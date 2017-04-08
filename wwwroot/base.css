@@ -84,6 +84,7 @@ section {
 .item {
     background: whitesmoke;
     border: 1pt solid whitesmoke;
+    border-radius: 4px;
     color: black;
     display: inline-block;
     margin: 1em;
@@ -94,18 +95,19 @@ section {
 }
 
 .item.local {
-    border: 1pt solid darkgray;
+    border: 1pt solid silver;
 }
 
 .item .favicon {
-    background: white;
-    border: 1pt solid darkgray;
+    background: whitesmoke;
+    border: 1pt solid whitesmoke;
+    border-radius: 2px;
     height: 16px;
-    left: -6px;
+    left: -2px;
     margin: 0;
     padding: 1px;
-    position: absolute;
-    top: -6px;
+    position: relative;
+    top: 4px;
     width: 16px;
 }
 
