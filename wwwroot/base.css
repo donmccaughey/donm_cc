@@ -1,0 +1,123 @@
+body, html {
+    background: white;
+    border: 0;
+    color: black;
+    font: 12pt Helvetica, Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    padding-top: 24pt; /* space for fixed menu */
+}
+
+h1, h2, h3 {
+    border: 0;
+    margin: 0;
+    padding: 0;
+}
+
+li {
+    margin-bottom: 0.5em;
+}
+
+section {
+    border: 0;
+    margin: 0.5em auto;
+    max-width: 40em;
+    padding: 0.5em 1em;
+}
+
+.menu {
+    background: rgba(192, 192, 192, 0.9); // silver
+    border: 0;
+    border-bottom: 1pt solid gray;
+    color: white;
+    height: 24pt; /* matches body padding-top */
+    margin: 0;
+    padding: 0;
+    position: fixed;
+    top: 0px;
+    width: 100%;
+    z-index: 10;
+}
+
+.menu a {
+    border: 0;
+    color: white;
+    display: inline-block;
+    font: bold 14pt Helvetica, Arial, sans-serif;
+    margin: 2pt 4pt;
+    padding: 0;
+    text-decoration: none;
+}
+
+.banner {
+    border: 0;
+    margin: 0;
+    padding: 0;
+    position: relative;
+    width: 100%;
+}
+
+.banner img {
+    border: 0;
+    margin: 0;
+    padding: 0;
+    width: 100%;
+}
+
+.banner .caption {
+    color: white;
+    right: 1em;
+    position: absolute;
+    top: 0.5em;
+}
+
+.collection {
+    border: 0;
+    margin: 0;
+    padding: 0;
+    text-align: center;
+}
+
+.item {
+    background: whitesmoke;
+    border: 1pt solid whitesmoke;
+    color: black;
+    display: inline-block;
+    margin: 1em;
+    padding: 0.5em 1em;
+    position: relative;
+    text-decoration: none;
+    text-align: center;
+}
+
+.item.local {
+    border: 1pt solid darkgray;
+}
+
+.item .favicon {
+    background: white;
+    border: 1pt solid darkgray;
+    height: 16px;
+    left: -6px;
+    margin: 0;
+    padding: 1px;
+    position: absolute;
+    top: -6px;
+    width: 16px;
+}
+
+.key_sentence {
+    display: block;
+    font-size: 14pt;
+    font-variant: small-caps;
+    font-weight: 600;
+    margin-bottom: 0.5em;
+}
+
+.key_sentence:before {
+    content: "\2022" " ";
+}
+

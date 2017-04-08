@@ -1,0 +1,223 @@
+<!doctype html>
+<html lang=en>
+<head>
+    <meta charset=utf-8>
+    <meta name=viewport content="initial-scale=0.9, width=device-width">
+    <title>Make</title>
+    <link rel=stylesheet href=/base.css>
+</head>
+<body>
+    <nav class=menu>
+        <a href=/>Don McCaughey</a>
+    </nav>
+    <section>
+        <h1>Make: a Tool for Building Software</h1>
+        <p>
+            Make is old. It was 
+            <a href=https://en.wikipedia.org/wiki/Make_(software)>first released in 1977</a>.
+            It's ubiquitous.
+            Make is a 
+            <a href=http://pubs.opengroup.org/onlinepubs/009695399/utilities/make.html>standard</a>
+            development tool on Unix, Linux and POSIX systems.
+            Make is not easy to use. 
+            It has many well-known warts and pitfalls.
+        <p>
+            Nevertheless, Make has survived for forty years because it is often
+            good enough.
+            If you develop software, particularly if you work in C or C++, you
+            will encounter a makefile sooner or later.
+    </section>
+    <section>
+        <h2>Characteristics of Make</h2>
+        <p>
+            <span class=key_sentence>Make is a <em>declarative</em> language.</span>
+            This is probably the biggest hurdle to overcome when learning Make.
+            Most people are more comfortable working in <em>imperative</em>
+            languages like Python or C.
+            Declarative languages like Make or SQL require a mental 
+            shift&mdash;you declare the results you want rather than list the 
+            steps to take.
+        <p>
+            Make complicates this thinking, since a large part of a makefile
+            consists of the commands to execute (i.e. the steps to take) to 
+            transform one or more input files into a desired output.
+            At the scale of a single Make rule, you write a small 
+            imperative script.
+            At the scale of the makefile, you <em>declare</em> the relationships
+            between targets (output files) and dependencies (input files).
+            Naive makefile authors try to use Make as an imperative scripting 
+            language; this usually produces an unreliable build.
+        <p>
+            <span class=key_sentence>Make operates on files.</span>
+            Make assumes that each step of your build has zero or more files 
+            as inputs and exactly one file as output.
+            This is one of Make's real deficiencies.
+            Some real world development tools (such as the venerable 
+            <a href=https://en.wikipedia.org/wiki/Yacc>Yacc</a>) produce 
+            multiple output files from their inputs.
+            Other build steps (such as posting a file to a server) don't 
+            produce an output file.
+            There are practical but imperfect workarounds for these scenarios.
+        <p>
+            <span class=key_sentence>A makefile must define a 
+            <a href=https://en.wikipedia.org/wiki/Directed_acyclic_graph>directed acyclic graph</a>.</span>
+            The set of rules in a makefile must form a complete directed 
+            graph without gaps or loops, starting from your final build 
+            products, through all intermediate outputs, ending with your 
+            source files.
+            This is another area where Make is often confusing.
+            Make starts at the &ldquo;end&rdquo; (the thing you want to build) and works 
+            backwards to the &ldquo;beginning&rdquo; (the source files).
+            Most people think about their build starting with the source files.
+        <p>
+            <span class=key_sentence>Make has weak tools for encapsulation and abstraction.</span>
+            Modern imperative languages have many different techniques for
+            encapsulating and abstracting away complexity and reducing 
+            boilerplate and repetition, such as modules, classes, functions
+            and macros.
+            Make has relatively few constructs for creating higher level 
+            structure that manages low level details.
+            While it's possible to write a makefile that minimizes boilerplate
+            and duplication, in my experience this results in code that's
+            very difficult to understand and maintain.
+            In practical usage, makefiles tend to have at least a moderate 
+            amount of verbosity and duplication.
+    </section>
+    <section>
+        <h2>Books on Make</h2>
+        <ul>
+            <li>
+                <a href=http://shop.oreilly.com/product/9780596006105.do><cite>Managing Projects with GNU Make</cite></a> 
+                I feel this is at best an adequate introduction to Make. 
+                If you've never used Make before, you may find this book helpful.
+                I don't know of a better introductory Make book, but take the
+                author's makefile style and recommendations with a grain of salt.
+            <li>
+                <a href=https://www.nostarch.com/gnumake><cite>The GNU Make Book</cite></a>
+                Great practical advice on using Make.
+                Best to read this one after you've spent some time using Make in
+                the real world.
+            <li>
+                <a href=https://www.gnu.org/software/make/manual/html_node/index.html><cite>The GNU Make Manual</cite></a>
+                An in-depth reference.
+                If you're relatively new to Make but understand the basics, the
+                <a href=https://www.gnu.org/software/make/manual/html_node/Functions.html><i>Functions</i></a>
+                reference is a great place to start.
+        </ul>
+    </section>
+    <section>
+        <h2>Useful Make Links</h2>
+        <ul>
+            <li>
+                <a href=http://make.mad-scientist.net>make.mad-scientist.net</a>
+                Information about GNU Make by one of its maintainers.
+            <li>
+                <a href=http://eigenstate.org/notes/makefiles>Notes on Writing Makefiles</a>
+                I'll pass on the author's makefile template, but the
+                <i>Factor out Common Code</i> section is excellent.
+            <li>
+                <a href=http://blog.jgc.org>John Graham-Cumming's blog</a>
+                Lots of GNU Make posts by the author of <cite>The GNU Make Book</cite>.
+            <li>
+                <a href=http://marmelab.com/blog/2016/02/29/auto-documented-makefile.html>Self-Documented Makefiles</a>
+                A handy trick for widely used makefiles.
+        </ul>
+    </section>
+    <section>
+        <h2><cite>Recursive Make Considered Harmful</cite></h2>
+        <p>
+            This is a widely cited
+            <a href=http://aegis.sourceforge.net/auug97.pdf>paper by Peter Miller</a>
+            on the pitfalls of organizing large projects using 
+            a recursive structure of modules in subdirectories, each module
+            having its own stand-alone makefile.
+            Makefiles in parent directories recursively call makefiles in 
+            subdirectories.
+            Modules can be nested in subdirectories to an arbitrary depth.
+        <p>
+            I've always found the paper 
+            somewhat disingenuous; the problems that Miller sites aren't really 
+            due to Make <em>per se</em> but due to coupling between modules. 
+            When modules are not independent, it's impossible to build 
+            them in isolation with repeatability and correctness.
+        <p>
+            It's still worth a read, especially if you ever find yourself 
+            writing a build system for a large project. The problems that 
+            Miller explores are common enough in real projects and worth 
+            understanding. Just keep in mind that in the real world, many large
+            projects use recursive makefiles successfully.
+    </section>
+    <section>
+        <h2>Alternate Build Systems</h2>
+        <p>
+            There are many other build systems.
+            Here's a partial list.
+        <ul>
+            <li>
+                <a href=https://cmake.org>CMake</a>
+                This cross-platform build tool is often used for C and C++ 
+                codebases that need to build on Windows, Linux and macOS.
+            <li>
+                <a href=https://www.perforce.com/resources/documentation/jam>Jam</a>
+                An build tool focused on C and C++.
+                Jam has a built-in understanding of C and C++ header dependencies.
+                <a href=https://www.freetype.org/jam/index.html>FT Jam</a>
+                is a fork of the original Jam maintained by the
+                <a href=https://www.freetype.org>FreeType project</a>.
+            <li>
+                <a href=https://ruby.github.io/rake/>Rake</a>
+                A Make-like internal 
+                <a href=http://www.martinfowler.com/bliki/DomainSpecificLanguage.html>DSL</a>
+                for Ruby.
+                Rake gives you the full power of a general purpose imperative
+                language, for both good and evil.
+                I have some modest experience with Rake.
+                From what I've seen, few rakefile authors understand Rake well; 
+                rakefiles are commonly messy imperative scripts rather than
+                declarative build specifications.
+            <p>
+                Still, if you know Ruby and spend a little effort to understand
+                Rake, you can produce a nice build system with it, 
+                including custom Rake tasks that cleanly encapsulate complexities
+                unique to your project. Documentation on Rake internals is
+                thin, but the Ruby source is small and readable.
+            <li>
+                <a href=https://ninja-build.org>Ninja</a>
+                A simple, low-level build system designed to build large projects
+                fast, Ninja is intended to be the assembly language of build systems.
+                CMake and gyp are higher level build tools that work with Ninja.
+            <li>
+                <a href=https://gyp.gsrc.io>GYP</a>
+                A meta build system that generates other build systems, including
+                Xcode, Visual Studio, Make and Ninja.
+            <li>
+                <a href=http://gittup.org/tup/>tup</a>
+                A file-based build system for Linux, macOS and Windows built
+                to be fast.
+            <li>
+                <a href=https://github.com/apenwarr/redo>redo</a>
+                A Python implementation of a build system design by
+                <a href=http://cr.yp.to/djb.html>Daniel J Bernstein</a>.
+            <li>
+                <a href=https://msdn.microsoft.com/en-us/library/dd9y37ha.aspx>NMAKE</a>
+                Microsoft's version of Make for Windows. 
+                It has a similar core syntax to Make, but is largely incompatible.
+                I'm not sure if NMAKE was ever widely used in the Microsoft
+                development world, but it's very old and still maintained.
+                Largely supplanted by Visual Studio and MSBuild.
+            <li>
+                <a href=https://msdn.microsoft.com/en-us/library/dd393574.aspx>MSBuild</a>
+                This is a command line interface to the Visual Studio build system.
+                MSBuild could conceivably be used stand-alone with a hand written
+                XML project file, but it's generally used to build a project
+                created by Visual Studio.
+            <li>
+                <a href=https://developer.apple.com/legacy/library/documentation/Darwin/Reference/ManPages/man1/xcodebuild.1.html>xcodebuild</a>
+                This is the command line interface to the Xcode build system.
+                Like MSBuild, this is used to build a project created by Xcode.
+                Unlike MSBuild, Apple hasn't documented the Xcode project
+                file format as far as I know.
+    </section>
+</body>
+</html>
+
