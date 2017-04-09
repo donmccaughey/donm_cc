@@ -387,6 +387,16 @@ Date.nowInSeconds = function() {
     return Math.trunc(Date.now() / 1000);
 }
 
+Math.trunc = Math.trunc || function(x) {
+  if (isNaN(x)) {
+    return NaN;
+  }
+  if (x > 0) {
+    return Math.floor(x);
+  }
+  return Math.ceil(x);
+};
+
 Location.prototype.splitQueryParameters = function() {
     var queryString = this.search.substring(1);
     var pairs = queryString.split('&');
