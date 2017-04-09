@@ -546,7 +546,7 @@ function Options($container, width, horizontalTileCount, verticalTileCount) {
         .on('touchend', function(event) {
             event.stopPropagation();
         })
-        .on('click', function(even) {
+        .on('click', function(event) {
             event.stopPropagation();
         })
         .appendTo($container);
