@@ -31,7 +31,7 @@ section {
 .menu {
     background: rgba(192, 192, 192, 0.9); // silver
     border: 0;
-    border-bottom: 1pt solid gray;
+    border-bottom: 2pt solid silver;
     color: white;
     height: 24pt; /* matches body padding-top */
     margin: 0;
@@ -46,8 +46,8 @@ section {
     border: 0;
     color: white;
     display: inline-block;
-    font: bold 14pt Helvetica, Arial, sans-serif;
-    margin: 2pt 4pt;
+    font: bold 16pt Helvetica, Arial, sans-serif;
+    margin: 4pt 8pt;
     padding: 0;
     text-decoration: none;
 }
@@ -87,6 +87,7 @@ section {
     border-radius: 4px;
     color: black;
     display: inline-block;
+    line-height: 150%;
     margin: 1em;
     padding: 0.5em 1em;
     position: relative;
@@ -98,6 +99,11 @@ section {
     border: 1pt solid silver;
 }
 
+.item strong {
+    font-size: 14pt;
+    font-weight: normal;
+}
+
 .item .favicon {
     background: whitesmoke;
     border: 1pt solid whitesmoke;
@@ -107,7 +113,7 @@ section {
     margin: 0;
     padding: 1px;
     position: relative;
-    top: 4px;
+    top: 2px;
     width: 16px;
 }
 
