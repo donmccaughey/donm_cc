@@ -39,13 +39,15 @@
             steps to take.
         <p>
             Make complicates this thinking, since a large part of a makefile
-            consists of the commands to execute (i.e. the steps to take) to 
-            transform one or more input files into a desired output.
-            At the scale of a single Make rule, you write a small 
-            imperative script.
-            At the scale of the makefile, you <em>declare</em> the relationships
-            between targets (output files) and dependencies (input files).
-            Naive makefile authors try to use Make as an imperative scripting 
+            consists of the commands to execute (i.e. the steps to take, called
+            the <em>recipe</em>) to transform one or more input files into a
+            desired output.
+            At the scale of a single Make rule, you write a small imperative
+            script.
+            At the scale of the makefile, you <em>declare</em> the
+            relationships between targets (output files) and dependencies
+            (input files).
+            Naive makefile authors try to use Make as an imperative scripting
             language; this usually produces an unreliable build.
         <p>
             <span class=key_sentence>Make operates on files.</span>
@@ -61,13 +63,14 @@
         <p>
             <span class=key_sentence>A makefile must define a 
             <a href=https://en.wikipedia.org/wiki/Directed_acyclic_graph>directed acyclic graph</a>.</span>
-            The set of rules in a makefile must form a complete directed 
-            graph without gaps or loops, starting from your final build 
-            products, through all intermediate outputs, ending with your 
-            source files.
+            The makefile rules for each final build product must form a
+            complete directed graph without gaps or loops, starting from the
+            final build products, through all intermediate outputs, ending with
+            the source files.
             This is another area where Make is often confusing.
-            Make starts at the &ldquo;end&rdquo; (the thing you want to build) and works 
-            backwards to the &ldquo;beginning&rdquo; (the source files).
+            Make starts at the &ldquo;end&rdquo; (the thing you want to build)
+            and works backwards to the &ldquo;beginning&rdquo; (the source
+            files).
             Most people think about their build starting with the source files.
         <p>
             <span class=key_sentence>Make has weak tools for encapsulation and abstraction.</span>
@@ -108,6 +111,9 @@
     <section>
         <h2>Useful Make Links</h2>
         <ul>
+            <li>
+                <a href=http://gromnitsky.users.sourceforge.net/articles/notes-for-new-make-users/>Notes for new Make users</a>
+                A great cookbook full of useful tips and tricks.
             <li>
                 <a href=http://make.mad-scientist.net>make.mad-scientist.net</a>
                 Information about GNU Make by one of its maintainers.
@@ -151,7 +157,7 @@
         <h2>Alternate Build Systems</h2>
         <p>
             There are many other build systems.
-            Here's a partial list.
+            Here's a partial list in no particular order.
         <ul>
             <li>
                 <a href=https://cmake.org>CMake</a>
@@ -187,6 +193,10 @@
                 fast, Ninja is intended to be the assembly language of build systems.
                 CMake and gyp are higher level build tools that work with Ninja.
             <li>
+                <a href=https://bazel.build>Bazel</a>
+                A replacement for Make, Maven and Gradle developed by Google.
+                It's focused on building C++ and Java code.
+            <li>
                 <a href=https://gyp.gsrc.io>GYP</a>
                 A meta build system that generates other build systems, including
                 Xcode, Visual Studio, Make and Ninja.
@@ -206,6 +216,16 @@
                 development world, but it's very old and still maintained.
                 Largely supplanted by Visual Studio and MSBuild.
             <li>
+                <a href=https://shakebuild.com>Shake</a>
+                A replacement for Make, Scons, Ant, etc. written in Haskell.
+            <li>
+                <a href=http://mesonbuild.com>Meson</a>
+                A "next-generation" build system written in Python that aims to
+                be fast and developer friendly.
+            <li>
+                <a href=https://buckbuild.com>Buck</a>
+                A build system from Facebook written in Java.
+            <li>
                 <a href=https://msdn.microsoft.com/en-us/library/dd393574.aspx>MSBuild</a>
                 This is a command line interface to the Visual Studio build system.
                 MSBuild could conceivably be used stand-alone with a hand written
@@ -217,6 +237,18 @@
                 Like MSBuild, this is used to build a project created by Xcode.
                 Unlike MSBuild, Apple hasn't documented the Xcode project
                 file format as far as I know.
+            <li>
+                <a href=https://github.com/apple/swift-llbuild>llbuild</a>
+                A set of libraries for building build systems.
+                Used by Xcode 9 and the Swift Package Manager.
+            <li>
+                <a href=https://github.com/facebook/xctool>xctool</a>
+                An extension for xcodebuild to make it easier to run tests on
+                continuous integration systems.
+            <li>
+                <a href=https://github.com/facebook/xcbuild>xcbuild</a>
+                A cross-platform Xcode-compatible build tool from Facebook.
+
     </section>
 </body>
 </html>
