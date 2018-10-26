@@ -1,3 +1,12 @@
+/* 
+ * Colors:
+ *      #ffffff white
+ *      #f5f5f5 whitesmoke
+ *      #c0c0c0 silver
+ *      #a9a9a9 darkgray
+ *      #000000 black 
+ */
+
 body, html {
     background: white;
     border: 0;
@@ -28,8 +37,17 @@ section {
     padding: 0.5em 1em;
 }
 
+time {
+    background: darkgray;
+    color: white;
+    font: 10pt Helvetica, Arial, sans-serif;
+    margin-left: 3pt;
+    padding: 1pt 3pt;
+    white-space: nowrap;
+}
+
 .menu {
-    background: rgba(192, 192, 192, 0.9); // silver
+    background: rgba(192, 192, 192, 0.9); /* silver */
     border: 0;
     border-bottom: 2pt solid silver;
     color: white;
@@ -95,6 +113,14 @@ section {
     text-align: center;
 }
 
+.item:hover {
+    border: 1pt solid black;
+}
+
+.item:visited {
+    color: darkgray;
+}
+
 .item.local {
     border: 1pt solid silver;
 }
@@ -117,16 +143,31 @@ section {
     width: 16px;
 }
 
-.key_sentence {
-    display: block;
-    font-size: 14pt;
-    font-variant: small-caps;
-    font-weight: 600;
-    margin-bottom: 0.5em;
+.links a:before {
+    content: '\1f517';
+    font-size: 8pt;
+    position: absolute;
+    left: -2em;
+    top: 25%;
 }
 
-.key_sentence:before {
-    content: "\2022" " ";
+.links a {
+    color: black;
+    display: list-item;
+    font-size: 14pt;
+    list-style-type: none;
+    margin: 0 2em;
+    padding: 0.25em;
+    position: relative;
+    text-decoration: none;
+}
+
+.links a:hover {
+    text-decoration: underline;
+}
+
+.links a:visited {
+    color: darkgray;
 }
 
 .overview h1 {
@@ -145,8 +186,11 @@ section {
     border: 1pt solid white;
 }
 
+.package .item:hover {
+    border: 1pt solid black;
+}
+
 .package .item .favicon {
     background: white;
     border: 1pt solid white;
 }
-
