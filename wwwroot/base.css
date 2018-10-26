@@ -46,30 +46,6 @@ time {
     white-space: nowrap;
 }
 
-.menu {
-    background: rgba(192, 192, 192, 0.9); /* silver */
-    border: 0;
-    border-bottom: 2pt solid silver;
-    color: white;
-    height: 24pt; /* matches body padding-top */
-    margin: 0;
-    padding: 0;
-    position: fixed;
-    top: 0px;
-    width: 100%;
-    z-index: 10;
-}
-
-.menu a {
-    border: 0;
-    color: white;
-    display: inline-block;
-    font: bold 16pt Helvetica, Arial, sans-serif;
-    margin: 4pt 8pt;
-    padding: 0;
-    text-decoration: none;
-}
-
 .banner {
     border: 0;
     margin: 0;
@@ -168,6 +144,30 @@ time {
 
 .links a:visited {
     color: darkgray;
+}
+
+.menu {
+    background: rgba(192, 192, 192, 0.9); /* silver */
+    border: 0;
+    border-bottom: 2pt solid silver;
+    color: white;
+    height: 24pt; /* matches body padding-top */
+    margin: 0;
+    padding: 0;
+    position: fixed;
+    top: 0px;
+    width: 100%;
+    z-index: 10;
+}
+
+.menu a {
+    border: 0;
+    color: white;
+    display: inline-block;
+    font: bold 16pt Helvetica, Arial, sans-serif;
+    margin: 4pt 8pt;
+    padding: 0;
+    text-decoration: none;
 }
 
 .overview h1 {
