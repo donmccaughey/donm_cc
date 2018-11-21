@@ -125,6 +125,10 @@ time {
     border: 1pt solid silver;
 }
 
+.item:hover.local {
+    border: 1pt solid black;
+}
+
 .item strong {
     font-size: 14pt;
     font-weight: normal;
