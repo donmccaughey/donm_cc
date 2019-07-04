@@ -61,19 +61,23 @@ section {
     padding: 0.5em 1em;
 }
 
+time:before {
+    content: '- '
+}
+
 time {
-    background: darkgray;
-    color: white;
-    font: 10pt Helvetica, Arial, sans-serif;
-    padding: 1pt 3pt;
+    color: dimgray;
+    font: 12pt Helvetica, Arial, sans-serif;
     white-space: nowrap;
 }
 
+.authors:before {
+    content: '- ';
+}
+
 .authors {
-    background: lightgray;
     color: black;
-    font: italic 10pt Helvetica, Arial, sans-serif;
-    padding: 1pt 3pt;
+    font: italic 12pt Helvetica, Arial, sans-serif;
     white-space: nowrap;
 }
 
@@ -104,6 +108,11 @@ time {
     margin: 0;
     padding: 0;
     text-align: center;
+}
+
+.collection h1 {
+    color: dimgray;
+    font-size: 16pt;
 }
 
 .item {
