@@ -6,9 +6,9 @@ home_page:
     title: Don McCaughey
     children:
     -
-        path: /macos_packages/index.html
+        path: /macos_packages.html
         title: macOS Packages
     -
-        path: /engineering_management/index.html
+        path: /engineering_management.html
         title: Engineering Management
 

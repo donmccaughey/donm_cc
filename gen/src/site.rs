@@ -1,11 +1,12 @@
 use serde_yaml;
 use std::error::Error;
+use std::fs::create_dir_all;
 use std::fs::File;
 use std::io::BufReader;
 
-use crate::report::Report;
 use crate::options::Options;
 use crate::page::Page;
+use crate::report::Report;
 
 
 #[derive(Debug, Deserialize)]
@@ -33,7 +34,8 @@ impl Site {
     {
         report.will_generate_site(&self);
 
-        self.home_page.generate(report)?;
+        create_dir_all(&options.output_dir)?;
+        self.home_page.generate(options, report)?;
 
         report.did_generate_site(&self);
         Ok(())
