@@ -10,6 +10,10 @@ pub struct Options {
     /// The directory to generated HTML files in
     pub output_dir: PathBuf,
 
+    #[structopt(long = "overwrite")]
+    /// Replace existing HTML files without warning
+    pub overwrite: bool,
+
     #[structopt(name = "SITE_DEF", parse(from_os_str))]
     /// The YAML file containing the site definition
     pub site_definition_file: PathBuf,

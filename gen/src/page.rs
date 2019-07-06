@@ -6,6 +6,7 @@ use std::path::PathBuf;
 use crate::options::Options;
 use crate::report::Report;
 use std::path::Component::RootDir;
+use crate::error::Error::{OutputDirIsRoot, PageExists};
 
 
 #[derive(Debug, Deserialize)]
@@ -31,7 +32,11 @@ impl Page {
         let mut output_path = options.output_dir.clone();
         output_path.push(relative_path);
 
-        let output_dir = output_path.parent().ok_or("Path is root")?;
+        if output_path.exists() && !options.overwrite {
+            return Err(Box::new(PageExists(self.title.clone(), output_path.clone())));
+        }
+
+        let output_dir = output_path.parent().ok_or(OutputDirIsRoot(self.title.clone()))?;
         create_dir_all(output_dir)?;
 
         let title = format!("<title>{}</title>", self.title);
