@@ -1,0 +1,14 @@
+# Site definition for https://donm.cc/
+
+name: Don McCaughey
+home_page:
+    path: /index.html
+    title: Don McCaughey
+    children:
+    -
+        path: /macos_packages/index.html
+        title: macOS Packages
+    -
+        path: /engineering_management/index.html
+        title: Engineering Management
+
