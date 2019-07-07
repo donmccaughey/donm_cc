@@ -1,7 +1,9 @@
 #[macro_use]
 extern crate serde_derive;
 
+mod banner;
 mod error;
+mod item;
 mod options;
 mod page;
 mod report;

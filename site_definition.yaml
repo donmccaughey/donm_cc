@@ -4,6 +4,47 @@ name: Don McCaughey
 home_page:
     path: /index.html
     title: Don McCaughey
+    banner:
+        image: /Don_and_Molly_hiking.jpg
+        description: Don and Molly hiking
+        caption: Texas, winter 2016
+    collection:
+    -
+        url: https://github.com/donmccaughey
+        favicon: 
+            path: /icons/github.png
+            description: GitHub icon
+        title: GitHub
+        subtitle: donmccaughey
+    -
+        url: https://twitter.com/donmccaughey
+        favicon:
+            path: /icons/twitter.png
+            description: Twitter icon
+        title: Twitter
+        subtitle: "@donmccaughey"
+    -
+        url: https://www.linkedin.com/in/donmccaughey
+        favicon:
+            path: /icons/linkedin.png
+            description: LinkedIn icon
+        title: LinkedIn
+        subtitle: donmccaughey
+    -
+        path: /resume/Resume_of_Don_McCaughey.pdf
+        title: Résumé
+        subtitle: Stuff I've done
+    -
+        url: https://www.copper.com
+        favicon:
+            path: /icons/copper.png
+            description: Copper icon
+        title: Copper
+        subtitle: My current gig
+    -
+        path: /memory_match/
+        title: Memory Match
+        subtitle: A tile matching game
     children:
     -
         path: /macos_packages.html

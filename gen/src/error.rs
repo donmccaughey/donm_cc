@@ -7,6 +7,7 @@ use std::path::PathBuf;
 pub enum Error {
     OutputDirIsRoot(String),
     PageExists(String, PathBuf),
+    PathContainsInvalidUnicode(PathBuf),
 }
 
 
@@ -22,6 +23,10 @@ impl fmt::Display for Error {
             },
             Error::OutputDirIsRoot(ref title) => {
                 write!(f, "Output directory for page \"{}\" is '/'", title)
+            },
+            Error::PathContainsInvalidUnicode(ref path) => {
+                let path = path.to_string_lossy();
+                write!(f, "The path \"{}\" contains invalid Unicode", path)
             },
         }
     }
