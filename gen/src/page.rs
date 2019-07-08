@@ -7,7 +7,7 @@ use std::path::Component::RootDir;
 use std::path::PathBuf;
 
 use crate::banner::Banner;
-use crate::error::Error::OutputDirIsRoot;
+use crate::error::Error::{OutputDirIsRoot, PathContainsInvalidUnicode};
 use crate::error::Error::PageExists;
 use crate::item::Item;
 use crate::options::Options;
@@ -18,6 +18,7 @@ use crate::report::Report;
 pub struct Page {
     pub path: PathBuf,
     pub title: String,
+    pub subtitle: String,
 
     pub banner: Option<Banner>,
 
@@ -62,6 +63,21 @@ impl Page {
         Ok(())
     }
 
+    fn write_anchor(&self, buf_writer: &mut BufWriter<File>) -> Result<(), Box<dyn Error>> {
+        let path = self.path.to_str().ok_or(PathContainsInvalidUnicode(self.path.clone()))?;
+        write!(buf_writer, "        <a class='item local' href='{}'>\n", path)?;
+        /*
+        if let Some(ref favicon) = self.favicon {
+            let src = favicon.path.to_str().ok_or(PathContainsInvalidUnicode(favicon.path.clone()))?;
+            write!(buf_writer, "            <img class=favicon src='{}' alt='{}'>\n", src, favicon.description)?;
+        }
+        */
+        write!(buf_writer, "            <strong>{}</strong>\n", self.title)?;
+        write!(buf_writer, "            <br><em>{}</em>\n", self.title)?;
+        write!(buf_writer, "        </a>\n")?;
+        Ok(())
+    }
+
     fn write(&self, buf_writer: &mut BufWriter<File>) -> Result<(), Box<dyn Error>> {
         write!(buf_writer, "<!doctype html>\n")?;
         write!(buf_writer, "<html lang=en>\n")?;
@@ -87,10 +103,13 @@ impl Page {
         if let Some(ref banner) = self.banner {
             banner.write(buf_writer)?;
         }
-        if !self.collection.is_empty() {
+        if self.collection.len() + self.children.len() > 0 {
             write!(buf_writer, "    <div class=collection>\n")?;
             for item in self.collection.iter() {
                 item.write(buf_writer)?;
+            }
+            for child in self.children.iter() {
+                child.write_anchor(buf_writer)?;
             }
             write!(buf_writer, "    </div>\n")?;
         }

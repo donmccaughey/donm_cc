@@ -4,6 +4,7 @@ name: Don McCaughey
 home_page:
     path: /index.html
     title: Don McCaughey
+    subtitle: My web site
     banner:
         image: /Don_and_Molly_hiking.jpg
         description: Don and Molly hiking
@@ -47,9 +48,26 @@ home_page:
         subtitle: A tile matching game
     children:
     -
-        path: /macos_packages.html
+        path: /macos_packages/index.html
         title: macOS Packages
+        subtitle: Software installers
     -
-        path: /engineering_management.html
+        path: /engineering_management/index.html
         title: Engineering Management
-
+        subtitle: Software is a team sport
+    -
+        path: /rust_and_wasm/index.html
+        title: Rust and Wasm
+        subtitle: Assembly for the web
+    -
+        path: /make/index.html
+        title: Make
+        subtitle: The build tool
+    -
+        path: /hashtables/index.html
+        title: Hashtables
+        subtitle: Keys and values
+    -
+        path: /science_fiction/index.html
+        title: Science Fiction
+        subtitle: Reading for fun
