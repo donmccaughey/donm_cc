@@ -97,10 +97,17 @@ time {
 }
 
 .banner .caption {
-    color: white;
+    color: whitesmoke;
     right: 1em;
     position: absolute;
-    top: 0.5em;
+    top: 0.67em;
+}
+
+.banner .lower-caption {
+    bottom: 0.67em;
+    color: whitesmoke;
+    right: 1em;
+    position: absolute;
 }
 
 .collection {
