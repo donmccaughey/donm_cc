@@ -1,0 +1,37 @@
+<!doctype html>
+<html lang=en>
+<head>
+    <meta charset=utf-8>
+    <meta name=viewport content="initial-scale=0.9, width=device-width">
+    <title>Random Words</title>
+    <link rel=stylesheet href=/base.css>
+    <script charset=utf-8 src=random_words.js type=text/javascript></script>
+</head>
+<body>
+    <nav class=menu>
+        <a href=/>Don McCaughey</a>
+    </nav>
+    <section class=overview>
+        <h1>Random Words</h1>
+    </section>
+    <section class=generator>
+        <form action=./ method=get>
+            <p>
+                <label for=count>Random Words:</label>
+                <input id=count name=count type=number value=0>
+
+            <p>
+                <label>Format:</label>
+                <input id=format_sentence name=format type=radio value=sentence checked>
+                <label for=format_sentence>Sentence</label>
+                <input id=format_list name=format type=radio value=list>
+                <label for=format_list>List</label>
+
+            <p><button>Go</button>
+        </form>
+        <ol id=random_words>
+        </ol>
+    </section>
+</body>
+</html>
+
