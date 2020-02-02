@@ -1,0 +1,24 @@
+#count {
+    width: 4em;
+}
+
+#random_words {
+    background: whitesmoke;
+    display: inline-block;
+    font-size: 14pt;
+    margin: 0;
+}
+
+#random_words {
+    padding: 1em 2em;
+}
+
+#random_words ol {
+    margin: 0;
+    padding: 0em 0em 0em 1em;
+}
+
+.generator {
+    border: thin solid darkgrey;
+}
+

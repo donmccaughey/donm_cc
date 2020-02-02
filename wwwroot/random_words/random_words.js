@@ -1,6 +1,14 @@
 'use strict';
 
 
+// https://github.com/elasticdog/yawl
+const yawl = {
+    resource: './words.table',
+    rowCount: 264097,
+    rowWidth: 46
+}
+
+
 function initializeForm(query) {
     const countInput = document.querySelector('#count');
     countInput.value = query.count;
@@ -11,30 +19,52 @@ function initializeForm(query) {
     const formatListRadio = document.querySelector('#format_list');
     formatListRadio.checked = query.isFormatList;
 
-    const ol = document.querySelector('#random_words');
-    ol.classList.add(query.format);
-    ol.innerHTML = '';
+    const p = document.querySelector('#random_words');
+    p.innerHTML = '';
 
+    var container;
+    var addWord;
+    if (query.isFormatList) {
+        const ol = document.createElement('ol');
+        p.appendChild(ol);
+        container = ol;
+        addWord = addListWord;
+    } else {
+        container = p;
+        addWord = addSentenceWord;
+    }
     for (let i = 0; i < query.count; ++i) {
         pickWord().then(function(word) {
-            const li = document.createElement('li');
-            li.innerText = word;
-            ol.appendChild(li);
+            addWord(container, word);
         });
     }
 }
 
 
+function addListWord(container, word) {
+    const li = document.createElement('li');
+    li.innerText = word;
+    container.appendChild(li);
+}
+
+
+function addSentenceWord(container, word) {
+    const span = document.createElement('span');
+    span.innerText = word;
+    container.appendChild(span);
+    const space = document.createTextNode(' ');
+    container.appendChild(space);
+}
+
+
 function pickWord() {
-    const resource = './words.table'
-    const rowCount = 264097;
-    const rowWidth = 46;
+    const wordList = yawl;
 
-    const index = uniformRandomValue(rowCount);
-    const firstBytePosition = rowWidth * index;
-    const lastBytePosition = firstBytePosition + rowWidth - 1;
+    const index = uniformRandomValue(wordList.rowCount);
+    const firstBytePosition = wordList.rowWidth * index;
+    const lastBytePosition = firstBytePosition + wordList.rowWidth - 1;
 
-    return fetch(resource, {
+    return fetch(wordList.resource, {
         headers: {
             Range: 'bytes=' + firstBytePosition + '-' + lastBytePosition
         }
@@ -73,7 +103,7 @@ class Query {
         const count = parseInt(parameters['count'] || 3);
         this.count = isNaN(count) ? 3 : count;
 
-        const format = parameters['format'] || 'list';
+        const format = parameters['format'] || 'sentence';
         this.format = ('sentence' == format.toLowerCase()) ? 'sentence' : 'list';
     }
 
@@ -85,12 +115,12 @@ class Query {
         return 'sentence' == this.format;
     }
 }
+
+
 function toInt(value) {
     const i = parseInt(value);
     return isNaN(i) ? undefined : i;
 }
-
-
 
 
 window.addEventListener('DOMContentLoaded', (event) => {
