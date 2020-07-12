@@ -17,7 +17,7 @@ impl SiteDef {
     pub fn read(site_root: &AbsPath, report: &Report) -> Result<SiteDef, Box<dyn Error>> {
         report.will_read_site(&site_root);
 
-        let site_file_path = site_root.join(&PathBuf::from("./_site.yaml"));
+        let site_file_path = site_root.join("./_site.yaml");
         let site_file = SiteFile::read(&site_file_path, &report)?;
 
         let cwd = AbsPath::current_dir().expect("Unable to get current working directory");

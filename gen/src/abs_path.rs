@@ -25,12 +25,17 @@ impl AbsPath {
         })
     }
 
-    pub fn new(path: &Path) -> io::Result<AbsPath> {
+    pub fn new<P>(path: P) -> io::Result<AbsPath>
+        where P: convert::AsRef<Path>
+    {
         let cwd = env::current_dir()?;
         Ok(Self::new_relative_to(path, &cwd))
     }
 
-    pub fn new_relative_to_root(path: &Path, root: &AbsPath) -> AbsPath {
+    pub fn new_relative_to_root<P>(path: P, root: &AbsPath) -> AbsPath
+        where P: convert::AsRef<Path>
+    {
+        let path = path.as_ref();
         let display_path_buf = relative_path(&root, path);
         let path_buf = normalize_relative_to(path, root);
         AbsPath {
@@ -39,7 +44,12 @@ impl AbsPath {
         }
     }
 
-    pub fn new_relative_to(path: &Path, relative_to: &Path) -> AbsPath {
+    pub fn new_relative_to<P, U>(path: P, relative_to: U) -> AbsPath
+        where P: convert::AsRef<Path>,
+              U: convert::AsRef<Path>
+    {
+        let path = path.as_ref();
+        let relative_to = relative_to.as_ref();
         assert!(relative_to.is_absolute());
         let path_buf = normalize_relative_to(path, relative_to);
         AbsPath {
@@ -48,7 +58,9 @@ impl AbsPath {
         }
     }
 
-    pub fn join(&self, path: &Path) -> AbsPath {
+    pub fn join<P>(&self, path: P) -> AbsPath
+        where P: convert::AsRef<Path>
+    {
         // TODO: test and fix up display field
         AbsPath::new_relative_to(path, &self)
     }
@@ -91,15 +103,21 @@ impl ops::Deref for AbsPath {
 }
 
 
-fn normalize_relative_to(path: &Path, relative_to: &Path) -> PathBuf {
-    if path.is_absolute() {
+fn normalize_relative_to<P, U>(path: P, relative_to: U) -> PathBuf
+    where P: convert::AsRef<Path>,
+          U: convert::AsRef<Path>
+{
+    if path.as_ref().is_absolute() {
         normalize(path)
     } else {
-        normalize(&relative_to.join(path))
+        normalize(&relative_to.as_ref().join(path))
     }
 }
 
-fn normalize(path: &Path) -> PathBuf {
+fn normalize<P>(path: P) -> PathBuf
+    where P: convert::AsRef<Path>
+{
+    let path = path.as_ref();
     assert!(path.is_absolute());
     // TODO: handle invalid cases like "/../foo"
     let mut components: Vec<Component> = path.components().collect();
@@ -126,7 +144,12 @@ fn normalize(path: &Path) -> PathBuf {
     components.iter().collect()
 }
 
-fn relative_path(root_path: &Path, other_path: &Path) -> PathBuf {
+fn relative_path<P, U>(root_path: P, other_path: U) -> PathBuf
+    where P: convert::AsRef<Path>,
+          U: convert::AsRef<Path>
+{
+    let root_path = root_path.as_ref();
+    let other_path = other_path.as_ref();
     assert!(root_path.is_absolute());
     assert!(other_path.is_absolute());
     let root_path_buf = normalize(root_path);
@@ -144,15 +167,17 @@ fn relative_path(root_path: &Path, other_path: &Path) -> PathBuf {
 
     let mut i = 0;
     let mut j = 0;
+    while j < other_components.len()
+        && i < root_components.len()
+        && root_components[i] == other_components[j]
+    {
+        i += 1;
+        j += 1;
+    }
+    for _ in i .. root_components.len() {
+        relative_components.push(Component::ParentDir);
+    }
     while j < other_components.len() {
-        if i < root_components.len() && root_components[i] == other_components[j] {
-            i += 1;
-            j += 1;
-            continue;
-        }
-        for _ in i .. root_components.len() {
-            relative_components.push(Component::ParentDir);
-        }
         relative_components.push(other_components[i]);
         i += 1;
         j += 1;
@@ -174,59 +199,40 @@ mod test {
 
     #[test]
     fn test_normalize() {
-        let path_buf = PathBuf::from("/foo/bar/baz");
-        assert_eq!(normalize(&path_buf), path_buf);
+        assert_eq!(normalize("/foo/bar/baz"), PathBuf::from("/foo/bar/baz"));
 
         // removes "."
 
-        let path_buf = PathBuf::from("/./foo/bar/baz");
-        assert_eq!(normalize(&path_buf), PathBuf::from("/foo/bar/baz"));
-
-        let path_buf = PathBuf::from("/foo/./bar/baz");
-        assert_eq!(normalize(&path_buf), PathBuf::from("/foo/bar/baz"));
-
-        let path_buf = PathBuf::from("/foo/bar/./baz");
-        assert_eq!(normalize(&path_buf), PathBuf::from("/foo/bar/baz"));
-
-        let path_buf = PathBuf::from("/foo/bar/baz/.");
-        assert_eq!(normalize(&path_buf), PathBuf::from("/foo/bar/baz"));
+        assert_eq!(normalize("/./foo/bar/baz"), PathBuf::from("/foo/bar/baz"));
+        assert_eq!(normalize("/foo/./bar/baz"), PathBuf::from("/foo/bar/baz"));
+        assert_eq!(normalize("/foo/bar/./baz"), PathBuf::from("/foo/bar/baz"));
+        assert_eq!(normalize("/foo/bar/baz/."), PathBuf::from("/foo/bar/baz"));
 
         // resolves ".."
 
-        let path_buf = PathBuf::from("/foo/../bar/baz");
-        assert_eq!(normalize(&path_buf), PathBuf::from("/bar/baz"));
-
-        let path_buf = PathBuf::from("/foo/bar/../baz");
-        assert_eq!(normalize(&path_buf), PathBuf::from("/foo/baz"));
-
-        let path_buf = PathBuf::from("/foo/bar/baz/..");
-        assert_eq!(normalize(&path_buf), PathBuf::from("/foo/bar"));
-
-        let path_buf = PathBuf::from("/foo/bar/baz/../..");
-        assert_eq!(normalize(&path_buf), PathBuf::from("/foo"));
-
-        let path_buf = PathBuf::from("/foo/bar/baz/../../..");
-        assert_eq!(normalize(&path_buf), PathBuf::from("/"));
-
-        let path_buf = PathBuf::from("/foo/../bar/../baz/..");
-        assert_eq!(normalize(&path_buf), PathBuf::from("/"));
-
-        let path_buf = PathBuf::from("/foo/../bar/baz/..");
-        assert_eq!(normalize(&path_buf), PathBuf::from("/bar"));
+        assert_eq!(normalize("/foo/../bar/baz"), PathBuf::from("/bar/baz"));
+        assert_eq!(normalize("/foo/bar/../baz"), PathBuf::from("/foo/baz"));
+        assert_eq!(normalize("/foo/bar/baz/.."), PathBuf::from("/foo/bar"));
+        assert_eq!(normalize("/foo/bar/baz/../.."), PathBuf::from("/foo"));
+        assert_eq!(normalize("/foo/bar/baz/../../.."), PathBuf::from("/"));
+        assert_eq!(normalize("/foo/../bar/../baz/.."), PathBuf::from("/"));
+        assert_eq!(normalize("/foo/../bar/baz/.."), PathBuf::from("/bar"));
+        assert_eq!(normalize("/foo/bar/baz/../../../one/two"), PathBuf::from("/one/two"));
+        assert_eq!(normalize("/foo/bar/baz/../../../one/two/3/../../../do/re/mi"), PathBuf::from("/do/re/mi"));
     }
 
     #[test]
     fn test_new_for_abs_path() {
-        let abs_path = AbsPath::new(&PathBuf::from("/foo/bar"));
+        let abs_path = AbsPath::new("/foo/bar");
         assert!(abs_path.is_ok());
         let abs_path = abs_path.unwrap();
-        assert_eq!(PathBuf::from("/foo/bar"), abs_path.path_buf);
-        assert_eq!("/foo/bar", abs_path.display);
+        assert_eq!(abs_path.path_buf, PathBuf::from("/foo/bar"));
+        assert_eq!(abs_path.display, "/foo/bar");
     }
 
     #[test]
     fn test_new_for_relative_path() {
-        let abs_path = AbsPath::new(&PathBuf::from("./foo/bar"));
+        let abs_path = AbsPath::new("./foo/bar");
         let cwd = env::current_dir().unwrap();
         assert!(abs_path.is_ok());
         let abs_path = abs_path.unwrap();
@@ -234,52 +240,36 @@ mod test {
         assert!(abs_path.path_buf.ends_with("foo/bar"));
         assert!(abs_path.path_buf.to_string_lossy().ends_with("/foo/bar"));
         assert!(!abs_path.path_buf.to_string_lossy().ends_with("./foo/bar"));
-        assert_eq!("./foo/bar", abs_path.display);
+        assert_eq!(abs_path.display, "./foo/bar");
     }
 
     #[test]
     fn test_new_relative_to_for_abs_path() {
-        let abs_path = AbsPath::new_relative_to(&PathBuf::from("/foo/bar"), &PathBuf::from("/usr/local"));
-        assert_eq!(PathBuf::from("/foo/bar"), abs_path.path_buf);
-        assert_eq!("/foo/bar", abs_path.display);
+        let abs_path = AbsPath::new_relative_to("/foo/bar", "/usr/local");
+        assert_eq!(abs_path.path_buf, PathBuf::from("/foo/bar"));
+        assert_eq!(abs_path.display, "/foo/bar");
     }
 
     #[test]
     fn test_new_relative_to_for_relative_path() {
-        let abs_path = AbsPath::new_relative_to(&PathBuf::from("./foo/bar"), &PathBuf::from("/usr/local"));
-        assert_eq!(PathBuf::from("/usr/local/foo/bar"), abs_path.path_buf);
-        assert_eq!("./foo/bar", abs_path.display);
+        let abs_path = AbsPath::new_relative_to("./foo/bar", "/usr/local");
+        assert_eq!(abs_path.path_buf, PathBuf::from("/usr/local/foo/bar"));
+        assert_eq!(abs_path.display, "./foo/bar");
     }
 
     #[test]
-    fn test_relative_path_for_child_path() {
-        let root_path = PathBuf::from("/foo/bar");
-        let other_path = PathBuf::from("/foo/bar/baz");
-        let relative_path = relative_path(&root_path, &other_path);
-        assert_eq!(relative_path, PathBuf::from("./baz"));
-    }
-
-    #[test]
-    fn test_relative_path_for_sibling_path() {
-        let root_path = PathBuf::from("/foo/bar/baz");
-        let other_path = PathBuf::from("/foo/bar/fid");
-        let relative_path = relative_path(&root_path, &other_path);
-        assert_eq!(relative_path, PathBuf::from("../fid"));
-    }
-
-    #[test]
-    fn test_relative_path_for_root() {
-        let root_path = PathBuf::from("/");
-        let other_path = PathBuf::from("/foo/bar/baz");
-        let relative_path = relative_path(&root_path, &other_path);
-        assert_eq!(relative_path, PathBuf::from("/foo/bar/baz"));
-    }
-
-    #[test]
-    fn test_relative_path_for_root_to_root() {
-        let root_path = PathBuf::from("/");
-        let other_path = PathBuf::from("/");
-        let relative_path = relative_path(&root_path, &other_path);
-        assert_eq!(relative_path, PathBuf::from("/"));
+    fn test_relative_path() {
+        // same path
+        assert_eq!(relative_path("/foo/bar", "/foo/bar"), PathBuf::from("."));
+        // child path
+        assert_eq!(relative_path("/foo/bar", "/foo/bar/baz"), PathBuf::from("./baz"));
+        // sibling paths
+        assert_eq!(relative_path("/foo/bar/baz", "/foo/bar/fid"), PathBuf::from("../fid"));
+        assert_eq!(relative_path("/foo", "/do"), PathBuf::from("../do"));
+        assert_eq!(relative_path("/foo/bar", "/do/re"), PathBuf::from("../../do/re"));
+        assert_eq!(relative_path("/foo/bar/baz", "/do/re/mi/fa"), PathBuf::from("../../../do/re/mi/fa"));
+        // relative to root
+        assert_eq!(relative_path("/", "/foo/bar/baz"), PathBuf::from("/foo/bar/baz"));
+        assert_eq!(relative_path("/", "/"), PathBuf::from("/"));
     }
 }
