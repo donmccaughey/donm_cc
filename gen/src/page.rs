@@ -1,14 +1,11 @@
 use std::error::Error;
-use std::fs::create_dir_all;
 use std::fs::File;
 use std::io::BufWriter;
 use std::io::Write;
-use std::path::Component::RootDir;
 use std::path::PathBuf;
 
 use crate::banner::Banner;
-use crate::error::Error::{OutputDirIsRoot, PathContainsInvalidUnicode};
-use crate::error::Error::PageExists;
+use crate::error::Error::PathContainsInvalidUnicode;
 use crate::item::Item;
 use crate::options::Options;
 use crate::report::Report;
@@ -34,7 +31,7 @@ impl Page {
         -> Result<(), Box<dyn Error>>
     {
         report.will_generate_page(self);
-
+        /*
         let relative_path = match self.path.strip_prefix(RootDir) {
             Ok(stripped_path) => stripped_path,
             Err(_) => &self.path,
@@ -59,7 +56,7 @@ impl Page {
         for child in self.children.iter() {
             child.generate(options, report)?;
         }
-
+        */
         Ok(())
     }
 

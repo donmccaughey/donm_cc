@@ -1,0 +1,47 @@
+title: Alastair Reynolds
+sections:
+-
+    title: Revelation Space
+    type: links
+    items:
+    -
+        type: book
+        url: https://www.amazon.com/gp/product/B001QL5MAA
+        title: Revelation Space
+        date: 2000
+        read: true
+    -
+        type: book
+        url: https://www.amazon.com/gp/product/B000OIZUH6
+        title: Chasm City
+        date: 2001
+        read: true
+    -
+        type: book
+        url: https://www.amazon.com/gp/product/B001JJWICY
+        title: Diamond Dogs, Turquoise Days
+        date: 2002
+        read: true
+-
+    title: Poseidon's Children
+    type: links
+    items:
+    -
+        type: book
+        url: https://www.amazon.com/gp/product/B005ZOCF5E
+        title: Blue Remembered Earth
+        date: 2012
+        read: true
+    -
+        type: book
+        url: https://www.amazon.com/gp/product/B00H2V6IN8
+        title: On the Steel Breeze
+        date: 2013
+        read: true
+    -
+        type: book
+        url: https://www.amazon.com/gp/product/B00X5937LW
+        title: Poseidon's Wake
+        date: 2015
+        read: true
+
