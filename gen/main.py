@@ -16,6 +16,16 @@ class Parent:
         self.has_files = has_files
 
     @property
+    def all(self) -> list:
+        all = [self]
+        for child in self.children:
+            if hasattr(child, 'all'):
+                all += child.all
+            else:
+                all.append(child)
+        return all
+
+    @property
     def dir(self) -> str:
         raise NotImplementedError
 
@@ -30,7 +40,7 @@ class Parent:
                         if entry.name.startswith('.'):
                             continue
                         source = os.path.join(path, entry.name)
-                        file = File(source, self)
+                        File(source, self)
         for child in self.children:
             if hasattr(child, 'find_files'):
                 child.find_files(source_dir)
