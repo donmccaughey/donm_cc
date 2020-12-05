@@ -17,6 +17,10 @@ class Child:
         self.parent = parent
         if self.parent:
             self.parent.children.append(self)
+            
+    @property
+    def path(self) -> str:
+        return (self.parent.dir if self.parent else './') + self.name
 
     @property
     def rank(self) -> int:
@@ -76,10 +80,6 @@ class File(Child):
         )
         self.source = source
 
-    @property
-    def path(self) -> str:
-        return self.parent.dir + self.name
-
     def write_tree_description(self, f):
         f.write(f'{self.path}\n')
 
@@ -101,14 +101,10 @@ class Directory(Parent):
 
     @property
     def dir(self) -> str:
-        return self.parent.dir + self.name + '/'
-
-    @property
-    def path(self) -> str:
-        return self.dir
+        return self.path + '/'
 
     def write_tree_description(self, f):
-        f.write(f'{self.path}\n')
+        f.write(f'{self.dir}\n')
         for child in self.children:
             child.write_tree_description(f)
 
@@ -157,7 +153,7 @@ class IndexPage(Parent, Page):
 
     @property
     def dir(self) -> str:
-        return self.parent.dir + self.name + '/' if self.parent else './'
+        return (self.parent.dir + self.name + '/') if self.parent else './'
 
     @property
     def path(self) -> str:
