@@ -11,7 +11,8 @@ def make_name(title: str):
 
 
 class Parent:
-    def __init__(self, has_files: bool):
+    def __init__(self, has_files: bool, **kwargs):
+        super().__init__(**kwargs)
         self.children: list[Union[File, Page, Directory]] = []
         self.has_files = has_files
 
@@ -71,8 +72,14 @@ class File:
 
 
 class Directory(Parent):
-    def __init__(self, name: str, parent: Union[Directory, IndexPage], has_files: bool = True):
-        Parent.__init__(self, has_files)
+    def __init__(
+            self,
+            name: str,
+            parent: Union[Directory, IndexPage],
+            has_files: bool = True,
+            **kwargs,
+    ):
+        super().__init__(has_files=has_files, **kwargs)
         self.name = name
         self.parent = parent
         parent.children.append(self)
@@ -116,9 +123,21 @@ class Page:
 
 
 class IndexPage(Parent, Page):
-    def __init__(self, title: str, parent: Optional[IndexPage], name: Optional[str] = None, has_files: bool = False):
-        Parent.__init__(self, has_files)
-        Page.__init__(self, title, parent, name)
+    def __init__(
+            self,
+            title: str,
+            parent: Optional[IndexPage],
+            name: Optional[str] = None,
+            has_files: bool = False,
+            **kwargs,
+    ):
+        super().__init__(
+            has_files=has_files,
+            name=name,
+            parent=parent,
+            title=title,
+            **kwargs,
+        )
         self.has_files = has_files
 
     @property
