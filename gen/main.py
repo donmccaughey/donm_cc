@@ -145,11 +145,8 @@ class IndexPage(Parent, Page):
 
     @property
     def dir(self) -> str:
-        if self.parent:
-            return self.parent.dir + self.name + '/'
-        else:
-            return './'
-
+        return self.parent.dir + self.name + '/' if self.parent else './'
+    
     @property
     def path(self) -> str:
         return self.dir + 'index.html'
