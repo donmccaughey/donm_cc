@@ -10,9 +10,21 @@ def make_name(title: str):
     return lowered.replace(' ', '_')
 
 
-class Parent:
-    def __init__(self, has_files: bool, **kwargs):
+class Child:
+    def __init__(self, parent: Optional[Parent], **kwargs):
         super().__init__(**kwargs)
+        self.parent = parent
+        if self.parent:
+            self.parent.children.append(self)
+
+    @property
+    def rank(self) -> int:
+        return self.parent.rank + 1 if self.parent else 0
+
+
+class Parent(Child):
+    def __init__(self, parent: Optional[Parent], has_files: bool, **kwargs):
+        super().__init__(parent=parent, **kwargs)
         self.children: list[Union[File, Page, Directory]] = []
         self.has_files = has_files
 
@@ -52,20 +64,20 @@ class Parent:
         return True
 
 
-class File:
-    def __init__(self, source: str, parent: Union[Directory, IndexPage]):
+class File(Child):
+    def __init__(
+            self,
+            source: str,
+            parent: Parent,
+            **kwargs,
+    ):
+        super().__init__(parent=parent, **kwargs)
         self.name = os.path.basename(source)
-        self.parent = parent
         self.source = source
-        parent.children.append(self)
 
     @property
     def path(self) -> str:
         return self.parent.dir + self.name
-
-    @property
-    def rank(self) -> int:
-        return self.parent.rank + 1 if self.parent else 0
 
     def write_tree_description(self, f):
         f.write(f'{self.path}\n')
@@ -75,14 +87,12 @@ class Directory(Parent):
     def __init__(
             self,
             name: str,
-            parent: Union[Directory, IndexPage],
+            parent: Parent,
             has_files: bool = True,
             **kwargs,
     ):
-        super().__init__(has_files=has_files, **kwargs)
+        super().__init__(has_files=has_files, parent=parent, **kwargs)
         self.name = name
-        self.parent = parent
-        parent.children.append(self)
 
     @property
     def dir(self) -> str:
@@ -92,31 +102,27 @@ class Directory(Parent):
     def path(self) -> str:
         return self.dir
 
-    @property
-    def rank(self) -> int:
-        return self.parent.rank + 1 if self.parent else 0
-
     def write_tree_description(self, f):
         f.write(f'{self.path}\n')
         for child in self.children:
             child.write_tree_description(f)
 
 
-class Page:
-    def __init__(self, title: str, parent: Optional[IndexPage], name: Optional[str] = None):
+class Page(Child):
+    def __init__(
+            self,
+            title: str,
+            parent: Parent,
+            name: Optional[str] = None,
+            **kwargs
+    ):
+        super().__init__(parent=parent, **kwargs)
         self.name = name if name is not None else make_name(title)
         self.title = title
-        self.parent = parent
-        if parent:
-            parent.children.append(self)
 
     @property
     def path(self) -> str:
         return self.parent.dir + self.name + '.html'
-
-    @property
-    def rank(self) -> int:
-        return self.parent.rank + 1 if self.parent else 0
 
     def write_tree_description(self, f):
         f.write(f'{self.path} "{self.title}"\n')
@@ -126,7 +132,7 @@ class IndexPage(Parent, Page):
     def __init__(
             self,
             title: str,
-            parent: Optional[IndexPage],
+            parent: Optional[Parent],
             name: Optional[str] = None,
             has_files: bool = False,
             **kwargs,
