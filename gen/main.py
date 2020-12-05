@@ -50,18 +50,15 @@ class Parent(Child):
             with os.scandir(path) as dir:
                 for entry in dir:
                     if entry.is_file():
-                        if entry.name.startswith('.'):
-                            continue
-                        source = os.path.join(path, entry.name)
-                        File(source, self)
+                        if self.should_include_file(entry.name):
+                            source = os.path.join(path, entry.name)
+                            File(source, self)
         for child in self.children:
             if hasattr(child, 'find_files'):
                 child.find_files(source_dir)
 
     def should_include_file(self, name: str) -> bool:
-        if name.startswith('.'):
-            return False
-        return True
+        return not name.startswith('.')
 
 
 class File(Child):
@@ -160,7 +157,8 @@ class IndexPage(Parent, Page):
     def should_include_file(self, name: str) -> bool:
         if name in ['index.html']:
             return False
-        return Parent.should_include_file(self, name)
+        else:
+            return super().should_include_file(name)
 
     def write_tree_description(self, f):
         super().write_tree_description(f)
