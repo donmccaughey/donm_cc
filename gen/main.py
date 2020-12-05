@@ -11,8 +11,9 @@ def make_name(title: str):
 
 
 class Child:
-    def __init__(self, parent: Optional[Parent], **kwargs):
+    def __init__(self, name: str, parent: Optional[Parent], **kwargs):
         super().__init__(**kwargs)
+        self.name = name
         self.parent = parent
         if self.parent:
             self.parent.children.append(self)
@@ -68,8 +69,11 @@ class File(Child):
             parent: Parent,
             **kwargs,
     ):
-        super().__init__(parent=parent, **kwargs)
-        self.name = os.path.basename(source)
+        super().__init__(
+            name=os.path.basename(source),
+            parent=parent,
+            **kwargs,
+        )
         self.source = source
 
     @property
@@ -88,8 +92,12 @@ class Directory(Parent):
             has_files: bool = True,
             **kwargs,
     ):
-        super().__init__(has_files=has_files, parent=parent, **kwargs)
-        self.name = name
+        super().__init__(
+            has_files=has_files,
+            name=name,
+            parent=parent,
+            **kwargs,
+        )
 
     @property
     def dir(self) -> str:
@@ -113,8 +121,12 @@ class Page(Child):
             name: Optional[str] = None,
             **kwargs
     ):
-        super().__init__(parent=parent, **kwargs)
-        self.name = name if name is not None else make_name(title)
+
+        super().__init__(
+            name=name if name is not None else make_name(title),
+            parent=parent,
+            **kwargs,
+        )
         self.title = title
 
     @property
@@ -146,7 +158,7 @@ class IndexPage(Parent, Page):
     @property
     def dir(self) -> str:
         return self.parent.dir + self.name + '/' if self.parent else './'
-    
+
     @property
     def path(self) -> str:
         return self.dir + 'index.html'
