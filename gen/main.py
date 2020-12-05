@@ -7,48 +7,17 @@ from typing import Optional, Union
 
 def make_name(title: str):
     lowered = title.lower()
-    unspaced = lowered.replace(' ', '_')
-    return unspaced
+    return lowered.replace(' ', '_')
 
 
-class File:
-    def __init__(self, source: str, parent: Union[Directory, IndexPage]):
-        self.name = os.path.basename(source)
-        self.parent = parent
-        self.source = source
-        parent.children.append(self)
-
-    @property
-    def path(self) -> str:
-        return self.parent.dir + self.name
-
-    @property
-    def rank(self) -> int:
-        return self.parent.rank + 1 if self.parent else 0
-
-    def write_tree_description(self, f):
-        f.write(f'{self.path}\n')
-
-
-class Directory:
-    def __init__(self, name: str, parent: Union[Directory, IndexPage], has_files: bool = True):
-        self.children: list[Union[File, Directory]] = []
-        self.name = name
-        self.parent = parent
+class Parent:
+    def __init__(self, has_files: bool):
+        self.children: list[Union[File, Page, Directory]] = []
         self.has_files = has_files
-        parent.children.append(self)
 
     @property
     def dir(self) -> str:
-        return self.parent.dir + self.name + '/'
-
-    @property
-    def path(self) -> str:
-        return self.dir
-
-    @property
-    def rank(self) -> int:
-        return self.parent.rank + 1 if self.parent else 0
+        raise NotImplementedError
 
     def find_files(self, source_dir: str):
         path = os.path.join(os.getcwd(), source_dir)
@@ -70,6 +39,45 @@ class Directory:
         if name.startswith('.'):
             return False
         return True
+
+
+class File:
+    def __init__(self, source: str, parent: Union[Directory, IndexPage]):
+        self.name = os.path.basename(source)
+        self.parent = parent
+        self.source = source
+        parent.children.append(self)
+
+    @property
+    def path(self) -> str:
+        return self.parent.dir + self.name
+
+    @property
+    def rank(self) -> int:
+        return self.parent.rank + 1 if self.parent else 0
+
+    def write_tree_description(self, f):
+        f.write(f'{self.path}\n')
+
+
+class Directory(Parent):
+    def __init__(self, name: str, parent: Union[Directory, IndexPage], has_files: bool = True):
+        Parent.__init__(self, has_files)
+        self.name = name
+        self.parent = parent
+        parent.children.append(self)
+
+    @property
+    def dir(self) -> str:
+        return self.parent.dir + self.name + '/'
+
+    @property
+    def path(self) -> str:
+        return self.dir
+
+    @property
+    def rank(self) -> int:
+        return self.parent.rank + 1 if self.parent else 0
 
     def write_tree_description(self, f):
         f.write(f'{self.path}\n')
@@ -97,10 +105,10 @@ class Page:
         f.write(f'{self.path} "{self.title}"\n')
 
 
-class IndexPage(Page):
+class IndexPage(Parent, Page):
     def __init__(self, title: str, parent: Optional[IndexPage], name: Optional[str] = None, has_files: bool = False):
-        super().__init__(title, parent, name)
-        self.children: list[Union[Directory, File, Page]] = []
+        Parent.__init__(self, has_files)
+        Page.__init__(self, title, parent, name)
         self.has_files = has_files
 
     @property
@@ -114,26 +122,10 @@ class IndexPage(Page):
     def path(self) -> str:
         return self.dir + 'index.html'
 
-    def find_files(self, source_dir: str):
-        path = os.path.join(os.getcwd(), source_dir)
-        path = os.path.join(path, self.dir)
-        path = os.path.normpath(path)
-        if self.has_files:
-            with os.scandir(path) as dir:
-                for entry in dir:
-                    if entry.is_file() and self.should_include_file(entry.name):
-                        source = os.path.join(path, entry.name)
-                        file = File(source, self)
-        for child in self.children:
-            if hasattr(child, 'find_files'):
-                child.find_files(source_dir)
-
     def should_include_file(self, name: str) -> bool:
-        if name.startswith('.'):
-            return False
         if name in ['index.html']:
             return False
-        return True
+        return Parent.should_include_file(self, name)
 
     def write_tree_description(self, f):
         super().write_tree_description(f)
