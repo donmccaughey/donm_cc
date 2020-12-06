@@ -17,10 +17,18 @@ class Child:
         self.parent = parent
         if self.parent:
             self.parent.children.append(self)
-            
+
+    @property
+    def dirname(self) -> str:
+        return self.parent.dirname
+
+    @property
+    def filename(self) -> Optional[str]:
+        return self.name
+
     @property
     def path(self) -> str:
-        return (self.parent.dir if self.parent else './') + self.name
+        return self.dirname + (self.filename if self.filename else '')
 
     @property
     def rank(self) -> int:
@@ -44,12 +52,12 @@ class Parent(Child):
         return all
 
     @property
-    def dir(self) -> str:
-        raise NotImplementedError
+    def dirname(self) -> str:
+        return self.parent.dirname if self.parent else './'
 
     def find_files(self, source_dir: str):
         path = os.path.join(os.getcwd(), source_dir)
-        path = os.path.join(path, self.dir)
+        path = os.path.join(path, self.dirname)
         path = os.path.normpath(path)
         if self.has_files:
             with os.scandir(path) as dir:
@@ -100,11 +108,15 @@ class Directory(Parent):
         )
 
     @property
-    def dir(self) -> str:
-        return self.path + '/'
+    def dirname(self) -> str:
+        return self.parent.dirname + self.name + '/'
 
+    @property
+    def filename(self) -> Optional[str]:
+        return None
+    
     def write_tree_description(self, f):
-        f.write(f'{self.dir}\n')
+        f.write(f'{self.dirname}\n')
         for child in self.children:
             child.write_tree_description(f)
 
@@ -126,8 +138,8 @@ class Page(Child):
         self.title = title
 
     @property
-    def path(self) -> str:
-        return self.parent.dir + self.name + '.html'
+    def filename(self) -> Optional[str]:
+        return self.name + '.html'
 
     def write_tree_description(self, f):
         f.write(f'{self.path} "{self.title}"\n')
@@ -152,12 +164,12 @@ class IndexPage(Parent, Page):
         self.has_files = has_files
 
     @property
-    def dir(self) -> str:
-        return (self.parent.dir + self.name + '/') if self.parent else './'
+    def dirname(self) -> str:
+        return (self.parent.dirname + self.name + '/') if self.parent else './'
 
     @property
-    def path(self) -> str:
-        return self.dir + 'index.html'
+    def filename(self) -> Optional[str]:
+        return 'index.html'
 
     def should_include_file(self, name: str) -> bool:
         if name in ['index.html']:
