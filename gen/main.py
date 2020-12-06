@@ -2,20 +2,21 @@ import sys
 from gen import Directory, File, IndexPage, Page
 
 
-root = IndexPage('Don McCaughey', name="")
+root = IndexPage('Don McCaughey', is_root=True)
 with root:
-    IndexPage('Don McCaughey', name='aughey')
-    Directory('banners')
     File('base.css')
+    Directory('banners')
+    Directory('icons')
+    Directory('resume')
+
+    IndexPage('Don McCaughey', name='aughey')
     IndexPage('Business Novels')
     IndexPage('Engineering Management')
     IndexPage('Hash Tables')
-    Directory('icons')
     IndexPage('macOS Packages', has_files=True)
     IndexPage('Make')
     IndexPage('Memory Match', has_files=True)
     IndexPage('Random Words', has_files=True)
-    Directory('resume')
     IndexPage('Rust and Wasm')
     with IndexPage('Science Fiction'):
         alastair_reynolds = Page('Alastair Reynolds')

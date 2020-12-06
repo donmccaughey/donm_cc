@@ -19,12 +19,16 @@ class Directory(Parent):
         )
 
     @property
-    def dirname(self) -> str:
-        return self.parent.dirname + self.name + '/'
+    def dir_parts(self) -> list[str]:
+        return (self.parent.dir_parts if self.parent else ['.']) + [self.name]
 
     @property
-    def filename(self) -> Optional[str]:
-        return None
+    def file_parts(self) -> list[str]:
+        return []
+
+    @property
+    def path(self) -> str:
+        return self.dirname
 
     def write_tree_description(self, f):
         f.write(f'{self.dirname}\n')

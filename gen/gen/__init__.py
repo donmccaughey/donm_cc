@@ -20,17 +20,32 @@ class Child:
         if self.parent:
             self.parent.children.append(self)
 
+    def __lt__(self, other: Child) -> bool:
+        return self.path_parts < other.path_parts
+
     @property
     def dirname(self) -> str:
-        return self.parent.dirname
+        return ('/'.join(self.dir_parts) + '/') if self.dir_parts else './'
+
+    @property
+    def dir_parts(self) -> list[str]:
+        return self.parent.dir_parts if self.parent else ['.']
 
     @property
     def filename(self) -> Optional[str]:
-        return self.name
+        return self.file_parts[0] if self.file_parts else None
+
+    @property
+    def file_parts(self) -> list[str]:
+        return [self.name]
 
     @property
     def path(self) -> str:
-        return self.dirname + (self.filename if self.filename else '')
+        return '/'.join(self.path_parts) if self.path_parts else './'
+
+    @property
+    def path_parts(self) -> list[str]:
+        return self.dir_parts + self.file_parts
 
     @property
     def rank(self) -> int:
@@ -58,16 +73,12 @@ class Parent(Child):
     @property
     def all(self) -> list:
         all = [self]
-        for child in self.children:
+        for child in sorted(self.children):
             if hasattr(child, 'all'):
                 all += child.all
             else:
                 all.append(child)
         return all
-
-    @property
-    def dirname(self) -> str:
-        return self.parent.dirname if self.parent else './'
 
     def find_files(self, source_dir: str):
         path = os.path.join(os.getcwd(), source_dir)

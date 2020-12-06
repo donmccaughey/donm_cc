@@ -24,8 +24,8 @@ class Page(Child):
         self.title = title
 
     @property
-    def filename(self) -> Optional[str]:
-        return self.name + '.html'
+    def file_parts(self) -> list[str]:
+        return [self.name + '.html']
 
     def write_tree_description(self, f):
         f.write(f'{self.path} "{self.title}"\n')

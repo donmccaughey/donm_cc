@@ -10,6 +10,7 @@ class IndexPage(Parent, Page):
             title: str,
             parent: Optional[Parent]=None,
             name: Optional[str] = None,
+            is_root: bool = False,
             has_files: bool = False,
             **kwargs,
     ):
@@ -20,15 +21,18 @@ class IndexPage(Parent, Page):
             title=title,
             **kwargs,
         )
-        self.has_files = has_files
+        self.is_root = is_root
 
     @property
-    def dirname(self) -> str:
-        return (self.parent.dirname + self.name + '/') if self.parent else './'
+    def dir_parts(self) -> list[str]:
+        return (
+                (self.parent.dir_parts if self.parent else ['.'])
+                + ([] if self.is_root else [self.name])
+        )
 
     @property
-    def filename(self) -> Optional[str]:
-        return 'index.html'
+    def file_parts(self) -> list[str]:
+        return ['index.html']
 
     def should_include_file(self, name: str) -> bool:
         if name in ['index.html']:
