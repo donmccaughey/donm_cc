@@ -1,5 +1,5 @@
 import sys
-from gen import IndexPage, Directory, File, Page
+from gen import Directory, File, IndexPage, Page
 
 
 root = IndexPage('Don McCaughey', name="", parent=None)
