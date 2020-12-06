@@ -46,7 +46,7 @@ class IndexPage(Parent, Page):
         print('writing index page', path)
         if not is_dry_run:
             with open(path, 'x', encoding='utf8') as f:
-                pass
+                self.write(f)
         for child in self.children:
             child.generate(output_path, is_dry_run)
 

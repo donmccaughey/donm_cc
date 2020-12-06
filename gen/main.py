@@ -1,4 +1,3 @@
-import sys
 from gen import Directory, File, IndexPage, Page
 
 

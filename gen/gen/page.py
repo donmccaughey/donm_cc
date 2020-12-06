@@ -34,4 +34,13 @@ class Page(Child):
         print('writing page', path)
         if not is_dry_run:
             with open(path, 'x', encoding='utf8') as f:
-                pass
+                self.write(f)
+
+    def write(self, f):
+        f.write('<!doctype html>\n')
+        f.write('<html lang=en>\n')
+        f.write('<meta charset=utf-8>\n')
+        f.write('<meta name=viewport content="initial-scale=0.9, width=device-width">\n')
+        f.write(f'<title>{self.title}</title>\n')
+        f.write('<link rel=stylesheet href=/base.css>\n')
+        f.write(f'<h1>{self.title}</h1>\n')
