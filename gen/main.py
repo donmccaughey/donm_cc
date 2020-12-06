@@ -24,10 +24,6 @@ with root:
         lois_mcmaster_bujold = Page('Lois McMaster Bujold')
 
 
-def main():
+if __name__ == '__main__':
     root.find_files('../wwwroot')
     root.write_tree_description(sys.stdout)
-
-
-if __name__ == '__main__':
-    main()
