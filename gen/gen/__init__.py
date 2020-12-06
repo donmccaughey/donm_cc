@@ -7,10 +7,6 @@ from typing import Optional
 with_parent: list[Optional[Parent]] = [None]
 
 
-class WithParent:
-    pass
-
-
 class Child:
     def __init__(
             self,
