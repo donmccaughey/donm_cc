@@ -4,11 +4,23 @@ import os
 from typing import Optional
 
 
+with_parent: list[Optional[Parent]] = [None]
+
+
+class WithParent:
+    pass
+
+
 class Child:
-    def __init__(self, name: str, parent: Optional[Parent], **kwargs):
+    def __init__(
+            self,
+            name: str,
+            parent: Optional[Parent]=None,
+            **kwargs,
+    ):
         super().__init__(**kwargs)
         self.name = name
-        self.parent = parent
+        self.parent = parent if parent else with_parent[-1]
         if self.parent:
             self.parent.children.append(self)
 
@@ -30,10 +42,22 @@ class Child:
 
 
 class Parent(Child):
-    def __init__(self, parent: Optional[Parent], has_files: bool, **kwargs):
+    def __init__(
+            self,
+            has_files: bool,
+            parent: Optional[Parent]=None,
+            **kwargs,
+    ):
         super().__init__(parent=parent, **kwargs)
         self.children: list[Child] = []
         self.has_files = has_files
+
+    def __enter__(self):
+        global with_parent
+        with_parent.append(self)
+
+    def __exit__(self, exc_type, exc_val, exc_tb):
+        with_parent.pop()
 
     @property
     def all(self) -> list:

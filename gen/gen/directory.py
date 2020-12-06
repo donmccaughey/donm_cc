@@ -7,7 +7,7 @@ class Directory(Parent):
     def __init__(
             self,
             name: str,
-            parent: Parent,
+            parent: Optional[Parent]=None,
             has_files: bool = True,
             **kwargs,
     ):

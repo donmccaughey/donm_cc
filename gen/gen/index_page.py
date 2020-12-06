@@ -8,7 +8,7 @@ class IndexPage(Parent, Page):
     def __init__(
             self,
             title: str,
-            parent: Optional[Parent],
+            parent: Optional[Parent]=None,
             name: Optional[str] = None,
             has_files: bool = False,
             **kwargs,

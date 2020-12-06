@@ -2,39 +2,26 @@ import sys
 from gen import Directory, File, IndexPage, Page
 
 
-root = IndexPage('Don McCaughey', name="", parent=None)
-
-aughey = IndexPage('Don McCaughey', parent=root, name='aughey')
-
-banners = Directory('banners', parent=root)
-
-base_css = File('base.css', parent=root)
-
-business_novels = IndexPage('Business Novels', parent=root)
-
-engineering_management = IndexPage('Engineering Management', parent=root)
-
-hash_tables = IndexPage('Hash Tables', parent=root)
-
-icons = Directory('icons', parent=root)
-
-macos_packages = IndexPage('macOS Packages', parent=root, has_files=True)
-
-make = IndexPage('Make', parent=root)
-
-memory_match = IndexPage('Memory Match', parent=root, has_files=True)
-
-random_words = IndexPage('Random Words', parent=root, has_files=True)
-
-resume = Directory('resume', parent=root)
-
-rust_and_wasm = IndexPage('Rust and Wasm', parent=root)
-
-science_fiction = IndexPage('Science Fiction', parent=root)
-alastair_reynolds = Page('Alastair Reynolds', parent=science_fiction)
-iain_m_banks = Page('Iain M Banks', parent=science_fiction)
-james_sa_corey = Page('James SA Corey', parent=science_fiction)
-lois_mcmaster_bujold = Page('Lois McMaster Bujold', parent=science_fiction)
+root = IndexPage('Don McCaughey', name="")
+with root:
+    IndexPage('Don McCaughey', name='aughey')
+    Directory('banners')
+    File('base.css')
+    IndexPage('Business Novels')
+    IndexPage('Engineering Management')
+    IndexPage('Hash Tables')
+    Directory('icons')
+    IndexPage('macOS Packages', has_files=True)
+    IndexPage('Make')
+    IndexPage('Memory Match', has_files=True)
+    IndexPage('Random Words', has_files=True)
+    Directory('resume')
+    IndexPage('Rust and Wasm')
+    with IndexPage('Science Fiction'):
+        alastair_reynolds = Page('Alastair Reynolds')
+        iain_m_banks = Page('Iain M Banks')
+        james_sa_corey = Page('James SA Corey')
+        lois_mcmaster_bujold = Page('Lois McMaster Bujold')
 
 
 def main():

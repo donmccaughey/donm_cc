@@ -12,11 +12,10 @@ class Page(Child):
     def __init__(
             self,
             title: str,
-            parent: Parent,
+            parent: Optional[Parent]=None,
             name: Optional[str] = None,
             **kwargs
     ):
-
         super().__init__(
             name=name if name is not None else make_name(title),
             parent=parent,
