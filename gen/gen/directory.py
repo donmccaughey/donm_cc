@@ -1,3 +1,4 @@
+import os
 from typing import Optional
 
 from gen import Parent
@@ -30,7 +31,11 @@ class Directory(Parent):
     def path(self) -> str:
         return self.dirname
 
-    def write_tree_description(self, f):
-        f.write(f'{self.dirname}\n')
+    def generate(self, output_path: str, is_dry_run: bool=True):
+        path = os.path.join(output_path, self.path)
+        path = os.path.normpath(path)
+        print('creating directory', path)
+        if not is_dry_run:
+            os.makedirs(path, exist_ok=False)
         for child in self.children:
-            child.write_tree_description(f)
+            child.generate(output_path, is_dry_run)

@@ -1,3 +1,4 @@
+import os
 from typing import Optional
 
 from gen import Parent
@@ -34,13 +35,23 @@ class IndexPage(Parent, Page):
     def file_parts(self) -> list[str]:
         return ['index.html']
 
+    def generate(self, output_path: str, is_dry_run: bool=True):
+        dirname = os.path.join(output_path, self.dirname)
+        dirname = os.path.normpath(dirname)
+        print('creating directory', dirname)
+        if not is_dry_run:
+            os.makedirs(dirname, exist_ok=False)
+        path = os.path.join(output_path, self.path)
+        path = os.path.normpath(path)
+        print('writing index page', path)
+        if not is_dry_run:
+            with open(path, 'x', encoding='utf8') as f:
+                pass
+        for child in self.children:
+            child.generate(output_path, is_dry_run)
+
     def should_include_file(self, name: str) -> bool:
         if name in ['index.html']:
             return False
         else:
             return super().should_include_file(name)
-
-    def write_tree_description(self, f):
-        super().write_tree_description(f)
-        for child in self.children:
-            child.write_tree_description(f)

@@ -1,3 +1,4 @@
+import os
 from typing import Optional
 
 from gen import Child, Parent
@@ -27,5 +28,10 @@ class Page(Child):
     def file_parts(self) -> list[str]:
         return [self.name + '.html']
 
-    def write_tree_description(self, f):
-        f.write(f'{self.path} "{self.title}"\n')
+    def generate(self, output_path: str, is_dry_run: bool=True):
+        path = os.path.join(output_path, self.path)
+        path = os.path.normpath(path)
+        print('writing page', path)
+        if not is_dry_run:
+            with open(path, 'x', encoding='utf8') as f:
+                pass

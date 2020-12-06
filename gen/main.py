@@ -27,4 +27,4 @@ with root:
 
 if __name__ == '__main__':
     root.find_files('../wwwroot')
-    root.write_tree_description(sys.stdout)
+    root.generate('../tmp', is_dry_run=False)

@@ -51,6 +51,9 @@ class Child:
     def rank(self) -> int:
         return self.parent.rank + 1 if self.parent else 0
 
+    def generate(self, output_path: str, is_dry_run=True):
+        raise NotImplementedError
+
 
 class Parent(Child):
     def __init__(
@@ -90,6 +93,8 @@ class Parent(Child):
                     if entry.is_file():
                         if self.should_include_file(entry.name):
                             source = os.path.join(path, entry.name)
+                            source = os.path.normpath(source)
+                            source = os.path.relpath(source)
                             File(source, self)
         for child in self.children:
             if hasattr(child, 'find_files'):
