@@ -4,7 +4,7 @@ import os
 from typing import Optional
 
 
-with_parent: list[Optional[Parent]] = [None]
+_with_parent: list[Optional[Parent]] = [None]
 
 
 class Child:
@@ -16,7 +16,7 @@ class Child:
     ):
         super().__init__(**kwargs)
         self.name = name
-        self.parent = parent if parent else with_parent[-1]
+        self.parent = parent if parent else _with_parent[-1]
         if self.parent:
             self.parent.children.append(self)
 
@@ -49,11 +49,11 @@ class Parent(Child):
         self.has_files = has_files
 
     def __enter__(self):
-        global with_parent
-        with_parent.append(self)
+        global _with_parent
+        _with_parent.append(self)
 
     def __exit__(self, exc_type, exc_val, exc_tb):
-        with_parent.pop()
+        _with_parent.pop()
 
     @property
     def all(self) -> list:
