@@ -2,9 +2,7 @@ import os
 from typing import Optional
 
 from gen import Child, Parent
-from .doctype import DocType
-from .document import Document
-from .tags import HTML, Head, Meta, Title, Link, Body, H1
+from tags import DocType, Document, HTML, Head, Meta, Title, Link, Body, H1
 
 
 def make_name(title: str):

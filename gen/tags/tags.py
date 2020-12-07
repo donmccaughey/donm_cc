@@ -1,8 +1,8 @@
 from typing import Optional
 
-from .element import Element, ElementType
-from .node import Node
-from .text import Text
+from tags.element import Element, ElementType
+from tags.node import Node
+from tags.text import Text
 
 
 class Body(Element):
