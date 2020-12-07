@@ -8,13 +8,12 @@ class DocType(Node):
         super().__init__(
             name='doctype',
             parent=parent,
-            type=NodeType.DOCTYPE,
+            node_type=NodeType.DOCTYPE,
             **kwargs,
         )
 
-    def __str__(self):
-        return '<!doctype html>'
+    def __str__(self) -> str:
+        return self.tag()
 
-    def write(self, f):
-        f.write(str(self))
-        f.write('\n')
+    def tag(self) -> str:
+        return '<!doctype html>'

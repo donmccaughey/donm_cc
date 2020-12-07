@@ -6,13 +6,12 @@ class Document(Node):
         super().__init__(
             name='document',
             parent=None,
-            type=NodeType.DOCUMENT,
+            node_type=NodeType.DOCUMENT,
             **kwargs,
         )
 
-    def __str__(self):
-        return '(document)'
-
-    def write(self, f):
+    def __str__(self) -> str:
+        s = ''
         for child in self.children:
-            child.write(f)
+            s += str(child) + '\n'
+        return s

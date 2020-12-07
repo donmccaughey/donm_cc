@@ -1,3 +1,5 @@
+from enum import unique, Enum, auto
+from textwrap import indent
 from typing import Optional
 
 from .node import Node, NodeType
@@ -7,24 +9,50 @@ def q(attribute_value) -> str:
     return f"'{attribute_value}'" if ' ' in attribute_value else attribute_value
 
 
+@unique
+class ElementType(Enum):
+    CONTAINER = auto()
+    COMPACT = auto()
+    EMPTY = auto()
+
+
 class Element(Node):
     def __init__(
             self,
             name: str,
             attributes: Optional[dict[str, str]] = None,
+            element_type: ElementType = ElementType.CONTAINER,
+            indent_children: bool = True,
             parent: Optional[Node] = None,
             **kwargs
     ):
         super().__init__(
             name=name,
+            node_type=NodeType.ELEMENT,
             parent=parent,
-            type=NodeType.ELEMENT,
             **kwargs,
         )
         self.attributes = attributes if attributes else {}
+        self.element_type = element_type
+        self.indent_children = indent_children
 
-    def __str__(self):
-        return self.start_tag()
+    def __str__(self) -> str:
+        if self.element_type == ElementType.COMPACT:
+            s = self.start_tag()
+            for child in self.children:
+                s += str(child)
+            s += self.end_tag()
+            return s
+        elif self.element_type == ElementType.EMPTY:
+            return self.start_tag()
+        else:
+            s = self.start_tag()
+            s += '\n'
+            for child in self.children:
+                child = str(child) + '\n'
+                s += indent(child, '    ') if self.indent_children else child
+            s += self.end_tag()
+            return s
 
     def attribute_str(self) -> str:
         if self.attributes:
@@ -33,17 +61,8 @@ class Element(Node):
         else:
             return ''
 
-    def start_tag(self) -> str:
-        return '<' + self.name + self.attribute_str() + '>'
-
     def end_tag(self) -> str:
         return f'</{self.name}>'
 
-    def write(self, f):
-        f.write(self.start_tag())
-        f.write('\n')
-        for child in self.children:
-            child.write(f)
-        if len(self.children) > 0:
-            f.write(self.end_tag())
-            f.write('\n')
+    def start_tag(self) -> str:
+        return '<' + self.name + self.attribute_str() + '>'

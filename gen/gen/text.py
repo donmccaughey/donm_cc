@@ -13,14 +13,10 @@ class Text(Node):
         super().__init__(
             name='text',
             parent=parent,
-            type=NodeType.TEXT,
+            node_type=NodeType.TEXT,
             **kwargs,
         )
         self.text = text
 
-    def __str__(self):
+    def __str__(self) -> str:
         return self.text
-
-    def write(self, f):
-        f.write(self.text)
-        f.write('\n')

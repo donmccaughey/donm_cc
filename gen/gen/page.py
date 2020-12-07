@@ -58,4 +58,4 @@ class Page(Child):
         print('writing page', path)
         if not is_dry_run:
             with open(path, 'x', encoding='utf8') as f:
-                self.document.write(f)
+                f.write(str(self.document))

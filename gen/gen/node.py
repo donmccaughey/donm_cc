@@ -16,12 +16,12 @@ class NodeType(Enum):
 
 
 class Node:
-    def __init__(self, name: str, type: NodeType, parent: Optional[Node]=None, **kwargs):
+    def __init__(self, name: str, node_type: NodeType, parent: Optional[Node]=None, **kwargs):
         super().__init__(**kwargs)
         self.children: list[Node] = []
         self.name = name
         self.parent = parent if parent else _with_node[-1]
-        self.type = type
+        self.node_type = node_type
         if self.parent:
             self.parent.children.append(self)
 
@@ -40,8 +40,5 @@ class Node:
     def rank(self) -> int:
         return self.parent.rank + 1 if self.parent else 0
 
-    def __str__(self):
-        raise NotImplementedError
-
-    def write(self, f):
+    def __str__(self) -> str:
         raise NotImplementedError

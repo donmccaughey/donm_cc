@@ -1,6 +1,6 @@
 from typing import Optional
 
-from .element import Element
+from .element import Element, ElementType
 from .node import Node
 from .text import Text
 
@@ -26,6 +26,7 @@ class H1(Element):
         super().__init__(
             name='h1',
             attributes=None,
+            element_type=ElementType.COMPACT,
             parent=parent,
             **kwargs,
         )
@@ -49,6 +50,7 @@ class HTML(Element):
         super().__init__(
             name='html',
             attributes={'lang': lang},
+            indent_children=False,
             parent=parent,
             **kwargs,
         )
@@ -65,6 +67,7 @@ class Link(Element):
         super().__init__(
             name='link',
             attributes=attributes,
+            element_type=ElementType.EMPTY,
             parent=parent,
             **kwargs,
         )
@@ -81,6 +84,7 @@ class Meta(Element):
         super().__init__(
             name='meta',
             attributes=attributes,
+            element_type=ElementType.EMPTY,
             parent=parent,
             **kwargs,
         )
@@ -97,6 +101,7 @@ class Title(Element):
         super().__init__(
             name='title',
             attributes=None,
+            element_type=ElementType.COMPACT,
             parent=parent,
             **kwargs,
         )
