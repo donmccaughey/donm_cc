@@ -27,7 +27,7 @@ class IndexPage(Parent, Page):
     @property
     def dir_parts(self) -> list[str]:
         return (
-                (self.parent.dir_parts if self.parent else ['.'])
+                (self.parent.dir_parts if self.parent else [])
                 + ([] if self.is_root else [self.name])
         )
 

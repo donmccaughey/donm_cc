@@ -21,7 +21,7 @@ class Directory(Parent):
 
     @property
     def dir_parts(self) -> list[str]:
-        return (self.parent.dir_parts if self.parent else ['.']) + [self.name]
+        return (self.parent.dir_parts if self.parent else []) + [self.name]
 
     @property
     def file_parts(self) -> list[str]:
@@ -29,7 +29,7 @@ class Directory(Parent):
 
     @property
     def path(self) -> str:
-        return self.dirname
+        return './' + self.dirname
 
     def generate(self, output_path: str, is_dry_run: bool=True):
         path = os.path.join(output_path, self.path)

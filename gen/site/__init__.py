@@ -29,7 +29,7 @@ class Child:
 
     @property
     def dir_parts(self) -> list[str]:
-        return self.parent.dir_parts if self.parent else ['.']
+        return self.parent.dir_parts if self.parent else []
 
     @property
     def filename(self) -> Optional[str]:
@@ -41,7 +41,7 @@ class Child:
 
     @property
     def path(self) -> str:
-        return '/'.join(self.path_parts) if self.path_parts else './'
+        return ('./' + '/'.join(self.path_parts)) if self.path_parts else './'
 
     @property
     def path_parts(self) -> list[str]:
