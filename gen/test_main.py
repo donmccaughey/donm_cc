@@ -9,6 +9,7 @@ class MainTestCase(unittest.TestCase):
         expected = [
             (0, './index.html'),
             (1, './aughey/index.html'),
+            (2, './aughey/handstand.jpg'),
             (1, './banners/'),
             (2, './banners/Don_and_Molly_Round_Hill_Lake_Tahoe_summer_2019.jpg'),
             (2, './banners/Don_and_Molly_hiking_Texas_winter_2016.jpg'),

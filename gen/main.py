@@ -8,7 +8,7 @@ with root:
     Directory('icons')
     Directory('resume')
 
-    IndexPage('Don McCaughey', name='aughey')
+    IndexPage('Don McCaughey', name='aughey', has_files=True)
     IndexPage('Business Novels')
     IndexPage('Engineering Management')
     IndexPage('Hash Tables')
