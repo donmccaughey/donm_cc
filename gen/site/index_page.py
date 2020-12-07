@@ -1,8 +1,8 @@
 import os
 from typing import Optional
 
-from gen import Parent
-from gen.page import Page
+from site import Parent
+from site.page import Page
 
 
 class IndexPage(Parent, Page):

@@ -1,4 +1,4 @@
-from gen import Directory, File, IndexPage, Page
+from site import Directory, File, IndexPage, Page
 
 
 root = IndexPage('Don McCaughey', is_root=True)

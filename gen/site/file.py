@@ -2,7 +2,7 @@ import os
 import shutil
 from typing import Optional
 
-from gen import Child, Parent
+from site import Child, Parent
 
 
 class File(Child):

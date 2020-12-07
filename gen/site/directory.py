@@ -1,7 +1,7 @@
 import os
 from typing import Optional
 
-from gen import Parent
+from site import Parent
 
 
 class Directory(Parent):

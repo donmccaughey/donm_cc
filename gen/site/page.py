@@ -1,7 +1,7 @@
 import os
 from typing import Optional
 
-from gen import Child, Parent
+from site import Child, Parent
 from tags import DocType, Document, HTML, Head, Meta, Title, Link, Body, H1
 
 
