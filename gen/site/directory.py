@@ -31,10 +31,6 @@ class Directory(Parent):
     def path(self) -> str:
         return './' + self.dirname
 
-    @property
-    def url(self) -> str:
-        return ('/' + '/'.join(self.dir_parts) + '/') if self.dir_parts else '/'
-
     def generate(self, output_path: str, is_dry_run: bool=True):
         path = os.path.join(output_path, self.path)
         path = os.path.normpath(path)
