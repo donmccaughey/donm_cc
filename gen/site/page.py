@@ -2,7 +2,7 @@ import os
 from typing import Optional
 
 from site import Child, Parent
-from tags import DocType, Document, HTML, Head, Meta, Title, Link, Body, H1
+from tags import *
 
 
 def make_name(title: str):
@@ -32,18 +32,12 @@ class Page(Child):
             DocType()
             with HTML(lang='en'):
                 with Head():
-                    Meta({'charset': 'utf-8'})
-                    Meta({
-                        'name': 'viewport',
-                        'content': 'initial-scale=0.9, width=device-width',
-                    })
+                    MetaCharset('utf-8')
+                    MetaViewport(initial_scale='0.9', width='device-width')
                     Title(self.title)
-                    Link({
-                        'rel': 'stylesheet',
-                        'href': '/base.css',
-                    })
+                    Stylesheet(href='/base.css')
                 with Body():
-                    H1(self.title)
+                    Nav(class_names=['menu'])
         return document
 
     @property

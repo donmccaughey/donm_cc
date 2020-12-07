@@ -20,7 +20,7 @@ class Element(Node):
     def __init__(
             self,
             name: str,
-            attributes: Optional[dict[str, str]] = None,
+            class_names: Optional[list[str]] = None,
             element_type: ElementType = ElementType.CONTAINER,
             indent_children: bool = True,
             parent: Optional[Node] = None,
@@ -32,9 +32,11 @@ class Element(Node):
             parent=parent,
             **kwargs,
         )
-        self.attributes = attributes if attributes else {}
+        self.attributes: dict[str, str] = {}
         self.element_type = element_type
         self.indent_children = indent_children
+        if class_names:
+            self.attributes['class'] = ' '.join(class_names)
 
     def __str__(self) -> str:
         if self.element_type == ElementType.COMPACT:

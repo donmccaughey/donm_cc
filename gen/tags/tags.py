@@ -9,7 +9,6 @@ class Body(Element):
     def __init__(self, parent: Optional[Node] = None, **kwargs):
         super().__init__(
             name='body',
-            attributes=None,
             parent=parent,
             **kwargs,
         )
@@ -25,7 +24,6 @@ class H1(Element):
     ):
         super().__init__(
             name='h1',
-            attributes=None,
             element_type=ElementType.COMPACT,
             parent=parent,
             **kwargs,
@@ -38,7 +36,6 @@ class Head(Element):
     def __init__(self, parent: Optional[Node] = None, **kwargs):
         super().__init__(
             name='head',
-            attributes=None,
             parent=parent,
             **kwargs,
         )
@@ -49,24 +46,21 @@ class HTML(Element):
     def __init__(self, lang: str, parent: Optional[Node] = None, **kwargs):
         super().__init__(
             name='html',
-            attributes={'lang': lang},
             indent_children=False,
             parent=parent,
             **kwargs,
         )
-        pass
+        self.attributes['lang'] = lang
 
 
 class Link(Element):
     def __init__(
             self,
-            attributes: dict[str, str],
             parent: Optional[Node] = None,
             **kwargs
     ):
         super().__init__(
             name='link',
-            attributes=attributes,
             element_type=ElementType.EMPTY,
             parent=parent,
             **kwargs,
@@ -75,20 +69,61 @@ class Link(Element):
 
 
 class Meta(Element):
-    def __init__(
-            self,
-            attributes: dict[str, str],
-            parent: Optional[Node] = None,
-            **kwargs
-    ):
+    def __init__(self, parent: Optional[Node] = None, **kwargs):
         super().__init__(
             name='meta',
-            attributes=attributes,
             element_type=ElementType.EMPTY,
             parent=parent,
             **kwargs,
         )
         pass
+
+
+class MetaCharset(Meta):
+    def __init__(
+            self,
+            charset: str,
+            parent: Optional[Node] = None,
+            **kwargs
+    ):
+        super().__init__(parent=parent, **kwargs)
+        self.attributes['charset'] = charset
+
+
+class MetaViewport(Meta):
+    def __init__(
+            self,
+            initial_scale: str,
+            width: str,
+            parent: Optional[Node] = None,
+            **kwargs
+    ):
+        super().__init__(parent=parent, **kwargs)
+        self.attributes['name'] = 'viewport'
+        self.attributes['content'] = f'initial-scale={initial_scale}, width={width}'
+
+
+class Nav(Element):
+    def __init__(
+            self,
+            class_names: Optional[list[str]],
+            parent: Optional[Node] = None,
+            **kwargs,
+    ):
+        super().__init__(
+            name='nav',
+            class_names=class_names,
+            parent=parent,
+            **kwargs,
+        )
+        pass
+
+
+class Stylesheet(Link):
+    def __init__(self, href: str, parent: Optional[Node] = None, **kwargs):
+        super().__init__(parent=parent, **kwargs)
+        self.attributes['rel'] = 'stylesheet'
+        self.attributes['href'] = href
 
 
 class Title(Element):
@@ -100,7 +135,6 @@ class Title(Element):
     ):
         super().__init__(
             name='title',
-            attributes=None,
             element_type=ElementType.COMPACT,
             parent=parent,
             **kwargs,
