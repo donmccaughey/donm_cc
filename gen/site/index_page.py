@@ -35,6 +35,10 @@ class IndexPage(Parent, Page):
     def file_parts(self) -> list[str]:
         return ['index.html']
 
+    @property
+    def url(self) -> str:
+        return ('/' + '/'.join(self.dir_parts) + '/') if self.dir_parts else '/'
+
     def generate(self, output_path: str, is_dry_run: bool=True):
         dirname = os.path.join(output_path, self.dirname)
         dirname = os.path.normpath(dirname)

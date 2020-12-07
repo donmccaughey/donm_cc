@@ -51,6 +51,10 @@ class Child:
     def rank(self) -> int:
         return self.parent.rank + 1 if self.parent else 0
 
+    @property
+    def url(self) -> str:
+        return ('/' + '/'.join(self.path_parts)) if self.path_parts else '/'
+
     def generate(self, output_path: str, is_dry_run=True):
         raise NotImplementedError
 
