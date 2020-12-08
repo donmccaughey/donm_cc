@@ -24,6 +24,15 @@ class Child:
         return self.path_parts < other.path_parts
 
     @property
+    def ancestors(self) -> list[Parent]:
+        ancestors = []
+        parent = self.parent
+        while parent:
+            ancestors.insert(0, parent)
+            parent = parent.parent
+        return ancestors
+
+    @property
     def dirname(self) -> str:
         return ('/'.join(self.dir_parts) + '/') if self.dir_parts else './'
 
@@ -90,7 +99,7 @@ class Parent(Child):
     @property
     def url(self) -> str:
         return ('/' + '/'.join(self.dir_parts) + '/') if self.dir_parts else '/'
-    
+
     def find_files(self, source_dir: str):
         path = os.path.join(os.getcwd(), source_dir)
         path = os.path.join(path, self.dirname)

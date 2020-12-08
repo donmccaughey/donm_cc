@@ -37,7 +37,15 @@ class Page(Child):
                     Title(self.title)
                     Stylesheet(href='/base.css')
                 with Body():
-                    Nav(class_names=['menu'])
+                    with Nav(class_names=['menu']):
+                        ancestors = self.ancestors
+                        if ancestors:
+                            for ancestor in self.ancestors:
+                                if hasattr(ancestor, 'title'):
+                                    A(href=ancestor.url, text=ancestor.title)
+                        else:
+                            A(href=self.url, text=self.title)
+                    Div()
         return document
 
     @property

@@ -20,6 +20,7 @@ class Element(Node):
     def __init__(
             self,
             name: str,
+            id: Optional[str] = None,
             class_names: Optional[list[str]] = None,
             element_type: ElementType = ElementType.CONTAINER,
             indent_children: bool = True,
@@ -35,6 +36,8 @@ class Element(Node):
         self.attributes: dict[str, str] = {}
         self.element_type = element_type
         self.indent_children = indent_children
+        if id:
+            self.attributes['id'] = id
         if class_names:
             self.attributes['class'] = ' '.join(class_names)
 

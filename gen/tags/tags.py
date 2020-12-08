@@ -5,6 +5,26 @@ from tags.node import Node
 from tags.text import Text
 
 
+class A(Element):
+    def __init__(
+            self,
+            href: str,
+            text: str,
+            class_names: Optional[list[str]] = None,
+            parent: Optional[Node] = None,
+            **kwargs,
+    ):
+        super().__init__(
+            name='a',
+            class_names=class_names,
+            element_type=ElementType.COMPACT,
+            parent=parent,
+            **kwargs,
+        )
+        self.attributes['href'] = href
+        Text(text, parent=self)
+
+
 class Body(Element):
     def __init__(self, parent: Optional[Node] = None, **kwargs):
         super().__init__(
@@ -15,10 +35,28 @@ class Body(Element):
         pass
 
 
+class Div(Element):
+    def __init__(
+            self,
+            id: Optional[str] = None,
+            class_names: Optional[list[str]] = None,
+            parent: Optional[Node] = None,
+            **kwargs,
+    ):
+        super().__init__(
+            name='div',
+            id=id,
+            class_names=class_names,
+            parent=parent,
+            **kwargs,
+        )
+        pass
+
+
 class H1(Element):
     def __init__(
             self,
-            text: Optional[str] = None,
+            text: str,
             parent: Optional[Node] = None,
             **kwargs
     ):
@@ -28,8 +66,7 @@ class H1(Element):
             parent=parent,
             **kwargs,
         )
-        if text:
-            Text(text, parent=self)
+        Text(text, parent=self)
 
 
 class Head(Element):
@@ -106,7 +143,7 @@ class MetaViewport(Meta):
 class Nav(Element):
     def __init__(
             self,
-            class_names: Optional[list[str]],
+            class_names: Optional[list[str]] = None,
             parent: Optional[Node] = None,
             **kwargs,
     ):
@@ -129,7 +166,7 @@ class Stylesheet(Link):
 class Title(Element):
     def __init__(
             self,
-            title: Optional[str] = None,
+            title: str,
             parent: Optional[Node] = None,
             **kwargs
     ):
@@ -139,5 +176,4 @@ class Title(Element):
             parent=parent,
             **kwargs,
         )
-        if title:
-            Text(title, parent=self)
+        Text(title, parent=self)
