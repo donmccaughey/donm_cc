@@ -61,8 +61,10 @@ class Element(Node):
 
     def attribute_str(self) -> str:
         if self.attributes:
-            s = {f"{k}={q(v)}" for (k, v) in self.attributes.items()}
-            return ' ' + ' '.join(s)
+            parts = [
+                f'{name}={q(self.attributes[name])}' for name in self.attributes
+            ]
+            return ' ' + ' '.join(parts)
         else:
             return ''
 
