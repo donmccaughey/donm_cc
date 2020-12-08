@@ -27,11 +27,7 @@ class A(Element):
 
 class Body(Element):
     def __init__(self, parent: Optional[Node] = None, **kwargs):
-        super().__init__(
-            name='body',
-            parent=parent,
-            **kwargs,
-        )
+        super().__init__(name='body', parent=parent, **kwargs)
         pass
 
 
@@ -54,12 +50,7 @@ class Div(Element):
 
 
 class H1(Element):
-    def __init__(
-            self,
-            text: str,
-            parent: Optional[Node] = None,
-            **kwargs
-    ):
+    def __init__(self, text: str, parent: Optional[Node] = None, **kwargs):
         super().__init__(
             name='h1',
             element_type=ElementType.COMPACT,
@@ -71,11 +62,7 @@ class H1(Element):
 
 class Head(Element):
     def __init__(self, parent: Optional[Node] = None, **kwargs):
-        super().__init__(
-            name='head',
-            parent=parent,
-            **kwargs,
-        )
+        super().__init__(name='head', parent=parent, **kwargs)
         pass
 
 
@@ -91,11 +78,7 @@ class HTML(Element):
 
 
 class Link(Element):
-    def __init__(
-            self,
-            parent: Optional[Node] = None,
-            **kwargs
-    ):
+    def __init__(self, parent: Optional[Node] = None, **kwargs):
         super().__init__(
             name='link',
             element_type=ElementType.EMPTY,
@@ -117,12 +100,7 @@ class Meta(Element):
 
 
 class MetaCharset(Meta):
-    def __init__(
-            self,
-            charset: str,
-            parent: Optional[Node] = None,
-            **kwargs
-    ):
+    def __init__(self, charset: str, parent: Optional[Node] = None, **kwargs):
         super().__init__(parent=parent, **kwargs)
         self.attributes['charset'] = charset
 
@@ -164,12 +142,7 @@ class Stylesheet(Link):
 
 
 class Title(Element):
-    def __init__(
-            self,
-            title: str,
-            parent: Optional[Node] = None,
-            **kwargs
-    ):
+    def __init__(self, title: str, parent: Optional[Node] = None, **kwargs):
         super().__init__(
             name='title',
             element_type=ElementType.COMPACT,
