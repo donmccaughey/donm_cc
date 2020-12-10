@@ -18,10 +18,10 @@ with root:
     IndexPage('Random Words', has_files=True)
     IndexPage('Rust and Wasm')
     with IndexPage('Science Fiction'):
-        alastair_reynolds = Page('Alastair Reynolds')
-        iain_m_banks = Page('Iain M Banks')
-        james_sa_corey = Page('James SA Corey')
-        lois_mcmaster_bujold = Page('Lois McMaster Bujold')
+        Page('Alastair Reynolds')
+        Page('Iain M Banks')
+        Page('James SA Corey')
+        Page('Lois McMaster Bujold')
 
 
 if __name__ == '__main__':
