@@ -77,6 +77,24 @@ class HTML(Element):
         self.attributes['lang'] = lang
 
 
+class Img(Element):
+    def __init__(
+            self,
+            src: str,
+            alt: str,
+            parent: Optional[Node] = None,
+            **kwargs,
+    ):
+        super().__init__(
+            name='img',
+            element_type=ElementType.EMPTY,
+            parent=parent,
+            **kwargs,
+        )
+        self.attributes['src'] = src
+        self.attributes['alt'] = alt
+
+
 class Link(Element):
     def __init__(self, parent: Optional[Node] = None, **kwargs):
         super().__init__(
@@ -132,6 +150,24 @@ class Nav(Element):
             **kwargs,
         )
         pass
+
+
+class Span(Element):
+    def __init__(
+            self,
+            text: str,
+            class_names: Optional[list[str]] = None,
+            parent: Optional[Node] = None,
+            **kwargs,
+    ):
+        super().__init__(
+            name='span',
+            element_type=ElementType.COMPACT,
+            class_names=class_names,
+            parent=parent,
+            **kwargs,
+        )
+        Text(text, parent=self)
 
 
 class Stylesheet(Link):

@@ -1,8 +1,19 @@
 from site import Directory, File, IndexPage, Page
+from tags import Div, Img, Span
 
 
 root = IndexPage('Don McCaughey', is_root=True)
 with root:
+    with Div(class_names=['banner']):
+        Img(
+            src='/banners/Don_and_Molly_Round_Hill_Lake_Tahoe_summer_2019.jpg',
+            alt='Don and Molly atop Round Hill'
+        )
+        Span(
+            text='Round Hill, Lake Tahoe, summer 2019',
+            class_names=['lower-caption']
+        )
+
     File('base.css')
     Directory('banners')
     Directory('icons')

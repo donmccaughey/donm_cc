@@ -24,6 +24,14 @@ class IndexPage(Parent, Page):
         )
         self.is_root = is_root
 
+    def __enter__(self):
+        Parent.__enter__(self)
+        Page.__enter__(self)
+
+    def __exit__(self, exc_type, exc_val, exc_tb):
+        Parent.__exit__(self, exc_type, exc_val, exc_tb)
+        Page.__exit__(self, exc_type, exc_val, exc_tb)
+
     @property
     def dir_parts(self) -> list[str]:
         return (
