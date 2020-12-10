@@ -8,7 +8,7 @@ class Directory(Parent):
     def __init__(
             self,
             name: str,
-            parent: Optional[Parent]=None,
+            parent: Optional[Parent] = None,
             has_files: bool = True,
             **kwargs,
     ):
@@ -31,7 +31,7 @@ class Directory(Parent):
     def path(self) -> str:
         return './' + self.dirname
 
-    def generate(self, output_path: str, is_dry_run: bool=True):
+    def generate(self, output_path: str, is_dry_run: bool = True):
         path = os.path.join(output_path, self.path)
         path = os.path.normpath(path)
         print('creating directory', path)

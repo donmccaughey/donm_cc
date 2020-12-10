@@ -9,7 +9,7 @@ class IndexPage(Parent, Page):
     def __init__(
             self,
             title: str,
-            parent: Optional[Parent]=None,
+            parent: Optional[Parent] = None,
             name: Optional[str] = None,
             is_root: bool = False,
             has_files: bool = False,
@@ -35,7 +35,7 @@ class IndexPage(Parent, Page):
     def file_parts(self) -> list[str]:
         return ['index.html']
 
-    def generate(self, output_path: str, is_dry_run: bool=True):
+    def generate(self, output_path: str, is_dry_run: bool = True):
         dirname = os.path.join(output_path, self.dirname)
         dirname = os.path.normpath(dirname)
         print('creating directory', dirname)

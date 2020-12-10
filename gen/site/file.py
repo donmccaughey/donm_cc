@@ -9,7 +9,7 @@ class File(Child):
     def __init__(
             self,
             source: str,
-            parent: Optional[Parent]=None,
+            parent: Optional[Parent] = None,
             **kwargs,
     ):
         super().__init__(
