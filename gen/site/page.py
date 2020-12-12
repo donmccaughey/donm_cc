@@ -3,7 +3,7 @@ from typing import Optional
 
 from site import Child, Parent
 from tags import *
-from tags.node import with_node
+from tags.node import with_node, Node
 
 
 def make_name(title: str):
@@ -44,8 +44,8 @@ class Page(Child):
                     MetaViewport(initial_scale='0.9', width='device-width')
                     Title(self.title)
                     Stylesheet(href='/base.css')
-                content_root = Body()
-                with content_root:
+                body = Body()
+                with body:
                     with Nav(class_names=['menu']):
                         ancestors = self.ancestors
                         if ancestors:
@@ -54,9 +54,7 @@ class Page(Child):
                                     A(href=ancestor.url, text=ancestor.title)
                         else:
                             A(href=self.url, text=self.title)
-                    for child in self.page_content.children:
-                        child.detach()
-                        content_root.children.append(child)
+                body.attach_children(self.page_content.detach_children())
         return document
 
     @property

@@ -9,7 +9,7 @@ class A(Element):
     def __init__(
             self,
             href: str,
-            text: str,
+            text: Optional[str] = None,
             class_names: Optional[list[str]] = None,
             parent: Optional[Node] = None,
             **kwargs,
@@ -17,17 +17,29 @@ class A(Element):
         super().__init__(
             name='a',
             class_names=class_names,
-            element_type=ElementType.COMPACT,
+            element_type=ElementType.COMPACT if text else ElementType.CONTAINER,
             parent=parent,
             **kwargs,
         )
         self.attributes['href'] = href
-        Text(text, parent=self)
+        if text:
+            Text(text, parent=self)
 
 
 class Body(Element):
     def __init__(self, parent: Optional[Node] = None, **kwargs):
         super().__init__(name='body', parent=parent, **kwargs)
+        pass
+
+
+class Br(Element):
+    def __init__(self, parent: Optional[Node] = None, **kwargs):
+        super().__init__(
+            name='br',
+            element_type=ElementType.EMPTY,
+            parent=parent,
+            **kwargs,
+        )
         pass
 
 
@@ -47,6 +59,22 @@ class Div(Element):
             **kwargs,
         )
         pass
+
+
+class Em(Element):
+    def __init__(
+            self,
+            text: str,
+            parent: Optional[Node] = None,
+            **kwargs,
+    ):
+        super().__init__(
+            name='em',
+            element_type=ElementType.COMPACT,
+            parent=parent,
+            **kwargs,
+        )
+        Text(text, parent=self)
 
 
 class H1(Element):
@@ -164,6 +192,22 @@ class Span(Element):
             name='span',
             element_type=ElementType.COMPACT,
             class_names=class_names,
+            parent=parent,
+            **kwargs,
+        )
+        Text(text, parent=self)
+
+
+class Strong(Element):
+    def __init__(
+            self,
+            text: str,
+            parent: Optional[Node] = None,
+            **kwargs,
+    ):
+        super().__init__(
+            name='strong',
+            element_type=ElementType.COMPACT,
             parent=parent,
             **kwargs,
         )

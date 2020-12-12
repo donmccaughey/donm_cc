@@ -1,4 +1,5 @@
 from .doctype import DocType
 from .document import Document
-from .tags import A, Body, Div, H1, Head, HTML, Img, MetaCharset, MetaViewport
-from .tags import Nav, Span, Stylesheet, Title
+from .text import Text
+from .tags import A, Body, Br, Div, Em, H1, Head, HTML, Img, MetaCharset
+from .tags import MetaViewport, Nav, Span, Strong, Stylesheet, Title
