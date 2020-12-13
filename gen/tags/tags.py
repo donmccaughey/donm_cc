@@ -180,6 +180,38 @@ class Nav(Element):
         pass
 
 
+class P(Element):
+    def __init__(
+            self,
+            class_names: Optional[list[str]] = None,
+            parent: Optional[Node] = None,
+            **kwargs,
+    ):
+        super().__init__(
+            name='p',
+            class_names=class_names,
+            parent=parent,
+            **kwargs,
+        )
+        pass
+
+
+class Section(Element):
+    def __init__(
+            self,
+            class_names: Optional[list[str]] = None,
+            parent: Optional[Node] = None,
+            **kwargs,
+    ):
+        super().__init__(
+            name='section',
+            class_names=class_names,
+            parent=parent,
+            **kwargs,
+        )
+        pass
+
+
 class Span(Element):
     def __init__(
             self,
@@ -219,6 +251,25 @@ class Stylesheet(Link):
         super().__init__(parent=parent, **kwargs)
         self.attributes['rel'] = 'stylesheet'
         self.attributes['href'] = href
+
+
+class Time(Element):
+    def __init__(
+            self,
+            datetime: str,
+            class_names: Optional[list[str]] = None,
+            parent: Optional[Node] = None,
+            **kwargs,
+    ):
+        super().__init__(
+            name='time',
+            element_type=ElementType.COMPACT,
+            class_names=class_names,
+            parent=parent,
+            **kwargs,
+        )
+        self.attributes['datetime'] = datetime
+        Text(datetime, parent=self)
 
 
 class Title(Element):

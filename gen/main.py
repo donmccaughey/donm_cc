@@ -1,7 +1,7 @@
 from typing import Optional
 
 from site import Directory, File, IndexPage, Page
-from tags import A, Br, Div, Em, Img, Span, Strong
+from tags import A, Br, Div, Em, H1, Img, P, Section, Span, Strong, Text, Time
 
 
 def item(
@@ -18,6 +18,41 @@ def item(
         Strong(title)
         Br()
         Em(subtitle)
+
+
+def link(
+        type: str,
+        title: str,
+        href: str,
+        author: Optional[str] = None,
+        date: Optional[str] = None,
+        checked: bool = False
+):
+    with A(class_names=[type], href=href):
+        Text(title)
+        if author:
+            Span(class_names=['authors'], text=author)
+        if date:
+            Time(datetime=date)
+        if checked:
+            Text('✓')
+
+
+def book(
+        title: str,
+        href: str,
+        author: Optional[str] = None,
+        date: Optional[str] = None,
+        checked: bool = False
+):
+    link(
+        type='book',
+        title=title,
+        href=href,
+        author=author,
+        date=date,
+        checked=checked,
+    )
 
 
 root = IndexPage('Don McCaughey', is_root=True)
@@ -53,8 +88,33 @@ with root:
     Directory('icons')
     Directory('resume')
 
-    IndexPage('Don McCaughey', name='aughey', has_files=True)
-    IndexPage('Business Novels')
+    with IndexPage('Don McCaughey', name='aughey', has_files=True):
+        with Div(class_names=['banner']):
+            Img(src='/aughey/handstand.jpg', alt='Don doing a handstand')
+            Span(class_names=['caption'], text='Coachella Festival, spring 2007')
+    with IndexPage('Business Novels'):
+        with Section(class_names=['overview']):
+            H1('Business Novels')
+            P()
+        with Section(class_names=['links']):
+            H1('Recommended')
+            book('The Goal', '', checked=True)
+            book('The Phoenix Project', '', checked=True)
+            book('The Unicorn Project', '', checked=True)
+            book('The Ideal Team Player', '', checked=True)
+            book('The Five Dysfunctions of a Team', '', checked=True)
+            book('The Four Obsessions of an Extraordinary Executive', '', checked=True)
+        with Section(class_names=['links']):
+            book('The Five Temptations of a CEO', '', checked=True)
+            book('Critical Chain', '', checked=True)
+            book('The Deadline: A Novel About Project Management', '')
+            book('How To Destroy A Tech Startup In Three Easy Steps', '', checked=True)
+        with Section(class_names=['links']):
+            H1('Business Comics')
+            book('The Adventures of Johnny Bunko', '', checked=True)
+            book("What Got You Here Won't Get You There", '', checked=True)
+
+
     IndexPage('Engineering Management')
     IndexPage('Hash Tables', name='hashtables')
     IndexPage('macOS Packages', has_files=True)

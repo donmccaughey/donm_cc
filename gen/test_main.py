@@ -16,7 +16,7 @@ class MainTestCase(unittest.TestCase):
             (1, './base.css', '/base.css'),
             (1, './business_novels/index.html', '/business_novels/'),
             (1, './engineering_management/index.html', '/engineering_management/'),
-            (1, './hash_tables/index.html', '/hash_tables/'),
+            (1, './hashtables/index.html', '/hashtables/'),
             (1, './icons/', '/icons/'),
             (2, './icons/copper.png', '/icons/copper.png'),
             (2, './icons/github.png', '/icons/github.png'),
