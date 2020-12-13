@@ -1,6 +1,6 @@
 from typing import Optional
 
-from site import Directory, File, IndexPage, Page
+from resources import Directory, File, IndexPage, Page
 from tags import A, Br, Div, Em, H1, Img, P, Section, Span, Strong, Text, Time
 
 
