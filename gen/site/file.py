@@ -1,8 +1,11 @@
+from __future__ import annotations
 import os
 import shutil
-from typing import Optional
+from typing import Optional, TYPE_CHECKING
+from .child import Child
 
-from site import Child, Parent
+if TYPE_CHECKING:
+    from .parent import Parent
 
 
 class File(Child):

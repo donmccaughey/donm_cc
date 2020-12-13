@@ -1,9 +1,12 @@
+from __future__ import annotations
 import os
-from typing import Optional
-
-from site import Child, Parent
+from typing import Optional, TYPE_CHECKING
+from .child import Child
 from tags import *
-from tags.node import with_node, Node
+from tags.node import with_node
+
+if TYPE_CHECKING:
+    from .parent import Parent
 
 
 def make_name(title: str):

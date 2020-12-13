@@ -1,8 +1,8 @@
+from __future__ import annotations
 import os
 from typing import Optional
-
-from site import Parent
-from site.page import Page
+from .page import Page
+from .parent import Parent
 
 
 class IndexPage(Parent, Page):
