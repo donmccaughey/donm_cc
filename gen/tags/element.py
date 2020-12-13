@@ -9,6 +9,13 @@ def q(attribute_value) -> str:
     return f"'{attribute_value}'" if ' ' in attribute_value else attribute_value
 
 
+def format_attribute(name: str, value: Optional[str]) -> str:
+    if value:
+        return f'{name}={q(value)}'
+    else:
+        return name
+
+
 @unique
 class ElementType(Enum):
     CONTAINER = auto()
@@ -63,7 +70,8 @@ class Element(Node):
         # TODO: html encode attribute values
         if self.attributes:
             parts = [
-                f'{name}={q(self.attributes[name])}' for name in self.attributes
+                format_attribute(name, self.attributes[name])
+                for name in self.attributes
             ]
             return ' ' + ' '.join(parts)
         else:

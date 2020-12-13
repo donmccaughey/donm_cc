@@ -70,6 +70,10 @@ class Page(Child):
         with self.head_content:
             Script(src=src, charset=charset)
 
+    def add_stylesheet(self, src: str):
+        with self.head_content:
+            Stylesheet(src)
+
     def generate(
             self,
             output_path: str,

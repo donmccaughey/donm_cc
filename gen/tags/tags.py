@@ -43,6 +43,22 @@ class Br(Element):
         pass
 
 
+class Button(Element):
+    def __init__(
+            self,
+            text: str,
+            parent: Optional[Node] = None,
+            **kwargs,
+    ):
+        super().__init__(
+            name='button',
+            element_type=ElementType.COMPACT,
+            parent=parent,
+            **kwargs,
+        )
+        Text(text, parent=self)
+
+
 class Code(Element):
     def __init__(
             self,
@@ -95,6 +111,25 @@ class Em(Element):
         Text(text, parent=self)
 
 
+class Form(Element):
+    def __init__(
+            self,
+            action: str,
+            method: Optional[str] = 'POST',
+            class_names: Optional[list[str]] = None,
+            parent: Optional[Node] = None,
+            **kwargs,
+    ):
+        super().__init__(
+            name='form',
+            class_names=class_names,
+            parent=parent,
+            **kwargs,
+        )
+        self.attributes['action'] = action
+        self.attributes['method'] = method
+
+
 class H1(Element):
     def __init__(self, text: str, parent: Optional[Node] = None, **kwargs):
         super().__init__(
@@ -141,11 +176,75 @@ class Img(Element):
         self.attributes['alt'] = alt
 
 
+class Input(Element):
+    def __init__(
+            self,
+            id: str,
+            name: Optional[str] = None,
+            type: Optional[str] = None,
+            value: Optional[str] = None,
+            checked: Optional[bool] = False,
+            parent: Optional[Node] = None,
+            **kwargs
+    ):
+        super().__init__(
+            name='input',
+            element_type=ElementType.EMPTY,
+            parent=parent,
+            **kwargs,
+        )
+        self.attributes['id'] = id
+        self.attributes['name'] = name if name else id
+        if type:
+            self.attributes['type'] = type
+        if value:
+            self.attributes['value'] = value
+        if checked:
+            self.attributes['checked'] = None
+
+
 class Link(Element):
     def __init__(self, parent: Optional[Node] = None, **kwargs):
         super().__init__(
             name='link',
             element_type=ElementType.EMPTY,
+            parent=parent,
+            **kwargs,
+        )
+        pass
+
+
+class Label(Element):
+    def __init__(
+            self,
+            text: str,
+            for_id: Optional[str] = None,
+            parent: Optional[Node] = None,
+            **kwargs
+    ):
+        super().__init__(
+            name='label',
+            element_type=ElementType.COMPACT,
+            parent=parent,
+            **kwargs,
+        )
+        Text(text, parent=self)
+        if for_id:
+            self.attributes['for'] = for_id
+
+
+class Li(Element):
+    def __init__(
+            self,
+            id: Optional[str] = None,
+            class_names: Optional[list[str]] = None,
+            parent: Optional[Node] = None,
+            **kwargs,
+    ):
+        super().__init__(
+            name='li',
+            id=id,
+            class_names=class_names,
             parent=parent,
             **kwargs,
         )
@@ -321,3 +420,21 @@ class Title(Element):
             **kwargs,
         )
         Text(title, parent=self)
+
+
+class Ul(Element):
+    def __init__(
+            self,
+            id: Optional[str] = None,
+            class_names: Optional[list[str]] = None,
+            parent: Optional[Node] = None,
+            **kwargs,
+    ):
+        super().__init__(
+            name='ul',
+            id=id,
+            class_names=class_names,
+            parent=parent,
+            **kwargs,
+        )
+        pass
