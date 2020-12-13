@@ -43,6 +43,24 @@ class Br(Element):
         pass
 
 
+class Code(Element):
+    def __init__(
+            self,
+            text: str,
+            class_names: Optional[list[str]] = None,
+            parent: Optional[Node] = None,
+            **kwargs,
+    ):
+        super().__init__(
+            name='code',
+            element_type=ElementType.COMPACT,
+            class_names=class_names,
+            parent=parent,
+            **kwargs,
+        )
+        Text(text, parent=self)
+
+
 class Div(Element):
     def __init__(
             self,

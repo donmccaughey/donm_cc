@@ -60,6 +60,7 @@ class Element(Node):
             return s
 
     def attribute_str(self) -> str:
+        # TODO: html encode attribute values
         if self.attributes:
             parts = [
                 f'{name}={q(self.attributes[name])}' for name in self.attributes

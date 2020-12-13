@@ -20,4 +20,5 @@ class Text(Node):
         self.text = text
 
     def __str__(self) -> str:
+        # TODO: HTML encode text
         return textwrap.fill(self.text.strip())
