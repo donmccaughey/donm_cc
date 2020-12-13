@@ -27,6 +27,7 @@ class IndexPage(Parent, Page):
     def __enter__(self):
         Parent.__enter__(self)
         Page.__enter__(self)
+        return self
 
     def __exit__(self, exc_type, exc_val, exc_tb):
         Parent.__exit__(self, exc_type, exc_val, exc_tb)

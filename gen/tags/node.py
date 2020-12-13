@@ -34,6 +34,7 @@ class Node:
 
     def __enter__(self):
         with_node.append(self)
+        return self
 
     def __exit__(self, exc_type, exc_val, exc_tb):
         with_node.pop()

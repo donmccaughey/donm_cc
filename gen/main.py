@@ -297,7 +297,11 @@ with root:
             link('blog', 'Notes on Writing Makefiles', 'http://eigenstate.org/notes/makefiles', authors='Ori Bernstein')
             link('blog', 'Self-Documented Makefile', 'http://marmelab.com/blog/2016/02/29/auto-documented-makefile.html', authors='François Zaninotto', date='2016-02-29')
 
-    IndexPage('Memory Match', has_files=True)
+    with IndexPage('Memory Match', has_files=True) as page:
+        page.add_script('https://cdnjs.cloudflare.com/ajax/libs/cash/1.3.0/cash.min.js')
+        page.add_script('memory_match.js', charset='utf-8')
+        Div(id='memory_match')
+
     IndexPage('Random Words', has_files=True)
     IndexPage('Rust and Wasm')
     with IndexPage('Science Fiction'):

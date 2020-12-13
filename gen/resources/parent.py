@@ -20,6 +20,7 @@ class Parent(Child):
 
     def __enter__(self):
         with_parent.append(self)
+        return self
 
     def __exit__(self, exc_type, exc_val, exc_tb):
         with_parent.pop()

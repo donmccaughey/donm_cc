@@ -215,6 +215,27 @@ class P(Element):
         if text:
             Text(text, parent=self)
 
+
+class Script(Element):
+    def __init__(
+            self,
+            src: str,
+            charset: Optional[str] = None,
+            parent: Optional[Node] = None,
+            **kwargs,
+    ):
+        super().__init__(
+            name='script',
+            element_type=ElementType.COMPACT,
+            parent=parent,
+            **kwargs,
+        )
+        if charset:
+            self.attributes['charset'] = charset
+        self.attributes['src'] = src
+        self.attributes['type'] = 'text/javascript'
+
+
 class Section(Element):
     def __init__(
             self,

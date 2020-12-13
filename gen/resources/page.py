@@ -28,10 +28,12 @@ class Page(Child):
             **kwargs,
         )
         self.title = title
+        self.head_content = Document()
         self.page_content = Document()
 
     def __enter__(self):
         with_node.append(self.page_content)
+        return self
 
     def __exit__(self, exc_type, exc_val, exc_tb):
         with_node.pop()
@@ -42,13 +44,13 @@ class Page(Child):
         with document:
             DocType()
             with HTML(lang='en'):
-                with Head():
+                with Head() as head:
                     MetaCharset('utf-8')
                     MetaViewport(initial_scale='0.9', width='device-width')
                     Title(self.title)
                     Stylesheet(href='/base.css')
-                body = Body()
-                with body:
+                    head.attach_children(self.head_content.detach_children())
+                with Body() as body:
                     with Nav(class_names=['menu']):
                         ancestors = self.ancestors
                         if ancestors:
@@ -57,12 +59,16 @@ class Page(Child):
                                     A(href=ancestor.url, text=ancestor.title)
                         else:
                             A(href=self.url, text=self.title)
-                body.attach_children(self.page_content.detach_children())
+                    body.attach_children(self.page_content.detach_children())
         return document
 
     @property
     def file_parts(self) -> list[str]:
         return [self.name + '.html']
+
+    def add_script(self, src: str, charset: Optional[str] = None):
+        with self.head_content:
+            Script(src=src, charset=charset)
 
     def generate(
             self,
