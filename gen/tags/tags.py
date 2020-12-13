@@ -183,6 +183,7 @@ class Nav(Element):
 class P(Element):
     def __init__(
             self,
+            text: Optional[str] = None,
             class_names: Optional[list[str]] = None,
             parent: Optional[Node] = None,
             **kwargs,
@@ -193,8 +194,8 @@ class P(Element):
             parent=parent,
             **kwargs,
         )
-        pass
-
+        if text:
+            Text(text, parent=self)
 
 class Section(Element):
     def __init__(

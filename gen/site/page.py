@@ -61,10 +61,16 @@ class Page(Child):
     def file_parts(self) -> list[str]:
         return [self.name + '.html']
 
-    def generate(self, output_path: str, is_dry_run: bool = True):
+    def generate(
+            self,
+            output_path: str,
+            is_dry_run: bool = True,
+            overwrite = False,
+    ):
         path = os.path.join(output_path, self.path)
         path = os.path.normpath(path)
         print('writing page', path)
         if not is_dry_run:
-            with open(path, 'x', encoding='utf8') as f:
+            mode = 'w' if overwrite else 'x'
+            with open(path, mode, encoding='utf8') as f:
                 f.write(str(self.document))

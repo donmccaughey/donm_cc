@@ -1,3 +1,4 @@
+import textwrap
 from typing import Optional
 
 from .node import Node, NodeType
@@ -19,4 +20,4 @@ class Text(Node):
         self.text = text
 
     def __str__(self) -> str:
-        return self.text
+        return textwrap.fill(self.text.strip())

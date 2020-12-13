@@ -114,8 +114,22 @@ with root:
             book('The Adventures of Johnny Bunko', '', checked=True)
             book("What Got You Here Won't Get You There", '', checked=True)
 
+    with IndexPage('Engineering Management'):
+        with Section(class_names=['overview']):
+            H1('Engineering Management')
+            P("""
+                In 2017 I became an engineering manager, a career change I wasn't
+                looking for and hadn't previously considered.  My experience as
+                consultant, tech lead and member of Extreme Programming teams
+                helped in the transition, but there is still a lot to learn in my
+                new role.
+            """)
+            P("""
+                Management is a skill quite different from software engineering,
+                and I still consider myself a beginner.  This page includes some
+                of the things I've found useful.
+            """)
 
-    IndexPage('Engineering Management')
     IndexPage('Hash Tables', name='hashtables')
     IndexPage('macOS Packages', has_files=True)
     IndexPage('Make')
@@ -130,4 +144,4 @@ with root:
 
 if __name__ == '__main__':
     root.find_files('../wwwroot')
-    root.generate('../tmp', is_dry_run=False)
+    root.generate('../tmp', is_dry_run=False, overwrite=True)

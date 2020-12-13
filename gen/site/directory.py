@@ -31,11 +31,16 @@ class Directory(Parent):
     def path(self) -> str:
         return './' + self.dirname
 
-    def generate(self, output_path: str, is_dry_run: bool = True):
+    def generate(
+            self,
+            output_path: str,
+            is_dry_run: bool = True,
+            overwrite = False,
+    ):
         path = os.path.join(output_path, self.path)
         path = os.path.normpath(path)
         print('creating directory', path)
         if not is_dry_run:
-            os.makedirs(path, exist_ok=False)
+            os.makedirs(path, exist_ok=overwrite)
         for child in self.children:
-            child.generate(output_path, is_dry_run)
+            child.generate(output_path, is_dry_run, overwrite)

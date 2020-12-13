@@ -43,20 +43,26 @@ class IndexPage(Parent, Page):
     def file_parts(self) -> list[str]:
         return ['index.html']
 
-    def generate(self, output_path: str, is_dry_run: bool = True):
+    def generate(
+            self,
+            output_path: str,
+            is_dry_run: bool = True,
+            overwrite = False,
+    ):
         dirname = os.path.join(output_path, self.dirname)
         dirname = os.path.normpath(dirname)
         print('creating directory', dirname)
         if not is_dry_run:
-            os.makedirs(dirname, exist_ok=False)
+            os.makedirs(dirname, exist_ok=overwrite)
         path = os.path.join(output_path, self.path)
         path = os.path.normpath(path)
         print('writing index page', path)
         if not is_dry_run:
-            with open(path, 'x', encoding='utf8') as f:
+            mode = 'w' if overwrite else 'x'
+            with open(path, mode, encoding='utf8') as f:
                 f.write(str(self.document))
         for child in self.children:
-            child.generate(output_path, is_dry_run)
+            child.generate(output_path, is_dry_run, overwrite)
 
     def should_include_file(self, name: str) -> bool:
         if name in ['index.html']:

@@ -11,7 +11,7 @@ class Child:
     def __init__(
             self,
             name: str,
-            parent: Optional[Parent]=None,
+            parent: Optional[Parent] = None,
             **kwargs,
     ):
         super().__init__(**kwargs)
@@ -64,7 +64,7 @@ class Child:
     def url(self) -> str:
         return ('/' + '/'.join(self.path_parts)) if self.path_parts else '/'
 
-    def generate(self, output_path: str, is_dry_run=True):
+    def generate(self, output_path: str, is_dry_run=True, overwrite=False):
         raise NotImplementedError
 
 
@@ -72,7 +72,7 @@ class Parent(Child):
     def __init__(
             self,
             has_files: bool,
-            parent: Optional[Parent]=None,
+            parent: Optional[Parent] = None,
             **kwargs,
     ):
         super().__init__(parent=parent, **kwargs)
