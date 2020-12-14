@@ -141,6 +141,17 @@ class H1(Element):
         Text(text, parent=self)
 
 
+class H2(Element):
+    def __init__(self, text: str, parent: Optional[Node] = None, **kwargs):
+        super().__init__(
+            name='h2',
+            element_type=ElementType.COMPACT,
+            parent=parent,
+            **kwargs,
+        )
+        Text(text, parent=self)
+
+
 class Head(Element):
     def __init__(self, parent: Optional[Node] = None, **kwargs):
         super().__init__(name='head', parent=parent, **kwargs)
