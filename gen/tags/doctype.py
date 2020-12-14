@@ -1,6 +1,5 @@
 from typing import Optional
-
-from .node import Node, NodeType
+from .node import Node
 
 
 class DocType(Node):
@@ -8,7 +7,6 @@ class DocType(Node):
         super().__init__(
             name='doctype',
             parent=parent,
-            node_type=NodeType.DOCTYPE,
             **kwargs,
         )
 

@@ -1,7 +1,7 @@
 import textwrap
 from typing import Optional
 
-from .node import Node, NodeType
+from .node import Node
 
 
 class Text(Node):
@@ -14,7 +14,6 @@ class Text(Node):
         super().__init__(
             name='text',
             parent=parent,
-            node_type=NodeType.TEXT,
             **kwargs,
         )
         self.text = text

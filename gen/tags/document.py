@@ -1,4 +1,4 @@
-from .node import Node, NodeType
+from .node import Node
 
 
 class Document(Node):
@@ -6,7 +6,6 @@ class Document(Node):
         super().__init__(
             name='document',
             parent=None,
-            node_type=NodeType.DOCUMENT,
             **kwargs,
         )
 
@@ -15,3 +14,6 @@ class Document(Node):
         for child in self.children:
             s += str(child) + '\n'
         return s
+
+    def attach(self, parent: Node):
+        self.parent = None

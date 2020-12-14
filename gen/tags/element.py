@@ -1,8 +1,7 @@
 from enum import unique, Enum, auto
 from textwrap import indent
 from typing import Optional
-
-from .node import Node, NodeType
+from .node import Node
 
 
 def q(attribute_value) -> str:
@@ -36,7 +35,6 @@ class Element(Node):
     ):
         super().__init__(
             name=name,
-            node_type=NodeType.ELEMENT,
             parent=parent,
             **kwargs,
         )

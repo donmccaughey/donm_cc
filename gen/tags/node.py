@@ -1,36 +1,21 @@
 from __future__ import annotations
-
-from enum import Enum, unique, auto
 from typing import Optional
 
 
 with_node: list[Optional[Node]] = [None]
 
 
-@unique
-class NodeType(Enum):
-    DOCTYPE = auto()
-    DOCUMENT = auto()
-    ELEMENT = auto()
-    TEXT = auto()
-
-
 class Node:
     def __init__(
             self,
             name: str,
-            node_type: NodeType,
             parent: Optional[Node] = None,
             **kwargs,
     ):
         super().__init__(**kwargs)
         self.children: list[Node] = []
         self.name = name
-        self.node_type = node_type
-        if self.node_type == NodeType.DOCUMENT:
-            self.parent = None
-        else:
-            self.attach(parent if parent else with_node[-1])
+        self.attach(parent if parent else with_node[-1])
 
     def __enter__(self):
         with_node.append(self)
