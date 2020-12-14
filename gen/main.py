@@ -7,8 +7,8 @@ from tags import Li, P, Section, Span, Strong, Text, Time, Ul
 
 def item(
         title: str,
-        subtitle: str,
         href: str,
+        subtitle: Optional[str] = None,
         favicon: Optional[str] = None,
         is_local: bool = False
 ):
@@ -17,8 +17,9 @@ def item(
         if favicon:
             Img(class_names=['favicon'], src=favicon, alt=f'{title} icon')
         Strong(title)
-        Br()
-        Em(subtitle)
+        if subtitle:
+            Br()
+            Em(subtitle)
 
 
 def link(
@@ -416,6 +417,18 @@ with root:
             link('blog', 'A web application completely in Rust', 'https://medium.com/@saschagrunert/a-web-application-completely-in-rust-6f6bdb6c4471', date='2018-07-07')
 
     with IndexPage('Science Fiction'):
+        with Section(class_names=['overview']):
+            H1('Science Fiction')
+            P("""
+                Science fiction has been a staple of my reading diet since I was
+                very young.  I gravitate towards space opera; multi-book,
+                galaxy-spanning sagas are my bread and butter.
+            """)
+        with Div(class_names=['collection']):
+            item('Iain M Banks', '/science_fiction/iain_m_banks.html', is_local=True)
+            item('Lois McMaster Bujold', '/science_fiction/lois_mcmaster_bujold.html', is_local=True)
+            item('James SA Corey', '/science_fiction/james_sa_corey.html', is_local=True)
+            item('Alastair Reynolds', '/science_fiction/alastair_reynolds.html', is_local=True)
         Page('Alastair Reynolds')
         Page('Iain M Banks')
         Page('James SA Corey')
