@@ -1,6 +1,5 @@
 import textwrap
 from typing import Optional
-
 from .node import Node
 
 
