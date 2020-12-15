@@ -1,8 +1,8 @@
 from typing import Optional
 
-from tags.element import Element, ElementType
-from tags.node import Node
-from tags.text import Text
+from html.element import Element, ElementType
+from html.node import Node
+from html.text import Text
 
 
 class A(Element):

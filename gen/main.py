@@ -1,8 +1,8 @@
 from typing import Optional
 
 from resources import Directory, File, IndexPage, Page
-from tags import A, Br, Button, Code, Div, Em, Form, H1, H2, Img, Input, Label
-from tags import Li, P, Section, Span, Strong, Text, Time, Ul
+from html import A, Br, Button, Code, Div, Em, Form, H1, H2, Img, Input, Label
+from html import Li, P, Section, Span, Strong, Text, Time, Ul
 
 
 def item(
@@ -191,7 +191,7 @@ with root:
                 """)
                 A('https://en.cppreference.com/w/cpp/container/unordered_map', 'C++ 11')
                 Text(').')
-                # TODO: handle runs of tags and text in phrasing content
+                # TODO: handle runs of html and text in phrasing content
             with P():
                 Text('I have my own unpolished')
                 A('https://github.com/donmccaughey/hashtable', 'hashtable for C')
