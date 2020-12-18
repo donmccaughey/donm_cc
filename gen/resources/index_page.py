@@ -1,7 +1,7 @@
 from __future__ import annotations
 import os
 from typing import Optional
-from .page import Page
+from .page import Page, format_tags
 from .parent import Parent
 
 
@@ -61,7 +61,7 @@ class IndexPage(Parent, Page):
         if not is_dry_run:
             mode = 'w' if overwrite else 'x'
             with open(path, mode, encoding='utf8') as f:
-                f.write(str(self.document))
+                f.write(format_tags(self.document.tags()))
         for child in self.children:
             child.generate(output_path, is_dry_run, overwrite)
 

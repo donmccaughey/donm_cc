@@ -1,6 +1,8 @@
 from __future__ import annotations
 import os
 from typing import Optional, TYPE_CHECKING
+
+from html.elements import as_compact
 from .child import Child
 from html import *
 from html.node import with_node
@@ -56,7 +58,7 @@ class Page(Child):
                         if ancestors:
                             for ancestor in self.ancestors:
                                 if hasattr(ancestor, 'title'):
-                                    A(href=ancestor.url, text=ancestor.title)
+                                    as_compact(A(href=ancestor.url, text=ancestor.title))
                         else:
                             A(href=self.url, text=self.title)
                     body.attach_children(self.page_content.detach_children())
@@ -86,4 +88,4 @@ class Page(Child):
         if not is_dry_run:
             mode = 'w' if overwrite else 'x'
             with open(path, mode, encoding='utf8') as f:
-                f.write(str(self.document))
+                f.write(format_tags(self.document.tags()))

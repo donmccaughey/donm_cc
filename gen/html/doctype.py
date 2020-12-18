@@ -1,5 +1,7 @@
 from typing import Optional
 from .node import Node
+from .format import Format
+from .tag import Tag, TagType
 
 
 class DocType(Node):
@@ -15,3 +17,17 @@ class DocType(Node):
 
     def tag(self) -> str:
         return '<!doctype html>'
+
+    def tags(self) -> list[Tag]:
+        return [
+            Tag(
+                name=self.name,
+                text=self.tag(),
+                type=TagType.DTD,
+                format=self.format,
+                has_end_tag=False,
+                indent_children=False,
+                is_heading=False,
+                is_phrasing_content=False,
+            )
+        ]

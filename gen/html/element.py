@@ -2,6 +2,8 @@ from enum import unique, Enum, auto
 from textwrap import indent
 from typing import Optional
 from .node import Node
+from .format import Format
+from .tag import Tag, TagType
 
 
 def q(attribute_value) -> str:
@@ -29,7 +31,6 @@ class Element(Node):
             id: Optional[str] = None,
             class_names: Optional[list[str]] = None,
             element_type: ElementType = ElementType.CONTAINER,
-            indent_children: bool = True,
             parent: Optional[Node] = None,
             **kwargs
     ):
@@ -40,7 +41,10 @@ class Element(Node):
         )
         self.attributes: dict[str, str] = {}
         self.element_type = element_type
-        self.indent_children = indent_children
+        self.has_end_tag = True
+        self.indent_children = True
+        self.is_heading = False
+        self.is_phrasing_content = False
         if id:
             self.attributes['id'] = id
         if class_names:
@@ -80,3 +84,32 @@ class Element(Node):
 
     def start_tag(self) -> str:
         return '<' + self.name + self.attribute_str() + '>'
+
+    def tags(self) -> list[Tag]:
+        tags = [
+            Tag(
+                name=self.name,
+                text=self.start_tag(),
+                type=TagType.START,
+                format=self.format,
+                has_end_tag=self.has_end_tag,
+                indent_children=self.indent_children,
+                is_heading=self.is_heading,
+                is_phrasing_content=self.is_phrasing_content,
+            )
+        ]
+        for child in self.children:
+            tags += child.tags()
+        tags+= [
+            Tag(
+                name=self.name,
+                text=self.end_tag() if self.has_end_tag else '',
+                type=TagType.END,
+                format=self.format,
+                has_end_tag=self.has_end_tag,
+                indent_children=self.indent_children,
+                is_heading=self.is_heading,
+                is_phrasing_content=self.is_phrasing_content,
+            )
+        ]
+        return tags

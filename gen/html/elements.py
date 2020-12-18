@@ -2,7 +2,18 @@ from typing import Optional
 
 from html.element import Element, ElementType
 from html.node import Node
+from html.format import Format
 from html.text import Text
+
+
+def as_block(element: Element) -> Element:
+    element.format = Format.BLOCK
+    return element
+
+
+def as_compact(element: Element) -> Element:
+    element.format = Format.COMPACT
+    return element
 
 
 class A(Element):
@@ -22,6 +33,8 @@ class A(Element):
             **kwargs,
         )
         self.attributes['href'] = href
+        self.format = Format.INLINE
+        self.is_phrasing_content = True
         if text:
             Text(text, parent=self)
 
@@ -40,7 +53,9 @@ class Br(Element):
             parent=parent,
             **kwargs,
         )
-        pass
+        self.format = Format.INLINE
+        self.has_end_tag = False
+        self.is_phrasing_content = True
 
 
 class Button(Element):
@@ -56,6 +71,8 @@ class Button(Element):
             parent=parent,
             **kwargs,
         )
+        self.format = Format.INLINE
+        self.is_phrasing_content = True
         Text(text, parent=self)
 
 
@@ -74,6 +91,8 @@ class Code(Element):
             parent=parent,
             **kwargs,
         )
+        self.format = Format.INLINE
+        self.is_phrasing_content = True
         Text(text, parent=self)
 
 
@@ -108,6 +127,8 @@ class Em(Element):
             parent=parent,
             **kwargs,
         )
+        self.format = Format.INLINE
+        self.is_phrasing_content = True
         Text(text, parent=self)
 
 
@@ -138,6 +159,8 @@ class H1(Element):
             parent=parent,
             **kwargs,
         )
+        self.format = Format.COMPACT
+        self.is_heading = True
         Text(text, parent=self)
 
 
@@ -149,6 +172,8 @@ class H2(Element):
             parent=parent,
             **kwargs,
         )
+        self.format = Format.COMPACT
+        self.is_heading = True
         Text(text, parent=self)
 
 
@@ -162,11 +187,11 @@ class HTML(Element):
     def __init__(self, lang: str, parent: Optional[Node] = None, **kwargs):
         super().__init__(
             name='html',
-            indent_children=False,
             parent=parent,
             **kwargs,
         )
         self.attributes['lang'] = lang
+        self.indent_children = False
 
 
 class Img(Element):
@@ -185,6 +210,9 @@ class Img(Element):
         )
         self.attributes['src'] = src
         self.attributes['alt'] = alt
+        self.format = Format.INLINE
+        self.has_end_tag = False
+        self.is_phrasing_content = True
 
 
 class Input(Element):
@@ -212,6 +240,9 @@ class Input(Element):
             self.attributes['value'] = value
         if checked:
             self.attributes['checked'] = None
+        self.format = Format.COMPACT
+        self.has_end_tag = False
+        self.is_phrasing_content = True
 
 
 class Link(Element):
@@ -222,7 +253,7 @@ class Link(Element):
             parent=parent,
             **kwargs,
         )
-        pass
+        self.has_end_tag = False
 
 
 class Label(Element):
@@ -239,9 +270,11 @@ class Label(Element):
             parent=parent,
             **kwargs,
         )
-        Text(text, parent=self)
+        self.format = Format.COMPACT
+        self.is_phrasing_content = True
         if for_id:
             self.attributes['for'] = for_id
+        Text(text, parent=self)
 
 
 class Li(Element):
@@ -270,7 +303,7 @@ class Meta(Element):
             parent=parent,
             **kwargs,
         )
-        pass
+        self.has_end_tag = False
 
 
 class MetaCharset(Meta):
@@ -344,6 +377,8 @@ class Script(Element):
             self.attributes['charset'] = charset
         self.attributes['src'] = src
         self.attributes['type'] = 'text/javascript'
+        self.format = Format.COMPACT # TODO: script containing code should be .BLOCK
+        self.is_phrasing_content = True
 
 
 class Section(Element):
@@ -377,6 +412,8 @@ class Span(Element):
             parent=parent,
             **kwargs,
         )
+        self.format = Format.INLINE
+        self.is_phrasing_content = True
         Text(text, parent=self)
 
 
@@ -393,6 +430,8 @@ class Strong(Element):
             parent=parent,
             **kwargs,
         )
+        self.format = Format.INLINE
+        self.is_phrasing_content = True
         Text(text, parent=self)
 
 
@@ -419,6 +458,8 @@ class Time(Element):
             **kwargs,
         )
         self.attributes['datetime'] = datetime
+        self.format = Format.INLINE
+        self.is_phrasing_content = True
         Text(datetime, parent=self)
 
 
@@ -430,6 +471,8 @@ class Title(Element):
             parent=parent,
             **kwargs,
         )
+        self.format = Format.COMPACT
+        self.is_heading = True
         Text(title, parent=self)
 
 

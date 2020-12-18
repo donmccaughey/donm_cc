@@ -15,9 +15,9 @@
     <section class=overview>
         <h1>Random Words</h1>
         <p>
-            <em>Random Words</em> is a small program that chooses random
-            entries from <a href=https://github.com/elasticdog/yawl>YAWL</a>,
-            a public domain list of 264,097 English words.
+            <em>Random Words</em> is a small program that chooses random entries
+            from <a href=https://github.com/elasticdog/yawl>YAWL</a>, a public
+            domain list of 264,097 English words.
         </p>
     </section>
     <section class=generator>
@@ -44,20 +44,20 @@
         <h1>Implementation</h1>
         <p>
             <em>Random Words</em> is written in JavaScript and runs in the
-            browser.  To avoid the need to fetch the whole 2.7 MB YAWL
-            <a href=word.list><code>word.list</code></a> file, I've converted
+            browser.  To avoid the need to fetch the whole 2.7 MB YAWL <a
+            href=word.list><code>word.list</code></a> file, I've converted
             <code>word.list</code> into a <a href=words.table>table</a> where
             each word is padded with spaces to 45 characters, the length of the
             <a href=https://en.wikipedia.org/wiki/Pneumonoultramicroscopicsilicovolcanoconiosis>longest word</a>
             in the list.
         </p>
         <p>
-            The program uses the
-            <a href=https://developer.mozilla.org/en-US/docs/Web/API/Crypto/getRandomValues><code>getRandomValues()</code></a>
+            The program uses the <a
+            href=https://developer.mozilla.org/en-US/docs/Web/API/Crypto/getRandomValues><code>getRandomValues()</code></a>
             function to generate a random number in the range [0, 264097) to
-            select a word, then uses the HTTP
-            <a href=https://tools.ietf.org/html/rfc7233#section-3.1>Range header</a>
-            to fetch only that word from the table.
+            select a word, then uses the HTTP <a
+            href=https://tools.ietf.org/html/rfc7233#section-3.1>Range
+            header</a> to fetch only that word from the table.
         </p>
         <p>
             <ul>

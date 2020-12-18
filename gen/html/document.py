@@ -1,4 +1,6 @@
 from .node import Node
+from .format import Format
+from .tag import Tag
 
 
 class Document(Node):
@@ -17,3 +19,9 @@ class Document(Node):
 
     def attach(self, parent: Node):
         self.parent = None
+
+    def tags(self) -> list[Tag]:
+        tags = []
+        for child in self.children:
+            tags += child.tags()
+        return tags

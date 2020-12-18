@@ -1,7 +1,9 @@
 from typing import Optional
 
+from html.elements import as_block, as_compact
 from resources import Directory, File, IndexPage, Page
-from html import A, Br, Button, Code, Div, Em, Form, H1, H2, Img, Input, Label
+from html import A, Br, Button, Code, Div, Em, Form, H1, H2, Img, Input, Label, \
+    Format
 from html import Li, P, Section, Span, Strong, Text, Time, Ul
 
 
@@ -13,10 +15,10 @@ def item(
         is_local: bool = False
 ):
     class_names = ['item'] + (['local'] if is_local else [])
-    with A(class_names=class_names, href=href):
+    with as_block(A(class_names=class_names, href=href)):
         if favicon:
-            Img(class_names=['favicon'], src=favicon, alt=f'{title} icon')
-        Strong(title)
+            as_block(Img(class_names=['favicon'], src=favicon, alt=f'{title} icon'))
+        as_compact(Strong(title))
         if subtitle:
             Br()
             Em(subtitle)
@@ -30,12 +32,13 @@ def link(
         date: Optional[str] = None,
         checked: bool = False
 ):
-    with A(class_names=[type], href=href):
+    with A(class_names=[type], href=href) as a:
+        a.format = Format.BLOCK
         Text(title)
         if authors:
-            Span(class_names=['authors'], text=authors)
+            as_compact(Span(class_names=['authors'], text=authors))
         if date:
-            Time(datetime=date)
+            as_compact(Time(datetime=date))
         if checked:
             Text('✓')
 
@@ -69,14 +72,14 @@ def package(
         H1(f'{name} {version}')
         P(description)
         with Div(class_names=['collection']):
-            with A(package, class_names=['item']):
-                Img('./package-32x32.png', 'package icon', class_names=['favicon'])
+            with as_block(A(package, class_names=['item'])):
+                as_block(Img('./package-32x32.png', 'package icon', class_names=['favicon']))
                 Strong('package')
-            with A(source, class_names=['item']):
-                Img('./source-32x32.png', 'source icon', class_names=['favicon'])
+            with as_block(A(source, class_names=['item'])):
+                as_block(Img('./source-32x32.png', 'source icon', class_names=['favicon']))
                 Strong('source')
-            with A(project, class_names=['item']):
-                Img('./project-32x32.png', 'project icon', class_names=['favicon'])
+            with as_block(A(project, class_names=['item'])):
+                as_block(Img('./project-32x32.png', 'project icon', class_names=['favicon']))
                 Strong('project')
 
 
@@ -310,7 +313,7 @@ with root:
             H1('Random Words')
             P("""
                 <em>Random Words</em> is a small program that chooses random
-                entries from <a href=https://github.com/elasticdog/yawl>YAWL</a>, 
+                entries from <a href=https://github.com/elasticdog/yawl>YAWL</a>,
                 a public domain list of 264,097 English words.
              """)
         with Section(class_names=['generator']):
@@ -332,26 +335,20 @@ with root:
             with P():
                 Text("""
                     <em>Random Words</em> is written in JavaScript and runs in the
-                    browser.  To avoid the need to fetch the whole 2.7 MB YAWL 
+                    browser.  To avoid the need to fetch the whole 2.7 MB YAWL
                     <a href=word.list><code>word.list</code></a> file, I've converted
                     <code>word.list</code> into a <a href=words.table>table</a> where 
                     each word is padded with spaces to 45 characters, the length of the
-                 """)
-                A('https://en.wikipedia.org/wiki/Pneumonoultramicroscopicsilicovolcanoconiosis', 'longest word')
-                Text("""
+                    <a href=https://en.wikipedia.org/wiki/Pneumonoultramicroscopicsilicovolcanoconiosis>longest word</a>
                     in the list.
                  """)
             with P():
                 Text("""
-                    The program uses the 
-                 """)
-                A('https://developer.mozilla.org/en-US/docs/Web/API/Crypto/getRandomValues', '<code>getRandomValues()</code>')
-                Text("""
+                    The program uses the
+                    <a href=https://developer.mozilla.org/en-US/docs/Web/API/Crypto/getRandomValues><code>getRandomValues()</code></a>
                     function to generate a random number in the range [0, 264097) to 
-                    select a word, then uses the HTTP 
-                 """)
-                A('https://tools.ietf.org/html/rfc7233#section-3.1', 'Range header')
-                Text("""
+                    select a word, then uses the HTTP
+                    <a href=https://tools.ietf.org/html/rfc7233#section-3.1>Range header</a>
                     to fetch only that word from the table.
                  """)
             with P():
@@ -379,9 +376,9 @@ with root:
                 execution environments.
              """)
             P("""
-                Together, Rust and Wasm open up new ways to write web clients, 
+                Together, Rust and Wasm open up new ways to write web clients,
                 new ways to share code between client and server, and allow web
-                clients to tackle problems that were previously impractical in 
+                clients to tackle problems that were previously impractical in
                 JavaScript.
             """)
         with Section(class_names=['links']):
@@ -457,7 +454,7 @@ with root:
             with Section(class_names=['links']):
                 H1('Merlin')
                 with P():
-                    with A('http://approachingpavonis.blogspot.com/2016/10/new-merlin-story-iron-tactician.html'):
+                    with as_block(A('http://approachingpavonis.blogspot.com/2016/10/new-merlin-story-iron-tactician.html')):
                         Text('There are four Merlin stories to date, ...')
                 book('Hideaway', 'https://www.goodreads.com/book/show/34793859-hideaway', date='2000')
                 book("Minla's Flowers (included in <em>Zima Blue</em>)", 'https://www.amazon.com/gp/product/B00GVG07DC', date='2009', checked=True)
