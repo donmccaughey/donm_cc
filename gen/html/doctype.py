@@ -1,6 +1,5 @@
 from typing import Optional
 from .node import Node
-from .format import Format
 from .tag import Tag, TagType
 
 

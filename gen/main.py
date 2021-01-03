@@ -227,9 +227,8 @@ with root:
                 Text('and are signed with my Apple developer credentials.')
             P("""
                 This is a collection of command line tools that I've found useful
-                at one time or another over the years. Some of them are widely 
-                used but excluded from macOS and Xcode due to GPL 
-                licenses.            
+                at one time or another over the years. Some of them are widely used
+                but excluded from macOS and Xcode due to GPL licenses.            
             """)
         package(
             name='pkg-config',
@@ -339,16 +338,22 @@ with root:
                     <a href=word.list><code>word.list</code></a> file, I've converted
                     <code>word.list</code> into a <a href=words.table>table</a> where 
                     each word is padded with spaces to 45 characters, the length of the
-                    <a href=https://en.wikipedia.org/wiki/Pneumonoultramicroscopicsilicovolcanoconiosis>longest word</a>
+                 """)
+                A('https://en.wikipedia.org/wiki/Pneumonoultramicroscopicsilicovolcanoconiosis', 'longest word')
+                Text("""
                     in the list.
                  """)
             with P():
                 Text("""
                     The program uses the
-                    <a href=https://developer.mozilla.org/en-US/docs/Web/API/Crypto/getRandomValues><code>getRandomValues()</code></a>
+                 """)
+                A('https://developer.mozilla.org/en-US/docs/Web/API/Crypto/getRandomValues', '<code>getRandomValues()</code>')
+                Text("""
                     function to generate a random number in the range [0, 264097) to 
                     select a word, then uses the HTTP
-                    <a href=https://tools.ietf.org/html/rfc7233#section-3.1>Range header</a>
+                 """)
+                A('https://tools.ietf.org/html/rfc7233#section-3.1', 'Range header')
+                Text("""
                     to fetch only that word from the table.
                  """)
             with P():

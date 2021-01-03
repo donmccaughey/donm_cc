@@ -47,7 +47,7 @@ def format_tags(tags: list[Tag]) -> str:
         elif tag.is_start:
             if tag.is_inline:
                 if previous_tag.is_inline:
-                    parts += [tag.text]
+                    parts += ['\n', indent(level), tag.text]
                 else:
                     parts += ['\n', indent(level), tag.text]
             elif tag.is_compact:
@@ -69,9 +69,7 @@ def format_tags(tags: list[Tag]) -> str:
                     parts += ['\n', indent(level), tag.text]
         elif tag.is_text:
             text = clean_text(tag.text)
-            if previous_tag.is_inline:
-                parts += [text]
-            elif previous_tag.is_compact and previous_tag.is_start:
+            if previous_tag.is_start and not previous_tag.is_block:
                 parts += [text]
             else:
                 parts += ['\n', wrap_text(text, level)]
