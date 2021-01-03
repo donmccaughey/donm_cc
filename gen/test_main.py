@@ -14,6 +14,7 @@ class MainTestCase(unittest.TestCase):
             (2, './banners/Don_and_Molly_Round_Hill_Lake_Tahoe_summer_2019.jpg', '/banners/Don_and_Molly_Round_Hill_Lake_Tahoe_summer_2019.jpg'),
             (2, './banners/Don_and_Molly_hiking_Texas_winter_2016.jpg', '/banners/Don_and_Molly_hiking_Texas_winter_2016.jpg'),
             (1, './base.css', '/base.css'),
+            (1, './bash/index.html', '/bash/'),
             (1, './business_novels/index.html', '/business_novels/'),
             (1, './engineering_management/index.html', '/engineering_management/'),
             (1, './hashtables/index.html', '/hashtables/'),
