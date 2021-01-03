@@ -2,7 +2,6 @@ from enum import unique, Enum, auto
 from textwrap import indent
 from typing import Optional
 from .node import Node
-from .format import Format
 from .tag import Tag, TagType
 
 

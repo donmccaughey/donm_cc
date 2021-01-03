@@ -56,10 +56,6 @@ class Child:
         return self.dir_parts + self.file_parts
 
     @property
-    def rank(self) -> int:
-        return self.parent.rank + 1 if self.parent else 0
-
-    @property
     def url(self) -> str:
         return ('/' + '/'.join(self.path_parts)) if self.path_parts else '/'
 

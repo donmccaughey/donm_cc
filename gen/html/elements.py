@@ -1,5 +1,4 @@
 from typing import Optional
-
 from html.element import Element, ElementType
 from html.node import Node
 from html.format import Format

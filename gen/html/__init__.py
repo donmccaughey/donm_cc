@@ -1,5 +1,4 @@
 from textwrap import TextWrapper, dedent
-
 from .doctype import DocType
 from .document import Document
 from .format import Format

@@ -1,10 +1,8 @@
 from typing import Optional
-
 from html.elements import as_block, as_compact
 from resources import Directory, File, IndexPage, Page
-from html import A, Br, Button, Code, Div, Em, Form, H1, H2, Img, Input, Label, \
-    Format
-from html import Li, P, Section, Span, Strong, Text, Time, Ul
+from html import A, Br, Button, Code, Div, Em, Form, H1, H2, Img, Input, Format
+from html import Label, Li, P, Section, Span, Strong, Text, Time, Ul
 
 
 def item(

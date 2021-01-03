@@ -1,7 +1,5 @@
 from __future__ import annotations
-
 from typing import Optional
-
 from html.format import Format
 from html.tag import Tag
 
@@ -35,10 +33,6 @@ class Node:
     @property
     def has_children(self) -> bool:
         return len(self.children) > 0
-
-    @property
-    def rank(self) -> int:
-        return self.parent.rank + 1 if self.parent else 0
 
     def __str__(self) -> str:
         raise NotImplementedError
