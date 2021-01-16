@@ -18,8 +18,6 @@ class Tag:
     format: Format
     has_end_tag: bool
     indent_children: bool
-    is_heading: bool
-    is_phrasing_content: bool
 
     @property
     def is_block(self) -> bool:

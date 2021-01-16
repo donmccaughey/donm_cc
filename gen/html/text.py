@@ -33,7 +33,5 @@ class Text(Node):
                 format=self.format,
                 has_end_tag=False,
                 indent_children=False,
-                is_heading=False,
-                is_phrasing_content=False,
             )
         ]

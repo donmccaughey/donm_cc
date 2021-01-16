@@ -93,8 +93,6 @@ class Element(Node):
                 format=self.format,
                 has_end_tag=self.has_end_tag,
                 indent_children=self.indent_children,
-                is_heading=self.is_heading,
-                is_phrasing_content=self.is_phrasing_content,
             )
         ]
         for child in self.children:
@@ -107,8 +105,6 @@ class Element(Node):
                 format=self.format,
                 has_end_tag=self.has_end_tag,
                 indent_children=self.indent_children,
-                is_heading=self.is_heading,
-                is_phrasing_content=self.is_phrasing_content,
             )
         ]
         return tags

@@ -21,7 +21,10 @@ class Node:
         self.next_sibling: Optional[Node] = None
         self.parent = None
         self.previous_sibling: Optional[Node] = None
-        self.attach(parent if parent else with_node[-1])
+        if not parent:
+            parent = with_node[-1]
+        if parent:
+            self.attach(parent)
 
     def __enter__(self):
         with_node.append(self)
