@@ -1,4 +1,6 @@
 from typing import Optional
+
+from html.comment import Comment
 from html.element import Element
 from html.node import Node
 from html.format import Format
@@ -39,6 +41,12 @@ class A(Element):
 class Body(Element):
     def __init__(self, parent: Optional[Node] = None, **kwargs):
         super().__init__(name='body', parent=parent, **kwargs)
+
+    def omit_end_tag(self) -> bool:
+        if self.next_sibling:
+            return not isinstance(self.next_sibling, Comment)
+        else:
+            return True
 
 
 class Button(Element):

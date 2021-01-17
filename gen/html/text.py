@@ -1,4 +1,3 @@
-import textwrap
 from typing import Optional
 from .node import Node
 from .format import Format
@@ -7,12 +6,7 @@ from .tag_type import TagType
 
 
 class Text(Node):
-    def __init__(
-            self,
-            text: str,
-            parent: Optional[Node] = None,
-            **kwargs
-    ):
+    def __init__(self, text: str, parent: Optional[Node] = None, **kwargs):
         super().__init__(
             name='text',
             parent=parent,

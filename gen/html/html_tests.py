@@ -1,7 +1,8 @@
 import unittest
 
 from html import format_tags, Img, Input, P, Div, Text, A
-from html.elements import as_block
+from html.comment import Comment
+from html.elements import as_block, HTML, Body
 
 
 class FormatTagsTestCase(unittest.TestCase):
@@ -11,7 +12,8 @@ class FormatTagsTestCase(unittest.TestCase):
 
         self.assertEqual(2, len(tags))
         self.assertEqual(
-            '\n<img src=mypic.jpg alt=Me!>\n',
+            '\n' +
+            '<img src=mypic.jpg alt=Me!>\n',
             format_tags(tags)
         )
 
@@ -21,8 +23,40 @@ class FormatTagsTestCase(unittest.TestCase):
 
         self.assertEqual(2, len(tags))
         self.assertEqual(
-            '\n<input id=count name=count type=number value=0>\n',
+            '\n' +
+            '<input id=count name=count type=number value=0>\n',
             format_tags(tags)
+        )
+
+
+class FormatTagsBodyTestCase(unittest.TestCase):
+    def test_body_omits_end_tag_when_no_next_sibling(self):
+        html = HTML(lang='en')
+        with html:
+            Body()
+
+        self.assertEqual(
+            '\n' +
+            '<html lang=en>\n' +
+            '<body>\n' +
+            '</html>\n',
+            format_tags(html.tags())
+        )
+
+    def test_body_keeps_end_tag_when_next_sibling_is_comment(self):
+        html = HTML(lang='en')
+        with html:
+            Body()
+            Comment('a comment')
+
+        self.assertEqual(
+            '\n' +
+            '<html lang=en>\n' +
+            '<body>\n' +
+            '</body>\n' +
+            '<!-- a comment -->\n'
+            '</html>\n',
+            format_tags(html.tags())
         )
 
 
@@ -46,8 +80,7 @@ class FormatTagsParagraphTestCase(unittest.TestCase):
             '<div>\n' +
             '    <p>\n' +
             '        text\n' +
-            '</div>' +
-            '\n',
+            '</div>\n',
             format_tags(d.tags())
         )
         self.assertEqual(
@@ -55,8 +88,7 @@ class FormatTagsParagraphTestCase(unittest.TestCase):
             '<div>\n' +
             '    <p>\n' +
             '        text\n' +
-            '</div>' +
-            '\n',
+            '</div>\n',
             format_tags(d.tags())
         )
 
@@ -71,8 +103,7 @@ class FormatTagsParagraphTestCase(unittest.TestCase):
             '    <p>\n' +
             '        text\n' +
             '    </p>\n' +
-            '</a>' +
-            '\n',
+            '</a>\n',
             format_tags(a.tags())
         )
 
@@ -89,8 +120,7 @@ class FormatTagsParagraphTestCase(unittest.TestCase):
             '        text\n' +
             '    <p>\n' +
             '        more text\n' +
-            '</div>' +
-            '\n',
+            '</div>\n',
             format_tags(d.tags())
         )
 
@@ -107,8 +137,7 @@ class FormatTagsParagraphTestCase(unittest.TestCase):
             '        text\n' +
             '    </p>\n' +
             '    more text\n' +
-            '</div>' +
-            '\n',
+            '</div>\n',
             format_tags(d.tags())
         )
 

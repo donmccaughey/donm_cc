@@ -44,7 +44,9 @@ def format_tags(tags: list[Tag]) -> str:
     for i, tag in enumerate(tags):
         previous_tag = tags[i - 1]
 
-        if tag.type == TagType.DTD:
+        if tag.type == TagType.COMMENT:
+            parts += ['\n', indent(level), tag.text]
+        elif tag.type == TagType.DTD:
             parts += [tag.text]
         elif tag.type == TagType.START:
             if tag.format == Format.INLINE:
