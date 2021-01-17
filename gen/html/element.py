@@ -41,24 +41,6 @@ class Element(Node):
         if class_names:
             self.attributes['class'] = ' '.join(class_names)
 
-    def __str__(self) -> str:
-        if self.element_type == ElementType.COMPACT:
-            s = self.start_tag()
-            for child in self.children:
-                s += str(child)
-            s += self.end_tag()
-            return s
-        elif self.element_type == ElementType.EMPTY:
-            return self.start_tag()
-        else:
-            s = self.start_tag()
-            s += '\n'
-            for child in self.children:
-                child = str(child) + '\n'
-                s += indent(child, '    ') if self.indent_children else child
-            s += self.end_tag()
-            return s
-
     def attribute_str(self) -> str:
         # TODO: html encode attribute values
         if self.attributes:

@@ -21,10 +21,6 @@ class Text(Node):
         self.format = Format.INLINE
         self.text = text
 
-    def __str__(self) -> str:
-        # TODO: HTML encode text
-        return textwrap.fill(self.text.strip())
-
     def tags(self) -> list[Tag]:
         return [
             Tag(

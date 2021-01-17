@@ -37,9 +37,6 @@ class Node:
     def has_children(self) -> bool:
         return len(self.children) > 0
 
-    def __str__(self) -> str:
-        raise NotImplementedError
-
     def attach(self, parent: Node):
         self.parent = parent
         self.previous_sibling = (

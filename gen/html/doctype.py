@@ -12,9 +12,6 @@ class DocType(Node):
             **kwargs,
         )
 
-    def __str__(self) -> str:
-        return self.tag()
-
     def tag(self) -> str:
         return '<!doctype html>'
 
