@@ -4,7 +4,7 @@ from html import Format
 from html.node import Node, with_node
 
 
-class NodeCase(unittest.TestCase):
+class NodeTestCase(unittest.TestCase):
     def test_init_defaults(self):
         node = Node('my node')
         self.assertEqual(node.name, 'my node')

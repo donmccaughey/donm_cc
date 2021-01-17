@@ -5,9 +5,10 @@ from .format import Format
 from .tag import Tag
 from .tag_type import TagType
 from .text import Text
-from .elements import A, Body, Br, Button, Code, Div, Em, Form, H1, H2, Head, HTML
-from .elements import Img, Input, Label, Li, MetaCharset, MetaViewport, Nav, P
-from .elements import Script, Section, Span, Strong, Stylesheet, Time, Title, Ul
+from .elements import A, Body, Br, Button, Code, Div, Em, Form, H1, H2, Head
+from .elements import HTML, Img, Input, Label, Li, MetaCharset, MetaViewport
+from .elements import Nav, P, Script, Section, Span, Strong, Stylesheet, Time
+from .elements import Title, Ul
 
 
 def indent(level: int) -> str:

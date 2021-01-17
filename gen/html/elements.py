@@ -229,7 +229,7 @@ class Input(Element):
             self.attributes['value'] = value
         if checked:
             self.attributes['checked'] = None
-        self.format = Format.COMPACT
+        self.format = Format.INLINE
         self.has_end_tag = False
 
 

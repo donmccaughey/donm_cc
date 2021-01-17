@@ -93,7 +93,7 @@ class Element(Node):
         tags += [
             Tag(
                 name=self.name,
-                text=self.end_tag() if self.has_end_tag else '',
+                text=self.end_tag(),
                 type=TagType.END,
                 format=self.format,
                 has_end_tag=self.has_end_tag,
