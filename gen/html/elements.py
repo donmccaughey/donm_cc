@@ -40,7 +40,6 @@ class A(Element):
 class Body(Element):
     def __init__(self, parent: Optional[Node] = None, **kwargs):
         super().__init__(name='body', parent=parent, **kwargs)
-        pass
 
 
 class Br(Element):
@@ -106,7 +105,6 @@ class Div(Element):
             parent=parent,
             **kwargs,
         )
-        pass
 
 
 class Em(Element):
@@ -172,7 +170,6 @@ class H2(Element):
 class Head(Element):
     def __init__(self, parent: Optional[Node] = None, **kwargs):
         super().__init__(name='head', parent=parent, **kwargs)
-        pass
 
 
 class HTML(Element):
@@ -281,7 +278,6 @@ class Li(Element):
             parent=parent,
             **kwargs,
         )
-        pass
 
 
 class Meta(Element):
@@ -327,7 +323,6 @@ class Nav(Element):
             parent=parent,
             **kwargs,
         )
-        pass
 
 
 class P(Element):
@@ -382,7 +377,6 @@ class Section(Element):
             parent=parent,
             **kwargs,
         )
-        pass
 
 
 class Span(Element):
@@ -475,4 +469,3 @@ class Ul(Element):
             parent=parent,
             **kwargs,
         )
-        pass
