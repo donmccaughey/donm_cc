@@ -25,11 +25,7 @@ class Element(Node):
             parent: Optional[Node] = None,
             **kwargs
     ):
-        super().__init__(
-            name=name,
-            parent=parent,
-            **kwargs,
-        )
+        super().__init__(name=name, parent=parent, **kwargs)
         self.attributes: dict[str, str] = {}
         self.indent_children = True
         if id:

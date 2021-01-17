@@ -209,6 +209,21 @@ class P(Element):
         if text:
             Text(text, parent=self)
 
+    def omit_end_tag(self) -> bool:
+        if self.next_sibling:
+            return self.next_sibling.name in [
+                'address', 'article', 'aside', 'blockquote', 'details', 'div',
+                'dl', 'fieldset', 'figcaption', 'figure', 'footer', 'form',
+                'h1', 'h2', 'h3', 'h4', 'h5', 'h6', 'header', 'hr', 'main',
+                'nav', 'ol', 'p', 'pre', 'section', 'table', 'ul'
+            ]
+        elif self.parent:
+            return self.parent.name not in [
+                'a', 'audio', 'del', 'ins', 'map', 'noscript', 'video'
+            ]
+        else:
+            return True
+
 
 class Script(Element):
     def __init__(

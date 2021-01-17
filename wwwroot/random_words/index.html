@@ -18,27 +18,22 @@
             <em>Random Words</em> is a small program that chooses random entries
             from <a href=https://github.com/elasticdog/yawl>YAWL</a>, a public
             domain list of 264,097 English words.
-        </p>
     </section>
     <section class=generator>
         <form action=./ method=GET>
             <p>
                 <label for=count>Number of Words:</label>
                 <input id=count name=count type=number value=0>
-            </p>
             <p>
                 <label>Format:</label>
                 <input id=format_sentence name=format type=radio value=sentence checked>
                 <label for=format_sentence>Sentence</label>
                 <input id=format_list name=format type=radio value=list>
                 <label for=format_list>List</label>
-            </p>
             <p>
                 <button>Go</button>
-            </p>
         </form>
         <p id=random_words>
-        </p>
     </section>
     <section id=implementation>
         <h1>Implementation</h1>
@@ -50,7 +45,6 @@
             each word is padded with spaces to 45 characters, the length of the
             <a href=https://en.wikipedia.org/wiki/Pneumonoultramicroscopicsilicovolcanoconiosis>longest word</a>
             in the list.
-        </p>
         <p>
             The program uses the
             <a href=https://developer.mozilla.org/en-US/docs/Web/API/Crypto/getRandomValues><code>getRandomValues()</code></a>
@@ -58,7 +52,6 @@
             select a word, then uses the HTTP
             <a href=https://tools.ietf.org/html/rfc7233#section-3.1>Range header</a>
             to fetch only that word from the table.
-        </p>
         <p>
             <ul>
                 <li>
@@ -74,7 +67,6 @@
                     <a href=words.table>The table of padded words</a>
                 </li>
             </ul>
-        </p>
     </section>
 </body>
 </html>
