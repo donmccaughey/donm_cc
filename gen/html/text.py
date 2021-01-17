@@ -32,7 +32,7 @@ class Text(Node):
                 text=self.text,
                 type=TagType.TEXT,
                 format=self.format,
-                has_end_tag=False,
+                omit=False,
                 indent_children=False,
             )
         ]

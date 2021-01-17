@@ -84,7 +84,7 @@ class Element(Node):
                 text=self.start_tag(),
                 type=TagType.START,
                 format=self.format,
-                has_end_tag=self.has_end_tag,
+                omit=False,
                 indent_children=self.indent_children,
             )
         ]
@@ -96,7 +96,7 @@ class Element(Node):
                 text=self.end_tag(),
                 type=TagType.END,
                 format=self.format,
-                has_end_tag=self.has_end_tag,
+                omit=not self.has_end_tag,
                 indent_children=self.indent_children,
             )
         ]

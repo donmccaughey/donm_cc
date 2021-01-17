@@ -59,14 +59,14 @@ def format_tags(tags: list[Tag]) -> str:
                 level += (1 if tag.indent_children else 0)
         elif tag.is_end:
             if tag.is_inline:
-                if tag.has_end_tag:
+                if not tag.omit:
                     parts += [tag.text]
             elif tag.is_compact:
                 level -= (1 if tag.indent_children else 0)
                 parts += [tag.text]
             else:
                 level -= (1 if tag.indent_children else 0)
-                if tag.has_end_tag:
+                if not tag.omit:
                     parts += ['\n', indent(level), tag.text]
         elif tag.is_text:
             text = clean_text(tag.text)

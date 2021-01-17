@@ -10,7 +10,7 @@ class Tag:
     text: str
     type: TagType
     format: Format
-    has_end_tag: bool
+    omit: bool
     indent_children: bool
 
     @property

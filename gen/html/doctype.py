@@ -25,7 +25,7 @@ class DocType(Node):
                 text=self.tag(),
                 type=TagType.DTD,
                 format=self.format,
-                has_end_tag=False,
+                omit=False,
                 indent_children=False,
             )
         ]
