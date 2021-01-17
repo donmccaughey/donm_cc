@@ -43,34 +43,37 @@ def format_tags(tags: list[Tag]) -> str:
     for i, tag in enumerate(tags):
         previous_tag = tags[i - 1]
 
-        if tag.is_dtd:
+        if tag.type == TagType.DTD:
             parts += [tag.text]
-        elif tag.is_start:
-            if tag.is_inline:
-                if previous_tag.is_inline:
+        elif tag.type == TagType.START:
+            if tag.format == Format.INLINE:
+                if previous_tag.format == Format.INLINE:
                     parts += ['\n', indent(level), tag.text]
                 else:
                     parts += ['\n', indent(level), tag.text]
-            elif tag.is_compact:
+            elif tag.format == Format.COMPACT:
                 parts += ['\n', indent(level), tag.text]
                 level += (1 if tag.indent_children else 0)
             else:
                 parts += ['\n', indent(level), tag.text]
                 level += (1 if tag.indent_children else 0)
-        elif tag.is_end:
-            if tag.is_inline:
+        elif tag.type == TagType.END:
+            if tag.format == Format.INLINE:
                 if not tag.omit:
                     parts += [tag.text]
-            elif tag.is_compact:
+            elif tag.format == Format.COMPACT:
                 level -= (1 if tag.indent_children else 0)
                 parts += [tag.text]
             else:
                 level -= (1 if tag.indent_children else 0)
                 if not tag.omit:
                     parts += ['\n', indent(level), tag.text]
-        elif tag.is_text:
+        elif tag.type == TagType.TEXT:
             text = clean_text(tag.text)
-            if previous_tag.is_start and not previous_tag.is_block:
+            if (
+                    previous_tag.type == TagType.START
+                    and not previous_tag.format == Format.BLOCK
+            ):
                 parts += [text]
             else:
                 parts += ['\n', wrap_text(text, level)]
