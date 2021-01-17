@@ -35,7 +35,6 @@ class Element(Node):
         )
         self.attributes: dict[str, str] = {}
         self.element_type = element_type
-        self.has_end_tag = True
         self.indent_children = True
         if id:
             self.attributes['id'] = id
@@ -96,7 +95,7 @@ class Element(Node):
                 text=self.end_tag(),
                 type=TagType.END,
                 format=self.format,
-                omit=not self.has_end_tag,
+                omit=self.element_type == ElementType.EMPTY,
                 indent_children=self.indent_children,
             )
         ]

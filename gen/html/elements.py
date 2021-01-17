@@ -52,7 +52,6 @@ class Br(Element):
             **kwargs,
         )
         self.format = Format.INLINE
-        self.has_end_tag = False
 
 
 class Button(Element):
@@ -201,7 +200,6 @@ class Img(Element):
         self.attributes['src'] = src
         self.attributes['alt'] = alt
         self.format = Format.INLINE
-        self.has_end_tag = False
 
 
 class Input(Element):
@@ -230,7 +228,6 @@ class Input(Element):
         if checked:
             self.attributes['checked'] = None
         self.format = Format.INLINE
-        self.has_end_tag = False
 
 
 class Link(Element):
@@ -241,7 +238,6 @@ class Link(Element):
             parent=parent,
             **kwargs,
         )
-        self.has_end_tag = False
 
 
 class Label(Element):
@@ -289,7 +285,6 @@ class Meta(Element):
             parent=parent,
             **kwargs,
         )
-        self.has_end_tag = False
 
 
 class MetaCharset(Meta):
