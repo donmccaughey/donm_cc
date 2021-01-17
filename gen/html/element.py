@@ -1,6 +1,7 @@
-from enum import unique, Enum, auto
 from textwrap import indent
 from typing import Optional
+
+from .element_type import ElementType
 from .node import Node
 from .tag import Tag, TagType
 
@@ -14,13 +15,6 @@ def format_attribute(name: str, value: Optional[str]) -> str:
         return f'{name}={q(value)}'
     else:
         return name
-
-
-@unique
-class ElementType(Enum):
-    CONTAINER = auto()
-    COMPACT = auto()
-    EMPTY = auto()
 
 
 class Element(Node):

@@ -1,5 +1,6 @@
 from typing import Optional
-from html.element import Element, ElementType
+from html.element import Element
+from html.element_type import ElementType
 from html.node import Node
 from html.format import Format
 from html.text import Text
