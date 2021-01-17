@@ -55,6 +55,12 @@ class Element(Node):
     def end_tag(self) -> str:
         return f'</{self.name}>'
 
+    def omit_end_tag(self) -> bool:
+        return self.element_type == ElementType.EMPTY
+
+    def omit_start_tag(self) -> bool:
+        return False
+
     def start_tag(self) -> str:
         return '<' + self.name + self.attribute_str() + '>'
 
@@ -65,7 +71,7 @@ class Element(Node):
                 text=self.start_tag(),
                 type=TagType.START,
                 format=self.format,
-                omit=False,
+                omit=self.omit_start_tag(),
                 indent_children=self.indent_children,
             )
         ]
@@ -77,7 +83,7 @@ class Element(Node):
                 text=self.end_tag(),
                 type=TagType.END,
                 format=self.format,
-                omit=self.element_type == ElementType.EMPTY,
+                omit=self.omit_end_tag(),
                 indent_children=self.indent_children,
             )
         ]
