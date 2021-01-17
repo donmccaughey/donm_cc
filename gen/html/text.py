@@ -2,7 +2,8 @@ import textwrap
 from typing import Optional
 from .node import Node
 from .format import Format
-from .tag import Tag, TagType
+from .tag import Tag
+from .tag_type import TagType
 
 
 class Text(Node):

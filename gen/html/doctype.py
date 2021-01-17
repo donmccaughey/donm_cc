@@ -1,6 +1,7 @@
 from typing import Optional
 from .node import Node
-from .tag import Tag, TagType
+from .tag import Tag
+from .tag_type import TagType
 
 
 class DocType(Node):

@@ -1,13 +1,7 @@
 from dataclasses import dataclass
-from enum import Enum, auto
+
+from .tag_type import TagType
 from .format import Format
-
-
-class TagType(Enum):
-    DTD = auto()
-    START = auto()
-    END = auto()
-    TEXT = auto()
 
 
 @dataclass

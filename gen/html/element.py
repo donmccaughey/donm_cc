@@ -3,7 +3,8 @@ from typing import Optional
 
 from .element_type import ElementType
 from .node import Node
-from .tag import Tag, TagType
+from .tag import Tag
+from .tag_type import TagType
 
 
 def q(attribute_value) -> str:
@@ -89,7 +90,7 @@ class Element(Node):
         ]
         for child in self.children:
             tags += child.tags()
-        tags+= [
+        tags += [
             Tag(
                 name=self.name,
                 text=self.end_tag() if self.has_end_tag else '',
