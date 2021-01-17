@@ -1,7 +1,5 @@
-from textwrap import indent
 from typing import Optional
 
-from .element_type import ElementType
 from .node import Node
 from .tag import Tag
 from .tag_type import TagType
@@ -24,7 +22,6 @@ class Element(Node):
             name: str,
             id: Optional[str] = None,
             class_names: Optional[list[str]] = None,
-            element_type: ElementType = ElementType.CONTAINER,
             parent: Optional[Node] = None,
             **kwargs
     ):
@@ -34,7 +31,6 @@ class Element(Node):
             **kwargs,
         )
         self.attributes: dict[str, str] = {}
-        self.element_type = element_type
         self.indent_children = True
         if id:
             self.attributes['id'] = id
@@ -56,7 +52,7 @@ class Element(Node):
         return f'</{self.name}>'
 
     def omit_end_tag(self) -> bool:
-        return self.element_type == ElementType.EMPTY
+        return False
 
     def omit_start_tag(self) -> bool:
         return False
