@@ -51,9 +51,6 @@ def format_tags(tags: list[Tag]) -> str:
                     parts += ['\n', indent(level), tag.text]
                 else:
                     parts += ['\n', indent(level), tag.text]
-            elif tag.format == Format.COMPACT:
-                parts += ['\n', indent(level), tag.text]
-                level += (1 if tag.indent_children else 0)
             else:
                 parts += ['\n', indent(level), tag.text]
                 level += (1 if tag.indent_children else 0)
