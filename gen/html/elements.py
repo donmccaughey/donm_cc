@@ -33,7 +33,6 @@ class A(Element):
         )
         self.attributes['href'] = href
         self.format = Format.INLINE
-        self.is_phrasing_content = True
         if text:
             Text(text, parent=self)
 
@@ -54,7 +53,6 @@ class Br(Element):
         )
         self.format = Format.INLINE
         self.has_end_tag = False
-        self.is_phrasing_content = True
 
 
 class Button(Element):
@@ -71,7 +69,6 @@ class Button(Element):
             **kwargs,
         )
         self.format = Format.INLINE
-        self.is_phrasing_content = True
         Text(text, parent=self)
 
 
@@ -91,7 +88,6 @@ class Code(Element):
             **kwargs,
         )
         self.format = Format.INLINE
-        self.is_phrasing_content = True
         Text(text, parent=self)
 
 
@@ -127,7 +123,6 @@ class Em(Element):
             **kwargs,
         )
         self.format = Format.INLINE
-        self.is_phrasing_content = True
         Text(text, parent=self)
 
 
@@ -211,7 +206,6 @@ class Img(Element):
         self.attributes['alt'] = alt
         self.format = Format.INLINE
         self.has_end_tag = False
-        self.is_phrasing_content = True
 
 
 class Input(Element):
@@ -241,7 +235,6 @@ class Input(Element):
             self.attributes['checked'] = None
         self.format = Format.COMPACT
         self.has_end_tag = False
-        self.is_phrasing_content = True
 
 
 class Link(Element):
@@ -270,7 +263,6 @@ class Label(Element):
             **kwargs,
         )
         self.format = Format.COMPACT
-        self.is_phrasing_content = True
         if for_id:
             self.attributes['for'] = for_id
         Text(text, parent=self)
@@ -377,7 +369,6 @@ class Script(Element):
         self.attributes['src'] = src
         self.attributes['type'] = 'text/javascript'
         self.format = Format.COMPACT # TODO: script containing code should be .BLOCK
-        self.is_phrasing_content = True
 
 
 class Section(Element):
@@ -412,7 +403,6 @@ class Span(Element):
             **kwargs,
         )
         self.format = Format.INLINE
-        self.is_phrasing_content = True
         Text(text, parent=self)
 
 
@@ -430,7 +420,6 @@ class Strong(Element):
             **kwargs,
         )
         self.format = Format.INLINE
-        self.is_phrasing_content = True
         Text(text, parent=self)
 
 
@@ -458,7 +447,6 @@ class Time(Element):
         )
         self.attributes['datetime'] = datetime
         self.format = Format.INLINE
-        self.is_phrasing_content = True
         Text(datetime, parent=self)
 
 
