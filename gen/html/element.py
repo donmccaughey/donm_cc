@@ -42,7 +42,6 @@ class Element(Node):
         self.element_type = element_type
         self.has_end_tag = True
         self.indent_children = True
-        self.is_heading = False
         if id:
             self.attributes['id'] = id
         if class_names:

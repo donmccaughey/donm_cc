@@ -154,7 +154,6 @@ class H1(Element):
             **kwargs,
         )
         self.format = Format.COMPACT
-        self.is_heading = True
         Text(text, parent=self)
 
 
@@ -167,7 +166,6 @@ class H2(Element):
             **kwargs,
         )
         self.format = Format.COMPACT
-        self.is_heading = True
         Text(text, parent=self)
 
 
@@ -459,7 +457,6 @@ class Title(Element):
             **kwargs,
         )
         self.format = Format.COMPACT
-        self.is_heading = True
         Text(title, parent=self)
 
 
