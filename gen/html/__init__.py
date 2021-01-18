@@ -50,10 +50,7 @@ def format_tags(tags: list[Tag]) -> str:
             parts += [tag.text]
         elif tag.type == TagType.START:
             if tag.format == Format.INLINE:
-                if previous_tag.format == Format.INLINE:
-                    parts += ['\n', indent(level), tag.text]
-                else:
-                    parts += ['\n', indent(level), tag.text]
+                parts += ['\n', indent(level), tag.text]
             else:
                 parts += ['\n', indent(level), tag.text]
                 level += (1 if tag.indent_children else 0)
