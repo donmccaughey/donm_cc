@@ -1,5 +1,5 @@
 import unittest
-
+from textwrap import dedent
 from html import format_tags, Img, Input, P, Div, Text, A
 from html.comment import Comment
 from html.elements import as_block, HTML, Body
@@ -12,8 +12,11 @@ class FormatTagsTestCase(unittest.TestCase):
 
         self.assertEqual(2, len(tags))
         self.assertEqual(
-            '\n' +
-            '<img src=mypic.jpg alt=Me!>\n',
+            dedent(
+                """
+                <img src=mypic.jpg alt=Me!>
+                """
+            ),
             format_tags(tags)
         )
 
@@ -23,8 +26,11 @@ class FormatTagsTestCase(unittest.TestCase):
 
         self.assertEqual(2, len(tags))
         self.assertEqual(
-            '\n' +
-            '<input id=count name=count type=number value=0>\n',
+            dedent(
+                """
+                <input id=count name=count type=number value=0>
+                """
+            ),
             format_tags(tags)
         )
 
@@ -36,10 +42,13 @@ class FormatTagsBodyTestCase(unittest.TestCase):
             Body()
 
         self.assertEqual(
-            '\n' +
-            '<html lang=en>\n' +
-            '<body>\n' +
-            '</html>\n',
+            dedent(
+                """
+                <html lang=en>
+                <body>
+                </html>
+                """
+            ),
             format_tags(html.tags())
         )
 
@@ -50,12 +59,15 @@ class FormatTagsBodyTestCase(unittest.TestCase):
             Comment('a comment')
 
         self.assertEqual(
-            '\n' +
-            '<html lang=en>\n' +
-            '<body>\n' +
-            '</body>\n' +
-            '<!-- a comment -->\n'
-            '</html>\n',
+            dedent(
+                """
+                <html lang=en>
+                <body>
+                </body>
+                <!-- a comment -->
+                </html>
+                """
+            ),
             format_tags(html.tags())
         )
 
@@ -64,9 +76,12 @@ class FormatTagsParagraphTestCase(unittest.TestCase):
     def test_omits_end_tag_when_no_parent(self):
         p = P('text')
         self.assertEqual(
-            '\n' +
-            '<p>\n' +
-            '    text\n',
+            dedent(
+                """
+                <p>
+                    text
+                """
+            ),
             format_tags(p.tags())
         )
 
@@ -76,19 +91,14 @@ class FormatTagsParagraphTestCase(unittest.TestCase):
             P('text')
 
         self.assertEqual(
-            '\n' +
-            '<div>\n' +
-            '    <p>\n' +
-            '        text\n' +
-            '</div>\n',
-            format_tags(d.tags())
-        )
-        self.assertEqual(
-            '\n' +
-            '<div>\n' +
-            '    <p>\n' +
-            '        text\n' +
-            '</div>\n',
+            dedent(
+                """
+                <div>
+                    <p>
+                        text
+                </div>
+                """
+            ),
             format_tags(d.tags())
         )
 
@@ -98,12 +108,15 @@ class FormatTagsParagraphTestCase(unittest.TestCase):
             P('text')
 
         self.assertEqual(
-            '\n' +
-            '<a href=/>\n' +
-            '    <p>\n' +
-            '        text\n' +
-            '    </p>\n' +
-            '</a>\n',
+            dedent(
+                """
+                <a href=/>
+                    <p>
+                        text
+                    </p>
+                </a>
+                """
+            ),
             format_tags(a.tags())
         )
 
@@ -114,13 +127,16 @@ class FormatTagsParagraphTestCase(unittest.TestCase):
             P('more text')
 
         self.assertEqual(
-            '\n' +
-            '<div>\n' +
-            '    <p>\n' +
-            '        text\n' +
-            '    <p>\n' +
-            '        more text\n' +
-            '</div>\n',
+            dedent(
+                """
+                <div>
+                    <p>
+                        text
+                    <p>
+                        more text
+                </div>
+                """
+            ),
             format_tags(d.tags())
         )
 
@@ -131,13 +147,16 @@ class FormatTagsParagraphTestCase(unittest.TestCase):
             Text('more text')
 
         self.assertEqual(
-            '\n' +
-            '<div>\n' +
-            '    <p>\n' +
-            '        text\n' +
-            '    </p>\n' +
-            '    more text\n' +
-            '</div>\n',
+            dedent(
+                """
+                <div>
+                    <p>
+                        text
+                    </p>
+                    more text
+                </div>
+                """
+            ),
             format_tags(d.tags())
         )
 
