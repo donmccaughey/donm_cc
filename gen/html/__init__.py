@@ -6,8 +6,9 @@ from .format import Format
 from .tag import Tag
 from .tag_type import TagType
 from .text import Text
-from .elements import A, Button, H1, H2, Label, Li, Script, Title
+from .elements import A, Li, Script
 from .block_element import Body, Div, Form, Head, HTML, Nav, P, Section, Ul
+from .compact_element import Button, H1, H2, Label, Title
 from .inline_element import Code, Em, Span, Strong, Time
 from .empty_element import Br, Img, Input, Link, Meta, MetaCharset
 from .empty_element import MetaCharset, MetaViewport, Stylesheet

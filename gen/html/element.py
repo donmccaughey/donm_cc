@@ -61,6 +61,7 @@ class Element(Node):
         for child in self.children:
             markup += child.markup(width)
         markup += self.end_tag()
+        markup += '\n'
         return markup
 
     def tags(self) -> list[Tag]:

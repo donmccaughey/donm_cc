@@ -61,7 +61,7 @@ class IndexPage(Parent, Page):
         if not is_dry_run:
             mode = 'w' if overwrite else 'x'
             with open(path, mode, encoding='utf8') as f:
-                f.write(format_tags(self.document.tags()))
+                f.write(self.document.markup(80))
         for child in self.children:
             child.generate(output_path, is_dry_run, overwrite)
 

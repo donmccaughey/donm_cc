@@ -11,7 +11,7 @@ class EmptyElement(Element):
         self.format = Format.INLINE
 
     def markup(self, width: int) -> str:
-        return self.start_tag()
+        return self.start_tag() + '\n'
 
     def omit_end_tag(self) -> bool:
         return True
