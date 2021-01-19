@@ -56,6 +56,13 @@ class Element(Node):
     def start_tag(self) -> str:
         return '<' + self.name + self.attribute_str() + '>'
 
+    def markup(self, width: int) -> str:
+        markup = self.start_tag()
+        for child in self.children:
+            markup += child.markup(width)
+        markup += self.end_tag()
+        return markup
+
     def tags(self) -> list[Tag]:
         tags = [
             Tag(

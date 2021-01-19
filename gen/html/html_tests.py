@@ -2,7 +2,8 @@ import unittest
 from textwrap import dedent
 from html import format_tags, Img, Input, P, Div, Text, A
 from html.comment import Comment
-from html.elements import as_block, HTML, Body
+from html.elements import as_block
+from html.block_element import Body, HTML
 
 
 class FormatTagsTestCase(unittest.TestCase):

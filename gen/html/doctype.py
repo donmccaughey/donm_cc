@@ -12,6 +12,9 @@ class DocType(Node):
             **kwargs,
         )
 
+    def markup(self, width: int) -> str:
+        return '<!doctype html>\n'
+
     def tag(self) -> str:
         return '<!doctype html>'
 

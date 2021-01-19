@@ -13,20 +13,20 @@ class Comment(Node):
         )
         self.text = text
 
-    def tag(self) -> str:
+    def markup(self, width: int) -> str:
         # TODO: handle invalid comment text
         # https://www.w3.org/TR/html52/syntax.html#comments
         # Optionally, text, with the additional restriction that the text must
         # not start with the string ">", nor start with the string "->", nor
         # contain the strings "<!--", "-->", or "--!>", nor end with the
         # string "<!-".
-        return f'<!-- {self.text} -->'
+        return f'<!-- {self.text} -->\n'
 
     def tags(self) -> list[Tag]:
         return [
             Tag(
                 name=self.name,
-                text=self.tag(),
+                text=f'<!-- {self.text} -->',
                 type=TagType.COMMENT,
                 format=self.format,
                 omit=False,

@@ -1,0 +1,187 @@
+from textwrap import indent
+from typing import Optional
+
+from html import Text
+from html.comment import Comment
+from html.element import Element
+from html.inline_element import InlineElement
+from html.node import Node
+from html.wrap import wrap_tokens
+
+
+class BlockElement(Element):
+    def __init__(self, name: str, parent: Optional[Node] = None, **kwargs):
+        super().__init__(name=name, parent=parent, **kwargs)
+
+    def markup(self, width: int) -> str:
+        markup = self.start_tag()
+        markup += '\n'
+
+        if self.children:
+            prefix = '    '
+            child_width = width - len(prefix)
+            tokens = []
+
+            def append_tokens():
+                nonlocal markup, tokens
+                if tokens:
+                    wrapped = wrap_tokens(tokens, child_width)
+                    if wrapped[-1].isspace():
+                        wrapped[-1] = '\n'
+                    else:
+                        wrapped.append('\n')
+                    s = ''.join(wrapped)
+                    markup += indent(s, prefix)
+                    tokens = []
+
+            for child in self.children:
+                if isinstance(child, InlineElement) or isinstance(child, Text):
+                    tokens += child.tokens()
+                else:
+                    append_tokens()
+                    markup += indent(child.markup(child_width), prefix)
+            append_tokens()
+
+        if not self.omit_end_tag():
+            markup += self.end_tag()
+            markup += '\n'
+        return markup
+
+
+class Body(BlockElement):
+    def __init__(self, parent: Optional[Node] = None, **kwargs):
+        super().__init__(name='body', parent=parent, **kwargs)
+
+    def omit_end_tag(self) -> bool:
+        if self.next_sibling:
+            return not isinstance(self.next_sibling, Comment)
+        else:
+            return True
+
+
+class Div(BlockElement):
+    def __init__(
+            self,
+            id: Optional[str] = None,
+            class_names: Optional[list[str]] = None,
+            parent: Optional[Node] = None,
+            **kwargs,
+    ):
+        super().__init__(
+            name='div',
+            id=id,
+            class_names=class_names,
+            parent=parent,
+            **kwargs,
+        )
+
+
+class Form(BlockElement):
+    def __init__(
+            self,
+            action: str,
+            method: Optional[str] = 'POST',
+            class_names: Optional[list[str]] = None,
+            parent: Optional[Node] = None,
+            **kwargs,
+    ):
+        super().__init__(
+            name='form',
+            class_names=class_names,
+            parent=parent,
+            **kwargs,
+        )
+        self.attributes['action'] = action
+        self.attributes['method'] = method
+
+
+class Head(BlockElement):
+    def __init__(self, parent: Optional[Node] = None, **kwargs):
+        super().__init__(name='head', parent=parent, **kwargs)
+
+
+class HTML(BlockElement):
+    def __init__(self, lang: str, parent: Optional[Node] = None, **kwargs):
+        super().__init__(name='html', parent=parent, **kwargs)
+        self.attributes['lang'] = lang
+        self.indent_children = False
+
+
+class Nav(BlockElement):
+    def __init__(
+            self,
+            class_names: Optional[list[str]] = None,
+            parent: Optional[Node] = None,
+            **kwargs,
+    ):
+        super().__init__(
+            name='nav',
+            class_names=class_names,
+            parent=parent,
+            **kwargs,
+        )
+
+
+class P(BlockElement):
+    def __init__(
+            self,
+            text: Optional[str] = None,
+            class_names: Optional[list[str]] = None,
+            parent: Optional[Node] = None,
+            **kwargs,
+    ):
+        super().__init__(
+            name='p',
+            class_names=class_names,
+            parent=parent,
+            **kwargs,
+        )
+        if text:
+            Text(text, parent=self)
+
+    def omit_end_tag(self) -> bool:
+        if self.next_sibling:
+            return self.next_sibling.name in [
+                'address', 'article', 'aside', 'blockquote', 'details', 'div',
+                'dl', 'fieldset', 'figcaption', 'figure', 'footer', 'form',
+                'h1', 'h2', 'h3', 'h4', 'h5', 'h6', 'header', 'hr', 'main',
+                'nav', 'ol', 'p', 'pre', 'section', 'table', 'ul'
+            ]
+        elif self.parent:
+            return self.parent.name not in [
+                'a', 'audio', 'del', 'ins', 'map', 'noscript', 'video'
+            ]
+        else:
+            return True
+
+
+class Section(BlockElement):
+    def __init__(
+            self,
+            class_names: Optional[list[str]] = None,
+            parent: Optional[Node] = None,
+            **kwargs,
+    ):
+        super().__init__(
+            name='section',
+            class_names=class_names,
+            parent=parent,
+            **kwargs,
+        )
+
+
+class Ul(BlockElement):
+    def __init__(
+            self,
+            id: Optional[str] = None,
+            class_names: Optional[list[str]] = None,
+            parent: Optional[Node] = None,
+            **kwargs,
+    ):
+        super().__init__(
+            name='ul',
+            id=id,
+            class_names=class_names,
+            parent=parent,
+            **kwargs,
+        )

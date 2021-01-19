@@ -19,6 +19,12 @@ class Document(Node):
     def attach(self, parent: Node):
         self.parent = None
 
+    def markup(self, width: int) -> str:
+        markup = ''
+        for child in self.children:
+            markup += child.markup(width)
+        return markup
+
     def tags(self) -> list[Tag]:
         tags = []
         for child in self.children:

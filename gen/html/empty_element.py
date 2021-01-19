@@ -10,6 +10,9 @@ class EmptyElement(Element):
         super().__init__(name=name, parent=parent, **kwargs)
         self.format = Format.INLINE
 
+    def markup(self, width: int) -> str:
+        return self.start_tag()
+
     def omit_end_tag(self) -> bool:
         return True
 

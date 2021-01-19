@@ -1,13 +1,14 @@
 from textwrap import TextWrapper, dedent
+
 from .doctype import DocType
 from .document import Document
 from .format import Format
 from .tag import Tag
 from .tag_type import TagType
 from .text import Text
-from .elements import A, Body, Button, Code, Div, Em, Form, H1, H2, Head, HTML
-from .elements import Label, Li, Nav, P, Script, Section, Span, Strong, Time
-from .elements import Title, Ul
+from .elements import A, Button, H1, H2, Label, Li, Script, Title
+from .block_element import Body, Div, Form, Head, HTML, Nav, P, Section, Ul
+from .inline_element import Code, Em, Span, Strong, Time
 from .empty_element import Br, Img, Input, Link, Meta, MetaCharset
 from .empty_element import MetaCharset, MetaViewport, Stylesheet
 

@@ -66,5 +66,11 @@ class Node:
         assert not self.children
         return children
 
+    def markup(self, width: int) -> str:
+        raise NotImplementedError
+
+    def tokens(self) -> list[str]:
+        raise NotImplementedError
+
     def tags(self) -> list[Tag]:
         raise NotImplementedError
