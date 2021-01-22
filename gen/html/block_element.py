@@ -25,11 +25,12 @@ class BlockElement(Element):
             def append_tokens():
                 nonlocal markup, tokens
                 if tokens:
+                    if tokens[0].isspace():
+                        del tokens[0]
+                    if tokens[-1].isspace():
+                        del tokens[-1]
                     wrapped = wrap_tokens(tokens, child_width)
-                    if wrapped[-1].isspace():
-                        wrapped[-1] = '\n'
-                    else:
-                        wrapped.append('\n')
+                    wrapped.append('\n')
                     s = ''.join(wrapped)
                     markup += indent(s, prefix)
                     tokens = []

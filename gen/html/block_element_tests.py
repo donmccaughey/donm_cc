@@ -106,6 +106,22 @@ class PTestCase(unittest.TestCase):
             p.markup(width=80)
         )
 
+    def test_markup_for_a_sentence_with_leading_and_trailing_space(self):
+        p = P(
+            dedent("""
+            A sentence.
+            """)
+        )
+        self.assertEqual(
+            dedent(
+                """\
+                <p>
+                    A sentence.
+                """
+            ),
+            p.markup(width=80)
+        )
+
     def test_markup_for_a_long_sentence(self):
         sentence = 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.'
         p = P(sentence)

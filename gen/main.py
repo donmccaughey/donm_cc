@@ -34,11 +34,13 @@ def link(
         a.format = Format.BLOCK
         Text(title)
         if authors:
+            Text(' ')
             as_compact(Span(class_names=['authors'], text=authors))
         if date:
+            Text(' ')
             as_compact(Time(datetime=date))
         if checked:
-            Text('✓')
+            Text(' ✓')
 
 
 def book(
