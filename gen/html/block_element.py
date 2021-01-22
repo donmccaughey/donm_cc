@@ -18,7 +18,7 @@ class BlockElement(Element):
         markup += '\n'
 
         if self.children:
-            prefix = '    '
+            prefix = '    ' if self.indent_children else ''
             child_width = width - len(prefix)
             tokens = []
 

@@ -1,7 +1,7 @@
 import unittest
 from textwrap import dedent
 
-from html import Body, Div, P, Text, Strong, Em
+from html import Body, Div, P, Text, Strong, Em, HTML, Head
 
 
 class BodyTestCase(unittest.TestCase):
@@ -59,6 +59,26 @@ class DivTestCase(unittest.TestCase):
                 """
             ),
             div.markup(width=80)
+        )
+
+
+class HTMLTestCase(unittest.TestCase):
+    def test_markup(self):
+        html = HTML(lang='en')
+        with html:
+            Head()
+            Body()
+        self.assertEqual(
+            dedent(
+                """\
+                <html lang=en>
+                <head>
+                </head>
+                <body>
+                </html>
+                """
+            ),
+            html.markup(width=80)
         )
 
 
