@@ -217,6 +217,45 @@ class WrapTokensTestCase(unittest.TestCase):
             wrap_tokens(tokens, 10)
         )
 
+    def test_wrap_adds_two_spaces_after_a_period(self):
+        tokens = [
+            'This', ' ', 'is', ' ', 'a', ' ', 'sentence.', ' ',
+            'And', ' ', 'so', ' ', 'is', ' ', 'this.'
+        ]
+        self.assertEqual(
+            [
+                'This', ' ', 'is', ' ', 'a', ' ', 'sentence.', '  ',
+                'And', ' ', 'so', ' ', 'is', ' ', 'this.'
+            ],
+            wrap_tokens(tokens, 80)
+        )
+
+    def test_wrap_adds_two_spaces_after_a_period_inside_markup(self):
+        tokens = [
+            '<em>', 'This', ' ', 'is', ' ', 'a', ' ', 'sentence.', '</em>', ' ',
+            'And', ' ', 'so', ' ', 'is', ' ', 'this.'
+        ]
+        self.assertEqual(
+            [
+                '<em>', 'This', ' ', 'is', ' ', 'a', ' ', 'sentence.', '</em>', '  ',
+                'And', ' ', 'so', ' ', 'is', ' ', 'this.'
+            ],
+            wrap_tokens(tokens, 80)
+        )
+
+    def test_wrap_breaks_line_after_a_period(self):
+        tokens = [
+            'This', ' ', 'is', ' ', 'a', ' ', 'sentence.', ' ',
+            'And', ' ', 'so', ' ', 'is', ' ', 'this.'
+        ]
+        self.assertEqual(
+            [
+                'This', ' ', 'is', ' ', 'a', ' ', 'sentence.', '\n',
+                'And', ' ', 'so', ' ', 'is', ' ', 'this.'
+            ],
+            wrap_tokens(tokens, 20)
+        )
+
 
 if __name__ == '__main__':
     unittest.main()
