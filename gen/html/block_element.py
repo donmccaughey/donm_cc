@@ -151,9 +151,8 @@ class Head(BlockElement):
 
 
 class HTML(BlockElement):
-    def __init__(self, lang: str, parent: Optional[Node] = None, **kwargs):
+    def __init__(self, parent: Optional[Node] = None, **kwargs):
         super().__init__(name='html', parent=parent, **kwargs)
-        self.attributes['lang'] = lang
         self.indent_children = False
 
     def omit_end_tag(self) -> bool:

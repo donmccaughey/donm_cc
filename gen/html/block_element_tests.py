@@ -29,7 +29,7 @@ class BodyTestCase(unittest.TestCase):
         )
 
     def test_markup_when_followed_by_comment(self):
-        html = HTML(lang='en')
+        html = HTML()
         with html:
             with Head():
                 Title('Hello')
@@ -39,7 +39,7 @@ class BodyTestCase(unittest.TestCase):
         self.assertEqual(
             dedent(
                 """\
-                <html lang=en>
+                <html>
                 <title>Hello</title>
                 <body>
                     <div>
@@ -52,7 +52,7 @@ class BodyTestCase(unittest.TestCase):
         )
 
     def test_markup_when_first_child_is_comment(self):
-        html = HTML(lang='en')
+        html = HTML()
         with html:
             with Head():
                 Title('Hello')
@@ -62,7 +62,7 @@ class BodyTestCase(unittest.TestCase):
         self.assertEqual(
             dedent(
                 """\
-                <html lang=en>
+                <html>
                 <title>Hello</title>
                 <body>
                     <!-- foobar -->
@@ -74,7 +74,7 @@ class BodyTestCase(unittest.TestCase):
         )
 
     def test_markup_when_first_child_is_script(self):
-        html = HTML(lang='en')
+        html = HTML()
         with html:
             with Head():
                 Title('Hello')
@@ -83,7 +83,7 @@ class BodyTestCase(unittest.TestCase):
         self.assertEqual(
             dedent(
                 """\
-                <html lang=en>
+                <html>
                 <title>Hello</title>
                 <body>
                     <script src=foo.js type=text/javascript></script>
@@ -154,7 +154,7 @@ class HeadTestCase(unittest.TestCase):
         )
 
     def test_markup_when_followed_by_comment(self):
-        html = HTML(lang='en')
+        html = HTML()
         with html:
             with Head():
                 Title('Hello')
@@ -162,7 +162,7 @@ class HeadTestCase(unittest.TestCase):
         self.assertEqual(
             dedent(
                 """\
-                <html lang=en>
+                <html>
                 <head>
                     <title>Hello</title>
                 </head>
@@ -173,14 +173,14 @@ class HeadTestCase(unittest.TestCase):
         )
 
     def test_markup_when_empty(self):
-        html = HTML(lang='en')
+        html = HTML()
         with html:
             Head()
             Body()
         self.assertEqual(
             dedent(
                 """\
-                <html lang=en>
+                <html>
                 """
             ),
             html.markup(width=80)
@@ -189,7 +189,7 @@ class HeadTestCase(unittest.TestCase):
 
 class HTMLTestCase(unittest.TestCase):
     def test_markup(self):
-        html = HTML(lang='en')
+        html = HTML()
         with html:
             with Head():
                 Title('Hello')
@@ -198,7 +198,7 @@ class HTMLTestCase(unittest.TestCase):
         self.assertEqual(
             dedent(
                 """\
-                <html lang=en>
+                <html>
                 <title>Hello</title>
                 <div>
                 </div>
@@ -210,7 +210,7 @@ class HTMLTestCase(unittest.TestCase):
     def test_markup_when_followed_by_a_comment(self):
         document = Document()
         with document:
-            with HTML(lang='en'):
+            with HTML():
                 with Head():
                     Title('Hello')
                 Body()
@@ -218,7 +218,7 @@ class HTMLTestCase(unittest.TestCase):
         self.assertEqual(
             dedent(
                 """\
-                <html lang=en>
+                <html>
                 <title>Hello</title>
                 </html>
                 <!-- foobar -->

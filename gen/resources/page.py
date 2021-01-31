@@ -43,7 +43,7 @@ class Page(Child):
         document = Document()
         with document:
             DocType()
-            with HTML(lang='en'):
+            with HTML():
                 with Head() as head:
                     MetaCharset('utf-8')
                     MetaViewport(initial_scale='0.9', width='device-width')

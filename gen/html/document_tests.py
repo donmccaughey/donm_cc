@@ -13,13 +13,13 @@ class DocumentTestCase(unittest.TestCase):
         document = Document()
         with document:
             DocType()
-            HTML(lang='en')
+            HTML()
             Comment('a comment')
         self.assertEqual(
             dedent(
                 """\
                 <!doctype html>
-                <html lang=en>
+                <html>
                 </html>
                 <!-- a comment -->
                 """
