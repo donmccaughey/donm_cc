@@ -44,8 +44,7 @@ class BodyTestCase(unittest.TestCase):
             dedent(
                 """\
                 <html lang=en>
-                <head>
-                    <title>Hello</title>
+                <title>Hello</title>
                 <body>
                     <div>
                     </div>
@@ -95,7 +94,22 @@ class HeadTestCase(unittest.TestCase):
         self.assertEqual(
             dedent(
                 """\
+                <title>Hello</title>
+                """
+            ),
+            head.markup(width=80)
+        )
+
+    def test_markup_when_first_child_is_a_comment(self):
+        head = Head()
+        with head:
+            Comment('foobar')
+            Title('Hello')
+        self.assertEqual(
+            dedent(
+                """\
                 <head>
+                    <!-- foobar -->
                     <title>Hello</title>
                 """
             ),
@@ -121,9 +135,7 @@ class HeadTestCase(unittest.TestCase):
             html.markup(width=80)
         )
 
-
-class HTMLTestCase(unittest.TestCase):
-    def test_markup(self):
+    def test_markup_when_empty(self):
         html = HTML(lang='en')
         with html:
             Head()
@@ -132,7 +144,25 @@ class HTMLTestCase(unittest.TestCase):
             dedent(
                 """\
                 <html lang=en>
-                <head>
+                <body>
+                """
+            ),
+            html.markup(width=80)
+        )
+
+
+class HTMLTestCase(unittest.TestCase):
+    def test_markup(self):
+        html = HTML(lang='en')
+        with html:
+            with Head():
+                Title('Hello')
+            Body()
+        self.assertEqual(
+            dedent(
+                """\
+                <html lang=en>
+                <title>Hello</title>
                 <body>
                 """
             ),
@@ -143,14 +173,15 @@ class HTMLTestCase(unittest.TestCase):
         document = Document()
         with document:
             with HTML(lang='en'):
-                Head()
+                with Head():
+                    Title('Hello')
                 Body()
             Comment('foobar')
         self.assertEqual(
             dedent(
                 """\
                 <html lang=en>
-                <head>
+                <title>Hello</title>
                 <body>
                 </html>
                 <!-- foobar -->

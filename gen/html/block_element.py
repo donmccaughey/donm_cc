@@ -14,8 +14,12 @@ class BlockElement(Element):
         super().__init__(name=name, parent=parent, **kwargs)
 
     def markup(self, width: int) -> str:
-        markup = self.start_tag()
-        markup += '\n'
+        markup = ''
+        if self.omit_start_tag() and self.omit_end_tag():
+            self.indent_children = False
+        else:
+            markup += self.start_tag()
+            markup += '\n'
 
         if self.children:
             prefix = '    ' if self.indent_children else ''
@@ -125,6 +129,12 @@ class Head(BlockElement):
             # A head element’s end tag may be omitted if the head element is
             # not immediately followed by a space character or a comment.
             return not isinstance(self.next_sibling, Comment)
+        else:
+            return True
+
+    def omit_start_tag(self) -> bool:
+        if self.children:
+            return isinstance(self.children[0], Element)
         else:
             return True
 
