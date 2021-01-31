@@ -113,7 +113,7 @@ class H2(CompactElement):
         Text(text, parent=self)
 
 
-class Label(Element):
+class Label(CompactElement):
     def __init__(
             self,
             text: str,
@@ -125,6 +125,23 @@ class Label(Element):
         if for_id:
             self.attributes['for'] = for_id
         Text(text, parent=self)
+
+
+class Li(CompactElement):
+    def __init__(
+            self,
+            id: Optional[str] = None,
+            class_names: Optional[list[str]] = None,
+            parent: Optional[Node] = None,
+            **kwargs,
+    ):
+        super().__init__(
+            name='li',
+            id=id,
+            class_names=class_names,
+            parent=parent,
+            **kwargs,
+        )
 
 
 class Title(CompactElement):
