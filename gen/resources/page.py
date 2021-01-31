@@ -1,7 +1,6 @@
 from __future__ import annotations
 import os
 from typing import Optional, TYPE_CHECKING
-from html.elements import as_compact
 from .child import Child
 from html import *
 from html.node import with_node
@@ -57,9 +56,9 @@ class Page(Child):
                         if ancestors:
                             for ancestor in self.ancestors:
                                 if hasattr(ancestor, 'title'):
-                                    as_compact(A(href=ancestor.url, text=ancestor.title))
+                                    CompactA(href=ancestor.url, text=ancestor.title)
                         else:
-                            A(href=self.url, text=self.title)
+                            CompactA(href=self.url, text=self.title)
                     body.attach_children(self.page_content.detach_children())
         return document
 

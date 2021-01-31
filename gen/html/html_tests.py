@@ -2,8 +2,7 @@ import unittest
 from textwrap import dedent
 from html import format_tags, Img, Input, P, Div, Text, A
 from html.comment import Comment
-from html.elements import as_block
-from html.block_element import Body, HTML
+from html.block_element import BlockA, Body, HTML
 
 
 class FormatTagsTestCase(unittest.TestCase):
@@ -104,7 +103,7 @@ class FormatTagsParagraphTestCase(unittest.TestCase):
         )
 
     def test_keeps_end_tag_when_last_sibling_and_parent_is_a(self):
-        a = as_block(A(href='/'))
+        a = BlockA(href='/')
         with a:
             P('text')
 

@@ -27,7 +27,7 @@ class BlockElement(Element):
                 if tokens:
                     if tokens[0].isspace():
                         del tokens[0]
-                    if tokens[-1].isspace():
+                    if tokens and tokens[-1].isspace():
                         del tokens[-1]
                     wrapped = wrap_tokens(tokens, child_width)
                     wrapped.append('\n')
@@ -47,6 +47,26 @@ class BlockElement(Element):
             markup += self.end_tag()
             markup += '\n'
         return markup
+
+
+class BlockA(BlockElement):
+    def __init__(
+            self,
+            href: str,
+            text: Optional[str] = None,
+            class_names: Optional[list[str]] = None,
+            parent: Optional[Node] = None,
+            **kwargs,
+    ):
+        super().__init__(
+            name='a',
+            class_names=class_names,
+            parent=parent,
+            **kwargs,
+        )
+        self.attributes['href'] = href
+        if text:
+            Text(text, parent=self)
 
 
 class Body(BlockElement):

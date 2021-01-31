@@ -1,9 +1,9 @@
 from typing import Optional
 from html.elements import as_block, as_compact
 from resources import Directory, File, IndexPage, Page
-from html import A, Br, Button, Code, Div, Em, Form, H1, H2, Img, Input, Format
+from html import A, Br, Button, Code, Div, Em, Form, H1, H2, Img, Input
 from html import Label, Li, P, Section, Span, Strong, Text, Time, Ul
-
+from html import BlockA, CompactSpan, CompactTime
 
 def item(
         title: str,
@@ -13,7 +13,7 @@ def item(
         is_local: bool = False
 ):
     class_names = ['item'] + (['local'] if is_local else [])
-    with as_block(A(class_names=class_names, href=href)):
+    with BlockA(class_names=class_names, href=href):
         if favicon:
             as_block(Img(class_names=['favicon'], src=favicon, alt=f'{title} icon'))
         as_compact(Strong(title))
@@ -30,15 +30,12 @@ def link(
         date: Optional[str] = None,
         checked: bool = False
 ):
-    with A(class_names=[type], href=href) as a:
-        a.format = Format.BLOCK
+    with BlockA(class_names=[type], href=href) as a:
         Text(title)
         if authors:
-            Text(' ')
-            as_compact(Span(class_names=['authors'], text=authors))
+            CompactSpan(class_names=['authors'], text=authors)
         if date:
-            Text(' ')
-            as_compact(Time(datetime=date))
+            CompactTime(datetime=date)
         if checked:
             Text(' ✓')
 
@@ -72,13 +69,13 @@ def package(
         H1(f'{name} {version}')
         P(description)
         with Div(class_names=['collection']):
-            with as_block(A(package, class_names=['item'])):
+            with BlockA(package, class_names=['item']):
                 as_block(Img('./package-32x32.png', 'package icon', class_names=['favicon']))
                 Strong('package')
-            with as_block(A(source, class_names=['item'])):
+            with BlockA(source, class_names=['item']):
                 as_block(Img('./source-32x32.png', 'source icon', class_names=['favicon']))
                 Strong('source')
-            with as_block(A(project, class_names=['item'])):
+            with BlockA(project, class_names=['item']):
                 as_block(Img('./project-32x32.png', 'project icon', class_names=['favicon']))
                 Strong('project')
 
@@ -268,7 +265,7 @@ with root:
         with Section(class_names=['overview']):
             H1('Make: a Tool for Building Software')
             with P():
-                Text('Make is old. It was')
+                Text('Make is old. It was ')
                 A('https://en.wikipedia.org/wiki/Make_(software)', 'first released')
                 Text("""
                     in 1977.  It's ubiquitous.  Make is a
@@ -291,8 +288,9 @@ with root:
                     for specifying a
                 """)
                 A('https://en.wikipedia.org/wiki/Directed_acyclic_graph', 'directed acyclic graph')
+                Text(',')
                 Text("""
-                    , where the vertices are files and the edges are build scripts, then 
+                    where the vertices are files and the edges are build scripts, then 
                     you can use Make effectively.  Even after many years, I still
                     sometimes forget this in both obvious and subtle ways while using
                     Make.
@@ -468,7 +466,7 @@ with root:
             with Section(class_names=['links']):
                 H1('Merlin')
                 with P():
-                    with as_block(A('http://approachingpavonis.blogspot.com/2016/10/new-merlin-story-iron-tactician.html')):
+                    with BlockA('http://approachingpavonis.blogspot.com/2016/10/new-merlin-story-iron-tactician.html'):
                         Text('There are four Merlin stories to date, ...')
                 book('Hideaway', 'https://www.goodreads.com/book/show/34793859-hideaway', date='2000')
                 book("Minla's Flowers (included in <em>Zima Blue</em>)", 'https://www.amazon.com/gp/product/B00GVG07DC', date='2009', checked=True)

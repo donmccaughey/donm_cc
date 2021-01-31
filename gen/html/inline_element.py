@@ -27,6 +27,26 @@ class InlineElement(Element):
         return tokens
 
 
+class A(InlineElement):
+    def __init__(
+            self,
+            href: str,
+            text: Optional[str] = None,
+            class_names: Optional[list[str]] = None,
+            parent: Optional[Node] = None,
+            **kwargs,
+    ):
+        super().__init__(
+            name='a',
+            class_names=class_names,
+            parent=parent,
+            **kwargs,
+        )
+        self.attributes['href'] = href
+        if text:
+            Text(text, parent=self)
+
+
 class Code(InlineElement):
     def __init__(
             self,

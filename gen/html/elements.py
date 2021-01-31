@@ -3,7 +3,6 @@ from typing import Optional
 from html.element import Element
 from html.node import Node
 from html.format import Format
-from html.text import Text
 
 
 def as_block(element: Element) -> Element:
@@ -14,27 +13,6 @@ def as_block(element: Element) -> Element:
 def as_compact(element: Element) -> Element:
     element.format = Format.COMPACT
     return element
-
-
-class A(Element):
-    def __init__(
-            self,
-            href: str,
-            text: Optional[str] = None,
-            class_names: Optional[list[str]] = None,
-            parent: Optional[Node] = None,
-            **kwargs,
-    ):
-        super().__init__(
-            name='a',
-            class_names=class_names,
-            parent=parent,
-            **kwargs,
-        )
-        self.attributes['href'] = href
-        self.format = Format.INLINE
-        if text:
-            Text(text, parent=self)
 
 
 class Li(Element):
