@@ -1,7 +1,8 @@
 import unittest
 from textwrap import dedent
 
-from html import Body, Div, P, Text, Strong, Em, HTML, Head
+from html import Body, Div, P, Text, Strong, Em, HTML, Head, Title
+from html.comment import Comment
 
 
 class BodyTestCase(unittest.TestCase):
@@ -29,6 +30,31 @@ class BodyTestCase(unittest.TestCase):
                 """
             ),
             body.markup(width=80)
+        )
+
+    def test_markup_when_followed_by_comment(self):
+        html = HTML(lang='en')
+        with html:
+            with Head():
+                Title('Hello')
+            with Body():
+                Div()
+            Comment('foobar')
+        self.assertEqual(
+            dedent(
+                """\
+                <html lang=en>
+                <head>
+                    <title>Hello</title>
+                <body>
+                    <div>
+                    </div>
+                </body>
+                <!-- foobar -->
+                </html>
+                """
+            ),
+            html.markup(width=80)
         )
 
 
@@ -62,6 +88,42 @@ class DivTestCase(unittest.TestCase):
         )
 
 
+class HeadTestCase(unittest.TestCase):
+    def test_markup(self):
+        head = Head()
+        with head:
+            Title('Hello')
+        self.assertEqual(
+            dedent(
+                """\
+                <head>
+                    <title>Hello</title>
+                """
+            ),
+            head.markup(width=80)
+        )
+
+    def test_markup_when_followed_by_comment(self):
+        html = HTML(lang='en')
+        with html:
+            with Head():
+                Title('Hello')
+            Comment('foobar')
+        self.assertEqual(
+            dedent(
+                """\
+                <html lang=en>
+                <head>
+                    <title>Hello</title>
+                </head>
+                <!-- foobar -->
+                </html>
+                """
+            ),
+            html.markup(width=80)
+        )
+
+
 class HTMLTestCase(unittest.TestCase):
     def test_markup(self):
         html = HTML(lang='en')
@@ -73,7 +135,6 @@ class HTMLTestCase(unittest.TestCase):
                 """\
                 <html lang=en>
                 <head>
-                </head>
                 <body>
                 </html>
                 """

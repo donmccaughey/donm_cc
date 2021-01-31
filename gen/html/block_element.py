@@ -120,6 +120,14 @@ class Head(BlockElement):
     def __init__(self, parent: Optional[Node] = None, **kwargs):
         super().__init__(name='head', parent=parent, **kwargs)
 
+    def omit_end_tag(self) -> bool:
+        if self.next_sibling:
+            # A head element’s end tag may be omitted if the head element is
+            # not immediately followed by a space character or a comment.
+            return not isinstance(self.next_sibling, Comment)
+        else:
+            return True
+
 
 class HTML(BlockElement):
     def __init__(self, lang: str, parent: Optional[Node] = None, **kwargs):
