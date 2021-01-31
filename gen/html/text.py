@@ -2,8 +2,6 @@ from typing import Optional, List
 
 from .node import Node
 from .format import Format
-from .tag import Tag
-from .tag_type import TagType
 from .wrap import wrap_tokens
 
 
@@ -38,15 +36,3 @@ class Text(Node):
                 token += ch
         tokens.append(token)
         return tokens
-
-    def tags(self) -> list[Tag]:
-        return [
-            Tag(
-                name='text',
-                text=self.text,
-                type=TagType.TEXT,
-                format=self.format,
-                omit=False,
-                indent_children=False,
-            )
-        ]

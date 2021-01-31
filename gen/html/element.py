@@ -1,8 +1,6 @@
 from typing import Optional
 
 from .node import Node
-from .tag import Tag
-from .tag_type import TagType
 
 
 def q(attribute_value) -> str:
@@ -63,28 +61,3 @@ class Element(Node):
         markup += self.end_tag()
         markup += '\n'
         return markup
-
-    def tags(self) -> list[Tag]:
-        tags = [
-            Tag(
-                name=self.name,
-                text=self.start_tag(),
-                type=TagType.START,
-                format=self.format,
-                omit=self.omit_start_tag(),
-                indent_children=self.indent_children,
-            )
-        ]
-        for child in self.children:
-            tags += child.tags()
-        tags += [
-            Tag(
-                name=self.name,
-                text=self.end_tag(),
-                type=TagType.END,
-                format=self.format,
-                omit=self.omit_end_tag(),
-                indent_children=self.indent_children,
-            )
-        ]
-        return tags

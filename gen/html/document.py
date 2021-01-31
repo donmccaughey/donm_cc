@@ -1,5 +1,4 @@
 from .node import Node
-from .tag import Tag
 
 
 class Document(Node):
@@ -24,9 +23,3 @@ class Document(Node):
         for child in self.children:
             markup += child.markup(width)
         return markup
-
-    def tags(self) -> list[Tag]:
-        tags = []
-        for child in self.children:
-            tags += child.tags()
-        return tags

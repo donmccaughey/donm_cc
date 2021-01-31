@@ -1,7 +1,5 @@
 from typing import Optional
 from .node import Node
-from .tag import Tag
-from .tag_type import TagType
 
 
 class Comment(Node):
@@ -21,15 +19,3 @@ class Comment(Node):
         # contain the strings "<!--", "-->", or "--!>", nor end with the
         # string "<!-".
         return f'<!-- {self.text} -->\n'
-
-    def tags(self) -> list[Tag]:
-        return [
-            Tag(
-                name=self.name,
-                text=f'<!-- {self.text} -->',
-                type=TagType.COMMENT,
-                format=self.format,
-                omit=False,
-                indent_children=False,
-            )
-        ]

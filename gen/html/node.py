@@ -1,7 +1,6 @@
 from __future__ import annotations
 from typing import Optional
 from html.format import Format
-from html.tag import Tag
 
 
 with_node: list[Optional[Node]] = [None]
@@ -70,7 +69,4 @@ class Node:
         raise NotImplementedError
 
     def tokens(self) -> list[str]:
-        raise NotImplementedError
-
-    def tags(self) -> list[Tag]:
         raise NotImplementedError
