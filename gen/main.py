@@ -308,12 +308,12 @@ with root:
 
     with IndexPage('Memory Match', has_files=True) as page:
         page.add_script('https://cdnjs.cloudflare.com/ajax/libs/cash/1.3.0/cash.min.js')
-        page.add_script('memory_match.js', charset='utf-8')
+        page.add_script('memory_match.js')
         Div(id='memory_match')
 
     with IndexPage('Random Words', has_files=True) as page:
         page.add_stylesheet('random_words.css')
-        page.add_script('random_words.js', charset='utf-8')
+        page.add_script('random_words.js')
         with Section(class_names=['overview']):
             H1('Random Words')
             P("""

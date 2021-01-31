@@ -66,9 +66,9 @@ class Page(Child):
     def file_parts(self) -> list[str]:
         return [self.name + '.html']
 
-    def add_script(self, src: str, charset: Optional[str] = None):
+    def add_script(self, src: str):
         with self.head_content:
-            Script(src=src, charset=charset)
+            Script(src=src)
 
     def add_stylesheet(self, src: str):
         with self.head_content:

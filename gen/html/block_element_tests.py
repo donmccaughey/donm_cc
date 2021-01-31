@@ -86,7 +86,7 @@ class BodyTestCase(unittest.TestCase):
                 <html>
                 <title>Hello</title>
                 <body>
-                    <script src=foo.js type=text/javascript></script>
+                    <script src=foo.js></script>
                 """
             ),
             html.markup(width=80)
