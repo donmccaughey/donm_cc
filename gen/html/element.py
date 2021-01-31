@@ -1,17 +1,7 @@
 from typing import Optional
 
+from .attributes import format_attribute
 from .node import Node
-
-
-def q(attribute_value) -> str:
-    return f"'{attribute_value}'" if ' ' in attribute_value else attribute_value
-
-
-def format_attribute(name: str, value: Optional[str]) -> str:
-    if value:
-        return f'{name}={q(value)}'
-    else:
-        return name
 
 
 class Element(Node):
@@ -32,13 +22,15 @@ class Element(Node):
             self.attributes['class'] = ' '.join(class_names)
 
     def attribute_str(self) -> str:
-        # TODO: html encode attribute values
         if self.attributes:
             parts = [
                 format_attribute(name, self.attributes[name])
                 for name in self.attributes
             ]
-            return ' ' + ' '.join(parts)
+            s = ' ' + ' '.join(parts)
+            if s.endswith('/'):
+                s += ' '
+            return s
         else:
             return ''
 

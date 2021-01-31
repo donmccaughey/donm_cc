@@ -1,9 +1,17 @@
 import unittest
 
+from html.element import Element
+
 
 class ElementTestCase(unittest.TestCase):
-    def xtest_something(self):
-        self.assertEqual(True, False)
+    def test_attribute_ends_with_slash(self):
+        element = Element('a')
+        element.attributes['href'] = '/'
+
+        self.assertEqual(
+            '<a href=/ >',
+            element.start_tag()
+        )
 
 
 if __name__ == '__main__':
