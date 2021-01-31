@@ -1,7 +1,6 @@
 from typing import Optional, List
 
 from .node import Node
-from .format import Format
 from .wrap import wrap_tokens
 
 
@@ -13,7 +12,6 @@ class Text(Node):
             **kwargs,
         )
         assert text
-        self.format = Format.INLINE
         self.text = text
 
     def markup(self, width: int) -> str:

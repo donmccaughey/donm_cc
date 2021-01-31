@@ -1,6 +1,5 @@
 from typing import Optional
 
-from html import Format
 from html.element import Element
 from html.node import Node
 
@@ -8,7 +7,6 @@ from html.node import Node
 class EmptyElement(Element):
     def __init__(self, name: str, parent: Optional[Node] = None, **kwargs):
         super().__init__(name=name, parent=parent, **kwargs)
-        self.format = Format.INLINE
 
     def markup(self, width: int) -> str:
         return self.start_tag() + '\n'

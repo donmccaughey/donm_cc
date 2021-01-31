@@ -1,6 +1,5 @@
 from __future__ import annotations
 from typing import Optional
-from html.format import Format
 
 
 with_node: list[Optional[Node]] = [None]
@@ -15,7 +14,6 @@ class Node:
     ):
         super().__init__(**kwargs)
         self.children: list[Node] = []
-        self.format = Format.BLOCK
         self.name = name
         self.next_sibling: Optional[Node] = None
         self.parent = None

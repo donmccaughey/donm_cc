@@ -1,6 +1,5 @@
 import unittest
 
-from html import Format
 from html.node import Node, with_node
 
 
@@ -9,7 +8,6 @@ class NodeTestCase(unittest.TestCase):
         node = Node('my node')
         self.assertEqual(node.name, 'my node')
         self.assertEqual(node.children, [])
-        self.assertEqual(node.format, Format.BLOCK)
         self.assertIsNone(node.next_sibling)
         self.assertIsNone(node.parent)
         self.assertIsNone(node.previous_sibling)

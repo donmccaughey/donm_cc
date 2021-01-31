@@ -1,6 +1,5 @@
 from .doctype import DocType
 from .document import Document
-from .format import Format
 from .text import Text
 from .elements import Li, Script
 from .block_element import BlockA

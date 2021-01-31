@@ -2,7 +2,6 @@ from typing import Optional
 
 from html.element import Element
 from html.node import Node
-from html.format import Format
 
 
 class Li(Element):
@@ -35,4 +34,3 @@ class Script(Element):
             self.attributes['charset'] = charset
         self.attributes['src'] = src
         self.attributes['type'] = 'text/javascript'
-        self.format = Format.COMPACT # TODO: script containing code should be .BLOCK

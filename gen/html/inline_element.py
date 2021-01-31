@@ -1,6 +1,6 @@
 from typing import Optional, List
 
-from html import Format, Text
+from html import Text
 from html.element import Element
 from html.node import Node
 from html.wrap import wrap_tokens
@@ -13,7 +13,6 @@ class InlineElement(Element):
     '''
     def __init__(self, name: str, parent: Optional[Node] = None, **kwargs):
         super().__init__(name=name, parent=parent, **kwargs)
-        self.format = Format.INLINE
 
     def markup(self, width: int) -> str:
         wrapped = wrap_tokens(self.tokens(), width)

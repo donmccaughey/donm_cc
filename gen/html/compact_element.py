@@ -1,7 +1,7 @@
 from textwrap import indent
 from typing import Optional
 
-from html import Format, Text
+from html import Text
 from html.element import Element
 from html.node import Node
 from html.wrap import wrap_tokens
@@ -10,7 +10,6 @@ from html.wrap import wrap_tokens
 class CompactElement(Element):
     def __init__(self, name: str, parent: Optional[Node] = None, **kwargs):
         super().__init__(name=name, parent=parent, **kwargs)
-        self.format = Format.COMPACT
 
     def markup(self, width: int) -> str:
         start = self.start_tag()
