@@ -322,6 +322,8 @@ with root:
                 a public domain list of 264,097 English words.
              """)
         with Section(class_names=['generator']):
+            H1('Results')
+            P(id='random_words')
             with Form(action='./', method='GET'):
                 with P():
                     Label('Number of Words:', for_id='count')
@@ -334,7 +336,6 @@ with root:
                     Label('List', for_id='format_list')
                 with P():
                     Button('Go')
-            P(id='random_words')
         with Section(id='implementation'):
             H1('Implementation')
             with P():
