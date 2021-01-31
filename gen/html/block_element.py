@@ -83,6 +83,17 @@ class Body(BlockElement):
         else:
             return True
 
+    def omit_start_tag(self) -> bool:
+        if not self.children:
+            return True
+        if isinstance(self.children[0], Comment):
+            return False
+        if isinstance(self.children[0], Element):
+            return self.children[0].name not in [
+                'meta', 'link', 'script', 'style', 'template'
+            ]
+        return True
+
 
 class Div(BlockElement):
     def __init__(

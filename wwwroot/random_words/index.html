@@ -6,58 +6,57 @@
 <link rel=stylesheet href=/base.css>
 <link rel=stylesheet href=random_words.css>
 <script charset=utf-8 src=random_words.js type=text/javascript></script>
-<body>
-    <nav class=menu>
-        <a href=/ >Don McCaughey</a>
-    </nav>
-    <section class=overview>
-        <h1>Random Words</h1>
+<nav class=menu>
+    <a href=/ >Don McCaughey</a>
+</nav>
+<section class=overview>
+    <h1>Random Words</h1>
+    <p>
+        <em>Random Words</em> is a small program that chooses random entries
+        from <a href=https://github.com/elasticdog/yawl>YAWL</a>, a public
+        domain list of 264,097 English words.
+</section>
+<section class=generator>
+    <form action=./ method=GET>
         <p>
-            <em>Random Words</em> is a small program that chooses random entries
-            from <a href=https://github.com/elasticdog/yawl>YAWL</a>, a public
-            domain list of 264,097 English words.
-    </section>
-    <section class=generator>
-        <form action=./ method=GET>
-            <p>
-                <label for=count>Number of Words:</label>
-                <input id=count name=count type=number value=0>
-            <p>
-                <label>Format:</label>
-                <input id=format_sentence name=format type=radio value=sentence checked>
-                <label for=format_sentence>Sentence</label>
-                <input id=format_list name=format type=radio value=list>
-                <label for=format_list>List</label>
-            <p>
-                <button>Go</button>
-        </form>
-        <p id=random_words>
-    </section>
-    <section id=implementation>
-        <h1>Implementation</h1>
+            <label for=count>Number of Words:</label>
+            <input id=count name=count type=number value=0>
         <p>
-            <em>Random Words</em> is written in JavaScript and runs in the
-            browser.  To avoid the need to fetch the whole 2.7 MB YAWL <a
-            href=word.list><code>word.list</code></a> file, I've converted
-            <code>word.list</code> into a <a href=words.table>table</a> where
-            each word is padded with spaces to 45 characters, the length of the
-            <a href=https://en.wikipedia.org/wiki/Pneumonoultramicroscopicsilicovolcanoconiosis>longest
-            word</a> in the list.
+            <label>Format:</label>
+            <input id=format_sentence name=format type=radio value=sentence checked>
+            <label for=format_sentence>Sentence</label>
+            <input id=format_list name=format type=radio value=list>
+            <label for=format_list>List</label>
         <p>
-            The program uses the
-            <a href=https://developer.mozilla.org/en-US/docs/Web/API/Crypto/getRandomValues><code>getRandomValues()</code></a>
-            function to generate a random number in the range [0, 264097) to
-            select a word, then uses the HTTP
-            <a href=https://tools.ietf.org/html/rfc7233#section-3.1>Range
-            header</a> to fetch only that word from the table.
-        <p>
-            <ul>
-                <li><a href=random_words.js>The JavaScript code</a></li>
-                <li><a href=word.list>The YAWL word list</a></li>
-                <li>
-                    <a href=make_table.py>The Python script to generate the
-                    words table</a>
-                </li>
-                <li><a href=words.table>The table of padded words</a></li>
-            </ul>
-    </section>
+            <button>Go</button>
+    </form>
+    <p id=random_words>
+</section>
+<section id=implementation>
+    <h1>Implementation</h1>
+    <p>
+        <em>Random Words</em> is written in JavaScript and runs in the browser.
+        To avoid the need to fetch the whole 2.7 MB YAWL <a
+        href=word.list><code>word.list</code></a> file, I've converted
+        <code>word.list</code> into a <a href=words.table>table</a> where each
+        word is padded with spaces to 45 characters, the length of the
+        <a href=https://en.wikipedia.org/wiki/Pneumonoultramicroscopicsilicovolcanoconiosis>longest
+        word</a> in the list.
+    <p>
+        The program uses the
+        <a href=https://developer.mozilla.org/en-US/docs/Web/API/Crypto/getRandomValues><code>getRandomValues()</code></a>
+        function to generate a random number in the range [0, 264097) to select
+        a word, then uses the HTTP
+        <a href=https://tools.ietf.org/html/rfc7233#section-3.1>Range header</a>
+        to fetch only that word from the table.
+    <p>
+        <ul>
+            <li><a href=random_words.js>The JavaScript code</a></li>
+            <li><a href=word.list>The YAWL word list</a></li>
+            <li>
+                <a href=make_table.py>The Python script to generate the words
+                table</a>
+            </li>
+            <li><a href=words.table>The table of padded words</a></li>
+        </ul>
+</section>

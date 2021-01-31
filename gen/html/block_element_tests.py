@@ -1,7 +1,8 @@
 import unittest
 from textwrap import dedent
 
-from html import Body, Div, P, Text, Strong, Em, HTML, Head, Title, Document
+from html import Body, Div, P, Text, Strong, Em, HTML, Head, Title, Document, \
+    Script
 from html.comment import Comment
 
 
@@ -9,11 +10,7 @@ class BodyTestCase(unittest.TestCase):
     def test_markup_for_empty_body(self):
         body = Body()
         self.assertEqual(
-            dedent(
-                """\
-                <body>
-                """
-            ),
+            '',
             body.markup(width=80)
         )
 
@@ -24,9 +21,8 @@ class BodyTestCase(unittest.TestCase):
         self.assertEqual(
             dedent(
                 """\
-                <body>
-                    <div>
-                    </div>
+                <div>
+                </div>
                 """
             ),
             body.markup(width=80)
@@ -50,6 +46,47 @@ class BodyTestCase(unittest.TestCase):
                     </div>
                 </body>
                 <!-- foobar -->
+                """
+            ),
+            html.markup(width=80)
+        )
+
+    def test_markup_when_first_child_is_comment(self):
+        html = HTML(lang='en')
+        with html:
+            with Head():
+                Title('Hello')
+            with Body():
+                Comment('foobar')
+                Div()
+        self.assertEqual(
+            dedent(
+                """\
+                <html lang=en>
+                <title>Hello</title>
+                <body>
+                    <!-- foobar -->
+                    <div>
+                    </div>
+                """
+            ),
+            html.markup(width=80)
+        )
+
+    def test_markup_when_first_child_is_script(self):
+        html = HTML(lang='en')
+        with html:
+            with Head():
+                Title('Hello')
+            with Body():
+                Script(src='foo.js')
+        self.assertEqual(
+            dedent(
+                """\
+                <html lang=en>
+                <title>Hello</title>
+                <body>
+                    <script src=foo.js type=text/javascript></script>
                 """
             ),
             html.markup(width=80)
@@ -144,7 +181,6 @@ class HeadTestCase(unittest.TestCase):
             dedent(
                 """\
                 <html lang=en>
-                <body>
                 """
             ),
             html.markup(width=80)
@@ -157,13 +193,15 @@ class HTMLTestCase(unittest.TestCase):
         with html:
             with Head():
                 Title('Hello')
-            Body()
+            with Body():
+                Div()
         self.assertEqual(
             dedent(
                 """\
                 <html lang=en>
                 <title>Hello</title>
-                <body>
+                <div>
+                </div>
                 """
             ),
             html.markup(width=80)
@@ -182,7 +220,6 @@ class HTMLTestCase(unittest.TestCase):
                 """\
                 <html lang=en>
                 <title>Hello</title>
-                <body>
                 </html>
                 <!-- foobar -->
                 """
