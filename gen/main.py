@@ -1,5 +1,4 @@
 from typing import Optional
-from html.elements import as_block, as_compact
 from resources import Directory, File, IndexPage, Page
 from html import A, Br, Button, Code, Div, Em, Form, H1, H2, Img, Input
 from html import Label, Li, P, Section, Span, Strong, Text, Time, Ul
@@ -15,8 +14,8 @@ def item(
     class_names = ['item'] + (['local'] if is_local else [])
     with BlockA(class_names=class_names, href=href):
         if favicon:
-            as_block(Img(class_names=['favicon'], src=favicon, alt=f'{title} icon'))
-        as_compact(Strong(title))
+            Img(class_names=['favicon'], src=favicon, alt=f'{title} icon')
+        Strong(title)
         if subtitle:
             Br()
             Em(subtitle)
@@ -70,13 +69,13 @@ def package(
         P(description)
         with Div(class_names=['collection']):
             with BlockA(package, class_names=['item']):
-                as_block(Img('./package-32x32.png', 'package icon', class_names=['favicon']))
+                Img('./package-32x32.png', 'package icon', class_names=['favicon'])
                 Strong('package')
             with BlockA(source, class_names=['item']):
-                as_block(Img('./source-32x32.png', 'source icon', class_names=['favicon']))
+                Img('./source-32x32.png', 'source icon', class_names=['favicon'])
                 Strong('source')
             with BlockA(project, class_names=['item']):
-                as_block(Img('./project-32x32.png', 'project icon', class_names=['favicon']))
+                Img('./project-32x32.png', 'project icon', class_names=['favicon'])
                 Strong('project')
 
 

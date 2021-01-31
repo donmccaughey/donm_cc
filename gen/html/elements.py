@@ -5,16 +5,6 @@ from html.node import Node
 from html.format import Format
 
 
-def as_block(element: Element) -> Element:
-    element.format = Format.BLOCK
-    return element
-
-
-def as_compact(element: Element) -> Element:
-    element.format = Format.COMPACT
-    return element
-
-
 class Li(Element):
     def __init__(
             self,
