@@ -135,6 +135,12 @@ class HTML(BlockElement):
         self.attributes['lang'] = lang
         self.indent_children = False
 
+    def omit_end_tag(self) -> bool:
+        if self.next_sibling:
+            return not isinstance(self.next_sibling, Comment)
+        else:
+            return True
+
 
 class Nav(BlockElement):
     def __init__(

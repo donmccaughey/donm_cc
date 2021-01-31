@@ -1,7 +1,7 @@
 import unittest
 from textwrap import dedent
 
-from html import Body, Div, P, Text, Strong, Em, HTML, Head, Title
+from html import Body, Div, P, Text, Strong, Em, HTML, Head, Title, Document
 from html.comment import Comment
 
 
@@ -51,7 +51,6 @@ class BodyTestCase(unittest.TestCase):
                     </div>
                 </body>
                 <!-- foobar -->
-                </html>
                 """
             ),
             html.markup(width=80)
@@ -117,7 +116,6 @@ class HeadTestCase(unittest.TestCase):
                     <title>Hello</title>
                 </head>
                 <!-- foobar -->
-                </html>
                 """
             ),
             html.markup(width=80)
@@ -136,10 +134,29 @@ class HTMLTestCase(unittest.TestCase):
                 <html lang=en>
                 <head>
                 <body>
-                </html>
                 """
             ),
             html.markup(width=80)
+        )
+
+    def test_markup_when_followed_by_a_comment(self):
+        document = Document()
+        with document:
+            with HTML(lang='en'):
+                Head()
+                Body()
+            Comment('foobar')
+        self.assertEqual(
+            dedent(
+                """\
+                <html lang=en>
+                <head>
+                <body>
+                </html>
+                <!-- foobar -->
+                """
+            ),
+            document.markup(width=80)
         )
 
 
