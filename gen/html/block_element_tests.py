@@ -39,7 +39,6 @@ class BodyTestCase(unittest.TestCase):
         self.assertEqual(
             dedent(
                 """\
-                <html>
                 <title>Hello</title>
                 <body>
                     <div>
@@ -62,7 +61,6 @@ class BodyTestCase(unittest.TestCase):
         self.assertEqual(
             dedent(
                 """\
-                <html>
                 <title>Hello</title>
                 <body>
                     <!-- foobar -->
@@ -83,7 +81,6 @@ class BodyTestCase(unittest.TestCase):
         self.assertEqual(
             dedent(
                 """\
-                <html>
                 <title>Hello</title>
                 <body>
                     <script src=foo.js></script>
@@ -162,7 +159,6 @@ class HeadTestCase(unittest.TestCase):
         self.assertEqual(
             dedent(
                 """\
-                <html>
                 <head>
                     <title>Hello</title>
                 </head>
@@ -180,7 +176,6 @@ class HeadTestCase(unittest.TestCase):
         self.assertEqual(
             dedent(
                 """\
-                <html>
                 """
             ),
             html.markup(width=80)
@@ -198,7 +193,6 @@ class HTMLTestCase(unittest.TestCase):
         self.assertEqual(
             dedent(
                 """\
-                <html>
                 <title>Hello</title>
                 <div>
                 </div>
@@ -222,6 +216,25 @@ class HTMLTestCase(unittest.TestCase):
                 <title>Hello</title>
                 </html>
                 <!-- foobar -->
+                """
+            ),
+            document.markup(width=80)
+        )
+
+    def test_markup_when_first_child_is_a_comment(self):
+        document = Document()
+        with document:
+            with HTML():
+                Comment('foobar')
+                with Head():
+                    Title('Hello')
+                Body()
+        self.assertEqual(
+            dedent(
+                """\
+                <html>
+                <!-- foobar -->
+                <title>Hello</title>
                 """
             ),
             document.markup(width=80)

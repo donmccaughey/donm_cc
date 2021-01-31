@@ -161,6 +161,12 @@ class HTML(BlockElement):
         else:
             return True
 
+    def omit_start_tag(self) -> bool:
+        if self.children:
+            return not isinstance(self.children[0], Comment)
+        else:
+            return True
+
 
 class Nav(BlockElement):
     def __init__(
