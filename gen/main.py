@@ -130,8 +130,11 @@ with root:
             book('The Five Dysfunctions of a Team', 'https://www.amazon.com/Five-Dysfunctions-Team-Leadership-Lencioni-ebook/dp/B006960LQW', checked=True)
             book('The Four Obsessions of an Extraordinary Executive', 'https://www.amazon.com/Four-Obsessions-Extraordinary-Executive-Leadership-ebook/dp/B003WUYQOQ', checked=True)
         with Section(class_names=['links']):
+            H1('Your Mileage May Vary')
             book('The Five Temptations of a CEO', 'https://www.amazon.com/Five-Temptations-CEO-10th-Anniversary-ebook/dp/B0062OAEWM', checked=True)
             book('Critical Chain', 'https://www.amazon.com/Critical-Chain-Business-Eliyahu-Goldratt-ebook/dp/B002LHRM2E', checked=True)
+        with Section(class_names=['links']):
+            H1('On My Readling List')
             book('The Deadline: A Novel About Project Management', 'https://www.amazon.com/Deadline-Novel-About-Project-Management-ebook/dp/B006MN4RAS')
             book('How To Destroy A Tech Startup In Three Easy Steps', 'https://www.amazon.com/Destroy-Tech-Startup-Three-Steps-ebook/dp/B0772FJQ1T', checked=True)
         with Section(class_names=['links']):
@@ -144,6 +147,7 @@ with root:
             H1('Bash: the "Bourne-again" shell')
             P()
         with Section(class_names=['links']):
+            H1('Tips and Tricks')
             link('blog', 'Use the Unofficial Bash Strict Mode (Unless You Looove Debugging)', 'http://redsymbol.net/articles/unofficial-bash-strict-mode/', authors='Aaron Maxwell')
             link('blog', 'How to write idempotent Bash scripts', 'https://arslan.io/2019/07/03/how-to-write-idempotent-bash-scripts/', authors='Fatih Arslan', date='2019-07-03')
             link('blog', 'Shortcuts to Move Faster in Bash Command Line', 'http://teohm.github.io/blog/2012/01/04/shortcuts-to-move-faster-in-bash-command-line/', authors='Huiming Teo', date='2012-01-04')
