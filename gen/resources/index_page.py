@@ -47,8 +47,9 @@ class IndexPage(Parent, Page):
     def generate(
             self,
             output_path: str,
-            is_dry_run: bool = True,
-            overwrite = False,
+            is_dry_run=True,
+            overwrite=False,
+            omit_styles=False,
     ):
         dirname = os.path.join(output_path, self.dirname)
         dirname = os.path.normpath(dirname)
@@ -58,12 +59,9 @@ class IndexPage(Parent, Page):
         path = os.path.join(output_path, self.path)
         path = os.path.normpath(path)
         print('writing index page', path)
-        if not is_dry_run:
-            mode = 'w' if overwrite else 'x'
-            with open(path, mode, encoding='utf8') as f:
-                f.write(self.document.markup(80))
+        self.write_page(path, is_dry_run, overwrite, omit_styles)
         for child in self.children:
-            child.generate(output_path, is_dry_run, overwrite)
+            child.generate(output_path, is_dry_run, overwrite, omit_styles)
 
     def should_include_file(self, name: str) -> bool:
         if name in ['index.html']:

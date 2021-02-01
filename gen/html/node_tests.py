@@ -91,6 +91,47 @@ class NodeTestCase(unittest.TestCase):
         self.assertEqual(child2.previous_sibling, child1)
         self.assertIsNone(child2.next_sibling)
 
+    def test_detach_children(self):
+        parent = Node('parent')
+        with parent:
+            child1 = Node('child1')
+            child2 = Node('child2')
+
+        detached = parent.detach_children()
+
+        self.assertEqual([], parent.children)
+        self.assertEqual([child1, child2], detached)
+
+        self.assertIsNone(child1.parent)
+        self.assertIsNone(child2.parent)
+
+    def test_detach_children_when_empty(self):
+        parent = Node('parent')
+
+        detached = parent.detach_children()
+
+        self.assertEqual([], parent.children)
+        self.assertEqual([], detached)
+
+    def test_detach_descendants(self):
+        parent = Node('parent')
+        with parent:
+            child1 = Node('child1')
+            with child1:
+                grandchild1 = Node('grandchild1')
+                grandchild2 = Node('grandchild2')
+            child2 = Node('child2')
+
+        detached = parent.detach_descendants(lambda node: node.name.startswith('g'))
+
+        self.assertEqual([child1, child2], parent.children)
+        self.assertEqual([], child1.children)
+        self.assertEqual([], child2.children)
+        self.assertEqual([grandchild1, grandchild2], detached)
+
+        self.assertIsNone(grandchild1.parent)
+        self.assertIsNone(grandchild2.parent)
+
 
 if __name__ == '__main__':
     unittest.main()

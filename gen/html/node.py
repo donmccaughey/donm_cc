@@ -1,6 +1,5 @@
 from __future__ import annotations
-from typing import Optional
-
+from typing import Optional, Callable
 
 with_node: list[Optional[Node]] = [None]
 
@@ -57,11 +56,17 @@ class Node:
             self.next_sibling = None
 
     def detach_children(self) -> list[Node]:
-        children = list(self.children)
-        for child in children:
-            child.detach()
-        assert not self.children
-        return children
+        return self.detach_descendants(lambda node: True)
+
+    def detach_descendants(self, matching: Callable[[Node], bool]) -> list[Node]:
+        detached = []
+        for child in list(self.children):
+            if matching(child):
+                child.detach()
+                detached.append(child)
+            else:
+                detached += child.detach_descendants(matching)
+        return detached
 
     def markup(self, width: int) -> str:
         raise NotImplementedError

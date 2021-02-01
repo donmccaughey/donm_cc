@@ -593,4 +593,4 @@ with root:
 
 if __name__ == '__main__':
     root.find_files('../site-src')
-    root.generate('../wwwroot', is_dry_run=False, overwrite=True)
+    root.generate('../wwwroot', is_dry_run=False, overwrite=True, omit_styles=False)

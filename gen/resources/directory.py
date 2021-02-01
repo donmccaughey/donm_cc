@@ -33,8 +33,9 @@ class Directory(Parent):
     def generate(
             self,
             output_path: str,
-            is_dry_run: bool = True,
-            overwrite = False,
+            is_dry_run=True,
+            overwrite=False,
+            omit_styles=False,
     ):
         path = os.path.join(output_path, self.path)
         path = os.path.normpath(path)

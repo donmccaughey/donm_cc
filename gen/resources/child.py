@@ -59,5 +59,11 @@ class Child:
     def url(self) -> str:
         return ('/' + '/'.join(self.path_parts)) if self.path_parts else '/'
 
-    def generate(self, output_path: str, is_dry_run=True, overwrite=False):
+    def generate(
+            self,
+            output_path: str,
+            is_dry_run=True,
+            overwrite=False,
+            omit_styles=False,
+    ):
         raise NotImplementedError

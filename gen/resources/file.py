@@ -22,7 +22,13 @@ class File(Child):
         )
         self.source = source
 
-    def generate(self, output_path: str, is_dry_run = True, overwrite = False):
+    def generate(
+            self,
+            output_path: str,
+            is_dry_run=True,
+            overwrite=False,
+            omit_styles=False,
+    ):
         path = os.path.join(output_path, self.path)
         path = os.path.normpath(path)
         print('copying file', path, 'from source', self.source)

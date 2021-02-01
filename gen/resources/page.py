@@ -38,8 +38,7 @@ class Page(Child):
     def __exit__(self, exc_type, exc_val, exc_tb):
         with_node.pop()
 
-    @property
-    def document(self) -> Document:
+    def build_document(self) -> Document:
         document = Document()
         with document:
             DocType()
@@ -77,13 +76,27 @@ class Page(Child):
     def generate(
             self,
             output_path: str,
-            is_dry_run: bool = True,
-            overwrite = False,
+            is_dry_run=True,
+            overwrite=False,
+            omit_styles=False,
     ):
         path = os.path.join(output_path, self.path)
         path = os.path.normpath(path)
         print('writing page', path)
+        self.write_page(path, is_dry_run, overwrite, omit_styles)
+
+    def write_page(
+            self,
+            path: str,
+            is_dry_run: bool,
+            overwrite: bool,
+            omit_styles: bool,
+    ):
         if not is_dry_run:
+            document = self.build_document()
+            if omit_styles:
+                detached = document.detach_descendants(lambda node: isinstance(node, Stylesheet))
+
             mode = 'w' if overwrite else 'x'
             with open(path, mode, encoding='utf8') as f:
-                f.write(self.document.markup(80))
+                f.write(document.markup(80))
