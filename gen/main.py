@@ -203,7 +203,6 @@ with root:
                 """)
                 A('https://en.cppreference.com/w/cpp/container/unordered_map', 'C++ 11')
                 Text(').')
-                # TODO: handle runs of html and text in phrasing content
             with P():
                 Text('I have my own unpolished')
                 A('https://github.com/donmccaughey/hashtable', 'hashtable for C')

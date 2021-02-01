@@ -24,15 +24,21 @@ class CompactElement(Element):
         if content and len(content) > remaining_width:
             prefix = '    '
             child_width = width - len(prefix)
-            wrapped = wrap_tokens(tokens, child_width)
-            if wrapped[-1].isspace():
-                wrapped[-1] = '\n'
+            wrapped_tokens = wrap_tokens(tokens, child_width)
+            if wrapped_tokens[-1].isspace():
+                wrapped_tokens[-1] = '\n'
             else:
-                wrapped.append('\n')
-            s = ''.join(wrapped)
-            return start + '\n' + indent(s, prefix) + end + '\n'
+                wrapped_tokens.append('\n')
+            wrapped_content = ''.join(wrapped_tokens)
+            if self.omit_end_tag():
+                return start + '\n' + indent(wrapped_content, prefix)
+            else:
+                return start + '\n' + indent(wrapped_content, prefix) + end + '\n'
         else:
-            return start + content + end + '\n'
+            if self.omit_end_tag():
+                return start + content + '\n'
+            else:
+                return start + content + end + '\n'
 
 
 class Button(CompactElement):
@@ -142,6 +148,12 @@ class Li(CompactElement):
             parent=parent,
             **kwargs,
         )
+
+    def omit_end_tag(self) -> bool:
+        if self.next_sibling:
+            return isinstance(self.next_sibling, Li)
+        else:
+            return True
 
 
 class Script(CompactElement):
