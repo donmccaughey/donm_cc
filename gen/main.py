@@ -1,3 +1,4 @@
+import argparse
 from typing import Optional
 from resources import Directory, File, IndexPage, Page
 from html import A, Br, Button, Code, Div, Em, Form, H1, H2, Img, Input
@@ -101,7 +102,6 @@ with root:
         item('Memory Match', '/memory_match/', 'A tile matching game', is_local=True)
         item('macOS Packages', '/macos_packages/', 'Software installers', favicon='/macos_packages/package-32x32.png', is_local=True)
         item('Engineering Management', '/engineering_management/', 'Software is a team sport', is_local=True)
-        item('Rust and Wasm', '/rust_and_wasm/', 'Assembling the web', is_local=True)
         item('Make', '/make/', 'The build tool', is_local=True)
         item('Hashtables', '/hashtables/', 'Keys and values', is_local=True)
         item('Science Fiction', '/science_fiction/', 'Reading for fun', is_local=True)
@@ -591,6 +591,21 @@ with root:
                 book('The Flowers of Vashnoi (novella)', 'https://www.amazon.com/Flowers-Vashnoi-Vorkosigan-Saga-ebook/dp/B07D4M7N3L', date='2018', checked=True)
 
 
-if __name__ == '__main__':
+def main():
+    arg_parser = argparse.ArgumentParser('Generate the site')
+    arg_parser.add_argument('--dry-run', action='store_true', default=False, help="don't write or copy files")
+    arg_parser.add_argument('--overwrite', action='store_true', default=False, help='overwrite existing files')
+    arg_parser.add_argument('--omit-styles', action='store_true', default=False, help='generate without stylesheet links')
+    args = arg_parser.parse_args()
+
     root.find_files('../site-src')
-    root.generate('../wwwroot', is_dry_run=False, overwrite=True, omit_styles=False)
+    root.generate(
+        '../wwwroot',
+        is_dry_run=args.dry_run,
+        overwrite=args.overwrite,
+        omit_styles=args.omit_styles,
+    )
+
+
+if __name__ == '__main__':
+    main()
