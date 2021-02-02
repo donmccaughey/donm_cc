@@ -130,9 +130,7 @@ time {
     display: inline-block;
     line-height: 150%;
     margin: 1em;
-    padding: 0.5em 1em;
-    position: relative;
-    text-decoration: none;
+    padding: 0;
     text-align: center;
 }
 
@@ -140,7 +138,16 @@ time {
     border: 1pt solid black;
 }
 
-.item:visited {
+.item a {
+    border: 0;
+    color: black;
+    display: inline-block;
+    margin: 0;
+    padding: 0.5em 1em;
+    text-decoration: none;
+}
+
+.item a:visited {
     color: gray;
 }
 

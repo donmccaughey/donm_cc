@@ -1,4 +1,4 @@
-from typing import Optional
+from typing import Optional, List
 
 from html.element import Element
 from html.node import Node
@@ -13,6 +13,9 @@ class EmptyElement(Element):
 
     def omit_end_tag(self) -> bool:
         return True
+
+    def tokens(self) -> List[str]:
+        return [self.start_tag() + '\n']
 
 
 class Br(EmptyElement):

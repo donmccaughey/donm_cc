@@ -13,13 +13,14 @@ def item(
         is_local: bool = False
 ):
     class_names = ['item'] + (['local'] if is_local else [])
-    with BlockA(class_names=class_names, href=href):
-        if favicon:
-            Img(class_names=['favicon'], src=favicon, alt=f'{title} icon')
-        Strong(title)
-        if subtitle:
-            Br()
-            Em(subtitle)
+    with Li(class_names=class_names):
+        with A(href=href):
+            if favicon:
+                Img(class_names=['favicon'], src=favicon, alt=f'{title} icon')
+            Strong(title)
+            if subtitle:
+                Br()
+                Em(subtitle)
 
 
 def link(
@@ -87,11 +88,12 @@ with root:
             src='/banners/Don_and_Molly_Round_Hill_Lake_Tahoe_summer_2019.jpg',
             alt='Don and Molly atop Round Hill'
         )
+        Br()
         Span(
             text='Round Hill, Lake Tahoe, summer 2019',
             class_names=['lower-caption']
         )
-    with Div(class_names=['collection']):
+    with Ul(class_names=['collection']):
         item('Sourcehut', 'https://git.sr.ht/~donmcc', 'donmcc')
         item('GitHub', 'https://github.com/donmccaughey', 'donmccaughey', favicon='/icons/github.png')
         item('Twitter', 'https://twitter.com/donmccaughey', '@donmccaughey', favicon='/icons/twitter.png')
@@ -436,7 +438,7 @@ with root:
                 very young.  I gravitate towards space opera; multi-book,
                 galaxy-spanning sagas are my bread and butter.
             """)
-        with Div(class_names=['collection']):
+        with Ul(class_names=['collection']):
             item('Iain M Banks', '/science_fiction/iain_m_banks.html', is_local=True)
             item('Lois McMaster Bujold', '/science_fiction/lois_mcmaster_bujold.html', is_local=True)
             item('James SA Corey', '/science_fiction/james_sa_corey.html', is_local=True)
