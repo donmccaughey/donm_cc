@@ -22,8 +22,7 @@ class Child:
     def __lt__(self, other: Child) -> bool:
         return self.path_parts < other.path_parts
 
-    @property
-    def ancestors(self) -> list[Parent]:
+    def find_ancestors(self) -> list[Parent]:
         ancestors = []
         parent = self.parent
         while parent:

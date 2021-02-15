@@ -51,16 +51,16 @@ class Page(Child):
                     head.attach_children(self.head_content.detach_children())
                 with Body() as body:
                     with Nav(class_names=['menu']):
-                        ancestors = self.ancestors
+                        ancestors = self.find_ancestors()
                         if ancestors:
-                            i = 0
-                            for ancestor in self.ancestors:
-                                # TODO: use a clearer criteria than hasattr()
-                                if hasattr(ancestor, 'title'):
-                                    if i:
+                            first = True
+                            for ancestor in ancestors:
+                                if isinstance(ancestor, Page):
+                                    if first:
+                                        first = False
+                                    else:
                                         Text(' &bull; ')
                                     A(href=ancestor.url, text=ancestor.title)
-                                    i += 1
                         else:
                             A(href=self.url, text=self.title)
                     body.attach_children(self.page_content.detach_children())
