@@ -1,7 +1,7 @@
 from __future__ import annotations
 import os
 from typing import Optional
-from resource import with_parent
+from resources import with_parent
 from .child import Child
 from .file import File
 

@@ -1,6 +1,6 @@
 import argparse
 from typing import Optional
-from resource import Directory, File, IndexPage, Page
+from resources import Directory, File, IndexPage, Page
 from markup import A, Br, Button, Code, Div, Em, Form, H1, H2, Img, Input
 from markup import Label, Li, P, Section, Span, Strong, Text, Time, Ul
 
