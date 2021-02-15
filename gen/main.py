@@ -1,89 +1,10 @@
 import argparse
-from typing import Optional
 from resources import Directory, File, IndexPage, Page
 from markup import A, Br, Button, Code, Div, Em, Form, H1, H2, Img, Input
 from markup import Label, Li, P, Section, Span, Strong, Text, Time, Ul
-
-
-def item(
-        title: str,
-        href: str,
-        subtitle: Optional[str] = None,
-        favicon: Optional[str] = None,
-        external: bool = False,
-):
-    class_names = ['item'] + (['external'] if external else [])
-    with Li(class_names=class_names):
-        with A(href=href):
-            if favicon:
-                Img(class_names=['favicon'], src=favicon, alt=f'{title} icon')
-            Strong(title)
-            if subtitle:
-                Br()
-                Em(subtitle)
-
-
-def link(
-        type: str,
-        title: str,
-        href: str,
-        authors: Optional[str] = None,
-        date: Optional[str] = None,
-        checked: bool = False
-):
-    with Li(class_names=[type]):
-        A(href=href, text=title, class_names=['title'])
-        if authors:
-            Text(', ')
-            Span(class_names=['authors'], text=authors)
-        if date:
-            Text(', ')
-            Time(datetime=date)
-        if checked:
-            Text(' ✓')
-
-
-def book(
-        title: str,
-        href: str,
-        authors: Optional[str] = None,
-        date: Optional[str] = None,
-        checked: bool = False
-):
-    link(
-        type='book',
-        title=title,
-        href=href,
-        authors=authors,
-        date=date,
-        checked=checked,
-    )
-
-
-def package(
-        name: str,
-        version: str,
-        package: str,
-        source: str,
-        project: str,
-        description: str,
-):
-    with Section(class_names=['package']):
-        H1(f'{name} {version}')
-        P(description)
-        with Ul(class_names=['collection']):
-            with Li(class_names=['item']):
-                with A(package):
-                    Img('./package-32x32.png', 'package icon', class_names=['favicon'])
-                    Strong('package')
-            with Li(class_names=['item']):
-                with A(source):
-                    Img('./source-32x32.png', 'source icon', class_names=['favicon'])
-                    Strong('source')
-            with Li(class_names=['item']):
-                with A(project):
-                    Img('./project-32x32.png', 'project icon', class_names=['favicon'])
-                    Strong('project')
+from site.collection import item
+from site.links import link, book
+from site.packages import package
 
 
 root = IndexPage('Don McCaughey', is_root=True)
