@@ -115,7 +115,7 @@ time {
 
 .item {
     background: whitesmoke;
-    border: 1pt solid whitesmoke;
+    border: 1pt solid silver;
     border-radius: 4px;
     color: black;
     display: inline-block;
@@ -126,6 +126,14 @@ time {
 }
 
 .item:hover {
+    border: 1pt solid black;
+}
+
+.item.external {
+    border: 1pt solid whitesmoke;
+}
+
+.item:hover.external {
     border: 1pt solid black;
 }
 
@@ -140,14 +148,6 @@ time {
 
 .item a:visited {
     color: dimgray;
-}
-
-.item.local {
-    border: 1pt solid silver;
-}
-
-.item:hover.local {
-    border: 1pt solid black;
 }
 
 .item strong {

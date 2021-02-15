@@ -10,9 +10,9 @@ def item(
         href: str,
         subtitle: Optional[str] = None,
         favicon: Optional[str] = None,
-        is_local: bool = False
+        external: bool = False,
 ):
-    class_names = ['item'] + (['local'] if is_local else [])
+    class_names = ['item'] + (['external'] if external else [])
     with Li(class_names=class_names):
         with A(href=href):
             if favicon:
@@ -99,20 +99,20 @@ with root:
             class_names=['lower-caption']
         )
     with Ul(class_names=['collection']):
-        item('Sourcehut', 'https://git.sr.ht/~donmcc', 'donmcc')
-        item('GitHub', 'https://github.com/donmccaughey', 'donmccaughey', favicon='/icons/github.png')
-        item('Twitter', 'https://twitter.com/donmccaughey', '@donmccaughey', favicon='/icons/twitter.png')
-        item('LinkedIn', 'https://www.linkedin.com/in/donmccaughey', 'donmccaughey', favicon='/icons/linkedin.png')
-        item('Résumé', '/resume/Resume_of_Don_McCaughey.pdf', "Stuff I've done", is_local=True)
-        item('Truework', 'https://www.truework.com', 'My current gig', favicon='/icons/truework.png')
-        item('Copper', 'https://www.copper.com', 'My previous gig', favicon='/icons/copper.png')
-        item('Memory Match', '/memory_match/', 'A tile matching game', is_local=True)
-        item('macOS Packages', '/macos_packages/', 'Software installers', favicon='/macos_packages/package-32x32.png', is_local=True)
-        item('Engineering Management', '/engineering_management/', 'Software is a team sport', is_local=True)
-        item('Make', '/make/', 'The build tool', is_local=True)
-        item('Hashtables', '/hashtables/', 'Keys and values', is_local=True)
-        item('Science Fiction', '/science_fiction/', 'Reading for fun', is_local=True)
-        item('Random Words', '/random_words/', 'A handy word picker', is_local=True)
+        item('Sourcehut', 'https://git.sr.ht/~donmcc', 'donmcc', external=True)
+        item('GitHub', 'https://github.com/donmccaughey', 'donmccaughey', favicon='/icons/github.png', external=True)
+        item('Twitter', 'https://twitter.com/donmccaughey', '@donmccaughey', favicon='/icons/twitter.png', external=True)
+        item('LinkedIn', 'https://www.linkedin.com/in/donmccaughey', 'donmccaughey', favicon='/icons/linkedin.png', external=True)
+        item('Truework', 'https://www.truework.com', 'My current gig', favicon='/icons/truework.png', external=True)
+        item('Copper', 'https://www.copper.com', 'My previous gig', favicon='/icons/copper.png', external=True)
+        item('Résumé', '/resume/Resume_of_Don_McCaughey.pdf', "Stuff I've done")
+        item('Memory Match', '/memory_match/', 'A tile matching game')
+        item('Random Words', '/random_words/', 'A handy word picker')
+        item('macOS Packages', '/macos_packages/', 'Software installers', favicon='/macos_packages/package-32x32.png')
+        item('Engineering Management', '/engineering_management/', 'Software is a team sport')
+        item('Make', '/make/', 'The build tool')
+        item('Hashtables', '/hashtables/', 'Keys and values')
+        item('Science Fiction', '/science_fiction/', 'Reading for fun')
 
     File('base.css')
     Directory('banners')
@@ -122,6 +122,7 @@ with root:
     with IndexPage('Don McCaughey', name='aughey', has_files=True):
         with Div(class_names=['banner']):
             Img(src='/aughey/handstand.jpg', alt='Don doing a handstand')
+            Br()
             Span(class_names=['caption'], text='Coachella Festival, spring 2007')
 
     with IndexPage('Business Novels'):
@@ -465,10 +466,10 @@ with root:
                 galaxy-spanning sagas are my bread and butter.
             """)
         with Ul(class_names=['collection']):
-            item('Iain M Banks', '/science_fiction/iain_m_banks.html', is_local=True)
-            item('Lois McMaster Bujold', '/science_fiction/lois_mcmaster_bujold.html', is_local=True)
-            item('James SA Corey', '/science_fiction/james_sa_corey.html', is_local=True)
-            item('Alastair Reynolds', '/science_fiction/alastair_reynolds.html', is_local=True)
+            item('Iain M Banks', '/science_fiction/iain_m_banks.html')
+            item('Lois McMaster Bujold', '/science_fiction/lois_mcmaster_bujold.html')
+            item('James SA Corey', '/science_fiction/james_sa_corey.html')
+            item('Alastair Reynolds', '/science_fiction/alastair_reynolds.html')
 
         with Page('Alastair Reynolds'):
             with Section(class_names=['overview']):
