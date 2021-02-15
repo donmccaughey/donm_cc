@@ -1,6 +1,6 @@
 from __future__ import annotations
 from typing import Optional, TYPE_CHECKING
-from resources import with_parent
+from resource import with_parent
 
 if TYPE_CHECKING:
     from .parent import Parent
