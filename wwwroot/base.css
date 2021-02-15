@@ -61,24 +61,15 @@ section {
     padding: 0.5em 1em;
 }
 
-time:before {
-    content: '- '
-}
-
 time {
-    color: dimgray;
-    font: 12pt Helvetica, Arial, sans-serif;
+    color: gray;
+    font: italic 12pt Helvetica, Arial, sans-serif;
     white-space: nowrap;
-}
-
-.authors:before {
-    content: '- ';
 }
 
 .authors {
-    color: black;
+    color: gray;
     font: italic 12pt Helvetica, Arial, sans-serif;
-    white-space: nowrap;
 }
 
 .banner {
@@ -148,7 +139,7 @@ time {
 }
 
 .item a:visited {
-    color: gray;
+    color: dimgray;
 }
 
 .item.local {
@@ -177,7 +168,7 @@ time {
     width: 16px;
 }
 
-.links a:before {
+.links li:before {
     content: '\1f517';
     font-size: 8pt;
     position: absolute;
@@ -185,42 +176,48 @@ time {
     top: 6pt;
 }
 
-.links a.blog:before {
+.links li.blog:before {
     content: '\1f5de';
 }
 
-.links a.book:before {
+.links li.book:before {
     content: '\1f4d6';
 }
 
-.links a.docs:before {
+.links li.docs:before {
     content: '\1f4d1';
 }
 
-.links a.email:before {
+.links li.email:before {
     content: '\1f4e7';
 }
 
-.links a.podcast:before {
+.links li.podcast:before {
     content: '\1f3a4';
 }
 
-.links a.repo:before {
+.links li.repo:before {
     content: '\1f4bc';
 }
 
-.links a.site:before {
+.links li.site:before {
     content: '\1f310';
 }
 
-.links a {
+.links li {
     color: black;
-    display: list-item;
-    font-size: 14pt;
+    font-size: 12pt;
+    left: -2em;
+    line-height: 1.4;
     list-style-type: none;
     margin: 0 2em;
     padding: 0.25em;
     position: relative;
+    width: 70ex;
+}
+
+.links a {
+    color: black;
     text-decoration: none;
 }
 
@@ -229,7 +226,7 @@ time {
 }
 
 .links a:visited {
-    color: gray;
+    color: dimgray;
 }
 
 .menu {
@@ -284,3 +281,8 @@ time {
     background: white;
     border: 1pt solid white;
 }
+
+.title {
+    font: 14pt Helvetica, Arial, sans-serif;
+}
+

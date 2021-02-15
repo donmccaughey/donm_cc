@@ -53,11 +53,16 @@ class Page(Child):
                     with Nav(class_names=['menu']):
                         ancestors = self.ancestors
                         if ancestors:
+                            i = 0
                             for ancestor in self.ancestors:
+                                # TODO: use a clearer criteria than hasattr()
                                 if hasattr(ancestor, 'title'):
-                                    CompactA(href=ancestor.url, text=ancestor.title)
+                                    if i:
+                                        Text(' &bull; ')
+                                    A(href=ancestor.url, text=ancestor.title)
+                                    i += 1
                         else:
-                            CompactA(href=self.url, text=self.title)
+                            A(href=self.url, text=self.title)
                     body.attach_children(self.page_content.detach_children())
         return document
 

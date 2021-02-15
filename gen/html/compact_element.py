@@ -52,61 +52,6 @@ class Button(CompactElement):
         Text(text, parent=self)
 
 
-class CompactA(CompactElement):
-    def __init__(
-            self,
-            href: str,
-            text: Optional[str] = None,
-            class_names: Optional[list[str]] = None,
-            parent: Optional[Node] = None,
-            **kwargs,
-    ):
-        super().__init__(
-            name='a',
-            class_names=class_names,
-            parent=parent,
-            **kwargs,
-        )
-        self.attributes['href'] = href
-        if text:
-            Text(text, parent=self)
-
-
-class CompactSpan(CompactElement):
-    def __init__(
-            self,
-            text: str,
-            class_names: Optional[list[str]] = None,
-            parent: Optional[Node] = None,
-            **kwargs,
-    ):
-        super().__init__(
-            name='span',
-            class_names=class_names,
-            parent=parent,
-            **kwargs,
-        )
-        Text(text, parent=self)
-
-
-class CompactTime(CompactElement):
-    def __init__(
-            self,
-            datetime: str,
-            class_names: Optional[list[str]] = None,
-            parent: Optional[Node] = None,
-            **kwargs,
-    ):
-        super().__init__(
-            name='time',
-            class_names=class_names,
-            parent=parent,
-            **kwargs,
-        )
-        self.attributes['datetime'] = datetime
-        Text(datetime, parent=self)
-
-
 class H1(CompactElement):
     def __init__(self, text: str, parent: Optional[Node] = None, **kwargs):
         super().__init__(name='h1', parent=parent, **kwargs)

@@ -53,26 +53,6 @@ class BlockElement(Element):
         return markup
 
 
-class BlockA(BlockElement):
-    def __init__(
-            self,
-            href: str,
-            text: Optional[str] = None,
-            class_names: Optional[list[str]] = None,
-            parent: Optional[Node] = None,
-            **kwargs,
-    ):
-        super().__init__(
-            name='a',
-            class_names=class_names,
-            parent=parent,
-            **kwargs,
-        )
-        self.attributes['href'] = href
-        if text:
-            Text(text, parent=self)
-
-
 class Body(BlockElement):
     def __init__(self, parent: Optional[Node] = None, **kwargs):
         super().__init__(name='body', parent=parent, **kwargs)
