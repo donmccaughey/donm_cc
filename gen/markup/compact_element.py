@@ -1,10 +1,10 @@
 from textwrap import indent
 from typing import Optional
 
-from html import Text
-from html.element import Element
-from html.node import Node
-from html.wrap import wrap_tokens
+from markup import Text
+from markup.element import Element
+from markup.node import Node
+from markup.wrap import wrap_tokens
 
 
 class CompactElement(Element):

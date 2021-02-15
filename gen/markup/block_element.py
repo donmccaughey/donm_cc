@@ -1,12 +1,12 @@
 from textwrap import indent
 from typing import Optional
 
-from html import Text
-from html.comment import Comment
-from html.element import Element
-from html.inline_element import InlineElement
-from html.node import Node
-from html.wrap import wrap_tokens
+from markup import Text
+from markup.comment import Comment
+from markup.element import Element
+from markup.inline_element import InlineElement
+from markup.node import Node
+from markup.wrap import wrap_tokens
 
 
 class BlockElement(Element):

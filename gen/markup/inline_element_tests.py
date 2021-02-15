@@ -1,7 +1,7 @@
 import unittest
 from textwrap import dedent
 
-from html import Span
+from markup import Span
 
 
 class SpanTestCase(unittest.TestCase):

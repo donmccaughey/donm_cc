@@ -1,5 +1,5 @@
 import unittest
-from html.wrap import wrap_tokens
+from markup.wrap import wrap_tokens
 
 
 class WrapTokensTestCase(unittest.TestCase):

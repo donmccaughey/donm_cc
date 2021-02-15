@@ -1,6 +1,6 @@
 import unittest
 
-from html.comment import Comment
+from markup.comment import Comment
 
 
 class CommentTestCase(unittest.TestCase):

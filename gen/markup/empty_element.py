@@ -1,7 +1,7 @@
 from typing import Optional, List
 
-from html.element import Element
-from html.node import Node
+from markup.element import Element
+from markup.node import Node
 
 
 class EmptyElement(Element):

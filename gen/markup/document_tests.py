@@ -1,7 +1,7 @@
 import unittest
 from textwrap import dedent
-from html import Document, DocType, HTML
-from html.comment import Comment
+from markup import Document, DocType, HTML
+from markup.comment import Comment
 
 
 class DocumentTestCase(unittest.TestCase):

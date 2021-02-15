@@ -1,8 +1,8 @@
 import unittest
 from textwrap import dedent
 
-from html import Title, Li, Ul, Text
-from html.comment import Comment
+from markup import Title, Li, Ul, Text
+from markup.comment import Comment
 
 
 class CompactElementTestCase(unittest.TestCase):

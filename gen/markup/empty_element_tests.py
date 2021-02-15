@@ -1,6 +1,6 @@
 import unittest
 
-from html import Br
+from markup import Br
 
 
 class BrTestCase(unittest.TestCase):

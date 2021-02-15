@@ -1,6 +1,6 @@
 import unittest
 
-from html.attributes import format_attribute
+from markup.attributes import format_attribute
 
 
 class AttributesTestCase(unittest.TestCase):

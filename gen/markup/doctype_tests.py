@@ -1,6 +1,6 @@
 import unittest
 
-from html import DocType
+from markup import DocType
 
 
 class DocTypeTestCase(unittest.TestCase):

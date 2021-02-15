@@ -2,8 +2,8 @@ from __future__ import annotations
 import os
 from typing import Optional, TYPE_CHECKING
 from .child import Child
-from html import *
-from html.node import with_node
+from markup import *
+from markup.node import with_node
 
 if TYPE_CHECKING:
     from .parent import Parent

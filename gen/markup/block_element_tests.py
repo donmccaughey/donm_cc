@@ -1,9 +1,9 @@
 import unittest
 from textwrap import dedent
 
-from html import Body, Div, P, Text, Strong, Em, HTML, Head, Title, Document, \
+from markup import Body, Div, P, Text, Strong, Em, HTML, Head, Title, Document, \
     Script
-from html.comment import Comment
+from markup.comment import Comment
 
 
 class BodyTestCase(unittest.TestCase):

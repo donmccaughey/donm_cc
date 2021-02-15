@@ -1,6 +1,6 @@
 import unittest
 
-from html.element import Element
+from markup.element import Element
 
 
 class ElementTestCase(unittest.TestCase):

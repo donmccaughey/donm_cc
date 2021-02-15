@@ -1,7 +1,7 @@
 import unittest
 from textwrap import dedent
 
-from html import Text
+from markup import Text
 
 
 class TextTestCase(unittest.TestCase):
