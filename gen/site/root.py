@@ -8,10 +8,8 @@ from site.pages.aughey import aughey
 from site.pages.home import home
 
 
-root = IndexPage('Don McCaughey', is_root=True)
-
+root = home()
 with root:
-    home()
 
     File('base.css')
     Directory('banners')
