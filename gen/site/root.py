@@ -1,15 +1,15 @@
-import site.pages
-
-from markup import Div, Img, Br, Span, Ul, Section, H1, P, A, Text, Code, Form, \
+from markup import Div, Ul, Section, H1, P, A, Text, Code, Form, \
     Label, Input, Button, Li, H2, Em
 from resources import IndexPage, File, Directory, Page
 from site.collection import item
 from site.links import book, link
 from site.packages import package
+from site.pages.aughey import aughey
 from site.pages.home_page import home_page
 
 
 root = IndexPage('Don McCaughey', is_root=True)
+
 with root:
     home_page()
 
@@ -18,11 +18,7 @@ with root:
     Directory('icons')
     Directory('resume')
 
-    with IndexPage('Don McCaughey', name='aughey', has_files=True):
-        with Div(class_names=['banner']):
-            Img(src='/aughey/handstand.jpg', alt='Don doing a handstand')
-            Br()
-            Span(class_names=['caption'], text='Coachella Festival, spring 2007')
+    aughey()
 
     with IndexPage('Business Novels'):
         with Section(class_names=['overview']):
