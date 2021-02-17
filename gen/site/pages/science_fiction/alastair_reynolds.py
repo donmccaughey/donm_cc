@@ -7,9 +7,26 @@ def alastair_reynolds():
     with Page('Alastair Reynolds'):
         with Section(class_names=['overview']):
             H1('Alastair Reynolds')
-            P()
+            P("""
+                Reynolds is an astrophysicist turned writer with a nack for
+                creating trippy, mind-bending stories.
+            """)
         with Section(class_names=['links']):
             H1('Revelation Space')
+            P("""
+                <em>Revelation Space</em> is the gateway drug that got me hooked
+                on Reynolds' strange vision of the future.  It forms
+                a loosely connected trilogy with <em>Redemption Ark</em> (featuring
+                a riveting near-light-speed chase between the stars spanning decades) and 
+                <em>Absolution Gap</em> (with a virus-induced religious cult, moving cathedrals
+                and a vanishing gas giant). 
+            """)
+            P("""
+                <em>Aurora Rising</em> and <em>Elysium Fire</em> form the
+                <a href=http://approachingpavonis.blogspot.com/2017/07/elysium-fire-and-new-title-for-prefect.html>Prefect
+                Dreyfuss Emergency</a> sub-series.  They're police procedurals
+                set in the Glitter Band, a swarm of thousands of orbital habitats.
+            """)
             with Ul():
                 book('Revelation Space',
                      'https://www.amazon.com/gp/product/B001QL5MAA',
@@ -62,8 +79,7 @@ def alastair_reynolds():
         with Section(class_names=['links']):
             H1('Merlin')
             with P():
-                with A(
-                        'http://approachingpavonis.blogspot.com/2016/10/new-merlin-story-iron-tactician.html'):
+                with A('http://approachingpavonis.blogspot.com/2016/10/new-merlin-story-iron-tactician.html'):
                     Text('There are four Merlin stories to date, ...')
             with Ul():
                 book('Hideaway',
@@ -113,6 +129,12 @@ def alastair_reynolds():
                      date='2019')
         with Section(class_names=['links']):
             H1('Collections')
+            P("""
+                Reynolds' short stories are like small bite-sized versions of his
+                novels.  Notably, the stories <em>Zima Blue</em> and <em>Beyond the Aquila Rift</em>
+                come to life in episodes of the animated series
+                <a href=https://www.netflix.com/title/80174608>Love, Death & Robots</a>.
+            """)
             with Ul():
                 book('Zima Blue',
                      'https://www.amazon.com/gp/product/B00GVG07DC',

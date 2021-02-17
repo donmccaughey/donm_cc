@@ -8,15 +8,22 @@ def iain_m_banks():
         with Section(class_names=['overview']):
             H1('Iain M Banks')
             P("""
-                    Banks passed away in 2013, and I've been carefully parceling out the
-                    remaining Culture novels since.  I was hooked early into <i>Consider
-                    Phlebas</i>, though <i>The Player of Games</i> and <i>Use of
-                    Weapons</i> are probably better and more accessible starting places.
-                    For me, <i>Look to Windward</i> best captures the heart and soul of
-                    the Culture.
-                 """)
+                Banks passed away in 2013, and I've been carefully parceling out his
+                remaining novels since.  
+             """)
         with Section(class_names=['links']):
             H1('The Culture Novels')
+            P("""
+                Banks creates a vision of a galaxy-spanning
+                post-scarcity future that is unique, hopeful and somehow very comforting
+                in its humanity.  I was hooked in the early chapters of
+                <em>Consider Phlebas</em>, though lots of folks in 
+                <a href=https://www.reddit.com/r/printSF/>r/printSF</a> seem lukewarm
+                on this one.  <em>The Player of Games</em> and <em>Use of
+                Weapons</em> are probably better and more accessible starting places.
+                For me, <em>Look to Windward</em> best captures the heart and soul of
+                the Culture.            
+            """)
             with Ul():
                 book('Consider Phlebas',
                      'https://www.amazon.com/gp/product/B0013TX6FI',

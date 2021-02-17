@@ -7,18 +7,19 @@ def lois_mcmaster_bujold():
     with Page('Lois McMaster Bujold'):
         with Section(class_names=['overview']):
             H1('Lois McMaster Bujold')
-            P("""
-                    The <i>Vorkosigan Saga</i> is a fun, pulpy space opera that draws
-                    more on Golden Age science fiction than New Wave or Cyberpunk.
-                """)
-            P("""
-                    The novels <i>Shards of Honor</i> and <i>Barrayar</i> form a
-                    two-part romance that is also Miles Vorkosigan's origin story.  Most
-                    of the remainder feature Miles' picaresque adventures.
-                """)
         with Section(class_names=['links']):
             H1('The Vorkosigan Saga')
-            Em('(internal chronological order)')
+            P("""
+                The <strong>Vorkosigan Saga</strong> is a fun, pulpy space opera that draws
+                more on Golden Age science fiction than New Wave or Cyberpunk.
+            """)
+            P("""
+                The novels <em>Shards of Honor</em> and <em>Barrayar</em> form a
+                two-part romance that is also Miles Vorkosigan's origin story.  Most
+                of the remaining stories feature Miles' picaresque adventures.
+            """)
+            with P():
+                Em('(internal chronological order)')
             with Ul():
                 book("Dreamweaver's Dilemma (short story)",
                      'https://www.amazon.com/Dreamweavers-Dilemma-Lois-McMaster-Bujold/dp/0915368536',
