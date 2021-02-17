@@ -2,7 +2,7 @@ from markup import Div, Img, Br, Span, Ul
 from site.collection import item
 
 
-def home_page():
+def home():
     with Div(class_names=['banner']):
         Img(
             src='/banners/Don_and_Molly_Round_Hill_Lake_Tahoe_summer_2019.jpg',

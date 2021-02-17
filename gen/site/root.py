@@ -5,13 +5,13 @@ from site.collection import item
 from site.links import book, link
 from site.packages import package
 from site.pages.aughey import aughey
-from site.pages.home_page import home_page
+from site.pages.home import home
 
 
 root = IndexPage('Don McCaughey', is_root=True)
 
 with root:
-    home_page()
+    home()
 
     File('base.css')
     Directory('banners')
