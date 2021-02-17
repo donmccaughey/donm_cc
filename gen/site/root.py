@@ -1,4 +1,4 @@
-from markup import Div, Ul, Section, H1, P, A, Text, Form, \
+from markup import Ul, Section, H1, P, A, Text, Form, \
     Label, Input, Button, Li, H2, Em
 from resources import IndexPage, File, Directory, Page
 from site.collection import item
@@ -11,6 +11,7 @@ from site.pages.hashtables import hashtables
 from site.pages.home import home
 from site.pages.macos_packages import macos_packages
 from site.pages.make import make
+from site.pages.memory_match import memory_match
 
 
 root = home()
@@ -27,11 +28,7 @@ with root:
     hashtables()
     macos_packages()
     make()
-
-    with IndexPage('Memory Match', has_files=True) as page:
-        page.add_script('https://cdnjs.cloudflare.com/ajax/libs/cash/1.3.0/cash.min.js')
-        page.add_script('memory_match.js')
-        Div(id='memory_match')
+    memory_match()
 
     with IndexPage('Random Words', has_files=True) as page:
         page.add_stylesheet('random_words.css')
