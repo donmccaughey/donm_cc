@@ -1,4 +1,5 @@
 from dataclasses import dataclass
+from enum import Enum, auto
 
 from markup import Section, H1, P, Ul, A, Text
 from resources import Page
@@ -46,6 +47,104 @@ class LinksPage:
                                 date=link.date,
                                 checked=link.checked,
                             )
+
+
+source = """
+.page links Alastair Reynolds
+
+Reynolds is an astrophysicist turned writer with a nack for
+creating trippy, mind-bending stories.
+
+.section links Revelation Space
+
+<em>Revelation Space</em> is the gateway drug that got me hooked
+on Reynolds' strange vision of the future.  It forms
+a loosely connected trilogy with <em>Redemption Ark</em> (featuring
+a riveting near-light-speed chase between the stars spanning decades) and 
+<em>Absolution Gap</em> (with a virus-induced religious cult, moving cathedrals
+and a vanishing gas giant). 
+
+<em>Aurora Rising</em> and <em>Elysium Fire</em> form the
+<a href=http://approachingpavonis.blogspot.com/2017/07/elysium-fire-and-new-title-for-prefect.html>Prefect
+Dreyfuss Emergency</a> sub-series.  They're police procedurals
+set in the Glitter Band, a swarm of thousands of orbital habitats.
+
+.link book Revelation Space
+.url https://www.amazon.com/gp/product/B001QL5MAA
+.date 2000
+.checked
+
+
+.section links Poseidon's Children
+
+.link book Blue Remembered Earth
+.url https://www.amazon.com/gp/product/B005ZOCF5E
+.date 2012
+.checked
+
+.link book On the Steel Breeze
+.url https://www.amazon.com/gp/product/B00H2V6IN8
+.date 2013
+.checked
+
+
+.section links Revenger
+
+.link book Revenger
+.url https://www.amazon.com/gp/product/B01LXW2IUQ
+.date 2016
+.checked
+
+.link book Shadow Captain
+.url https://www.amazon.com/gp/product/B07CWQN8FQ
+.date 2019
+"""
+
+
+class TokenType(Enum):
+    DIRECTIVE = auto()
+    MODIFIER = auto()
+    DATA = auto()
+    BLANK_LINE = auto()
+    TEXT_LINE = auto()
+
+
+@dataclass
+class Token:
+    type: TokenType
+    text: str
+
+
+modifiers = ['links', 'book']
+
+
+def unescape(text: str) -> str:
+    return text
+
+
+def tokenize(source: str) -> Token:
+    for line in source.splitlines():
+        if 0 == len(line):
+            yield Token(TokenType.BLANK_LINE, line)
+        elif line.isspace():
+            yield Token(TokenType.BLANK_LINE, line)
+        elif '.' is line[0]:
+            parts = line.split(' ', 2)
+            yield Token(TokenType.DIRECTIVE, parts[0][1:])
+            if 2 == len(parts):
+                if parts[1] in modifiers:
+                    yield Token(TokenType.MODIFIER, parts[1])
+                else:
+                    yield Token(TokenType.DATA, unescape(parts[1]))
+            if 3 == len(parts):
+                if parts[1] in modifiers:
+                    yield Token(TokenType.MODIFIER, parts[1])
+                    yield Token(TokenType.DATA, unescape(parts[2]))
+                else:
+                    data = parts[1] + ' ' + parts[2]
+                    yield Token(TokenType.DATA, unescape(data))
+        else:
+            yield Token(TokenType.TEXT_LINE, unescape(line))
 
 
 page = LinksPage(
