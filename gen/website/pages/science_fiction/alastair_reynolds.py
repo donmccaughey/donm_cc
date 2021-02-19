@@ -105,8 +105,7 @@ class TokenType(Enum):
     DIRECTIVE = auto()
     MODIFIER = auto()
     DATA = auto()
-    BLANK_LINE = auto()
-    TEXT_LINE = auto()
+    PARAGRAPH = auto()
 
 
 @dataclass
@@ -123,12 +122,16 @@ def unescape(text: str) -> str:
 
 
 def tokenize(source: str) -> Token:
+    paragraph = []
     for line in source.splitlines():
-        if 0 == len(line):
-            yield Token(TokenType.BLANK_LINE, line)
-        elif line.isspace():
-            yield Token(TokenType.BLANK_LINE, line)
-        elif '.' is line[0]:
+        if 0 == len(line) or line.isspace():
+            if paragraph:
+                yield Token(TokenType.PARAGRAPH, '\n'.join(paragraph))
+                paragraph = []
+        elif '.' == line[0]:
+            if paragraph:
+                yield Token(TokenType.PARAGRAPH, '\n'.join(paragraph))
+                paragraph = []
             parts = line.split(' ', 2)
             yield Token(TokenType.DIRECTIVE, parts[0][1:])
             if 2 == len(parts):
@@ -144,7 +147,9 @@ def tokenize(source: str) -> Token:
                     data = parts[1] + ' ' + parts[2]
                     yield Token(TokenType.DATA, unescape(data))
         else:
-            yield Token(TokenType.TEXT_LINE, unescape(line))
+            paragraph.append(line)
+    if paragraph:
+        yield Token(TokenType.PARAGRAPH, '\n'.join(paragraph))
 
 
 page = LinksPage(
