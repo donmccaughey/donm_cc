@@ -1,10 +1,10 @@
 from markup import Section, H1, P, Ul
 from resources import IndexPage
-from site.collection import item
-from site.pages.science_fiction.alastair_reynolds import alastair_reynolds
-from site.pages.science_fiction.iain_m_banks import iain_m_banks
-from site.pages.science_fiction.james_sa_corey import james_sa_corey
-from site.pages.science_fiction.lois_mcmaster_bujold import lois_mcmaster_bujold
+from website.collection import item
+from website.pages.science_fiction.alastair_reynolds import alastair_reynolds
+from website.pages.science_fiction.iain_m_banks import iain_m_banks
+from website.pages.science_fiction.james_sa_corey import james_sa_corey
+from website.pages.science_fiction.lois_mcmaster_bujold import lois_mcmaster_bujold
 
 
 def science_fiction():

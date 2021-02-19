@@ -3,7 +3,7 @@ from enum import Enum, auto
 
 from markup import Section, H1, P, Ul, A, Text
 from resources import Page
-from site.links import book, link as build_link
+from website.links import link as build_link
 
 
 @dataclass

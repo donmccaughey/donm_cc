@@ -1,6 +1,6 @@
 from markup import Section, H1, P, Text, Code
 from resources import IndexPage
-from site.packages import package
+from website.packages import package
 
 
 def macos_packages():

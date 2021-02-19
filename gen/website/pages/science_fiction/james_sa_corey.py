@@ -1,6 +1,6 @@
 from markup import Section, H1, Em, Ul, P
 from resources import Page
-from site.links import book
+from website.links import book
 
 
 def james_sa_corey():

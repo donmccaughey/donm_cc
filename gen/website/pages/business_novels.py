@@ -1,6 +1,6 @@
 from markup import Section, H1, P, Ul
 from resources import IndexPage
-from site.links import book
+from website.links import book
 
 
 def business_novels():

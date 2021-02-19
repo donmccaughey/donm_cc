@@ -1,5 +1,5 @@
 import argparse
-from site import root
+from website import root
 
 
 def main():

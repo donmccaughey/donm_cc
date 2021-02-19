@@ -1,6 +1,6 @@
 from markup import Div, Img, Br, Span, Ul
 from resources import IndexPage
-from site.collection import item
+from website.collection import item
 
 
 def home():

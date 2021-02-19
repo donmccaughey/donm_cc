@@ -1,6 +1,6 @@
 from markup import Section, H1, P, Em, Ul
 from resources import Page
-from site.links import book
+from website.links import book
 
 
 def lois_mcmaster_bujold():

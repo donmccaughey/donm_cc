@@ -1,6 +1,6 @@
 from markup import Section, H1, P, Ul, H2
 from resources import IndexPage
-from site.links import link
+from website.links import link
 
 
 def rust_and_wasm():
