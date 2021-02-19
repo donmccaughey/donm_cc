@@ -207,7 +207,10 @@ class Parser:
     def start(self) -> bool:
         self.next_token()
         # TODO: detect incomplete parse
-        return self.page()
+        parsed = self.page()
+        if not parsed:
+            print(self.error)
+        return parsed
 
     def next_token(self):
         try:
