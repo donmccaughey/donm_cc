@@ -1,10 +1,9 @@
 from file_formats.links_page.parser import Parser
-from file_formats.links_page.lexer import tokenize
 from website.pages.links_page import build_links_page
 
 
 def alastair_reynolds():
-    parser = Parser(tokenize(source))
+    parser = Parser(source)
     if not parser.parse():
         raise parser.error
     build_links_page(parser.links_page)

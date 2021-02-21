@@ -1,7 +1,7 @@
 from typing import Iterator, Optional, Union
 
 from file_formats.links_page import LinksPage, LinksSection, Link
-from .lexer import Token, TokenType
+from .lexer import Token, TokenType, tokenize
 
 
 class ParserError(RuntimeError):
@@ -53,8 +53,8 @@ class Parser:
         checked_directive = '.checked'
     """
 
-    def __init__(self, lexer: Iterator[Token]):
-        self.lexer = lexer
+    def __init__(self, source: str):
+        self.lexer = tokenize(source)
         self.token: Optional[Token] = None
         self.error: Optional[ParserError] = None
         self.links_page: Optional[LinksPage] = None
