@@ -4,7 +4,6 @@ from typing import Optional, Iterator, Union
 
 from markup import Section, H1, P, Ul
 from resources import Page
-from website.links import link as build_link
 
 
 @dataclass
@@ -28,28 +27,6 @@ class LinksPage:
     title: str
     notes: list[str]
     sections: list[LinksSection]
-
-    def build(self):
-        with Page(self.title):
-            with Section(class_names=['overview']):
-                H1(self.title)
-                for note in self.notes:
-                    P(note)
-            for section in self.sections:
-                with Section(class_names=['links']):
-                    H1(section.title)
-                    for note in section.notes:
-                        P(note)
-                    with Ul():
-                        for link in section.links:
-                            build_link(
-                                type=link.type,
-                                title=link.title,
-                                href=link.link,
-                                authors=None,
-                                date=link.date,
-                                checked=link.checked,
-                            )
 
 
 class TokenType(Enum):

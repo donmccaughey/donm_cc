@@ -1,11 +1,12 @@
 from file_formats.links_page import tokenize, Parser
+from website.pages.links_page import build_links_page
 
 
 def alastair_reynolds():
     parser = Parser(tokenize(source))
     if not parser.parse():
         raise parser.error
-    parser.links_page.build()
+    build_links_page(parser.links_page)
 
 
 source = """
