@@ -23,7 +23,7 @@ def unescape(text: str) -> str:
     return text
 
 
-def tokenize(source: str) -> Iterator[Token]:
+def lexer(source: str) -> Iterator[Token]:
     paragraph = []
     for line in source.splitlines():
         if 0 == len(line) or line.isspace():

@@ -1,7 +1,7 @@
 from typing import Iterator, Optional, Union
 
 from file_formats.links_page import LinksPage, LinksSection, Link
-from .lexer import Token, TokenType, tokenize
+from .lexer import Token, TokenType, lexer
 
 
 def parse(source: str) -> LinksPage:
@@ -61,7 +61,7 @@ class Parser:
     """
 
     def __init__(self, source: str):
-        self.lexer = tokenize(source)
+        self.lexer = lexer(source)
         self.token: Optional[Token] = None
         self.error: Optional[ParserError] = None
         self.links_page: Optional[LinksPage] = None
