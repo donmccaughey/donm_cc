@@ -1,4 +1,5 @@
-from file_formats.links_page import tokenize, Parser
+from file_formats.links_page.parser import Parser
+from file_formats.links_page.lexer import tokenize
 from website.pages.links_page import build_links_page
 
 
