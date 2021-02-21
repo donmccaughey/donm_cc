@@ -4,6 +4,13 @@ from file_formats.links_page import LinksPage, LinksSection, Link
 from .lexer import Token, TokenType, tokenize
 
 
+def parse(source: str) -> LinksPage:
+    parser = Parser(source)
+    if not parser.parse():
+        raise parser.error
+    return parser.links_page
+
+
 class ParserError(RuntimeError):
     def __init__(self, token: Token, message: str):
         super().__init__(message)

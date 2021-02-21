@@ -1,12 +1,9 @@
-from file_formats.links_page.parser import Parser
+from file_formats.links_page.parser import parse
 from website.pages.links_page import build_links_page
 
 
 def alastair_reynolds():
-    parser = Parser(source)
-    if not parser.parse():
-        raise parser.error
-    build_links_page(parser.links_page)
+    build_links_page(parse(source))
 
 
 source = """
