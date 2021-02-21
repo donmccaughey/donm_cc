@@ -34,21 +34,16 @@ def lexer(source: str) -> Iterator[Token]:
             if paragraph:
                 yield Token(TokenType.PARAGRAPH, '\n'.join(paragraph))
                 paragraph = []
-            parts = line.split(None, 2)
-            yield Token(TokenType.DIRECTIVE, parts[0][1:])
-            if 2 == len(parts):
-                if parts[1] in modifiers:
-                    yield Token(TokenType.MODIFIER, parts[1])
+            directive, *rest_of_line = line.split(None, 1)
+            yield Token(TokenType.DIRECTIVE, directive[1:])
+            if rest_of_line:
+                modifier, *data = rest_of_line[0].split(None, 1)
+                if modifier in modifiers:
+                    yield Token(TokenType.MODIFIER, modifier)
+                    if data:
+                        yield Token(TokenType.DATA, data[0].strip())
                 else:
-                    yield Token(TokenType.DATA, parts[1])
-            if 3 == len(parts):
-                if parts[1] in modifiers:
-                    yield Token(TokenType.MODIFIER, parts[1])
-                    yield Token(TokenType.DATA, parts[2].strip())
-                else:
-                    parts = line.split(None, 1)
-                    data = parts[1]
-                    yield Token(TokenType.DATA, data.strip())
+                    yield Token(TokenType.DATA, rest_of_line[0].strip())
         else:
             paragraph.append(unescape(line.rstrip()))
     if paragraph:

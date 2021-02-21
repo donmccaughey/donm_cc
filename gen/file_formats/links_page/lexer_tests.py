@@ -200,6 +200,24 @@ class LexerTestCase(unittest.TestCase):
             tokens
         )
 
+    def test_paragraph_directive(self):
+        source = dedent("""
+        This is a paragraph that
+        spans multiple lines.
+        .section links More Links
+        """)
+        tokens = list(lexer(source))
+        self.assertEqual(
+            [
+                Token(TokenType.PARAGRAPH,
+                      'This is a paragraph that\nspans multiple lines.'),
+                Token(TokenType.DIRECTIVE, 'section'),
+                Token(TokenType.MODIFIER, 'links'),
+                Token(TokenType.DATA, 'More Links'),
+            ],
+            tokens
+        )
+
 
 if __name__ == '__main__':
     unittest.main()
