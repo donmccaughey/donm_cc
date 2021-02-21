@@ -20,7 +20,7 @@ modifiers = ['links', 'book']
 
 
 def unescape(text: str) -> str:
-    return text
+    return text.replace(r'\.', '.')
 
 
 def lexer(source: str) -> Iterator[Token]:
@@ -34,21 +34,22 @@ def lexer(source: str) -> Iterator[Token]:
             if paragraph:
                 yield Token(TokenType.PARAGRAPH, '\n'.join(paragraph))
                 paragraph = []
-            parts = line.split(' ', 2)
+            parts = line.split(None, 2)
             yield Token(TokenType.DIRECTIVE, parts[0][1:])
             if 2 == len(parts):
                 if parts[1] in modifiers:
                     yield Token(TokenType.MODIFIER, parts[1])
                 else:
-                    yield Token(TokenType.DATA, unescape(parts[1]))
+                    yield Token(TokenType.DATA, parts[1])
             if 3 == len(parts):
                 if parts[1] in modifiers:
                     yield Token(TokenType.MODIFIER, parts[1])
-                    yield Token(TokenType.DATA, unescape(parts[2].strip()))
+                    yield Token(TokenType.DATA, parts[2].strip())
                 else:
-                    data = parts[1] + ' ' + parts[2]
-                    yield Token(TokenType.DATA, unescape(data.strip()))
+                    parts = line.split(None, 1)
+                    data = parts[1]
+                    yield Token(TokenType.DATA, data.strip())
         else:
-            paragraph.append(line.strip())
+            paragraph.append(unescape(line.rstrip()))
     if paragraph:
         yield Token(TokenType.PARAGRAPH, '\n'.join(paragraph))
