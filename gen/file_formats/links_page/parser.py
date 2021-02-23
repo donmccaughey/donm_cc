@@ -1,19 +1,40 @@
-from typing import Iterator, Optional, Union
+from enum import Enum, auto
+from typing import Optional, Union
 
 from file_formats.links_page import LinksPage, LinksSection, Link
 from .lexer import Token, TokenType, lexer
 
 
 def parse(source: str) -> LinksPage:
-    parser = Parser(source)
-    if not parser.parse():
-        raise parser.error
-    return parser.links_page
+    result = Parser(source).parse()
+    if isinstance(result, LinksPage):
+        return result
+    else:
+        raise result
 
 
 class ParserError(RuntimeError):
     def __init__(self, token: Token, message: str):
         super().__init__(message)
+        self.token = token
+
+
+class MissingDirectiveError(ParserError):
+    def __init__(self, token: Token, directive: str):
+        self.directive = directive
+        super().__init__(token, f'Expected {directive} directive')
+
+
+class MissingModifierError(ParserError):
+    def __init__(self, token: Token, modifier: str):
+        self.modifier = modifier
+        super().__init__(token, f'Expected {modifier} modifier')
+
+
+class MissingDataError(ParserError):
+    def __init__(self, token: Token, data_description: str):
+        self.data_description = data_description
+        super().__init__(token, f'Expected {data_description}')
 
 
 class Parser:
@@ -22,8 +43,8 @@ class Parser:
 
     Grammar:
 
-        page = declaration
-             | declaration sections
+        page = declaration EOF
+             | declaration sections EOF
 
         declaration = page_directive
                     | page_directive paragraphs
@@ -92,6 +113,9 @@ class Parser:
                 and directive == self.token.text
         )
 
+    def is_eof(self) -> bool:
+        return None == self.token
+
     def is_modifier(self, modifier) -> bool:
         return (
                 self.token
@@ -108,8 +132,11 @@ class Parser:
     def page(self) -> bool:
         if not self.declaration():
             return False
-        self.sections()
-        return True
+        if self.is_eof():
+            return True
+        if not self.sections():
+            return False
+        return self.is_eof()
 
     def declaration(self) -> bool:
         if not self.page_directive():
@@ -119,15 +146,15 @@ class Parser:
 
     def page_directive(self) -> bool:
         if not self.is_directive('page'):
-            self.error = ParserError(self.token, 'Expected .page directive')
+            self.error = MissingDirectiveError(self.token, 'page')
             return False
         self.next_token()
         if not self.is_modifier('links'):
-            self.error = ParserError(self.token, 'Expected links modifier')
+            self.error = MissingModifierError(self.token, 'links')
             return False
         self.next_token()
         if not self.is_data():
-            self.error = ParserError(self.token, 'Expected page title')
+            self.error = MissingDataError(self.token, 'page title')
             return False
         self.links_page = LinksPage(title=(self.token.text.strip()), notes=[], sections=[])
         self.notes = self.links_page.notes
@@ -160,15 +187,15 @@ class Parser:
 
     def section_directive(self) -> bool:
         if not self.is_directive('section'):
-            self.error = ParserError(self.token, 'Expected .section directive')
+            self.error = MissingDirectiveError(self.token, 'section')
             return False
         self.next_token()
         if not self.is_modifier('links'):
-            self.error = ParserError(self.token, 'Expected links modifier')
+            self.error = MissingModifierError(self.token, 'links')
             return False
         self.next_token()
         if not self.is_data():
-            self.error = ParserError(self.token, 'Expected section title')
+            self.error = MissingDataError(self.token, 'section title')
             return False
         section = LinksSection(title=self.token.text, notes=[], links=[])
         self.links_page.sections.append(section)
