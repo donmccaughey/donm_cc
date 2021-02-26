@@ -43,11 +43,11 @@ class Parser:
 
     Grammar:
 
-        page = declaration EOF
-             | declaration sections EOF
+        page = overview EOF
+             | overview sections EOF
 
-        declaration = page_directive
-                    | page_directive paragraphs
+        overview = page_directive
+                 | page_directive paragraphs
 
         page_directive = '.page' 'links' DATA
 
@@ -130,7 +130,7 @@ class Parser:
         )
 
     def page(self) -> bool:
-        if not self.declaration():
+        if not self.overview():
             return False
         if self.is_eof():
             return True
@@ -138,7 +138,7 @@ class Parser:
             return False
         return self.is_eof()
 
-    def declaration(self) -> bool:
+    def overview(self) -> bool:
         if not self.page_directive():
             return False
         self.paragraphs()
