@@ -43,8 +43,8 @@ class Parser:
 
     Grammar:
 
-        page = overview EOF
-             | overview sections EOF
+        page = overview
+             | overview sections
 
         overview = page_directive
                  | page_directive paragraphs
@@ -90,9 +90,8 @@ class Parser:
 
     def parse(self) -> Union[LinksPage, ParserError]:
         self.next_token()
-        # TODO: detect incomplete parse
-        parsed = self.page()
-        return self.links_page if parsed else self.error
+        self.page()
+        return self.error if self.error else self.links_page
 
     def next_token(self):
         try:
@@ -113,9 +112,6 @@ class Parser:
                 and directive == self.token.text
         )
 
-    def is_eof(self) -> bool:
-        return None == self.token
-
     def is_modifier(self, modifier) -> bool:
         return (
                 self.token
@@ -132,11 +128,7 @@ class Parser:
     def page(self) -> bool:
         if not self.overview():
             return False
-        if self.is_eof():
-            return True
-        if not self.sections():
-            return False
-        return self.is_eof()
+        return self.sections()
 
     def overview(self) -> bool:
         if not self.page_directive():
@@ -163,7 +155,6 @@ class Parser:
 
     def paragraphs(self) -> bool:
         if not self.is_paragraph():
-            self.error = ParserError(self.token, 'Expected a paragraph')
             return False
         self.notes.append(self.token.text)
         self.next_token()
@@ -187,7 +178,6 @@ class Parser:
 
     def section_directive(self) -> bool:
         if not self.is_directive('section'):
-            self.error = MissingDirectiveError(self.token, 'section')
             return False
         self.next_token()
         if not self.is_modifier('links'):
@@ -222,11 +212,10 @@ class Parser:
 
     def link_directive(self) -> bool:
         if not self.is_directive('link'):
-            self.error = ParserError(self.token, 'Expected .links directive')
             return False
         self.next_token()
         if not self.is_modifier('book'):
-            self.error = ParserError(self.token, 'Expected book modifier')
+            self.error = MissingModifierError(self.token, 'book')
             return False
         self.next_token()
         if not self.is_data():
@@ -257,7 +246,6 @@ class Parser:
 
     def date_directive(self) -> bool:
         if not self.is_directive('date'):
-            self.error = ParserError(self.token, 'Expected .date directive')
             return False
         self.next_token()
         if not self.is_data():
@@ -269,7 +257,6 @@ class Parser:
 
     def checked_directive(self) -> bool:
         if not self.is_directive('checked'):
-            self.error = ParserError(self.token, 'Expected .checked directive')
             return False
         self.links_page.sections[-1].links[-1].checked = True
         self.next_token()

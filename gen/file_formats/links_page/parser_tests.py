@@ -160,7 +160,6 @@ class ParserTestCase(unittest.TestCase):
         )
         self.assertEqual([], section.links)
 
-    @unittest.skip
     def test_link_directive_missing_modifier(self):
         source = dedent('''
         .page links My Links
