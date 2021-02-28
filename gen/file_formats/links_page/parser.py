@@ -37,6 +37,11 @@ class MissingDataError(ParserError):
         super().__init__(token, f'Expected {data_description}')
 
 
+class UnexpectedTokenError(ParserError):
+    def __init__(self, token: Token):
+        super().__init__(token, 'Unexpected token')
+
+
 class Parser:
     """
     Parse a links file.
@@ -91,7 +96,12 @@ class Parser:
     def parse(self) -> Union[LinksPage, ParserError]:
         self.next_token()
         self.page()
-        return self.error if self.error else self.links_page
+        if self.error:
+            return self.error
+        elif self.token:
+            return UnexpectedTokenError(self.token)
+        else:
+            return self.links_page
 
     def next_token(self):
         try:

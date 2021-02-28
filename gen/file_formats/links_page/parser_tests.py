@@ -3,7 +3,8 @@ from textwrap import dedent
 
 from file_formats.links_page import LinksPage
 from file_formats.links_page.parser import Parser, ParserError, \
-    MissingDirectiveError, MissingModifierError, MissingDataError
+    MissingDirectiveError, MissingModifierError, MissingDataError, \
+    UnexpectedTokenError
 
 
 class ParserTestCase(unittest.TestCase):
@@ -37,6 +38,24 @@ class ParserTestCase(unittest.TestCase):
         self.assertEqual('My Links', result.title)
         self.assertEqual([], result.notes)
         self.assertEqual([], result.sections)
+
+    def test_page_directive_invalid_modifier(self):
+        source = '.page invalid My Links'
+        parser = Parser(source)
+        result = parser.parse()
+        self.assertIsInstance(result, MissingModifierError)
+        self.assertEqual('links', result.modifier)
+
+    def test_page_directive_invalid_data(self):
+        source = dedent('''
+        .page links 
+        
+        This is a paragraph.
+        ''')
+        parser = Parser(source)
+        result = parser.parse()
+        self.assertIsInstance(result, MissingDataError)
+        self.assertEqual('page title', result.data_description)
 
     def test_page_directive_with_one_paragraph(self):
         source = dedent('''
@@ -73,6 +92,16 @@ class ParserTestCase(unittest.TestCase):
             result.notes
         )
         self.assertEqual([], result.sections)
+
+    def test_page_directive_twice(self):
+        source = dedent('''
+        .page links My Links
+
+        .page
+        ''')
+        parser = Parser(source)
+        result = parser.parse()
+        self.assertIsInstance(result, UnexpectedTokenError)
 
     def test_section_directive_missing_modifier(self):
         source = dedent('''
@@ -172,7 +201,6 @@ class ParserTestCase(unittest.TestCase):
         result = parser.parse()
         self.assertIsInstance(result, MissingModifierError)
         self.assertEqual('book', result.modifier)
-
 
 
 if __name__ == '__main__':
