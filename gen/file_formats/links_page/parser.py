@@ -103,38 +103,6 @@ class Parser:
         else:
             return self.links_page
 
-    def next_token(self):
-        try:
-            self.token = next(self.lexer)
-        except StopIteration:
-            self.token = None
-
-    def is_data(self) -> bool:
-        return (
-                self.token
-                and TokenType.DATA == self.token.type
-        )
-
-    def is_directive(self, directive) -> bool:
-        return (
-                self.token
-                and TokenType.DIRECTIVE == self.token.type
-                and directive == self.token.text
-        )
-
-    def is_modifier(self, modifier) -> bool:
-        return (
-                self.token
-                and TokenType.MODIFIER == self.token.type
-                and modifier == self.token.text
-        )
-
-    def is_paragraph(self) -> bool:
-        return (
-                self.token
-                and TokenType.PARAGRAPH == self.token.type
-        )
-
     def page(self) -> bool:
         if not self.overview():
             return False
@@ -271,3 +239,35 @@ class Parser:
         self.links_page.sections[-1].links[-1].checked = True
         self.next_token()
         return True
+
+    def next_token(self):
+        try:
+            self.token = next(self.lexer)
+        except StopIteration:
+            self.token = None
+
+    def is_data(self) -> bool:
+        return (
+                self.token
+                and TokenType.DATA == self.token.type
+        )
+
+    def is_directive(self, directive) -> bool:
+        return (
+                self.token
+                and TokenType.DIRECTIVE == self.token.type
+                and directive == self.token.text
+        )
+
+    def is_modifier(self, modifier) -> bool:
+        return (
+                self.token
+                and TokenType.MODIFIER == self.token.type
+                and modifier == self.token.text
+        )
+
+    def is_paragraph(self) -> bool:
+        return (
+                self.token
+                and TokenType.PARAGRAPH == self.token.type
+        )
