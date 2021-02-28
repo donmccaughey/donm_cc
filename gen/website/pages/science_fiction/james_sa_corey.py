@@ -36,7 +36,8 @@ def james_sa_corey():
                      'https://www.amazon.com/gp/product/B008CJ241O',
                      date='2012', checked=True)
                 book('Drive (short story)',
-                     'https://www.syfy.com/theexpanse/drive/', date='2012')
+                     'https://www.amazon.com/gp/product/B00ADOZNJG/',
+                     date='2012', checked=True)
                 book("Abaddon's Gate",
                      'https://www.amazon.com/gp/product/B00A2DZMYE',
                      date='2013', checked=True)
