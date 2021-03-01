@@ -11,29 +11,25 @@ class ParserTestCase(unittest.TestCase):
 
     def test_empty_file(self):
         source = ''
-        parser = Parser(source)
-        result = parser.parse()
+        result = Parser(source).parse()
         self.assertIsInstance(result, MissingDirectiveError)
         self.assertEqual('page', result.directive)
 
     def test_page_directive_missing_modifier(self):
         source = '.page'
-        parser = Parser(source)
-        result = parser.parse()
+        result = Parser(source).parse()
         self.assertIsInstance(result, MissingModifierError)
         self.assertEqual('links', result.modifier)
 
     def test_page_directive_missing_title(self):
         source = '.page links'
-        parser = Parser(source)
-        result = parser.parse()
+        result = Parser(source).parse()
         self.assertIsInstance(result, MissingDataError)
         self.assertEqual('page title', result.data_description)
 
     def test_page_directive_only(self):
         source = '.page links My Links'
-        parser = Parser(source)
-        result = parser.parse()
+        result = Parser(source).parse()
         self.assertIsInstance(result, LinksPage)
         self.assertEqual('My Links', result.title)
         self.assertEqual([], result.notes)
@@ -41,8 +37,7 @@ class ParserTestCase(unittest.TestCase):
 
     def test_page_directive_invalid_modifier(self):
         source = '.page invalid My Links'
-        parser = Parser(source)
-        result = parser.parse()
+        result = Parser(source).parse()
         self.assertIsInstance(result, MissingModifierError)
         self.assertEqual('links', result.modifier)
 
@@ -52,8 +47,7 @@ class ParserTestCase(unittest.TestCase):
         
         This is a paragraph.
         ''')
-        parser = Parser(source)
-        result = parser.parse()
+        result = Parser(source).parse()
         self.assertIsInstance(result, MissingDataError)
         self.assertEqual('page title', result.data_description)
 
@@ -63,8 +57,7 @@ class ParserTestCase(unittest.TestCase):
         
         This is a paragraph.
         ''')
-        parser = Parser(source)
-        result = parser.parse()
+        result = Parser(source).parse()
         self.assertIsInstance(result, LinksPage)
         self.assertEqual('My Links', result.title)
         self.assertEqual(['This is a paragraph.'], result.notes)
@@ -79,8 +72,7 @@ class ParserTestCase(unittest.TestCase):
         
         This is the third paragraph.
         ''')
-        parser = Parser(source)
-        result = parser.parse()
+        result = Parser(source).parse()
         self.assertIsInstance(result, LinksPage)
         self.assertEqual('My Links', result.title)
         self.assertEqual(
@@ -99,8 +91,7 @@ class ParserTestCase(unittest.TestCase):
 
         .page
         ''')
-        parser = Parser(source)
-        result = parser.parse()
+        result = Parser(source).parse()
         self.assertIsInstance(result, UnexpectedTokenError)
 
     def test_section_directive_missing_modifier(self):
@@ -109,8 +100,7 @@ class ParserTestCase(unittest.TestCase):
         
         .section
         ''')
-        parser = Parser(source)
-        result = parser.parse()
+        result = Parser(source).parse()
         self.assertIsInstance(result, MissingModifierError)
         self.assertEqual('links', result.modifier)
 
@@ -120,8 +110,7 @@ class ParserTestCase(unittest.TestCase):
         
         .section links
         ''')
-        parser = Parser(source)
-        result = parser.parse()
+        result = Parser(source).parse()
         self.assertIsInstance(result, MissingDataError)
         self.assertEqual('section title', result.data_description)
 
@@ -132,8 +121,7 @@ class ParserTestCase(unittest.TestCase):
         .section links New Links
         
         ''')
-        parser = Parser(source)
-        result = parser.parse()
+        result = Parser(source).parse()
         self.assertIsInstance(result, LinksPage)
         self.assertEqual(1, len(result.sections))
 
@@ -156,8 +144,7 @@ class ParserTestCase(unittest.TestCase):
         
         The really old stuff.
         ''')
-        parser = Parser(source)
-        result = parser.parse()
+        result = Parser(source).parse()
         self.assertIsInstance(result, LinksPage)
         self.assertEqual(3, len(result.sections))
 
@@ -184,8 +171,7 @@ class ParserTestCase(unittest.TestCase):
         
         These are some links.
         ''')
-        parser = Parser(source)
-        result = parser.parse()
+        result = Parser(source).parse()
         self.assertIsInstance(result, LinksPage)
         self.assertEqual(1, len(result.sections))
 
@@ -206,8 +192,7 @@ class ParserTestCase(unittest.TestCase):
         
         But these are mine.
         ''')
-        parser = Parser(source)
-        result = parser.parse()
+        result = Parser(source).parse()
         self.assertIsInstance(result, LinksPage)
         self.assertEqual(1, len(result.sections))
 
@@ -231,8 +216,7 @@ class ParserTestCase(unittest.TestCase):
         
         .link
         ''')
-        parser = Parser(source)
-        result = parser.parse()
+        result = Parser(source).parse()
         self.assertIsInstance(result, MissingModifierError)
         self.assertEqual('book', result.modifier)
 
@@ -257,8 +241,7 @@ class ParserTestCase(unittest.TestCase):
         
         .link book Example Book
         ''')
-        parser = Parser(source)
-        result = parser.parse()
+        result = Parser(source).parse()
         self.assertIsInstance(result, MissingDirectiveError)
         self.assertEqual('url', result.directive)
 
@@ -271,8 +254,7 @@ class ParserTestCase(unittest.TestCase):
         .link book Example Book
         .link
         ''')
-        parser = Parser(source)
-        result = parser.parse()
+        result = Parser(source).parse()
         self.assertIsInstance(result, MissingDirectiveError)
         self.assertEqual('url', result.directive)
 
@@ -299,8 +281,7 @@ class ParserTestCase(unittest.TestCase):
         .link book Example Book
         .url https://example.book
         ''')
-        parser = Parser(source)
-        result = parser.parse()
+        result = Parser(source).parse()
         self.assertIsInstance(result, LinksPage)
         self.assertEqual(1, len(result.sections))
 
@@ -326,8 +307,7 @@ class ParserTestCase(unittest.TestCase):
         .url https://example.book
         .date
         ''')
-        parser = Parser(source)
-        result = parser.parse()
+        result = Parser(source).parse()
         self.assertIsInstance(result, MissingDataError)
         self.assertEqual('date value', result.data_description)
 
@@ -341,8 +321,7 @@ class ParserTestCase(unittest.TestCase):
         .url https://example.book
         .date 2012
         ''')
-        parser = Parser(source)
-        result = parser.parse()
+        result = Parser(source).parse()
         self.assertIsInstance(result, LinksPage)
         self.assertEqual(1, len(result.sections))
 
@@ -369,8 +348,7 @@ class ParserTestCase(unittest.TestCase):
         .date 2012
         .checked
         ''')
-        parser = Parser(source)
-        result = parser.parse()
+        result = Parser(source).parse()
         self.assertIsInstance(result, LinksPage)
         self.assertEqual(1, len(result.sections))
 
@@ -396,8 +374,7 @@ class ParserTestCase(unittest.TestCase):
         .url https://example.book
         .checked
         ''')
-        parser = Parser(source)
-        result = parser.parse()
+        result = Parser(source).parse()
         self.assertIsInstance(result, LinksPage)
         self.assertEqual(1, len(result.sections))
 
@@ -430,8 +407,7 @@ class ParserTestCase(unittest.TestCase):
         .url https://example3.book
         .date 2001
         ''')
-        parser = Parser(source)
-        result = parser.parse()
+        result = Parser(source).parse()
         self.assertIsInstance(result, LinksPage)
         self.assertEqual(1, len(result.sections))
 
