@@ -1,4 +1,3 @@
-from enum import Enum, auto
 from typing import Optional, Union
 
 from file_formats.links_page import LinksPage, LinksSection, Link
@@ -40,6 +39,22 @@ class MissingDataError(ParserError):
 class UnexpectedTokenError(ParserError):
     def __init__(self, token: Token):
         super().__init__(token, 'Unexpected token')
+
+
+class ProductionResult:
+    matched: bool
+    error: Optional[ParserError]
+
+    def __init__(self, result: Union[bool, ParserError]):
+        if isinstance(result, ParserError):
+            self.matched = False
+            self.error = result
+        else:
+            self.matched = bool(result)
+            self.error = None
+
+    def __bool__(self):
+        return False if self.error else self.matched
 
 
 class Parser:
@@ -89,116 +104,130 @@ class Parser:
     def __init__(self, source: str):
         self.lexer = lexer(source)
         self.token: Optional[Token] = None
-        self.error: Optional[ParserError] = None
         self.links_page: Optional[LinksPage] = None
         self.notes: Optional[list[str]] = None
 
     def parse(self) -> Union[LinksPage, ParserError]:
         self.next_token()
-        self.page()
-        if self.error:
-            return self.error
+        result = self.page()
+        if result.error:
+            return result.error
         elif self.token:
             return UnexpectedTokenError(self.token)
         else:
             return self.links_page
 
-    def page(self) -> bool:
-        if not self.overview():
-            return False
-        return self.sections()
+    def page(self) -> ProductionResult:
+        result = self.overview()
+        if not result:
+            return result
+        result = self.sections()
+        if result.error:
+            return result
+        return ProductionResult(True)
 
-    def overview(self) -> bool:
-        if not self.page_directive():
-            return False
-        self.paragraphs()
-        return True
+    def overview(self) -> ProductionResult:
+        result = self.page_directive()
+        if not result:
+            return result
+        result = self.paragraphs()
+        if result.error:
+            return result
+        return ProductionResult(True)
 
-    def page_directive(self) -> bool:
+    def page_directive(self) -> ProductionResult:
         if not self.is_directive('page'):
-            self.error = MissingDirectiveError(self.token, 'page')
-            return False
+            return ProductionResult(MissingDirectiveError(self.token, 'page'))
         self.next_token()
         if not self.is_modifier('links'):
-            self.error = MissingModifierError(self.token, 'links')
-            return False
+            return ProductionResult(MissingModifierError(self.token, 'links'))
         self.next_token()
         if not self.is_data():
-            self.error = MissingDataError(self.token, 'page title')
-            return False
+            return ProductionResult(MissingDataError(self.token, 'page title'))
         self.links_page = LinksPage(title=(self.token.text.strip()), notes=[], sections=[])
         self.notes = self.links_page.notes
         self.next_token()
-        return True
+        return ProductionResult(True)
 
-    def paragraphs(self) -> bool:
+    def paragraphs(self) -> ProductionResult:
         if not self.is_paragraph():
-            return False
+            return ProductionResult(False)
         self.notes.append(self.token.text)
         self.next_token()
-        self.paragraphs()
-        return True
+        result = self.paragraphs()
+        if result.error:
+            return result
+        return ProductionResult(True)
 
-    def sections(self) -> bool:
-        if not self.section():
-            return False
-        self.sections()
-        return True
+    def sections(self) -> ProductionResult:
+        result = self.section()
+        if not result:
+            return result
+        result = self.sections()
+        if result.error:
+            return result
+        return ProductionResult(True)
 
-    def section(self) -> bool:
-        if not self.section_directive():
-            return False
-        if self.paragraphs():
-            self.links()
-        else:
-            self.links()
-        return True
+    def section(self) -> ProductionResult:
+        result = self.section_directive()
+        if not result:
+            return result
+        result = self.paragraphs()
+        if result.error:
+            return result
+        result = self.links()
+        if result.error:
+            return result
+        return ProductionResult(True)
 
-    def section_directive(self) -> bool:
+    def section_directive(self) -> ProductionResult:
         if not self.is_directive('section'):
-            return False
+            return ProductionResult(False)
         self.next_token()
         if not self.is_modifier('links'):
-            self.error = MissingModifierError(self.token, 'links')
-            return False
+            return ProductionResult(MissingModifierError(self.token, 'links'))
         self.next_token()
         if not self.is_data():
-            self.error = MissingDataError(self.token, 'section title')
-            return False
+            return ProductionResult(MissingDataError(self.token, 'section title'))
         section = LinksSection(title=self.token.text, notes=[], links=[])
         self.links_page.sections.append(section)
         self.notes = section.notes
         self.next_token()
-        return True
+        return ProductionResult(True)
 
-    def links(self) -> bool:
-        if not self.link():
-            return False
-        self.links()
-        return True
+    def links(self) -> ProductionResult:
+        result = self.link()
+        if not result:
+            return result
+        result = self.links()
+        if result.error:
+            return result
+        return ProductionResult(True)
 
-    def link(self) -> bool:
-        if not self.link_directive():
-            return False
-        if not self.url_directive():
-            return False
-        if self.date_directive():
-            self.checked_directive()
-        else:
-            self.checked_directive()
-        return True
+    def link(self) -> ProductionResult:
+        result = self.link_directive()
+        if not result:
+            return result
+        result = self.url_directive()
+        if not result:
+            return result
+        result = self.date_directive()
+        if result.error:
+            return result
+        result = self.checked_directive()
+        if result.error:
+            return result
+        return ProductionResult(True)
 
-    def link_directive(self) -> bool:
+    def link_directive(self) -> ProductionResult:
         if not self.is_directive('link'):
-            return False
+            return ProductionResult(False)
         self.next_token()
         if not self.is_modifier('book'):
-            self.error = MissingModifierError(self.token, 'book')
-            return False
+            return ProductionResult(MissingModifierError(self.token, 'book'))
         self.next_token()
         if not self.is_data():
-            self.error = ParserError(self.token, 'Expected link title')
-            return False
+            return ProductionResult(ParserError(self.token, 'Expected link title'))
         link = Link(
             type='book',
             title=self.token.text,
@@ -208,37 +237,34 @@ class Parser:
         )
         self.links_page.sections[-1].links.append(link)
         self.next_token()
-        return True
+        return ProductionResult(True)
 
-    def url_directive(self) -> bool:
+    def url_directive(self) -> ProductionResult:
         if not self.is_directive('url'):
-            self.error = ParserError(self.token, 'Expected .url directive')
-            return False
+            return ProductionResult(ParserError(self.token, 'Expected .url directive'))
         self.next_token()
         if not self.is_data():
-            self.error = ParserError(self.token, 'Expected URL')
-            return False
+            return ProductionResult(ParserError(self.token, 'Expected URL'))
         self.links_page.sections[-1].links[-1].link = self.token.text
         self.next_token()
-        return True
+        return ProductionResult(True)
 
-    def date_directive(self) -> bool:
+    def date_directive(self) -> ProductionResult:
         if not self.is_directive('date'):
-            return False
+            return ProductionResult(False)
         self.next_token()
         if not self.is_data():
-            self.error = ParserError(self.token, 'Expected date')
-            return False
+            return ProductionResult(ParserError(self.token, 'Expected date'))
         self.links_page.sections[-1].links[-1].date = self.token.text
         self.next_token()
-        return True
+        return ProductionResult(True)
 
-    def checked_directive(self) -> bool:
+    def checked_directive(self) -> ProductionResult:
         if not self.is_directive('checked'):
-            return False
+            return ProductionResult(False)
         self.links_page.sections[-1].links[-1].checked = True
         self.next_token()
-        return True
+        return ProductionResult(True)
 
     def next_token(self):
         try:
