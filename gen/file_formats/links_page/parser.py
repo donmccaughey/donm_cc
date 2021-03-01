@@ -227,7 +227,7 @@ class Parser:
             return ProductionResult(MissingModifierError(self.token, 'book'))
         self.next_token()
         if not self.is_data():
-            return ProductionResult(ParserError(self.token, 'Expected link title'))
+            return ProductionResult(MissingDataError(self.token, 'link title'))
         link = Link(
             type='book',
             title=self.token.text,
@@ -241,10 +241,10 @@ class Parser:
 
     def url_directive(self) -> ProductionResult:
         if not self.is_directive('url'):
-            return ProductionResult(ParserError(self.token, 'Expected .url directive'))
+            return ProductionResult(MissingDirectiveError(self.token, 'url'))
         self.next_token()
         if not self.is_data():
-            return ProductionResult(ParserError(self.token, 'Expected URL'))
+            return ProductionResult(MissingDataError(self.token, 'URL address'))
         self.links_page.sections[-1].links[-1].link = self.token.text
         self.next_token()
         return ProductionResult(True)
@@ -254,7 +254,7 @@ class Parser:
             return ProductionResult(False)
         self.next_token()
         if not self.is_data():
-            return ProductionResult(ParserError(self.token, 'Expected date'))
+            return ProductionResult(MissingDataError(self.token, 'date value'))
         self.links_page.sections[-1].links[-1].date = self.token.text
         self.next_token()
         return ProductionResult(True)
