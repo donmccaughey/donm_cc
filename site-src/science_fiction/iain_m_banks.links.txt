@@ -1,12 +1,3 @@
-from file_formats.links_page.parser import parse
-from website.pages.links_page import build_links_page
-
-
-def iain_m_banks():
-    build_links_page(parse(source))
-
-
-source = """
 .page links Iain M Banks
 
 Banks passed away in 2013, and I've been carefully parceling out his
@@ -91,4 +82,4 @@ the Culture.
 .link book Transition
 .url https://www.amazon.com/gp/product/B002O0Q6YS
 .date 2009
-"""
+

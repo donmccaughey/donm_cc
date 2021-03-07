@@ -1,7 +1,6 @@
 from markup import Section, H1, P, Ul
 from resources import IndexPage
 from website.collection import item
-from website.pages.science_fiction.iain_m_banks import iain_m_banks
 from website.pages.science_fiction.james_sa_corey import james_sa_corey
 from website.pages.science_fiction.lois_mcmaster_bujold import lois_mcmaster_bujold
 
@@ -22,6 +21,5 @@ def science_fiction():
             item('James SA Corey', '/science_fiction/james_sa_corey.html')
             item('Alastair Reynolds', '/science_fiction/alastair_reynolds.html')
 
-        iain_m_banks()
         james_sa_corey()
         lois_mcmaster_bujold()
