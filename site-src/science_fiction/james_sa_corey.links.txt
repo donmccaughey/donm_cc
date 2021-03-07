@@ -1,0 +1,92 @@
+.page links James SA Corey
+
+<em>James SA Corey</em> is the pen name of writing duo 
+Daniel Abraham and Ty Franck.
+
+
+.section links The Expanse
+
+A great hard science fiction space opera set a couple of centuries
+in the future, <em>The Expanse</em> is a fun rollicking adventure
+that hits all the high points: clashing civilizations, daring deeds,
+alien mysteries, cool tech and a tight-knit crew pulling together to
+save the day.
+
+<em>(publication order)</em>
+
+.link book Leviathan Wakes
+.url https://www.amazon.com/gp/product/B0047Y171G
+.date 2011
+.checked
+
+.link book The Butcher of Anderson Station (novella)
+.url https://www.amazon.com/gp/product/B0052AHUYM
+.date 2011
+.checked
+
+.link book Caliban's War
+.url https://www.amazon.com/gp/product/B005SCRR1A
+.date 2012
+.checked
+
+.link book Gods of Risk (novella)
+.url https://www.amazon.com/gp/product/B008CJ241O
+.date 2012
+.checked
+
+.link book Drive (short story)
+.url https://www.amazon.com/gp/product/B00ADOZNJG/
+.date 2012
+.checked
+
+.link book Abaddon's Gate
+.url https://www.amazon.com/gp/product/B00A2DZMYE
+.date 2013
+.checked
+
+.link book The Churn (novella)
+.url https://www.amazon.com/gp/product/B00I82884W
+.date 2014
+.checked
+
+.link book Cibola Burn
+.url https://www.amazon.com/gp/product/B00FPQA4F0
+.date 2014
+.checked
+
+.link book Nemesis Games
+.url https://www.amazon.com/gp/product/B00O7X626W
+.date 2015
+.checked
+
+.link book The Vital Abyss (novella)
+.url https://www.amazon.com/gp/product/B015NRKNS8
+.date 2015
+.checked
+
+.link book Babylon's Ashes
+.url https://www.amazon.com/gp/product/B018S2773Y
+.date 2016
+.checked
+
+.link book Strange Dogs (novella)
+.url https://www.amazon.com/gp/product/B06ZZ1MKW8
+.date 2017
+.checked
+
+.link book Persepolis Rising
+.url https://www.amazon.com/gp/product/B06XKN9G27
+.date 2017
+
+.link book Tiamat's Wrath
+.url https://www.amazon.com/gp/product/B07BVNVWL6
+.date 2019
+
+.link book Auberon (novella)
+.url https://www.amazon.com/gp/product/B07YKR19FN
+.date 2019
+
+.link book The Last Flight of the Cassandra
+.url https://www.goodreads.com/book/show/49233894-the-last-flight-of-the-cassandra
+.date 2019
+
