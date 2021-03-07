@@ -3,8 +3,7 @@ import os
 from typing import Optional
 from resources import with_parent
 from .child import Child
-from .file import File
-
+import resources
 
 class Parent(Child):
     def __init__(
@@ -50,7 +49,10 @@ class Parent(Child):
                             source = os.path.join(path, entry.name)
                             source = os.path.normpath(source)
                             source = os.path.relpath(source)
-                            File(source, self)
+                            if source.endswith('.links.txt'):
+                                resources.links_file.LinksFile(source, self)
+                            else:
+                                resources.file.File(source, self)
         for child in self.children:
             if hasattr(child, 'find_files'):
                 child.find_files(source_dir)

@@ -1,12 +1,3 @@
-from file_formats.links_page.parser import parse
-from website.pages.links_page import build_links_page
-
-
-def alastair_reynolds():
-    build_links_page(parse(source))
-
-
-source = """
 .page links Alastair Reynolds
 
 Reynolds is an astrophysicist turned writer with a nack for
@@ -193,4 +184,4 @@ come to life in episodes of the animated series
 .link book Beyond the Aquila Rift
 .url https://www.amazon.com/gp/product/B01FE7KJ2C
 .date 2016
-"""
+

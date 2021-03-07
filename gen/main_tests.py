@@ -4,7 +4,7 @@ import main
 
 class MainTestCase(unittest.TestCase):
     def test_all(self):
-        main.root.find_files('../wwwroot')
+        main.root.find_files('../site-src')
         all = main.root.all
         expected = [
             ('./index.html', '/'),

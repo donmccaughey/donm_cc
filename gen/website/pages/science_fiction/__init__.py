@@ -1,14 +1,13 @@
 from markup import Section, H1, P, Ul
 from resources import IndexPage
 from website.collection import item
-from website.pages.science_fiction.alastair_reynolds import alastair_reynolds
 from website.pages.science_fiction.iain_m_banks import iain_m_banks
 from website.pages.science_fiction.james_sa_corey import james_sa_corey
 from website.pages.science_fiction.lois_mcmaster_bujold import lois_mcmaster_bujold
 
 
 def science_fiction():
-    with IndexPage('Science Fiction'):
+    with IndexPage('Science Fiction', has_files=True):
         with Section(class_names=['overview']):
             H1('Science Fiction')
             P("""
@@ -23,7 +22,6 @@ def science_fiction():
             item('James SA Corey', '/science_fiction/james_sa_corey.html')
             item('Alastair Reynolds', '/science_fiction/alastair_reynolds.html')
 
-        alastair_reynolds()
         iain_m_banks()
         james_sa_corey()
         lois_mcmaster_bujold()
