@@ -88,13 +88,17 @@ class Parser:
               | link links
 
         link = link_directive url_directive
-             | link_directive url_directive date_directive
-             | link_directive url_directive date_directive checked_directive
-             | link_directive url_directive checked_directive
+             | link_directive url_directive link_attributes
 
         link_directive = '.link' 'book' DATA
 
         url_directive = '.url' DATA
+
+        link_attributes = link_attribute
+                        | link_attribute link_attributes
+
+        link_attribute = date_directive
+                       | checked_directive
 
         date_directive = '.date' DATA
 
@@ -211,10 +215,7 @@ class Parser:
         result = self.url_directive()
         if not result:
             return result
-        result = self.date_directive()
-        if result.error:
-            return result
-        result = self.checked_directive()
+        result = self.link_attributes()
         if result.error:
             return result
         return ProductionResult(True)
@@ -248,6 +249,24 @@ class Parser:
         self.links_page.sections[-1].links[-1].link = self.token.text
         self.next_token()
         return ProductionResult(True)
+
+    def link_attributes(self) -> ProductionResult:
+        result = self.link_attribute()
+        if not result:
+            return result
+        result = self.link_attributes()
+        if result.error:
+            return result
+        return ProductionResult(True)
+
+    def link_attribute(self) -> ProductionResult:
+        result = self.date_directive()
+        if result.matched or result.error:
+            return result
+        result = self.checked_directive()
+        if result.matched or result.error:
+            return result
+        return ProductionResult(False)
 
     def date_directive(self) -> ProductionResult:
         if not self.is_directive('date'):

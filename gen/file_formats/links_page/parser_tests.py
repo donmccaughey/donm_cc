@@ -337,6 +337,33 @@ class ParserTestCase(unittest.TestCase):
         self.assertEqual('2012', link.date)
         self.assertFalse(link.checked)
 
+    def test_link_with_date_twice(self):
+        source = dedent('''
+        .page links My Links
+
+        .section links New Links
+        
+        .link book Example Book
+        .url https://example.book
+        .date 2012
+        .date 2011
+        ''')
+        result = Parser(source).parse()
+        self.assertIsInstance(result, LinksPage)
+        self.assertEqual(1, len(result.sections))
+
+        section = result.sections[0]
+        self.assertEqual('New Links', section.title)
+        self.assertEqual([], section.notes)
+        self.assertEqual(1, len(section.links))
+
+        link = section.links[0]
+        self.assertEqual('book', link.type)
+        self.assertEqual('Example Book', link.title)
+        self.assertEqual('https://example.book', link.link)
+        self.assertEqual('2011', link.date)
+        self.assertFalse(link.checked)
+
     def test_link_with_date_and_checked(self):
         source = dedent('''
         .page links My Links
@@ -364,6 +391,33 @@ class ParserTestCase(unittest.TestCase):
         self.assertEqual('2012', link.date)
         self.assertTrue(link.checked)
 
+    def test_link_with_checked_and_date(self):
+        source = dedent('''
+        .page links My Links
+
+        .section links New Links
+        
+        .link book Example Book
+        .url https://example.book
+        .checked
+        .date 2012
+        ''')
+        result = Parser(source).parse()
+        self.assertIsInstance(result, LinksPage)
+        self.assertEqual(1, len(result.sections))
+
+        section = result.sections[0]
+        self.assertEqual('New Links', section.title)
+        self.assertEqual([], section.notes)
+        self.assertEqual(1, len(section.links))
+
+        link = section.links[0]
+        self.assertEqual('book', link.type)
+        self.assertEqual('Example Book', link.title)
+        self.assertEqual('https://example.book', link.link)
+        self.assertEqual('2012', link.date)
+        self.assertTrue(link.checked)
+
     def test_link_with_checked(self):
         source = dedent('''
         .page links My Links
@@ -372,6 +426,33 @@ class ParserTestCase(unittest.TestCase):
         
         .link book Example Book
         .url https://example.book
+        .checked
+        ''')
+        result = Parser(source).parse()
+        self.assertIsInstance(result, LinksPage)
+        self.assertEqual(1, len(result.sections))
+
+        section = result.sections[0]
+        self.assertEqual('New Links', section.title)
+        self.assertEqual([], section.notes)
+        self.assertEqual(1, len(section.links))
+
+        link = section.links[0]
+        self.assertEqual('book', link.type)
+        self.assertEqual('Example Book', link.title)
+        self.assertEqual('https://example.book', link.link)
+        self.assertIsNone(link.date)
+        self.assertTrue(link.checked)
+
+    def test_link_with_checked_twice(self):
+        source = dedent('''
+        .page links My Links
+
+        .section links New Links
+        
+        .link book Example Book
+        .url https://example.book
+        .checked
         .checked
         ''')
         result = Parser(source).parse()
