@@ -9,10 +9,12 @@ if TYPE_CHECKING:
 class Child:
     def __init__(
             self,
+            name: str,
             parent: Optional[Parent] = None,
             **kwargs,
     ):
         super().__init__(**kwargs)
+        self.name = name
         self.parent = parent if parent else with_parent[-1]
         if self.parent:
             self.parent.children.append(self)

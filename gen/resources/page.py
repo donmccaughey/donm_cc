@@ -6,7 +6,6 @@ from .child import Child
 from .directory import Directory
 from markup import *
 from markup.node import with_node
-from .name_mixin import NameMixin
 
 if TYPE_CHECKING:
     from .parent import Parent
@@ -17,7 +16,7 @@ def make_name(title: str):
     return lowered.replace(' ', '_')
 
 
-class Page(NameMixin, Child):
+class Page(Child):
     def __init__(
             self,
             title: str,

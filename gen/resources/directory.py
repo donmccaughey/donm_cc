@@ -1,11 +1,10 @@
 import os
 from typing import Optional
 
-from .name_mixin import NameMixin
 from .parent import Parent
 
 
-class Directory(NameMixin, Parent):
+class Directory(Parent):
     def __init__(
             self,
             name: str,
