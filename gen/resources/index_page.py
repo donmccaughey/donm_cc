@@ -34,14 +34,12 @@ class IndexPage(Parent, Page):
         Parent.__exit__(self, exc_type, exc_val, exc_tb)
         Page.__exit__(self, exc_type, exc_val, exc_tb)
 
-    @property
     def dir_parts(self) -> list[str]:
         return (
-                (self.parent.dir_parts if self.parent else [])
+                (self.parent.dir_parts() if self.parent else [])
                 + ([] if self.is_root else [self.name])
         )
 
-    @property
     def file_parts(self) -> list[str]:
         return ['index.html']
 

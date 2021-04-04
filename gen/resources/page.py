@@ -67,7 +67,6 @@ class Page(NameMixin, Child):
                     body.attach_children(self.page_content.detach_children())
         return document
 
-    @property
     def file_parts(self) -> list[str]:
         return [self.name + '.html']
 

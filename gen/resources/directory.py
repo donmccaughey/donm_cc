@@ -20,11 +20,9 @@ class Directory(NameMixin, Parent):
             **kwargs,
         )
 
-    @property
     def dir_parts(self) -> list[str]:
-        return (self.parent.dir_parts if self.parent else []) + [self.name]
+        return (self.parent.dir_parts() if self.parent else []) + [self.name]
 
-    @property
     def file_parts(self) -> list[str]:
         return []
 

@@ -18,7 +18,7 @@ class Child:
             self.parent.children.append(self)
 
     def __lt__(self, other: Child) -> bool:
-        return self.path_parts < other.path_parts
+        return self.path_parts() < other.path_parts()
 
     def find_ancestors(self) -> list[Parent]:
         ancestors = []
@@ -30,31 +30,32 @@ class Child:
 
     @property
     def dirname(self) -> str:
-        return ('/'.join(self.dir_parts) + '/') if self.dir_parts else './'
+        dir_parts = self.dir_parts()
+        return ('/'.join(dir_parts) + '/') if dir_parts else './'
 
-    @property
     def dir_parts(self) -> list[str]:
-        return self.parent.dir_parts if self.parent else []
+        return self.parent.dir_parts() if self.parent else []
 
     @property
     def filename(self) -> Optional[str]:
-        return self.file_parts[0] if self.file_parts else None
+        file_parts = self.file_parts()
+        return file_parts[0] if file_parts else None
 
-    @property
     def file_parts(self) -> list[str]:
         return [self.name]
 
     @property
     def path(self) -> str:
-        return ('./' + '/'.join(self.path_parts)) if self.path_parts else './'
+        path_parts = self.path_parts()
+        return ('./' + '/'.join(path_parts)) if path_parts else './'
 
-    @property
     def path_parts(self) -> list[str]:
-        return self.dir_parts + self.file_parts
+        return self.dir_parts() + self.file_parts()
 
     @property
     def url(self) -> str:
-        return ('/' + '/'.join(self.path_parts)) if self.path_parts else '/'
+        path_parts = self.path_parts()
+        return ('/' + '/'.join(path_parts)) if path_parts else '/'
 
     def generate(
             self,

@@ -36,7 +36,8 @@ class Parent(Child):
 
     @property
     def url(self) -> str:
-        return ('/' + '/'.join(self.dir_parts) + '/') if self.dir_parts else '/'
+        dir_parts = self.dir_parts()
+        return ('/' + '/'.join(dir_parts) + '/') if dir_parts else '/'
 
     def find_files(self, source_dir: str):
         path = os.path.join(os.getcwd(), source_dir)
