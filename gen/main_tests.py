@@ -8,8 +8,9 @@ class MainTestCase(unittest.TestCase):
         all = main.root.all
         expected = [
             ('./', '/'),
-            ('./aughey/index.html', '/aughey/'),
+            ('./aughey/', '/aughey/'),
             ('./aughey/handstand.jpg', '/aughey/handstand.jpg'),
+            ('./aughey/index.html', '/aughey/index.html'),
             ('./banners/', '/banners/'),
             ('./banners/Don_and_Molly_Round_Hill_Lake_Tahoe_summer_2019.jpg', '/banners/Don_and_Molly_Round_Hill_Lake_Tahoe_summer_2019.jpg'),
             ('./banners/Don_and_Molly_hiking_Texas_winter_2016.jpg', '/banners/Don_and_Molly_hiking_Texas_winter_2016.jpg'),
