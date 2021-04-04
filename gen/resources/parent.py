@@ -5,6 +5,7 @@ from resources import with_parent
 from .child import Child
 import resources
 
+
 class Parent(Child):
     def __init__(
             self,

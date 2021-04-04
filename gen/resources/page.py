@@ -4,6 +4,7 @@ from typing import Optional, TYPE_CHECKING
 from .child import Child
 from markup import *
 from markup.node import with_node
+from .name_mixin import NameMixin
 
 if TYPE_CHECKING:
     from .parent import Parent
@@ -14,7 +15,7 @@ def make_name(title: str):
     return lowered.replace(' ', '_')
 
 
-class Page(Child):
+class Page(NameMixin, Child):
     def __init__(
             self,
             title: str,

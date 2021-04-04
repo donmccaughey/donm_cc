@@ -3,12 +3,13 @@ import os
 import shutil
 from typing import Optional, TYPE_CHECKING
 from .child import Child
+from .name_mixin import NameMixin
 
 if TYPE_CHECKING:
     from .parent import Parent
 
 
-class File(Child):
+class File(NameMixin, Child):
     def __init__(
             self,
             source: str,
