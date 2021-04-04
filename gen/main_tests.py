@@ -7,7 +7,7 @@ class MainTestCase(unittest.TestCase):
         main.root.find_files('../site-src')
         all = main.root.all
         expected = [
-            ('./index.html', '/'),
+            ('./', '/'),
             ('./aughey/index.html', '/aughey/'),
             ('./aughey/handstand.jpg', '/aughey/handstand.jpg'),
             ('./banners/', '/banners/'),
@@ -24,6 +24,7 @@ class MainTestCase(unittest.TestCase):
             ('./icons/linkedin.png', '/icons/linkedin.png'),
             ('./icons/truework.png', '/icons/truework.png'),
             ('./icons/twitter.png', '/icons/twitter.png'),
+            ('./index.html', '/index.html'),
             ('./macos_packages/index.html', '/macos_packages/'),
             ('./macos_packages/package-32x32.png', '/macos_packages/package-32x32.png'),
             ('./macos_packages/project-32x32.png', '/macos_packages/project-32x32.png'),

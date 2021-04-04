@@ -1,4 +1,4 @@
-from resources import File, Directory
+from resources import Directory
 from website.pages.aughey import aughey
 from website.pages.bash import bash
 from website.pages.business_novels import business_novels
@@ -15,7 +15,6 @@ from website.pages.science_fiction import science_fiction
 
 root = home()
 with root:
-    File('base.css')
     Directory('banners')
     Directory('icons')
     Directory('resume')

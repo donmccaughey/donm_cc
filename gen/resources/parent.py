@@ -59,5 +59,11 @@ class Parent(Child):
             if hasattr(child, 'find_files'):
                 child.find_files(source_dir)
 
+    def find_index_page(self) -> Optional[resources.page.Page]:
+        for child in self.children:
+            if isinstance(child, resources.page.Page) and child.name == 'index':
+                return child
+        return None
+
     def should_include_file(self, name: str) -> bool:
         return not name.startswith('.')

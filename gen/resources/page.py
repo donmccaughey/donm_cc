@@ -1,7 +1,9 @@
 from __future__ import annotations
 import os
-from typing import Optional, TYPE_CHECKING
+from typing import Optional, TYPE_CHECKING, Tuple
+
 from .child import Child
+from .directory import Directory
 from markup import *
 from markup.node import with_node
 from .name_mixin import NameMixin
@@ -52,20 +54,25 @@ class Page(NameMixin, Child):
                     head.attach_children(self.head_content.detach_children())
                 with Body() as body:
                     with Nav(class_names=['menu']):
-                        ancestors = self.find_ancestors()
-                        if ancestors:
-                            first = True
-                            for ancestor in ancestors:
-                                if isinstance(ancestor, Page):
-                                    if first:
-                                        first = False
-                                    else:
-                                        Text(' &bull; ')
-                                    A(href=ancestor.url, text=ancestor.title)
-                        else:
-                            A(href=self.url, text=self.title)
+                        nav_links = self.find_nav_links()
+                        for i, (url, title) in enumerate(nav_links):
+                            if i:
+                                Text(' &bull; ')
+                            A(href=url, text=title)
                     body.attach_children(self.body_content.detach_children())
         return document
+
+    def find_nav_links(self) -> list[Tuple[str, str]]:
+        ancestors = self.find_ancestors()
+        nav_links = []
+        for ancestor in ancestors:
+            if isinstance(ancestor, Page):
+                nav_links.append((ancestor.url, ancestor.title))
+            elif isinstance(ancestor, Directory):
+                index = ancestor.find_index_page()
+                if index:
+                    nav_links.append((ancestor.url, index.title))
+        return nav_links if nav_links else [(self.url, self.title)]
 
     def file_parts(self) -> list[str]:
         return [self.name + '.html']

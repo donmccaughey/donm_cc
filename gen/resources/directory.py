@@ -10,6 +10,7 @@ class Directory(NameMixin, Parent):
             self,
             name: str,
             parent: Optional[Parent] = None,
+            is_root: bool = False,
             has_files: bool = True,
             **kwargs,
     ):
@@ -19,16 +20,20 @@ class Directory(NameMixin, Parent):
             parent=parent,
             **kwargs,
         )
+        self.is_root = is_root
 
     def dir_parts(self) -> list[str]:
-        return (self.parent.dir_parts() if self.parent else []) + [self.name]
+        return (
+                (self.parent.dir_parts() if self.parent else [])
+                + ([] if self.is_root else [self.name])
+        )
 
     def file_parts(self) -> list[str]:
         return []
 
     @property
     def path(self) -> str:
-        return './' + self.dirname
+        return './' if self.is_root else './' + self.dirname
 
     def generate(
             self,
