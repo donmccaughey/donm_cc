@@ -30,10 +30,10 @@ class Page(NameMixin, Child):
         )
         self.title = title
         self.head_content = Document()
-        self.page_content = Document()
+        self.body_content = Document()
 
     def __enter__(self):
-        with_node.append(self.page_content)
+        with_node.append(self.body_content)
         return self
 
     def __exit__(self, exc_type, exc_val, exc_tb):
@@ -64,7 +64,7 @@ class Page(NameMixin, Child):
                                     A(href=ancestor.url, text=ancestor.title)
                         else:
                             A(href=self.url, text=self.title)
-                    body.attach_children(self.page_content.detach_children())
+                    body.attach_children(self.body_content.detach_children())
         return document
 
     def file_parts(self) -> list[str]:

@@ -26,7 +26,7 @@ class LinksFile(Page):
 
         self.source = source
         self.links_page = links_page
-        with self.page_content:
+        with self.body_content:
             with Section(class_names=['overview']):
                 H1(links_page.title)
                 for note in links_page.notes:
