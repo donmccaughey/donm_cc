@@ -3,7 +3,7 @@ from typing import Optional
 from file_formats.links_page.parser import parse
 from markup import Section, H1, P, Ul
 from website.links import link as build_link
-from .parent import Parent
+from .directory import Directory
 from .page import Page
 
 
@@ -11,7 +11,7 @@ class LinksFile(Page):
     def __init__(
             self,
             source: str,
-            parent: Optional[Parent] = None,
+            parent: Optional[Directory] = None,
             **kwargs,
     ):
         with open(source) as f:

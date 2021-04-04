@@ -1,16 +1,16 @@
 from __future__ import annotations
 from typing import Optional, TYPE_CHECKING
-from resources import with_parent
+from . import with_parent
 
 if TYPE_CHECKING:
-    from .parent import Parent
+    from .directory import Directory
 
 
 class Resource:
     def __init__(
             self,
             name: str,
-            parent: Optional[Parent] = None,
+            parent: Optional[Directory] = None,
             **kwargs,
     ):
         super().__init__(**kwargs)
@@ -22,7 +22,7 @@ class Resource:
     def __lt__(self, other: Resource) -> bool:
         return self.path_parts() < other.path_parts()
 
-    def find_ancestors(self) -> list[Parent]:
+    def find_ancestors(self) -> list[Directory]:
         ancestors = []
         parent = self.parent
         while parent:

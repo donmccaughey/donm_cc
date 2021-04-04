@@ -2,10 +2,10 @@ from __future__ import annotations
 from typing import Optional, TYPE_CHECKING
 
 if TYPE_CHECKING:
-    from .parent import Parent
+    from .directory import Directory
 
 
-with_parent: list[Optional[Parent]] = [None]
+with_parent: list[Optional[Directory]] = [None]
 
 
 from .directory import Directory

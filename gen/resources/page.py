@@ -1,14 +1,10 @@
 from __future__ import annotations
 import os
-from typing import Optional, TYPE_CHECKING, Tuple
-
-from .resource import Resource
-from .directory import Directory
+from typing import Optional, Tuple
 from markup import *
 from markup.node import with_node
-
-if TYPE_CHECKING:
-    from .parent import Parent
+from .directory import Directory
+from .resource import Resource
 
 
 def make_name(title: str):
@@ -20,7 +16,7 @@ class Page(Resource):
     def __init__(
             self,
             title: str,
-            parent: Optional[Parent] = None,
+            parent: Optional[Directory] = None,
             name: Optional[str] = None,
             **kwargs
     ):

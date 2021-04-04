@@ -1,18 +1,16 @@
 from __future__ import annotations
 import os
 import shutil
-from typing import Optional, TYPE_CHECKING
+from typing import Optional
+from .directory import Directory
 from .resource import Resource
-
-if TYPE_CHECKING:
-    from .parent import Parent
 
 
 class File(Resource):
     def __init__(
             self,
             source: str,
-            parent: Optional[Parent] = None,
+            parent: Optional[Directory] = None,
             **kwargs,
     ):
         super().__init__(
