@@ -2,7 +2,7 @@ from __future__ import annotations
 import os
 from typing import Optional, TYPE_CHECKING, Tuple
 
-from .child import Child
+from .resource import Resource
 from .directory import Directory
 from markup import *
 from markup.node import with_node
@@ -16,7 +16,7 @@ def make_name(title: str):
     return lowered.replace(' ', '_')
 
 
-class Page(Child):
+class Page(Resource):
     def __init__(
             self,
             title: str,

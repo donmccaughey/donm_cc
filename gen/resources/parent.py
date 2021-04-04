@@ -2,11 +2,11 @@ from __future__ import annotations
 import os
 from typing import Optional
 from resources import with_parent
-from .child import Child
+from .resource import Resource
 import resources
 
 
-class Parent(Child):
+class Parent(Resource):
     def __init__(
             self,
             has_files: bool,
@@ -14,7 +14,7 @@ class Parent(Child):
             **kwargs,
     ):
         super().__init__(parent=parent, **kwargs)
-        self.children: list[Child] = []
+        self.children: list[Resource] = []
         self.has_files = has_files
 
     def __enter__(self):

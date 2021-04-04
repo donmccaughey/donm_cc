@@ -2,13 +2,13 @@ from __future__ import annotations
 import os
 import shutil
 from typing import Optional, TYPE_CHECKING
-from .child import Child
+from .resource import Resource
 
 if TYPE_CHECKING:
     from .parent import Parent
 
 
-class File(Child):
+class File(Resource):
     def __init__(
             self,
             source: str,

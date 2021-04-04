@@ -6,7 +6,7 @@ if TYPE_CHECKING:
     from .parent import Parent
 
 
-class Child:
+class Resource:
     def __init__(
             self,
             name: str,
@@ -19,7 +19,7 @@ class Child:
         if self.parent:
             self.parent.children.append(self)
 
-    def __lt__(self, other: Child) -> bool:
+    def __lt__(self, other: Resource) -> bool:
         return self.path_parts() < other.path_parts()
 
     def find_ancestors(self) -> list[Parent]:
