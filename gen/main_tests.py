@@ -53,9 +53,10 @@ class MainTestCase(unittest.TestCase):
             ('./resume/Resume_of_Don_McCaughey.pdf', '/resume/Resume_of_Don_McCaughey.pdf'),
             ('./rust_and_wasm/', '/rust_and_wasm/'),
             ('./rust_and_wasm/index.html', '/rust_and_wasm/index.html'),
-            ('./science_fiction/index.html', '/science_fiction/'),
+            ('./science_fiction/', '/science_fiction/'),
             ('./science_fiction/alastair_reynolds.html', '/science_fiction/alastair_reynolds.html'),
             ('./science_fiction/iain_m_banks.html', '/science_fiction/iain_m_banks.html'),
+            ('./science_fiction/index.html', '/science_fiction/index.html'),
             ('./science_fiction/james_sa_corey.html', '/science_fiction/james_sa_corey.html'),
             ('./science_fiction/lois_mcmaster_bujold.html', '/science_fiction/lois_mcmaster_bujold.html'),
         ]
