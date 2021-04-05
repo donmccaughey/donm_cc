@@ -58,20 +58,17 @@ class Page(Resource):
         return document
 
     def find_nav_links(self) -> list[Tuple[str, str]]:
-        ancestors = self.find_ancestors()
-        if not ancestors:
+        directories = self.find_directories()
+        if not directories:
             return [(self.url, self.title)]
 
         nav_links = []
-        for ancestor in ancestors:
-            if isinstance(ancestor, Page):
-                nav_links.append((ancestor.url, ancestor.title))
-            elif isinstance(ancestor, Directory):
-                index = ancestor.find_index_page()
-                if not index:
-                    continue
-                if ancestor.is_root or index is not self:
-                    nav_links.append((ancestor.url, index.title))
+        for directory in directories:
+            index = directory.find_index_page()
+            if not index:
+                continue
+            if directory.is_root or index is not self:
+                nav_links.append((directory.url, index.title))
         return nav_links
 
     def file_parts(self) -> list[str]:

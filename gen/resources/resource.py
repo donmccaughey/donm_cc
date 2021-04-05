@@ -22,13 +22,13 @@ class Resource:
     def __lt__(self, other: Resource) -> bool:
         return self.path_parts() < other.path_parts()
 
-    def find_ancestors(self) -> list[Directory]:
-        ancestors = []
+    def find_directories(self) -> list[Directory]:
+        directories = []
         parent = self.parent
         while parent:
-            ancestors.insert(0, parent)
+            directories.insert(0, parent)
             parent = parent.parent
-        return ancestors
+        return directories
 
     @property
     def dirname(self) -> str:
