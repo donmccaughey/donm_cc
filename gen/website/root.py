@@ -1,7 +1,6 @@
 from resources import Directory
 from website.pages.aughey import aughey
 from website.pages.bash import bash
-from website.pages.business_novels import business_novels
 from website.pages.engineering_management import engineering_management
 from website.pages.hashtables import hashtables
 from website.pages.home import home
@@ -16,11 +15,11 @@ from website.pages.science_fiction import science_fiction
 root = home()
 with root:
     Directory('banners')
+    Directory('business_novels')
     Directory('icons')
     Directory('resume')
 
     aughey()
-    business_novels()
     bash()
     engineering_management()
     hashtables()
