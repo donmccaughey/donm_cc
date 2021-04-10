@@ -1,5 +1,6 @@
 from typing import Optional
 
+import os
 from file_formats.links_page.parser import parse
 from markup import Section, H1, P, Ul
 from website.links import link as build_link
@@ -18,8 +19,12 @@ class LinksFile(Page):
             contents = f.read()
             links_page = parse(contents)
 
+        basename = os.path.basename(source)
+        name = basename.split('.')[0]
+
         super().__init__(
             title=links_page.title,
+            name=name,
             parent=parent,
             **kwargs,
         )
