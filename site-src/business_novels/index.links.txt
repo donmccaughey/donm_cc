@@ -11,37 +11,40 @@ is sometimes amateurish and uneven, but I find this genre particularly fun.
 
 .link book The Goal
 .url https://www.amazon.com/Goal-Process-Ongoing-Improvement-ebook/dp/B002LHRM2O
-.authors Eliyahu M Goldratt and Jeff Cox
+.author Eliyahu M Goldratt
+.author Jeff Cox
 .date 1984
 .checked
 
 .link book The Phoenix Project
 .url https://www.amazon.com/Phoenix-Project-DevOps-Helping-Business-ebook/dp/B078Y98RG8
-.authors Gene Kim, Kevin Behr and George Spafford
+.author Gene Kim
+.author Kevin Behr
+.author George Spafford
 .date 2018
 .checked
 
 .link book The Unicorn Project
 .url https://www.amazon.com/Unicorn-Project-Developers-Disruption-Thriving-ebook/dp/B07QT9QR41
-.authors Gene Kim
+.author Gene Kim
 .date 2019
 .checked
 
 .link book The Ideal Team Player
 .url https://www.amazon.com/Ideal-Team-Player-Recognize-Cultivate-ebook/dp/B01B6AEJJ0
-.authors Patrick Lencioni
+.author Patrick Lencioni
 .date 2016
 .checked
 
 .link book The Five Dysfunctions of a Team
 .url https://www.amazon.com/Five-Dysfunctions-Team-Leadership-Lencioni-ebook/dp/B006960LQW
-.authors Patrick Lencioni
+.author Patrick Lencioni
 .date 2011
 .checked
 
 .link book The Four Obsessions of an Extraordinary Executive
 .url https://www.amazon.com/Four-Obsessions-Extraordinary-Executive-Leadership-ebook/dp/B003WUYQOQ
-.authors Patrick Lencioni
+.author Patrick Lencioni
 .date 2008
 .checked
 
@@ -50,19 +53,19 @@ is sometimes amateurish and uneven, but I find this genre particularly fun.
 
 .link book The Five Temptations of a CEO
 .url https://www.amazon.com/Five-Temptations-CEO-10th-Anniversary-ebook/dp/B0062OAEWM
-.authors Patrick Lencioni
+.author Patrick Lencioni
 .date 2008
 .checked
 
 .link book Critical Chain
 .url https://www.amazon.com/Critical-Chain-Business-Eliyahu-Goldratt-ebook/dp/B002LHRM2E
-.authors Eliyahu M Goldratt
+.author Eliyahu M Goldratt
 .date 1997
 .checked
 
 .link book How To Destroy A Tech Startup In Three Easy Steps
 .url https://www.amazon.com/Destroy-Tech-Startup-Three-Steps-ebook/dp/B0772FJQ1T
-.authors Lawrence Krubner
+.author Lawrence Krubner
 .date 2017
 .checked
 
@@ -71,7 +74,7 @@ is sometimes amateurish and uneven, but I find this genre particularly fun.
 
 .link book The Deadline: A Novel About Project Management
 .url https://www.amazon.com/Deadline-Novel-About-Project-Management-ebook/dp/B006MN4RAS
-.authors Tom DeMarco
+.author Tom DeMarco
 .date 2011
 
 
@@ -79,12 +82,15 @@ is sometimes amateurish and uneven, but I find this genre particularly fun.
 
 .link book The Adventures of Johnny Bunko
 .url https://www.amazon.com/Adventures-Johnny-Bunko-Career-Guide-ebook/dp/B0015DRPL8
-.authors Daniel H Pink and Reb Ten Pas
+.author Daniel H Pink
+.author Reb Ten Pas
 .date 2008
 .checked
 
 .link book What Got You Here Won't Get You There
 .url https://www.amazon.com/What-Here-There-illustrated-version-ebook/dp/B00710YFJY
-.authors Marshall Goldsmith, Mark Reiter and Shane Clester
+.author Marshall Goldsmith
+.author Mark Reiter
+.author Shane Clester
 .date 2011
 .checked

@@ -1,6 +1,15 @@
-from typing import Optional
+from typing import Optional, List
 
 from markup import Li, A, Text, Span, Time
+
+
+def join_authors(authors: List[str]) -> str:
+    if 1 == len(authors):
+        return authors[0]
+    else:
+        last = authors[-2] + ' and ' + authors[-1]
+        authors[-2:] = [last]
+        return ', '.join(authors)
 
 
 def link(
@@ -8,12 +17,16 @@ def link(
         title: str,
         href: str,
         authors: Optional[str] = None,
+        authors_list: List[str] = [],
         date: Optional[str] = None,
         checked: bool = False
 ):
     with Li(class_names=[type]):
         A(href=href, text=title, class_names=['title'])
-        if authors:
+        if authors_list:
+            Text(', ')
+            Span(class_names=['authors'], text=join_authors(authors_list))
+        elif authors:
             Text(', ')
             Span(class_names=['authors'], text=authors)
         if date:
@@ -27,6 +40,7 @@ def book(
         title: str,
         href: str,
         authors: Optional[str] = None,
+        authors_list: List[str] = [],
         date: Optional[str] = None,
         checked: bool = False
 ):
@@ -35,6 +49,7 @@ def book(
         title=title,
         href=href,
         authors=authors,
+        authors_list=authors_list,
         date=date,
         checked=checked,
     )

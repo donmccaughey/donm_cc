@@ -297,6 +297,75 @@ class ParserTestCase(unittest.TestCase):
         self.assertIsNone(link.date)
         self.assertFalse(link.checked)
 
+    def test_link_with_author_missing_value(self):
+        source = dedent('''
+        .page links My Links
+
+        .section links New Links
+
+        .link book Example Book
+        .url https://example.book
+        .author
+        ''')
+        result = Parser(source).parse()
+        self.assertIsInstance(result, MissingDataError)
+        self.assertEqual('author value', result.data_description)
+
+    def test_link_with_one_author(self):
+        source = dedent('''
+        .page links My Links
+
+        .section links New Links
+
+        .link book Example Book
+        .url https://example.book
+        .author Alice Author
+        ''')
+        result = Parser(source).parse()
+        self.assertIsInstance(result, LinksPage)
+        self.assertEqual(1, len(result.sections))
+
+        section = result.sections[0]
+        self.assertEqual('New Links', section.title)
+        self.assertEqual([], section.notes)
+        self.assertEqual(1, len(section.links))
+
+        link = section.links[0]
+        self.assertEqual('book', link.type)
+        self.assertEqual('Example Book', link.title)
+        self.assertEqual('https://example.book', link.link)
+        self.assertEqual(['Alice Author'], link.authors_list)
+        self.assertIsNone(link.date)
+        self.assertFalse(link.checked)
+
+    def test_link_with_two_author(self):
+        source = dedent('''
+        .page links My Links
+
+        .section links New Links
+
+        .link book Example Book
+        .url https://example.book
+        .author Alice Author
+        .author Bob Booker
+        ''')
+        result = Parser(source).parse()
+        self.assertIsInstance(result, LinksPage)
+        self.assertEqual(1, len(result.sections))
+
+        section = result.sections[0]
+        self.assertEqual('New Links', section.title)
+        self.assertEqual([], section.notes)
+        self.assertEqual(1, len(section.links))
+
+        link = section.links[0]
+        self.assertEqual('book', link.type)
+        self.assertEqual('Example Book', link.title)
+        self.assertEqual('https://example.book', link.link)
+        self.assertEqual(['Alice Author', 'Bob Booker'], link.authors_list)
+        self.assertIsNone(link.date)
+        self.assertFalse(link.checked)
+
     def test_link_with_authors_missing_value(self):
         source = dedent('''
         .page links My Links

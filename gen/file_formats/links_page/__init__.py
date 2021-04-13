@@ -1,5 +1,5 @@
 from dataclasses import dataclass
-from typing import Optional
+from typing import Optional, List
 
 
 @dataclass
@@ -8,6 +8,7 @@ class Link:
     title: str
     link: Optional[str]
     authors: Optional[str]
+    authors_list: List[str]
     date: Optional[str]
     checked: bool
 
