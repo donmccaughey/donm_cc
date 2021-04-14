@@ -36,7 +36,7 @@ def hashtables():
                 with Ul():
                     link('site', 'FNV Hash',
                          'http://www.isthe.com/chongo/tech/comp/fnv/index.html',
-                         authors='Landon Curt Noll', date='2017-04-29')
+                         authors=['Landon Curt Noll'], date='2017-04-29')
             with Section(class_names=['links']):
                 H1('Hashing')
                 with Ul():
@@ -46,14 +46,14 @@ def hashtables():
                          date='2018-10-01')
                     link('blog', 'A Probing Hash Table Framework',
                          'https://skystrife.github.io/blog/2016/01/29/a-probing-hash-table-framework/',
-                         authors='Chase Geigle', date='2016-01-29')
+                         authors=['Chase Geigle'], date='2016-01-29')
                     link('blog', 'Best hash table for C',
                          'https://www.reddit.com/r/C_Programming/comments/3533bw/best_hash_table_for_c/',
-                         authors='Reddit', date='2015-05-06')
+                         authors=['Reddit'], date='2015-05-06')
                     link('blog', "Types Don't Know #",
                          'https://isocpp.org/files/papers/n3980.html',
-                         authors='Howard E. Hinnant, Vinnie Falco and John Bytheway',
+                         authors=['Howard E. Hinnant', 'Vinnie Falco', 'John Bytheway'],
                          date='2014-05-24')
                     link('blog', 'Dynamic Hash Tables',
                          'https://www.csd.uoc.gr/~hy460/pdf/Dynamic%20Hash%20Tables.pdf',
-                         authors='Per-Åke Larson', date='1988-04')
+                         authors=['Per-Åke Larson'], date='1988-04')

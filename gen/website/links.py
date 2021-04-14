@@ -16,19 +16,15 @@ def link(
         type: str,
         title: str,
         href: str,
-        authors: Optional[str] = None,
-        authors_list: List[str] = [],
+        authors: List[str] = [],
         date: Optional[str] = None,
         checked: bool = False
 ):
     with Li(class_names=[type]):
         A(href=href, text=title, class_names=['title'])
-        if authors_list:
+        if authors:
             Text(', ')
-            Span(class_names=['authors'], text=join_authors(authors_list))
-        elif authors:
-            Text(', ')
-            Span(class_names=['authors'], text=authors)
+            Span(class_names=['authors'], text=join_authors(authors))
         if date:
             Text(', ')
             Time(datetime=date)
@@ -39,8 +35,7 @@ def link(
 def book(
         title: str,
         href: str,
-        authors: Optional[str] = None,
-        authors_list: List[str] = [],
+        authors: List[str] = [],
         date: Optional[str] = None,
         checked: bool = False
 ):
@@ -49,7 +44,6 @@ def book(
         title=title,
         href=href,
         authors=authors,
-        authors_list=authors_list,
         date=date,
         checked=checked,
     )

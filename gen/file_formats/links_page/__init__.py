@@ -7,8 +7,7 @@ class Link:
     type: str
     title: str
     link: Optional[str]
-    authors: Optional[str]
-    authors_list: List[str]
+    authors: List[str]
     date: Optional[str]
     checked: bool
 

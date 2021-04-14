@@ -48,7 +48,6 @@ class LinksFile(Page):
                                 title=link.title,
                                 href=link.link,
                                 authors=link.authors,
-                                authors_list=link.authors_list,
                                 date=link.date,
                                 checked=link.checked,
                             )

@@ -98,7 +98,6 @@ class Parser:
                         | link_attribute link_attributes
 
         link_attribute = author_directive
-                       | authors_directive
                        | date_directive
                        | checked_directive
 
@@ -239,8 +238,7 @@ class Parser:
             type='book',
             title=self.token.text,
             link=None,
-            authors=None,
-            authors_list=[],
+            authors=[],
             date=None,
             checked=False,
         )
@@ -271,9 +269,6 @@ class Parser:
         result = self.author_directive()
         if result.matched or result.error:
             return result
-        result = self.authors_directive()
-        if result.matched or result.error:
-            return result
         result = self.date_directive()
         if result.matched or result.error:
             return result
@@ -288,17 +283,7 @@ class Parser:
         self.next_token()
         if not self.is_data():
             return ProductionResult(MissingDataError(self.token, 'author value'))
-        self.links_page.sections[-1].links[-1].authors_list.append(self.token.text)
-        self.next_token()
-        return ProductionResult(True)
-
-    def authors_directive(self) -> ProductionResult:
-        if not self.is_directive('authors'):
-            return ProductionResult(False)
-        self.next_token()
-        if not self.is_data():
-            return ProductionResult(MissingDataError(self.token, 'authors value'))
-        self.links_page.sections[-1].links[-1].authors = self.token.text
+        self.links_page.sections[-1].links[-1].authors.append(self.token.text)
         self.next_token()
         return ProductionResult(True)
 

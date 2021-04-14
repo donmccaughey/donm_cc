@@ -48,10 +48,10 @@ def make():
                 with Ul():
                     link('book', 'Managing Projects with GNU Make',
                          'https://www.amazon.com/Managing-Projects-GNU-Make-Handbooks/dp/0596006101',
-                         authors='Robert Mecklenburg', date='2004')
+                         authors=['Robert Mecklenburg'], date='2004')
                     link('book', 'The GNU Make Book',
                          'https://nostarch.com/gnumake',
-                         authors='John Graham-Cumming', date='2015')
+                         authors=['John Graham-Cumming'], date='2015')
                     link('book', 'The GNU Make Manual',
                          'https://www.gnu.org/software/make/manual/html_node/index.html',
                          date='2016')
@@ -60,13 +60,13 @@ def make():
                 with Ul():
                     link('blog', 'Notes for new Make users',
                          'http://gromnitsky.users.sourceforge.net/articles/notes-for-new-make-users/',
-                         authors='Alexander Gromnitsky', date='2019-03-09')
+                         authors=['Alexander Gromnitsky'], date='2019-03-09')
                     link('blog', 'make.mad-scientist.net',
-                         'http://make.mad-scientist.net', authors='Paul D Smith',
+                         'http://make.mad-scientist.net', authors=['Paul D Smith'],
                          date='2017-07-30')
                     link('blog', 'Notes on Writing Makefiles',
                          'http://eigenstate.org/notes/makefiles',
-                         authors='Ori Bernstein')
+                         authors=['Ori Bernstein'])
                     link('blog', 'Self-Documented Makefile',
                          'http://marmelab.com/blog/2016/02/29/auto-documented-makefile.html',
-                         authors='François Zaninotto', date='2016-02-29')
+                         authors=['François Zaninotto'], date='2016-02-29')
