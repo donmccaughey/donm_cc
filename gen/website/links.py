@@ -1,9 +1,10 @@
+from collections import Sequence
 from typing import Optional, List
 
 from markup import Li, A, Text, Span, Time
 
 
-def join_authors(authors: List[str]) -> str:
+def join_authors(authors: list[str]) -> str:
     if 1 == len(authors):
         return authors[0]
     else:
@@ -16,7 +17,7 @@ def link(
         type: str,
         title: str,
         href: str,
-        authors: List[str] = [],
+        authors: Sequence[str] = (),
         date: Optional[str] = None,
         checked: bool = False
 ):
@@ -24,7 +25,7 @@ def link(
         A(href=href, text=title, class_names=['title'])
         if authors:
             Text(', ')
-            Span(class_names=['authors'], text=join_authors(authors))
+            Span(class_names=['authors'], text=join_authors(list(authors)))
         if date:
             Text(', ')
             Time(datetime=date)
@@ -35,7 +36,7 @@ def link(
 def book(
         title: str,
         href: str,
-        authors: List[str] = [],
+        authors: Sequence[str] = (),
         date: Optional[str] = None,
         checked: bool = False
 ):
