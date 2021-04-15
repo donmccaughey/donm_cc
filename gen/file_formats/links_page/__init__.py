@@ -4,7 +4,7 @@ from typing import Optional, List
 
 @dataclass
 class Link:
-    type: str
+    modifier: str
     title: str
     link: Optional[str]
     authors: List[str]

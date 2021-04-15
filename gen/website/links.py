@@ -14,14 +14,14 @@ def join_authors(authors: list[str]) -> str:
 
 
 def link(
-        type: str,
+        modifier: str,
         title: str,
         href: str,
         authors: Sequence[str] = (),
         date: Optional[str] = None,
         checked: bool = False
 ):
-    with Li(class_names=[type]):
+    with Li(class_names=[modifier]):
         A(href=href, text=title, class_names=['title'])
         if authors:
             Text(', ')
@@ -41,7 +41,7 @@ def book(
         checked: bool = False
 ):
     link(
-        type='book',
+        modifier='book',
         title=title,
         href=href,
         authors=authors,

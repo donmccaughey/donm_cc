@@ -4,6 +4,9 @@ from file_formats.links_page import LinksPage, LinksSection, Link
 from .lexer import Token, TokenType, lexer
 
 
+LINK_MODIFIERS = ('blog', 'book', 'docs', 'email', 'podcast', 'repo', 'site')
+
+
 def parse(source: str) -> LinksPage:
     result = Parser(source).parse()
     if isinstance(result, LinksPage):
@@ -22,6 +25,11 @@ class MissingDirectiveError(ParserError):
     def __init__(self, token: Token, directive: str):
         self.directive = directive
         super().__init__(token, f'Expected {directive} directive')
+
+
+class MissingLinkModifierError(ParserError):
+    def __init__(self, token: Token):
+        super().__init__(token, f'Expected link modifier: {LINK_MODIFIERS}')
 
 
 class MissingModifierError(ParserError):
@@ -90,7 +98,9 @@ class Parser:
         link = link_directive url_directive
              | link_directive url_directive link_attributes
 
-        link_directive = '.link' 'book' DATA
+        link_directive = '.link' link_modifier DATA
+
+        link_modifier = 'blog' | 'book' | 'docs' | 'email' | 'podcast' | 'repo' | 'site'
 
         url_directive = '.url' DATA
 
@@ -229,13 +239,14 @@ class Parser:
         if not self.is_directive('link'):
             return ProductionResult(False)
         self.next_token()
-        if not self.is_modifier('book'):
-            return ProductionResult(MissingModifierError(self.token, 'book'))
+        if not self.is_link_modifier():
+            return ProductionResult(MissingLinkModifierError(self.token))
+        modifier = self.token.text
         self.next_token()
         if not self.is_data():
             return ProductionResult(MissingDataError(self.token, 'link title'))
         link = Link(
-            type='book',
+            modifier=modifier,
             title=self.token.text,
             link=None,
             authors=[],
@@ -321,6 +332,13 @@ class Parser:
                 self.token
                 and TokenType.DIRECTIVE == self.token.type
                 and directive == self.token.text
+        )
+
+    def is_link_modifier(self) -> bool:
+        return (
+                self.token
+                and TokenType.MODIFIER == self.token.type
+                and self.token.text in LINK_MODIFIERS
         )
 
     def is_modifier(self, modifier) -> bool:

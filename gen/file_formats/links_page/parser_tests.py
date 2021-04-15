@@ -4,7 +4,7 @@ from textwrap import dedent
 from file_formats.links_page import LinksPage
 from file_formats.links_page.parser import Parser, ParserError, \
     MissingDirectiveError, MissingModifierError, MissingDataError, \
-    UnexpectedTokenError
+    UnexpectedTokenError, MissingLinkModifierError
 
 
 class ParserTestCase(unittest.TestCase):
@@ -217,8 +217,7 @@ class ParserTestCase(unittest.TestCase):
         .link
         ''')
         result = Parser(source).parse()
-        self.assertIsInstance(result, MissingModifierError)
-        self.assertEqual('book', result.modifier)
+        self.assertIsInstance(result, MissingLinkModifierError)
 
     def test_link_directive_missing_title(self):
         source = dedent('''
@@ -272,7 +271,7 @@ class ParserTestCase(unittest.TestCase):
         self.assertIsInstance(result, MissingDataError)
         self.assertEqual('URL address', result.data_description)
 
-    def test_link(self):
+    def test_book_link(self):
         source = dedent('''
         .page links My Links
 
@@ -291,9 +290,34 @@ class ParserTestCase(unittest.TestCase):
         self.assertEqual(1, len(section.links))
 
         link = section.links[0]
-        self.assertEqual('book', link.type)
+        self.assertEqual('book', link.modifier)
         self.assertEqual('Example Book', link.title)
         self.assertEqual('https://example.book', link.link)
+        self.assertIsNone(link.date)
+        self.assertFalse(link.checked)
+
+    def test_repo_link(self):
+        source = dedent('''
+        .page links My Links
+
+        .section links New Links
+        
+        .link repo Example Repo
+        .url https://example.repo
+        ''')
+        result = Parser(source).parse()
+        self.assertIsInstance(result, LinksPage)
+        self.assertEqual(1, len(result.sections))
+
+        section = result.sections[0]
+        self.assertEqual('New Links', section.title)
+        self.assertEqual([], section.notes)
+        self.assertEqual(1, len(section.links))
+
+        link = section.links[0]
+        self.assertEqual('repo', link.modifier)
+        self.assertEqual('Example Repo', link.title)
+        self.assertEqual('https://example.repo', link.link)
         self.assertIsNone(link.date)
         self.assertFalse(link.checked)
 
@@ -331,7 +355,7 @@ class ParserTestCase(unittest.TestCase):
         self.assertEqual(1, len(section.links))
 
         link = section.links[0]
-        self.assertEqual('book', link.type)
+        self.assertEqual('book', link.modifier)
         self.assertEqual('Example Book', link.title)
         self.assertEqual('https://example.book', link.link)
         self.assertEqual(['Alice Author'], link.authors)
@@ -359,7 +383,7 @@ class ParserTestCase(unittest.TestCase):
         self.assertEqual(1, len(section.links))
 
         link = section.links[0]
-        self.assertEqual('book', link.type)
+        self.assertEqual('book', link.modifier)
         self.assertEqual('Example Book', link.title)
         self.assertEqual('https://example.book', link.link)
         self.assertEqual(['Alice Author', 'Bob Booker'], link.authors)
@@ -400,7 +424,7 @@ class ParserTestCase(unittest.TestCase):
         self.assertEqual(1, len(section.links))
 
         link = section.links[0]
-        self.assertEqual('book', link.type)
+        self.assertEqual('book', link.modifier)
         self.assertEqual('Example Book', link.title)
         self.assertEqual('https://example.book', link.link)
         self.assertEqual('2012', link.date)
@@ -427,7 +451,7 @@ class ParserTestCase(unittest.TestCase):
         self.assertEqual(1, len(section.links))
 
         link = section.links[0]
-        self.assertEqual('book', link.type)
+        self.assertEqual('book', link.modifier)
         self.assertEqual('Example Book', link.title)
         self.assertEqual('https://example.book', link.link)
         self.assertEqual('2011', link.date)
@@ -454,7 +478,7 @@ class ParserTestCase(unittest.TestCase):
         self.assertEqual(1, len(section.links))
 
         link = section.links[0]
-        self.assertEqual('book', link.type)
+        self.assertEqual('book', link.modifier)
         self.assertEqual('Example Book', link.title)
         self.assertEqual('https://example.book', link.link)
         self.assertEqual('2012', link.date)
@@ -481,7 +505,7 @@ class ParserTestCase(unittest.TestCase):
         self.assertEqual(1, len(section.links))
 
         link = section.links[0]
-        self.assertEqual('book', link.type)
+        self.assertEqual('book', link.modifier)
         self.assertEqual('Example Book', link.title)
         self.assertEqual('https://example.book', link.link)
         self.assertEqual('2012', link.date)
@@ -507,7 +531,7 @@ class ParserTestCase(unittest.TestCase):
         self.assertEqual(1, len(section.links))
 
         link = section.links[0]
-        self.assertEqual('book', link.type)
+        self.assertEqual('book', link.modifier)
         self.assertEqual('Example Book', link.title)
         self.assertEqual('https://example.book', link.link)
         self.assertIsNone(link.date)
@@ -534,7 +558,7 @@ class ParserTestCase(unittest.TestCase):
         self.assertEqual(1, len(section.links))
 
         link = section.links[0]
-        self.assertEqual('book', link.type)
+        self.assertEqual('book', link.modifier)
         self.assertEqual('Example Book', link.title)
         self.assertEqual('https://example.book', link.link)
         self.assertIsNone(link.date)
@@ -567,21 +591,21 @@ class ParserTestCase(unittest.TestCase):
         self.assertEqual(3, len(section.links))
 
         link = section.links[0]
-        self.assertEqual('book', link.type)
+        self.assertEqual('book', link.modifier)
         self.assertEqual('Example Book 1', link.title)
         self.assertEqual('https://example1.book', link.link)
         self.assertIsNone(link.date)
         self.assertFalse(link.checked)
 
         link = section.links[1]
-        self.assertEqual('book', link.type)
+        self.assertEqual('book', link.modifier)
         self.assertEqual('Example Book 2', link.title)
         self.assertEqual('https://example2.book', link.link)
         self.assertIsNone(link.date)
         self.assertTrue(link.checked)
 
         link = section.links[2]
-        self.assertEqual('book', link.type)
+        self.assertEqual('book', link.modifier)
         self.assertEqual('Example Book 3', link.title)
         self.assertEqual('https://example3.book', link.link)
         self.assertEqual('2001', link.date)

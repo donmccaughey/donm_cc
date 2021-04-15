@@ -44,7 +44,7 @@ class LinksFile(Page):
                     with Ul():
                         for link in section.links:
                             build_link(
-                                type=link.type,
+                                modifier=link.modifier,
                                 title=link.title,
                                 href=link.link,
                                 authors=link.authors,

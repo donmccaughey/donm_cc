@@ -33,7 +33,9 @@ class Token:
         return Token(TokenType.PARAGRAPH, '\n'.join(lines))
 
 
-MODIFIERS = ['links', 'book']
+MODIFIERS = (
+    'blog', 'book', 'docs', 'email', 'links', 'podcast', 'repo', 'site'
+)
 
 
 def unescape(text: str) -> str:
