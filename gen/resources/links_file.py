@@ -17,26 +17,26 @@ class LinksFile(Page):
     ):
         with open(source) as f:
             contents = f.read()
-            links_page = parse(contents)
+            page_file = parse(contents)
 
         basename = os.path.basename(source)
         name = basename.split('.')[0]
 
         super().__init__(
-            title=links_page.title,
+            title=page_file.title,
             name=name,
             parent=parent,
             **kwargs,
         )
 
         self.source = source
-        self.links_page = links_page
+        self.page_file = page_file
         with self.body_content:
             with Section(class_names=['overview']):
-                H1(links_page.title)
-                for note in links_page.notes:
+                H1(page_file.title)
+                for note in page_file.notes:
                     P(note)
-            for section in links_page.sections:
+            for section in page_file.sections:
                 with Section(class_names=['links']):
                     H1(section.title)
                     for note in section.notes:
