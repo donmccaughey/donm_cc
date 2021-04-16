@@ -1,8 +1,8 @@
 import unittest
 from textwrap import dedent
 
-from file_formats.links_page import LinksPage
-from file_formats.links_page.parser import Parser, ParserError, \
+from file_formats.page_file import LinksPage
+from file_formats.page_file.parser import Parser, ParserError, \
     MissingDirectiveError, MissingModifierError, MissingDataError, \
     UnexpectedTokenError, MissingLinkModifierError
 

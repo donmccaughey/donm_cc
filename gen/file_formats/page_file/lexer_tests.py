@@ -1,7 +1,7 @@
 import unittest
 from textwrap import dedent
 
-from file_formats.links_page.lexer import lexer, Token, TokenType
+from file_formats.page_file.lexer import lexer, Token, TokenType
 
 
 class LexerTestCase(unittest.TestCase):

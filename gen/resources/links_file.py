@@ -1,7 +1,7 @@
 from typing import Optional
 
 import os
-from file_formats.links_page.parser import parse
+from file_formats.page_file.parser import parse
 from markup import Section, H1, P, Ul
 from website.links import link as build_link
 from .directory import Directory

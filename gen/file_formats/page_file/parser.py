@@ -1,6 +1,6 @@
 from typing import Optional, Union
 
-from file_formats.links_page import LinksPage, LinksSection, Link
+from file_formats.page_file import LinksPage, LinksSection, Link
 from .lexer import Token, TokenType, lexer
 
 
