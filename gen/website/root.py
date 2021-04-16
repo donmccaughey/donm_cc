@@ -1,7 +1,6 @@
 from resources import Directory
 from website.pages.aughey import aughey
 from website.pages.bash import bash
-from website.pages.engineering_management import engineering_management
 from website.pages.hashtables import hashtables
 from website.pages.home_page import home_page
 from website.pages.macos_packages import macos_packages
@@ -18,12 +17,12 @@ with root:
 
     Directory('banners')
     Directory('business_novels')
+    Directory('engineering_management')
     Directory('icons')
     Directory('resume')
 
     aughey()
     bash()
-    engineering_management()
     hashtables()
     macos_packages()
     make()
