@@ -1,15 +1,15 @@
 from typing import Optional, Union
 
-from file_formats.page_file import LinksPage, LinksSection, Link
+from file_formats.page_file import PageFile, LinksSection, Link
 from .lexer import Token, TokenType, lexer
 
 
 LINK_MODIFIERS = ('blog', 'book', 'docs', 'email', 'podcast', 'repo', 'site')
 
 
-def parse(source: str) -> LinksPage:
+def parse(source: str) -> PageFile:
     result = Parser(source).parse()
-    if isinstance(result, LinksPage):
+    if isinstance(result, PageFile):
         return result
     else:
         raise result
@@ -123,10 +123,10 @@ class Parser:
     def __init__(self, source: str):
         self.lexer = lexer(source)
         self.token: Optional[Token] = None
-        self.links_page: Optional[LinksPage] = None
+        self.page_file: Optional[PageFile] = None
         self.notes: Optional[list[str]] = None
 
-    def parse(self) -> Union[LinksPage, ParserError]:
+    def parse(self) -> Union[PageFile, ParserError]:
         self.next_token()
         result = self.page()
         if result.error:
@@ -134,7 +134,7 @@ class Parser:
         elif self.token:
             return UnexpectedTokenError(self.token)
         else:
-            return self.links_page
+            return self.page_file
 
     def page(self) -> ProductionResult:
         result = self.overview()
@@ -163,8 +163,8 @@ class Parser:
         self.next_token()
         if not self.is_data():
             return ProductionResult(MissingDataError(self.token, 'page title'))
-        self.links_page = LinksPage(title=(self.token.text.strip()), notes=[], sections=[])
-        self.notes = self.links_page.notes
+        self.page_file = PageFile(title=(self.token.text.strip()), notes=[], sections=[])
+        self.notes = self.page_file.notes
         self.next_token()
         return ProductionResult(True)
 
@@ -209,7 +209,7 @@ class Parser:
         if not self.is_data():
             return ProductionResult(MissingDataError(self.token, 'section title'))
         section = LinksSection(title=self.token.text, notes=[], links=[])
-        self.links_page.sections.append(section)
+        self.page_file.sections.append(section)
         self.notes = section.notes
         self.next_token()
         return ProductionResult(True)
@@ -253,7 +253,7 @@ class Parser:
             date=None,
             checked=False,
         )
-        self.links_page.sections[-1].links.append(link)
+        self.page_file.sections[-1].links.append(link)
         self.next_token()
         return ProductionResult(True)
 
@@ -263,7 +263,7 @@ class Parser:
         self.next_token()
         if not self.is_data():
             return ProductionResult(MissingDataError(self.token, 'URL address'))
-        self.links_page.sections[-1].links[-1].link = self.token.text
+        self.page_file.sections[-1].links[-1].link = self.token.text
         self.next_token()
         return ProductionResult(True)
 
@@ -294,7 +294,7 @@ class Parser:
         self.next_token()
         if not self.is_data():
             return ProductionResult(MissingDataError(self.token, 'author value'))
-        self.links_page.sections[-1].links[-1].authors.append(self.token.text)
+        self.page_file.sections[-1].links[-1].authors.append(self.token.text)
         self.next_token()
         return ProductionResult(True)
 
@@ -304,14 +304,14 @@ class Parser:
         self.next_token()
         if not self.is_data():
             return ProductionResult(MissingDataError(self.token, 'date value'))
-        self.links_page.sections[-1].links[-1].date = self.token.text
+        self.page_file.sections[-1].links[-1].date = self.token.text
         self.next_token()
         return ProductionResult(True)
 
     def checked_directive(self) -> ProductionResult:
         if not self.is_directive('checked'):
             return ProductionResult(False)
-        self.links_page.sections[-1].links[-1].checked = True
+        self.page_file.sections[-1].links[-1].checked = True
         self.next_token()
         return ProductionResult(True)
 

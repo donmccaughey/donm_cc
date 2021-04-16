@@ -20,7 +20,7 @@ class LinksSection:
 
 
 @dataclass
-class LinksPage:
+class PageFile:
     title: str
     notes: list[str]
     sections: list[LinksSection]

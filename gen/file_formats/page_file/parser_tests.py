@@ -1,7 +1,7 @@
 import unittest
 from textwrap import dedent
 
-from file_formats.page_file import LinksPage
+from file_formats.page_file import PageFile
 from file_formats.page_file.parser import Parser, ParserError, \
     MissingDirectiveError, MissingModifierError, MissingDataError, \
     UnexpectedTokenError, MissingLinkModifierError
@@ -30,7 +30,7 @@ class ParserTestCase(unittest.TestCase):
     def test_page_directive_only(self):
         source = '.page links My Links'
         result = Parser(source).parse()
-        self.assertIsInstance(result, LinksPage)
+        self.assertIsInstance(result, PageFile)
         self.assertEqual('My Links', result.title)
         self.assertEqual([], result.notes)
         self.assertEqual([], result.sections)
@@ -58,7 +58,7 @@ class ParserTestCase(unittest.TestCase):
         This is a paragraph.
         ''')
         result = Parser(source).parse()
-        self.assertIsInstance(result, LinksPage)
+        self.assertIsInstance(result, PageFile)
         self.assertEqual('My Links', result.title)
         self.assertEqual(['This is a paragraph.'], result.notes)
         self.assertEqual([], result.sections)
@@ -73,7 +73,7 @@ class ParserTestCase(unittest.TestCase):
         This is the third paragraph.
         ''')
         result = Parser(source).parse()
-        self.assertIsInstance(result, LinksPage)
+        self.assertIsInstance(result, PageFile)
         self.assertEqual('My Links', result.title)
         self.assertEqual(
             [
@@ -122,7 +122,7 @@ class ParserTestCase(unittest.TestCase):
         
         ''')
         result = Parser(source).parse()
-        self.assertIsInstance(result, LinksPage)
+        self.assertIsInstance(result, PageFile)
         self.assertEqual(1, len(result.sections))
 
         section = result.sections[0]
@@ -145,7 +145,7 @@ class ParserTestCase(unittest.TestCase):
         The really old stuff.
         ''')
         result = Parser(source).parse()
-        self.assertIsInstance(result, LinksPage)
+        self.assertIsInstance(result, PageFile)
         self.assertEqual(3, len(result.sections))
 
         section = result.sections[0]
@@ -172,7 +172,7 @@ class ParserTestCase(unittest.TestCase):
         These are some links.
         ''')
         result = Parser(source).parse()
-        self.assertIsInstance(result, LinksPage)
+        self.assertIsInstance(result, PageFile)
         self.assertEqual(1, len(result.sections))
 
         section = result.sections[0]
@@ -193,7 +193,7 @@ class ParserTestCase(unittest.TestCase):
         But these are mine.
         ''')
         result = Parser(source).parse()
-        self.assertIsInstance(result, LinksPage)
+        self.assertIsInstance(result, PageFile)
         self.assertEqual(1, len(result.sections))
 
         section = result.sections[0]
@@ -281,7 +281,7 @@ class ParserTestCase(unittest.TestCase):
         .url https://example.book
         ''')
         result = Parser(source).parse()
-        self.assertIsInstance(result, LinksPage)
+        self.assertIsInstance(result, PageFile)
         self.assertEqual(1, len(result.sections))
 
         section = result.sections[0]
@@ -306,7 +306,7 @@ class ParserTestCase(unittest.TestCase):
         .url https://example.repo
         ''')
         result = Parser(source).parse()
-        self.assertIsInstance(result, LinksPage)
+        self.assertIsInstance(result, PageFile)
         self.assertEqual(1, len(result.sections))
 
         section = result.sections[0]
@@ -346,7 +346,7 @@ class ParserTestCase(unittest.TestCase):
         .author Alice Author
         ''')
         result = Parser(source).parse()
-        self.assertIsInstance(result, LinksPage)
+        self.assertIsInstance(result, PageFile)
         self.assertEqual(1, len(result.sections))
 
         section = result.sections[0]
@@ -374,7 +374,7 @@ class ParserTestCase(unittest.TestCase):
         .author Bob Booker
         ''')
         result = Parser(source).parse()
-        self.assertIsInstance(result, LinksPage)
+        self.assertIsInstance(result, PageFile)
         self.assertEqual(1, len(result.sections))
 
         section = result.sections[0]
@@ -415,7 +415,7 @@ class ParserTestCase(unittest.TestCase):
         .date 2012
         ''')
         result = Parser(source).parse()
-        self.assertIsInstance(result, LinksPage)
+        self.assertIsInstance(result, PageFile)
         self.assertEqual(1, len(result.sections))
 
         section = result.sections[0]
@@ -442,7 +442,7 @@ class ParserTestCase(unittest.TestCase):
         .date 2011
         ''')
         result = Parser(source).parse()
-        self.assertIsInstance(result, LinksPage)
+        self.assertIsInstance(result, PageFile)
         self.assertEqual(1, len(result.sections))
 
         section = result.sections[0]
@@ -469,7 +469,7 @@ class ParserTestCase(unittest.TestCase):
         .checked
         ''')
         result = Parser(source).parse()
-        self.assertIsInstance(result, LinksPage)
+        self.assertIsInstance(result, PageFile)
         self.assertEqual(1, len(result.sections))
 
         section = result.sections[0]
@@ -496,7 +496,7 @@ class ParserTestCase(unittest.TestCase):
         .date 2012
         ''')
         result = Parser(source).parse()
-        self.assertIsInstance(result, LinksPage)
+        self.assertIsInstance(result, PageFile)
         self.assertEqual(1, len(result.sections))
 
         section = result.sections[0]
@@ -522,7 +522,7 @@ class ParserTestCase(unittest.TestCase):
         .checked
         ''')
         result = Parser(source).parse()
-        self.assertIsInstance(result, LinksPage)
+        self.assertIsInstance(result, PageFile)
         self.assertEqual(1, len(result.sections))
 
         section = result.sections[0]
@@ -549,7 +549,7 @@ class ParserTestCase(unittest.TestCase):
         .checked
         ''')
         result = Parser(source).parse()
-        self.assertIsInstance(result, LinksPage)
+        self.assertIsInstance(result, PageFile)
         self.assertEqual(1, len(result.sections))
 
         section = result.sections[0]
@@ -582,7 +582,7 @@ class ParserTestCase(unittest.TestCase):
         .date 2001
         ''')
         result = Parser(source).parse()
-        self.assertIsInstance(result, LinksPage)
+        self.assertIsInstance(result, PageFile)
         self.assertEqual(1, len(result.sections))
 
         section = result.sections[0]
