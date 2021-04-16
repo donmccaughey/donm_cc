@@ -10,5 +10,5 @@ with_parent: list[Optional[Directory]] = [None]
 
 from .directory import Directory
 from .file import File
-from .links_file import LinksFile
+from .page_file import PageFile
 from .page import Page

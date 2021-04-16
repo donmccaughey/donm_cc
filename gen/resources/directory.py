@@ -73,7 +73,7 @@ class Directory(Resource):
                             source = os.path.normpath(source)
                             source = os.path.relpath(source)
                             if source.endswith('.links.txt'):
-                                resources.links_file.LinksFile(source, self)
+                                resources.page_file.PageFile(source, self)
                             else:
                                 resources.file.File(source, self)
         for child in self.children:

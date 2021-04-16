@@ -8,7 +8,7 @@ from .directory import Directory
 from .page import Page
 
 
-class LinksFile(Page):
+class PageFile(Page):
     def __init__(
             self,
             source: str,
