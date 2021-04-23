@@ -67,7 +67,7 @@ class ProductionResult:
 
 class Parser:
     """
-    Parse a links file.
+    Parse a page file.
 
     Grammar:
 
