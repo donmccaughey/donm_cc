@@ -9,6 +9,8 @@ from .page import Page
 
 
 class PageFile(Page):
+    EXT = '.page'
+
     def __init__(
             self,
             source: str,
