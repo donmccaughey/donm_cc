@@ -2,7 +2,7 @@ from typing import Optional
 
 
 def q(attribute_value) -> str:
-    if attribute_value is '':
+    if attribute_value == '':
         return "''"
 
     if '"' in attribute_value and "'" in attribute_value:
