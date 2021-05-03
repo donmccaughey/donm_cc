@@ -1,7 +1,7 @@
 import unittest
 from textwrap import dedent
 
-from file_formats.page_file.lexer import lexer, Token, TokenType
+from file_formats.page_file.lexer import lexer, Token, TokenType, Location
 
 
 class LexerTestCase(unittest.TestCase):
@@ -17,14 +17,14 @@ class LexerTestCase(unittest.TestCase):
     def test_directive(self):
         tokens = list(lexer('.checked'))
         self.assertEqual(
-            [Token(TokenType.DIRECTIVE, 'checked')],
+            [Token(TokenType.DIRECTIVE, 'checked', Location(1))],
             tokens
         )
 
     def test_indented_directive(self):
         tokens = list(lexer(' .checked'))
         self.assertEqual(
-            [Token(TokenType.PARAGRAPH, ' .checked')],
+            [Token(TokenType.PARAGRAPH, ' .checked', Location(1))],
             tokens
         )
 
@@ -32,8 +32,8 @@ class LexerTestCase(unittest.TestCase):
         tokens = list(lexer('.section links'))
         self.assertEqual(
             [
-                Token(TokenType.DIRECTIVE, 'section'),
-                Token(TokenType.MODIFIER, 'links')
+                Token(TokenType.DIRECTIVE, 'section', Location(1)),
+                Token(TokenType.MODIFIER, 'links', Location(1))
              ],
             tokens
         )
@@ -42,8 +42,8 @@ class LexerTestCase(unittest.TestCase):
         tokens = list(lexer('.section invalid'))
         self.assertEqual(
             [
-                Token(TokenType.DIRECTIVE, 'section'),
-                Token(TokenType.DATA, 'invalid')
+                Token(TokenType.DIRECTIVE, 'section', Location(1)),
+                Token(TokenType.DATA, 'invalid', Location(1))
              ],
             tokens
         )
@@ -52,9 +52,9 @@ class LexerTestCase(unittest.TestCase):
         tokens = list(lexer('.section links More Links'))
         self.assertEqual(
             [
-                Token(TokenType.DIRECTIVE, 'section'),
-                Token(TokenType.MODIFIER, 'links'),
-                Token(TokenType.DATA, 'More Links'),
+                Token(TokenType.DIRECTIVE, 'section', Location(1)),
+                Token(TokenType.MODIFIER, 'links', Location(1)),
+                Token(TokenType.DATA, 'More Links', Location(1)),
              ],
             tokens
         )
@@ -63,8 +63,8 @@ class LexerTestCase(unittest.TestCase):
         tokens = list(lexer('.section invalid    More Links'))
         self.assertEqual(
             [
-                Token(TokenType.DIRECTIVE, 'section'),
-                Token(TokenType.DATA, 'invalid    More Links'),
+                Token(TokenType.DIRECTIVE, 'section', Location(1)),
+                Token(TokenType.DATA, 'invalid    More Links', Location(1)),
              ],
             tokens
         )
@@ -73,9 +73,9 @@ class LexerTestCase(unittest.TestCase):
         tokens = list(lexer('.section   links   More Links \t'))
         self.assertEqual(
             [
-                Token(TokenType.DIRECTIVE, 'section'),
-                Token(TokenType.MODIFIER, 'links'),
-                Token(TokenType.DATA, 'More Links'),
+                Token(TokenType.DIRECTIVE, 'section', Location(1)),
+                Token(TokenType.MODIFIER, 'links', Location(1)),
+                Token(TokenType.DATA, 'More Links', Location(1)),
              ],
             tokens
         )
@@ -84,8 +84,8 @@ class LexerTestCase(unittest.TestCase):
         tokens = list(lexer('.url https://example.com'))
         self.assertEqual(
             [
-                Token(TokenType.DIRECTIVE, 'url'),
-                Token(TokenType.DATA, 'https://example.com'),
+                Token(TokenType.DIRECTIVE, 'url', Location(1)),
+                Token(TokenType.DATA, 'https://example.com', Location(1)),
              ],
             tokens
         )
@@ -94,8 +94,8 @@ class LexerTestCase(unittest.TestCase):
         tokens = list(lexer('.url \t https://example.com   '))
         self.assertEqual(
             [
-                Token(TokenType.DIRECTIVE, 'url'),
-                Token(TokenType.DATA, 'https://example.com'),
+                Token(TokenType.DIRECTIVE, 'url', Location(1)),
+                Token(TokenType.DATA, 'https://example.com', Location(1)),
              ],
             tokens
         )
@@ -107,7 +107,7 @@ class LexerTestCase(unittest.TestCase):
         tokens = list(lexer(source))
         self.assertEqual(
             [
-                Token(TokenType.PARAGRAPH, 'Hello, world!'),
+                Token(TokenType.PARAGRAPH, 'Hello, world!', Location(2)),
              ],
             tokens
         )
@@ -117,7 +117,7 @@ class LexerTestCase(unittest.TestCase):
         tokens = list(lexer(source))
         self.assertEqual(
             [
-                Token(TokenType.PARAGRAPH, 'Hello, world!'),
+                Token(TokenType.PARAGRAPH, 'Hello, world!', Location(1)),
              ],
             tokens
         )
@@ -131,7 +131,11 @@ class LexerTestCase(unittest.TestCase):
         tokens = list(lexer(source))
         self.assertEqual(
             [
-                Token(TokenType.PARAGRAPH, 'Now is the time for\nall good men to come\nto the aid of the party.'),
+                Token(
+                    TokenType.PARAGRAPH,
+                    'Now is the time for\nall good men to come\nto the aid of the party.',
+                    Location(2)
+                ),
              ],
             tokens
         )
@@ -145,7 +149,11 @@ class LexerTestCase(unittest.TestCase):
         tokens = list(lexer(source))
         self.assertEqual(
             [
-                Token(TokenType.PARAGRAPH, '    Now is the time for\nall good men to come\nto the aid of the party.'),
+                Token(
+                    TokenType.PARAGRAPH,
+                    '    Now is the time for\nall good men to come\nto the aid of the party.',
+                    Location(2)
+                ),
              ],
             tokens
         )
@@ -162,9 +170,19 @@ class LexerTestCase(unittest.TestCase):
         tokens = list(lexer(source))
         self.assertEqual(
             [
-                Token(TokenType.PARAGRAPH, 'This is a paragraph.'),
-                Token(TokenType.PARAGRAPH, 'This is another paragraph.'),
-                Token(TokenType.PARAGRAPH, 'And this is a paragraph that\nspans multiple lines.'),
+                Token(
+                    TokenType.PARAGRAPH, 'This is a paragraph.', Location(2)
+                ),
+                Token(
+                    TokenType.PARAGRAPH,
+                    'This is another paragraph.',
+                    Location(4)
+                ),
+                Token(
+                    TokenType.PARAGRAPH,
+                    'And this is a paragraph that\nspans multiple lines.',
+                    Location(6)
+                ),
              ],
             tokens
         )
@@ -174,8 +192,12 @@ class LexerTestCase(unittest.TestCase):
         tokens = list(lexer(source))
         self.assertEqual(
             [
-                Token(TokenType.PARAGRAPH, 'This is a paragraph.'),
-                Token(TokenType.PARAGRAPH, 'This is another paragraph.'),
+                Token(TokenType.PARAGRAPH, 'This is a paragraph.', Location(1)),
+                Token(
+                    TokenType.PARAGRAPH,
+                    'This is another paragraph.',
+                    Location(3)
+                ),
              ],
             tokens
         )
@@ -185,7 +207,7 @@ class LexerTestCase(unittest.TestCase):
         tokens = list(lexer(source))
         self.assertEqual(
             [
-                Token(TokenType.PARAGRAPH, '.directive'),
+                Token(TokenType.PARAGRAPH, '.directive', Location(1)),
              ],
             tokens
         )
@@ -195,7 +217,11 @@ class LexerTestCase(unittest.TestCase):
         tokens = list(lexer(source))
         self.assertEqual(
             [
-                Token(TokenType.PARAGRAPH, r'\. for a literal backslash'),
+                Token(
+                    TokenType.PARAGRAPH,
+                    r'\. for a literal backslash',
+                    Location(1)
+                ),
              ],
             tokens
         )
@@ -210,10 +236,12 @@ class LexerTestCase(unittest.TestCase):
         self.assertEqual(
             [
                 Token(TokenType.PARAGRAPH,
-                      'This is a paragraph that\nspans multiple lines.'),
-                Token(TokenType.DIRECTIVE, 'section'),
-                Token(TokenType.MODIFIER, 'links'),
-                Token(TokenType.DATA, 'More Links'),
+                      'This is a paragraph that\nspans multiple lines.',
+                      Location(2)
+                      ),
+                Token(TokenType.DIRECTIVE, 'section', Location(4)),
+                Token(TokenType.MODIFIER, 'links', Location(4)),
+                Token(TokenType.DATA, 'More Links', Location(4)),
             ],
             tokens
         )
