@@ -22,3 +22,6 @@ def bash():
                     link('blog', 'Shortcuts to Move Faster in Bash Command Line',
                          'http://teohm.github.io/blog/2012/01/04/shortcuts-to-move-faster-in-bash-command-line/',
                          authors=['Huiming Teo'], date='2012-01-04')
+                    link('blog', 'How "Exit Traps" Can Make Your Bash Scripts Way More Robust And Reliable',
+                         'http://redsymbol.net/articles/bash-exit-traps/',
+                         authors=['Aaron Maxwell'])
