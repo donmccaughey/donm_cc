@@ -1,4 +1,4 @@
-from typing import Optional, Union
+from typing import Optional
 
 from file_formats.page_file import PageFile, LinksSection, Link
 from .lexer import Token, TokenType, lexer
@@ -53,7 +53,7 @@ class ProductionResult:
     matched: bool
     error: Optional[ParserError]
 
-    def __init__(self, result: Union[bool, ParserError]):
+    def __init__(self, result: bool | ParserError):
         if isinstance(result, ParserError):
             self.matched = False
             self.error = result
@@ -126,7 +126,7 @@ class Parser:
         self.page_file: Optional[PageFile] = None
         self.notes: Optional[list[str]] = None
 
-    def parse(self) -> Union[PageFile, ParserError]:
+    def parse(self) -> PageFile | ParserError:
         self.next_token()
         result = self.page()
         if result.error:
