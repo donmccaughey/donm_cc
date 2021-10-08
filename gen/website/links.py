@@ -1,5 +1,4 @@
-from collections import Sequence
-from typing import Optional, List
+from typing import Optional, Sequence
 
 from markup import Li, A, Text, Span, Time
 
