@@ -23,10 +23,6 @@ def home_page():
                  favicon='/icons/twitter.png', external=True)
             item('LinkedIn', 'https://www.linkedin.com/in/donmccaughey',
                  'donmccaughey', favicon='/icons/linkedin.png', external=True)
-            item('Truework', 'https://www.truework.com', 'My current gig',
-                 favicon='/icons/truework.png', external=True)
-            item('Copper', 'https://www.copper.com', 'My previous gig',
-                 favicon='/icons/copper.png', external=True)
             item('Résumé', '/resume/Resume_of_Don_McCaughey.pdf', "Stuff I've done")
             item('Memory Match', '/memory_match/', 'A tile matching game')
             item('Random Words', '/random_words/', 'A handy word picker')
