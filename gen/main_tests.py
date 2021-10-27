@@ -59,6 +59,7 @@ class MainTestCase(unittest.TestCase):
             ('./science_fiction/index.html', '/science_fiction/index.html'),
             ('./science_fiction/james_sa_corey.html', '/science_fiction/james_sa_corey.html'),
             ('./science_fiction/lois_mcmaster_bujold.html', '/science_fiction/lois_mcmaster_bujold.html'),
+            ('./science_fiction/walter_jon_williams.html', '/science_fiction/walter_jon_williams.html'),
         ]
         actual = [(item.path, item.url) for item in all]
         self.assertEqual(expected, actual)

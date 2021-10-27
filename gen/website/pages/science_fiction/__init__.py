@@ -19,3 +19,4 @@ def science_fiction():
                      '/science_fiction/lois_mcmaster_bujold.html')
                 item('James SA Corey', '/science_fiction/james_sa_corey.html')
                 item('Alastair Reynolds', '/science_fiction/alastair_reynolds.html')
+                item('Walter Jon Williams', '/science_fiction/walter_jon_williams.html')
