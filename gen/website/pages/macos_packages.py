@@ -45,6 +45,14 @@ def macos_packages():
                 description='A recursive directory listing command.'
             )
             package(
+                name='wget',
+                version='1.21.2',
+                package='https://github.com/donmccaughey/wget_pkg/releases/latest/download/wget-1.21.2.pkg',
+                source='https://github.com/donmccaughey/wget_pkg',
+                project='https://www.gnu.org/software/wget/',
+                description='A command line tool for retrieving files using HTTP, HTTPS, FTP and FTPS.'
+            )
+            package(
                 name='XZ Utils',
                 version='5.2.5',
                 package='https://github.com/donmccaughey/xz_pkg/releases/latest/download/xz-5.2.5.pkg',
