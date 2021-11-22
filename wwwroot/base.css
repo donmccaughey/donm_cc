@@ -116,7 +116,6 @@ time {
 .item {
     background: whitesmoke;
     border: 1pt solid silver;
-    border-radius: 4px;
     color: black;
     display: inline-block;
     line-height: 150%;
@@ -130,7 +129,7 @@ time {
 }
 
 .item.external {
-    border: 1pt solid whitesmoke;
+    border: 1pt solid silver;
 }
 
 .item:hover.external {
@@ -265,12 +264,14 @@ time {
     background: whitesmoke;
     border: 1pt solid whitesmoke;
     border-radius: 4px;
-    padding: 1em 2em 0em 2em;
+    margin-bottom: 2em;
+    padding: 0em 2em 0em 2em;
 }
 
 .package .item {
     background: white;
     border: 1pt solid white;
+    margin-top: 0;
 }
 
 .package .item:hover {
