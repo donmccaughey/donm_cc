@@ -21,6 +21,14 @@ def macos_packages():
                     but excluded from macOS and Xcode due to GPL licenses.            
                 """)
             package(
+                name='jq',
+                version='1.6',
+                package='https://github.com/donmccaughey/jq_pkg/releases/latest/download/jq-1.6.pkg',
+                source='https://github.com/donmccaughey/jq_pkg',
+                project='https://stedolan.github.io/jq/',
+                description='A lightweight and flexible command line JSON processor'
+            )
+            package(
                 name='nginx',
                 version='1.20.1',
                 package='https://github.com/donmccaughey/nginx_pkg/releases/latest/download/nginx-1.20.1.pkg',
