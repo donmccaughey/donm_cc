@@ -16,7 +16,7 @@ def make():
                         in 1977.  It's ubiquitous.  Make is a
                     """)
                     A(
-                        'http://pubs.opengroup.org/onlinepubs/009695399/utilities/make.html',
+                        'https://pubs.opengroup.org/onlinepubs/9699919799/utilities/make.html',
                         'standard')
                     Text("""
                         development tool on Unix, Linux and POSIX systems.  Make is not 
@@ -47,7 +47,7 @@ def make():
                 H1('Books')
                 with Ul():
                     link('book', 'Managing Projects with GNU Make',
-                         'https://www.amazon.com/Managing-Projects-GNU-Make-Handbooks/dp/0596006101',
+                         'https://www.amazon.com/dp/B0026OR2RW',
                          authors=['Robert Mecklenburg'], date='2004')
                     link('book', 'The GNU Make Book',
                          'https://nostarch.com/gnumake',
