@@ -293,6 +293,87 @@ class ParserTestCase(unittest.TestCase):
         self.assertEqual('book', link.modifier)
         self.assertEqual('Example Book', link.title)
         self.assertEqual('https://example.book', link.url)
+        self.assertIsNone(link.asin)
+        self.assertIsNone(link.date)
+        self.assertFalse(link.checked)
+
+    def test_book_link_with_asin(self):
+        source = dedent('''
+        .page links My Links
+
+        .section links New Links
+        
+        .link book Example Book
+        .asin B123456789
+        ''')
+        result = Parser(source).parse()
+        self.assertIsInstance(result, PageFile)
+        self.assertEqual(1, len(result.sections))
+
+        section = result.sections[0]
+        self.assertEqual('New Links', section.title)
+        self.assertEqual([], section.notes)
+        self.assertEqual(1, len(section.links))
+
+        link = section.links[0]
+        self.assertEqual('book', link.modifier)
+        self.assertEqual('Example Book', link.title)
+        self.assertIsNone(link.url)
+        self.assertEqual('B123456789', link.asin)
+        self.assertIsNone(link.date)
+        self.assertFalse(link.checked)
+
+    def test_book_link_with_url_and_asin(self):
+        source = dedent('''
+        .page links My Links
+
+        .section links New Links
+        
+        .link book Example Book
+        .url https://example.book
+        .asin B123456789
+        ''')
+        result = Parser(source).parse()
+        self.assertIsInstance(result, PageFile)
+        self.assertEqual(1, len(result.sections))
+
+        section = result.sections[0]
+        self.assertEqual('New Links', section.title)
+        self.assertEqual([], section.notes)
+        self.assertEqual(1, len(section.links))
+
+        link = section.links[0]
+        self.assertEqual('book', link.modifier)
+        self.assertEqual('Example Book', link.title)
+        self.assertEqual('https://example.book', link.url)
+        self.assertEqual('B123456789', link.asin)
+        self.assertIsNone(link.date)
+        self.assertFalse(link.checked)
+
+    def test_book_link_with_asin_and_url(self):
+        source = dedent('''
+        .page links My Links
+
+        .section links New Links
+        
+        .link book Example Book
+        .asin B123456789
+        .url https://example.book
+        ''')
+        result = Parser(source).parse()
+        self.assertIsInstance(result, PageFile)
+        self.assertEqual(1, len(result.sections))
+
+        section = result.sections[0]
+        self.assertEqual('New Links', section.title)
+        self.assertEqual([], section.notes)
+        self.assertEqual(1, len(section.links))
+
+        link = section.links[0]
+        self.assertEqual('book', link.modifier)
+        self.assertEqual('Example Book', link.title)
+        self.assertEqual('https://example.book', link.url)
+        self.assertEqual('B123456789', link.asin)
         self.assertIsNone(link.date)
         self.assertFalse(link.checked)
 
@@ -358,6 +439,7 @@ class ParserTestCase(unittest.TestCase):
         self.assertEqual('book', link.modifier)
         self.assertEqual('Example Book', link.title)
         self.assertEqual('https://example.book', link.url)
+        self.assertIsNone(link.asin)
         self.assertEqual(['Alice Author'], link.authors)
         self.assertIsNone(link.date)
         self.assertFalse(link.checked)
@@ -386,6 +468,7 @@ class ParserTestCase(unittest.TestCase):
         self.assertEqual('book', link.modifier)
         self.assertEqual('Example Book', link.title)
         self.assertEqual('https://example.book', link.url)
+        self.assertIsNone(link.asin)
         self.assertEqual(['Alice Author', 'Bob Booker'], link.authors)
         self.assertIsNone(link.date)
         self.assertFalse(link.checked)
@@ -427,6 +510,7 @@ class ParserTestCase(unittest.TestCase):
         self.assertEqual('book', link.modifier)
         self.assertEqual('Example Book', link.title)
         self.assertEqual('https://example.book', link.url)
+        self.assertIsNone(link.asin)
         self.assertEqual('2012', link.date)
         self.assertFalse(link.checked)
 
@@ -454,6 +538,7 @@ class ParserTestCase(unittest.TestCase):
         self.assertEqual('book', link.modifier)
         self.assertEqual('Example Book', link.title)
         self.assertEqual('https://example.book', link.url)
+        self.assertIsNone(link.asin)
         self.assertEqual('2011', link.date)
         self.assertFalse(link.checked)
 
@@ -481,6 +566,7 @@ class ParserTestCase(unittest.TestCase):
         self.assertEqual('book', link.modifier)
         self.assertEqual('Example Book', link.title)
         self.assertEqual('https://example.book', link.url)
+        self.assertIsNone(link.asin)
         self.assertEqual('2012', link.date)
         self.assertTrue(link.checked)
 
@@ -508,6 +594,7 @@ class ParserTestCase(unittest.TestCase):
         self.assertEqual('book', link.modifier)
         self.assertEqual('Example Book', link.title)
         self.assertEqual('https://example.book', link.url)
+        self.assertIsNone(link.asin)
         self.assertEqual('2012', link.date)
         self.assertTrue(link.checked)
 
@@ -534,6 +621,7 @@ class ParserTestCase(unittest.TestCase):
         self.assertEqual('book', link.modifier)
         self.assertEqual('Example Book', link.title)
         self.assertEqual('https://example.book', link.url)
+        self.assertIsNone(link.asin)
         self.assertIsNone(link.date)
         self.assertTrue(link.checked)
 
@@ -561,6 +649,7 @@ class ParserTestCase(unittest.TestCase):
         self.assertEqual('book', link.modifier)
         self.assertEqual('Example Book', link.title)
         self.assertEqual('https://example.book', link.url)
+        self.assertIsNone(link.asin)
         self.assertIsNone(link.date)
         self.assertTrue(link.checked)
 
@@ -594,6 +683,7 @@ class ParserTestCase(unittest.TestCase):
         self.assertEqual('book', link.modifier)
         self.assertEqual('Example Book 1', link.title)
         self.assertEqual('https://example1.book', link.url)
+        self.assertIsNone(link.asin)
         self.assertIsNone(link.date)
         self.assertFalse(link.checked)
 

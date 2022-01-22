@@ -7,6 +7,7 @@ class BookLink:
     modifier: str
     title: str
     url: Optional[str]
+    asin: Optional[str]
     authors: List[str]
     date: Optional[str]
     checked: bool
