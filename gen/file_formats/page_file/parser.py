@@ -92,8 +92,14 @@ class Parser:
 
         section_directive = '.section' 'links' DATA
 
-        links = general_link
-              | general_link links
+        links = link
+              | link links
+
+        link = book_link
+             | general_link
+
+        book_link = general_link_directive url_directive
+                  | general_link_directive url_directive general_link_attributes
 
         general_link = general_link_directive url_directive
                      | general_link_directive url_directive general_link_attributes
@@ -217,6 +223,27 @@ class Parser:
         if not result:
             return result
         result = self.links()
+        if result.error:
+            return result
+        return ProductionResult(True)
+
+    def link(self) -> ProductionResult:
+        result = self.book_link()
+        if result.matched or result.error:
+            return result
+        result = self.general_link()
+        if result.matched or result.error:
+            return result
+        return ProductionResult(False)
+
+    def book_link(self) -> ProductionResult:
+        result = self.general_link_directive()
+        if not result:
+            return result
+        result = self.url_directive()
+        if not result:
+            return result
+        result = self.general_link_attributes()
         if result.error:
             return result
         return ProductionResult(True)
