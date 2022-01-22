@@ -99,18 +99,31 @@ class Parser:
              | '.link' general_link
 
         book_link = book_link_directive url_directive
-                  | book_link_directive url_directive general_link_attributes
+                  | book_link_directive url_directive book_link_attributes
+
+        book_link_directive = 'book' DATA
+
+        url_directive = '.url' DATA
+
+        book_link_attributes = book_link_attribute
+                             | book_link_attribute book_link_attributes
+
+        book_link_attribute = author_directive
+                            | date_directive
+                            | checked_directive
+
+        author_directive = '.author' DATA
+
+        date_directive = '.date' DATA
+
+        checked_directive = '.checked'
 
         general_link = general_link_directive url_directive
                      | general_link_directive url_directive general_link_attributes
 
-        book_link_directive = 'book' DATA
-
         general_link_directive = general_link_modifier DATA
 
         general_link_modifier = 'blog' | 'docs' | 'email' | 'podcast' | 'repo' | 'site'
-
-        url_directive = '.url' DATA
 
         general_link_attributes = general_link_attribute
                                 | general_link_attribute general_link_attributes
@@ -118,12 +131,6 @@ class Parser:
         general_link_attribute = author_directive
                                | date_directive
                                | checked_directive
-
-        author_directive = '.author' DATA
-
-        date_directive = '.date' DATA
-
-        checked_directive = '.checked'
     """
 
     def __init__(self, source: str):
@@ -245,7 +252,7 @@ class Parser:
         result = self.url_directive()
         if not result:
             return result
-        result = self.general_link_attributes()
+        result = self.book_link_attributes()
         if result.error:
             return result
         return ProductionResult(True)
@@ -267,6 +274,37 @@ class Parser:
         self.page_file.sections[-1].links.append(link)
         self.next_token()
         return ProductionResult(True)
+
+    def url_directive(self) -> ProductionResult:
+        if not self.is_directive('url'):
+            return ProductionResult(MissingDirectiveError(self.token, 'url'))
+        self.next_token()
+        if not self.is_data():
+            return ProductionResult(MissingDataError(self.token, 'URL address'))
+        self.page_file.sections[-1].links[-1].url = self.token.text
+        self.next_token()
+        return ProductionResult(True)
+
+    def book_link_attributes(self) -> ProductionResult:
+        result = self.book_link_attribute()
+        if not result:
+            return result
+        result = self.book_link_attributes()
+        if result.error:
+            return result
+        return ProductionResult(True)
+
+    def book_link_attribute(self) -> ProductionResult:
+        result = self.author_directive()
+        if result.matched or result.error:
+            return result
+        result = self.date_directive()
+        if result.matched or result.error:
+            return result
+        result = self.checked_directive()
+        if result.matched or result.error:
+            return result
+        return ProductionResult(False)
 
     def general_link(self) -> ProductionResult:
         result = self.general_link_directive()
@@ -296,16 +334,6 @@ class Parser:
             checked=False,
         )
         self.page_file.sections[-1].links.append(link)
-        self.next_token()
-        return ProductionResult(True)
-
-    def url_directive(self) -> ProductionResult:
-        if not self.is_directive('url'):
-            return ProductionResult(MissingDirectiveError(self.token, 'url'))
-        self.next_token()
-        if not self.is_data():
-            return ProductionResult(MissingDataError(self.token, 'URL address'))
-        self.page_file.sections[-1].links[-1].url = self.token.text
         self.next_token()
         return ProductionResult(True)
 
