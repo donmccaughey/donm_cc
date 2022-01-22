@@ -92,11 +92,11 @@ class Parser:
 
         section_directive = '.section' 'links' DATA
 
-        links = link
-              | link links
+        links = general_link
+              | general_link links
 
-        link = general_link_directive url_directive
-             | general_link_directive url_directive general_link_attributes
+        general_link = general_link_directive url_directive
+                     | general_link_directive url_directive general_link_attributes
 
         general_link_directive = '.link' general_link_modifier DATA
 
@@ -213,7 +213,7 @@ class Parser:
         return ProductionResult(True)
 
     def links(self) -> ProductionResult:
-        result = self.link()
+        result = self.general_link()
         if not result:
             return result
         result = self.links()
@@ -221,7 +221,7 @@ class Parser:
             return result
         return ProductionResult(True)
 
-    def link(self) -> ProductionResult:
+    def general_link(self) -> ProductionResult:
         result = self.general_link_directive()
         if not result:
             return result
