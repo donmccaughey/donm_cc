@@ -4,7 +4,7 @@ from file_formats.page_file import PageFile, LinksSection, Link
 from .lexer import Token, TokenType, lexer
 
 
-LINK_MODIFIERS = ('blog', 'book', 'docs', 'email', 'podcast', 'repo', 'site')
+LINK_MODIFIERS = ('blog', 'docs', 'email', 'podcast', 'repo', 'site')
 
 
 def parse(source: str) -> PageFile:
@@ -95,18 +95,20 @@ class Parser:
         links = link
               | link links
 
-        link = book_link
-             | general_link
+        link = '.link' book_link
+             | '.link' general_link
 
-        book_link = general_link_directive url_directive
-                  | general_link_directive url_directive general_link_attributes
+        book_link = book_link_directive url_directive
+                  | book_link_directive url_directive general_link_attributes
 
         general_link = general_link_directive url_directive
                      | general_link_directive url_directive general_link_attributes
 
-        general_link_directive = '.link' general_link_modifier DATA
+        book_link_directive = 'book' DATA
 
-        general_link_modifier = 'blog' | 'book' | 'docs' | 'email' | 'podcast' | 'repo' | 'site'
+        general_link_directive = general_link_modifier DATA
+
+        general_link_modifier = 'blog' | 'docs' | 'email' | 'podcast' | 'repo' | 'site'
 
         url_directive = '.url' DATA
 
@@ -219,7 +221,7 @@ class Parser:
         return ProductionResult(True)
 
     def links(self) -> ProductionResult:
-        result = self.general_link()
+        result = self.link()
         if not result:
             return result
         result = self.links()
@@ -228,16 +230,16 @@ class Parser:
         return ProductionResult(True)
 
     def link(self) -> ProductionResult:
+        if not self.is_directive('link'):
+            return ProductionResult(False)
+        self.next_token()
         result = self.book_link()
         if result.matched or result.error:
             return result
-        result = self.general_link()
-        if result.matched or result.error:
-            return result
-        return ProductionResult(False)
+        return self.general_link()
 
     def book_link(self) -> ProductionResult:
-        result = self.general_link_directive()
+        result = self.book_link_directive()
         if not result:
             return result
         result = self.url_directive()
@@ -246,6 +248,24 @@ class Parser:
         result = self.general_link_attributes()
         if result.error:
             return result
+        return ProductionResult(True)
+
+    def book_link_directive(self) -> ProductionResult:
+        if not self.is_modifier('book'):
+            return ProductionResult(False)
+        self.next_token()
+        if not self.is_data():
+            return ProductionResult(MissingDataError(self.token, 'link title'))
+        link = Link(
+            modifier='book',
+            title=self.token.text,
+            link=None,
+            authors=[],
+            date=None,
+            checked=False,
+        )
+        self.page_file.sections[-1].links.append(link)
+        self.next_token()
         return ProductionResult(True)
 
     def general_link(self) -> ProductionResult:
@@ -261,9 +281,6 @@ class Parser:
         return ProductionResult(True)
 
     def general_link_directive(self) -> ProductionResult:
-        if not self.is_directive('link'):
-            return ProductionResult(False)
-        self.next_token()
         if not self.is_general_link_modifier():
             return ProductionResult(MissingLinkModifierError(self.token))
         modifier = self.token.text
