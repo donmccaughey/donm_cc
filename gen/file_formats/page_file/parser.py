@@ -95,25 +95,23 @@ class Parser:
         links = link
               | link links
 
-        link = link_directive url_directive
-             | link_directive url_directive link_attributes
+        link = general_link_directive url_directive
+             | general_link_directive url_directive general_link_attributes
 
-        link_directive = '.link' link_modifier DATA
+        general_link_directive = '.link' general_link_modifier DATA
 
-        link_modifier = 'blog' | 'book' | 'docs' | 'email' | 'podcast' | 'repo' | 'site'
+        general_link_modifier = 'blog' | 'book' | 'docs' | 'email' | 'podcast' | 'repo' | 'site'
 
         url_directive = '.url' DATA
 
-        link_attributes = link_attribute
-                        | link_attribute link_attributes
+        general_link_attributes = general_link_attribute
+                                | general_link_attribute general_link_attributes
 
-        link_attribute = author_directive
-                       | date_directive
-                       | checked_directive
+        general_link_attribute = author_directive
+                               | date_directive
+                               | checked_directive
 
         author_directive = '.author' DATA
-
-        authors_directive = '.authors' DATA
 
         date_directive = '.date' DATA
 
@@ -224,22 +222,22 @@ class Parser:
         return ProductionResult(True)
 
     def link(self) -> ProductionResult:
-        result = self.link_directive()
+        result = self.general_link_directive()
         if not result:
             return result
         result = self.url_directive()
         if not result:
             return result
-        result = self.link_attributes()
+        result = self.general_link_attributes()
         if result.error:
             return result
         return ProductionResult(True)
 
-    def link_directive(self) -> ProductionResult:
+    def general_link_directive(self) -> ProductionResult:
         if not self.is_directive('link'):
             return ProductionResult(False)
         self.next_token()
-        if not self.is_link_modifier():
+        if not self.is_general_link_modifier():
             return ProductionResult(MissingLinkModifierError(self.token))
         modifier = self.token.text
         self.next_token()
@@ -267,16 +265,16 @@ class Parser:
         self.next_token()
         return ProductionResult(True)
 
-    def link_attributes(self) -> ProductionResult:
-        result = self.link_attribute()
+    def general_link_attributes(self) -> ProductionResult:
+        result = self.general_link_attribute()
         if not result:
             return result
-        result = self.link_attributes()
+        result = self.general_link_attributes()
         if result.error:
             return result
         return ProductionResult(True)
 
-    def link_attribute(self) -> ProductionResult:
+    def general_link_attribute(self) -> ProductionResult:
         result = self.author_directive()
         if result.matched or result.error:
             return result
@@ -334,7 +332,7 @@ class Parser:
                 and directive == self.token.text
         )
 
-    def is_link_modifier(self) -> bool:
+    def is_general_link_modifier(self) -> bool:
         return (
                 self.token
                 and TokenType.MODIFIER == self.token.type
