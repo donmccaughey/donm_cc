@@ -1,6 +1,6 @@
 from typing import Optional
 
-from file_formats.page_file import PageFile, LinksSection, Link
+from file_formats.page_file import PageFile, LinksSection, Link, BookLink
 from .lexer import Token, TokenType, lexer
 
 
@@ -256,7 +256,7 @@ class Parser:
         self.next_token()
         if not self.is_data():
             return ProductionResult(MissingDataError(self.token, 'link title'))
-        link = Link(
+        link = BookLink(
             modifier='book',
             title=self.token.text,
             link=None,

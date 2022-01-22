@@ -3,6 +3,16 @@ from typing import Optional, List
 
 
 @dataclass
+class BookLink:
+    modifier: str
+    title: str
+    link: Optional[str]
+    authors: List[str]
+    date: Optional[str]
+    checked: bool
+
+
+@dataclass
 class Link:
     modifier: str
     title: str
@@ -16,7 +26,7 @@ class Link:
 class LinksSection:
     title: str
     notes: list[str]
-    links: list[Link]
+    links: list[BookLink | Link]
 
 
 @dataclass
