@@ -6,7 +6,7 @@ from typing import Optional, List
 class BookLink:
     modifier: str
     title: str
-    link: Optional[str]
+    url: Optional[str]
     authors: List[str]
     date: Optional[str]
     checked: bool
@@ -16,7 +16,7 @@ class BookLink:
 class Link:
     modifier: str
     title: str
-    link: Optional[str]
+    url: Optional[str]
     authors: List[str]
     date: Optional[str]
     checked: bool

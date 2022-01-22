@@ -259,7 +259,7 @@ class Parser:
         link = BookLink(
             modifier='book',
             title=self.token.text,
-            link=None,
+            url=None,
             authors=[],
             date=None,
             checked=False,
@@ -290,7 +290,7 @@ class Parser:
         link = Link(
             modifier=modifier,
             title=self.token.text,
-            link=None,
+            url=None,
             authors=[],
             date=None,
             checked=False,
@@ -305,7 +305,7 @@ class Parser:
         self.next_token()
         if not self.is_data():
             return ProductionResult(MissingDataError(self.token, 'URL address'))
-        self.page_file.sections[-1].links[-1].link = self.token.text
+        self.page_file.sections[-1].links[-1].url = self.token.text
         self.next_token()
         return ProductionResult(True)
 

@@ -48,7 +48,7 @@ class PageFile(Page):
                             build_link(
                                 modifier=link.modifier,
                                 title=link.title,
-                                href=link.link,
+                                href=link.url,
                                 authors=link.authors,
                                 date=link.date,
                                 checked=link.checked,
