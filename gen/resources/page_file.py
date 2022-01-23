@@ -1,9 +1,11 @@
 from typing import Optional
 
 import os
+
+from file_formats.page_file import Link, BookLink
 from file_formats.page_file.parser import parse
 from markup import Section, H1, P, Ul
-from website.links import link as build_link
+from website.links import book, link as general_link
 from .directory import Directory
 from .page import Page
 
@@ -45,11 +47,25 @@ class PageFile(Page):
                         P(note)
                     with Ul():
                         for link in section.links:
-                            build_link(
-                                modifier=link.modifier,
-                                title=link.title,
-                                href=link.url,
-                                authors=link.authors,
-                                date=link.date,
-                                checked=link.checked,
-                            )
+                            self.link(link)
+
+    def link(self, link: BookLink | Link):
+        match link:
+            case BookLink():
+                book(
+                    title=link.title,
+                    href=link.url,
+                    asin=link.asin,
+                    authors=link.authors,
+                    date=link.date,
+                    checked=link.checked,
+                )
+            case Link():
+                general_link(
+                    modifier=link.modifier,
+                    title=link.title,
+                    href=link.url,
+                    authors=link.authors,
+                    date=link.date,
+                    checked=link.checked,
+                )

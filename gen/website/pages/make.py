@@ -1,6 +1,6 @@
 from markup import Section, H1, P, Text, A, Ul
 from resources import Directory, Page
-from website.links import link
+from website.links import book, link
 
 
 def make():
@@ -46,13 +46,13 @@ def make():
             with Section(class_names=['links']):
                 H1('Books')
                 with Ul():
-                    link('book', 'Managing Projects with GNU Make',
+                    book('Managing Projects with GNU Make',
                          'https://www.amazon.com/dp/B0026OR2RW',
                          authors=['Robert Mecklenburg'], date='2004')
-                    link('book', 'The GNU Make Book',
+                    book('The GNU Make Book',
                          'https://nostarch.com/gnumake',
                          authors=['John Graham-Cumming'], date='2015')
-                    link('book', 'The GNU Make Manual',
+                    book('The GNU Make Manual',
                          'https://www.gnu.org/software/make/manual/html_node/index.html',
                          date='2016')
             with Section(class_names=['links']):

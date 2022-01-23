@@ -1,6 +1,6 @@
 from markup import Section, H1, P, Ul, H2
 from resources import Directory, Page
-from website.links import link
+from website.links import book, link
 
 
 def rust_and_wasm():
@@ -29,9 +29,9 @@ def rust_and_wasm():
                 with Ul():
                     link('site', 'The Rust Programming Language site',
                          'https://www.rust-lang.org')
-                    link('book', 'The Rust Programming Language book',
+                    book('The Rust Programming Language book',
                          'https://doc.rust-lang.org/book/')
-                    link('book', 'Rust by Example',
+                    book('Rust by Example',
                          'https://doc.rust-lang.org/rust-by-example/')
             with Section(class_names=['links']):
                 H1('Wasm')
@@ -49,7 +49,7 @@ def rust_and_wasm():
                     link('repo',
                          '<code>wasm-bindgen</code>: Import JavaScript things into Rust and export Rust things to JavaScript',
                          'https://github.com/rustwasm/wasm-bindgen')
-                    link('book', 'Rust and WebAssembly book',
+                    book('Rust and WebAssembly book',
                          'https://rustwasm.github.io/book/')
                     link('blog', 'Rust and JavaScript Interop',
                          'https://blog.ryanlevick.com/posts/wasm-bindgen-interop/',

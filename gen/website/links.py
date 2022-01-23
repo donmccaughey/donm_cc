@@ -34,7 +34,8 @@ def link(
 
 def book(
         title: str,
-        href: str,
+        href: Optional[str] = None,
+        asin: Optional[str] = None,
         authors: Sequence[str] = (),
         date: Optional[str] = None,
         checked: bool = False
