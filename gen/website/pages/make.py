@@ -47,7 +47,7 @@ def make():
                 H1('Books')
                 with Ul():
                     book('Managing Projects with GNU Make',
-                         'https://www.amazon.com/dp/B0026OR2RW',
+                         asin='B0026OR2RW',
                          authors=['Robert Mecklenburg'], date='2004')
                     book('The GNU Make Book',
                          'https://nostarch.com/gnumake',

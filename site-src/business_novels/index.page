@@ -10,14 +10,14 @@ is sometimes amateurish and uneven, but I find this genre particularly fun.
 .section links Recommended
 
 .link book The Goal
-.url https://www.amazon.com/dp/B002LHRM2O
+.asin B002LHRM2O
 .author Eliyahu M Goldratt
 .author Jeff Cox
 .date 1984
 .checked
 
 .link book The Phoenix Project
-.url https://www.amazon.com/dp/B078Y98RG8
+.asin B078Y98RG8
 .author Gene Kim
 .author Kevin Behr
 .author George Spafford
@@ -25,25 +25,25 @@ is sometimes amateurish and uneven, but I find this genre particularly fun.
 .checked
 
 .link book The Unicorn Project
-.url https://www.amazon.com/dp/B07QT9QR41
+.asin B07QT9QR41
 .author Gene Kim
 .date 2019
 .checked
 
 .link book The Ideal Team Player
-.url https://www.amazon.com/dp/B01B6AEJJ0
+.asin B01B6AEJJ0
 .author Patrick Lencioni
 .date 2016
 .checked
 
 .link book The Five Dysfunctions of a Team
-.url https://www.amazon.com/dp/B006960LQW
+.asin B006960LQW
 .author Patrick Lencioni
 .date 2011
 .checked
 
 .link book The Four Obsessions of an Extraordinary Executive
-.url https://www.amazon.com/dp/B003WUYQOQ
+.asin B003WUYQOQ
 .author Patrick Lencioni
 .date 2008
 .checked
@@ -52,19 +52,19 @@ is sometimes amateurish and uneven, but I find this genre particularly fun.
 .section links Your Mileage May Vary
 
 .link book The Five Temptations of a CEO
-.url https://www.amazon.com/dp/B0062OAEWM
+.asin B0062OAEWM
 .author Patrick Lencioni
 .date 2008
 .checked
 
 .link book Critical Chain
-.url https://www.amazon.com/dp/B002LHRM2E
+.asin B002LHRM2E
 .author Eliyahu M Goldratt
 .date 1997
 .checked
 
 .link book How To Destroy A Tech Startup In Three Easy Steps
-.url https://www.amazon.com/dp/B0772FJQ1T
+.asin B0772FJQ1T
 .author Lawrence Krubner
 .date 2017
 .checked
@@ -73,7 +73,7 @@ is sometimes amateurish and uneven, but I find this genre particularly fun.
 .section links On My Readling List
 
 .link book The Deadline: A Novel About Project Management
-.url https://www.amazon.com/dp/B006MN4RAS
+.asin B006MN4RAS
 .author Tom DeMarco
 .date 2011
 
@@ -81,14 +81,14 @@ is sometimes amateurish and uneven, but I find this genre particularly fun.
 .section links Business Comics
 
 .link book The Adventures of Johnny Bunko
-.url https://www.amazon.com/dp/B0015DRPL8
+.asin B0015DRPL8
 .author Daniel H Pink
 .author Reb Ten Pas
 .date 2008
 .checked
 
 .link book What Got You Here Won't Get You There
-.url https://www.amazon.com/dp/B00710YFJY
+.asin B00710YFJY
 .author Marshall Goldsmith
 .author Mark Reiter
 .author Shane Clester

@@ -40,6 +40,9 @@ def book(
         date: Optional[str] = None,
         checked: bool = False
 ):
+    assert(href or asin)
+    if not href:
+        href = f'https://www.amazon.com/dp/{asin}'
     link(
         modifier='book',
         title=title,
