@@ -67,3 +67,6 @@ class Resource:
             omit_styles=False,
     ):
         raise NotImplementedError
+
+    def accumulate_links(self, links: list[(Resource, str)]):
+        raise NotImplementedError

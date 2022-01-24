@@ -109,3 +109,14 @@ class Page(Resource):
             mode = 'w' if overwrite else 'x'
             with open(path, mode, encoding='utf8') as f:
                 f.write(document.markup(80))
+
+    def accumulate_links(self, links: list[(Resource, str)]):
+        document = self.build_document()
+        nodes = []
+        document.accumulate_nodes(nodes)
+        for node in nodes:
+            if isinstance(node, A):
+                a: A = node
+                href = a.attributes['href']
+                if href:
+                    links.append((self, href))

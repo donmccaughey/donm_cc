@@ -33,6 +33,11 @@ class Node:
     def has_children(self) -> bool:
         return len(self.children) > 0
 
+    def accumulate_nodes(self, nodes: list):
+        nodes.append(self)
+        for child in self.children:
+            child.accumulate_nodes(nodes)
+
     def attach(self, parent: Node):
         self.parent = parent
         self.previous_sibling = (

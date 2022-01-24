@@ -103,3 +103,7 @@ class Directory(Resource):
             os.makedirs(path, exist_ok=overwrite)
         for child in self.children:
             child.generate(output_path, is_dry_run, overwrite)
+
+    def accumulate_links(self, links: list[(Resource, str)]):
+        for child in self.children:
+            child.accumulate_links(links)

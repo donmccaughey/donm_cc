@@ -1,2 +1,2 @@
-precisely==0.1.9
-
+precisely == 0.1.9
+requests == 2.27.1
