@@ -32,7 +32,6 @@ def convert_codepoint(codepoint_string):
 
 
 def convert_js_file(input_path, output_path):
-    pattern = r"""\s+ \[' \\u \{ ([0-9a-f]{5}) \}', '([^']+)' \], """
     pattern = r"""\s+ \[' \\u \{ ([0-9a-f]{5}) \}', \s* '([^']*)' \], """
     regex = re.compile(pattern, re.IGNORECASE | re.VERBOSE)
     input = file(input_path, 'r')
@@ -43,7 +42,7 @@ def convert_js_file(input_path, output_path):
             codepoint = match.group(1)
             name = match.group(2)
             js_string = convert_codepoint(codepoint)
-            output.write("    ['%s', '%s'], // '\\u{%s}'\n" % (js_string, name, codepoint))
+            output.write("    ['%s', '%s'], // '\\u{%s}'\n" % (js_string, name.lower(), codepoint))
         else:
             output.write(line)
     output.close()
