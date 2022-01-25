@@ -1,0 +1,54 @@
+.page links Hashtables
+
+<a href=https://en.wikipedia.org/wiki/Hash_table>Hashtables</a> are such an
+interesting and foundational data structure, though sadly but understandably
+missing from the C standard library (and only added to C++ in
+<a href=https://en.cppreference.com/w/cpp/container/unordered_map>C++ 11</a>.
+
+I have my own unpolished
+<a href=https://github.com/donmccaughey/hashtable>hashtable for C</a> and I
+enjoy collecting links to other implementations, hashing functions and related
+articles.
+
+
+.section links Hashtable Implementations
+
+.link repo uthash: C macros for hash tables and more
+.url https://github.com/troydhanson/uthash
+
+
+.section links Hashing Functions
+
+.link site FNV Hash
+.url http://www.isthe.com/chongo/tech/comp/fnv/index.html
+.author Landon Curt Noll
+.date 2017-04-29
+
+
+.section links Hashing
+
+.link blog Advanced techniques to implement fast hash tables
+.url https://attractivechaos.wordpress.com/2018/10/01/advanced-techniques-to-implement-fast-hash-tables/
+.date 2018-10-01
+
+.link blog A Probing Hash Table Framework
+.url https://skystrife.github.io/blog/2016/01/29/a-probing-hash-table-framework/
+.author Chase Geigle
+.date 2016-01-29
+
+.link blog Best hash table for C
+.url https://www.reddit.com/r/C_Programming/comments/3533bw/best_hash_table_for_c/
+.author Reddit
+.date 2015-05-06
+
+.link blog Types Don't Know #
+.url https://isocpp.org/files/papers/n3980.html
+.author Howard E Hinnant
+.author Vinnie Falco
+.author John Bytheway
+.date 2014-05-24
+
+.link blog Dynamic Hash Tables
+.url https://www.csd.uoc.gr/~hy460/pdf/Dynamic%20Hash%20Tables.pdf
+.author Per-Åke Larson
+.date 1988-04
