@@ -32,6 +32,7 @@ class ParserTestCase(unittest.TestCase):
         result = Parser(source).parse()
         self.assertIsInstance(result, PageFile)
         self.assertEqual('My Links', result.title)
+        self.assertIsNone(result.subtitle)
         self.assertEqual([], result.notes)
         self.assertEqual([], result.sections)
 
@@ -51,6 +52,18 @@ class ParserTestCase(unittest.TestCase):
         self.assertIsInstance(result, MissingDataError)
         self.assertEqual('page title', result.data_description)
 
+    def test_page_directive_with_subtitle(self):
+        source = dedent('''
+        .page links My Links 
+        .subtitle The Movie
+        ''')
+        result = Parser(source).parse()
+        self.assertIsInstance(result, PageFile)
+        self.assertEqual('My Links', result.title)
+        self.assertEqual('The Movie', result.subtitle)
+        self.assertEqual([], result.notes)
+        self.assertEqual([], result.sections)
+
     def test_page_directive_with_one_paragraph(self):
         source = dedent('''
         .page links My Links
@@ -60,6 +73,7 @@ class ParserTestCase(unittest.TestCase):
         result = Parser(source).parse()
         self.assertIsInstance(result, PageFile)
         self.assertEqual('My Links', result.title)
+        self.assertIsNone(result.subtitle)
         self.assertEqual(['This is a paragraph.'], result.notes)
         self.assertEqual([], result.sections)
 
@@ -75,6 +89,7 @@ class ParserTestCase(unittest.TestCase):
         result = Parser(source).parse()
         self.assertIsInstance(result, PageFile)
         self.assertEqual('My Links', result.title)
+        self.assertIsNone(result.subtitle)
         self.assertEqual(
             [
                 'This is the first paragraph.',

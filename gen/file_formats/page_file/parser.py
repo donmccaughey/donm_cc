@@ -74,10 +74,15 @@ class Parser:
         page = overview
              | overview sections
 
-        overview = page_directive
-                 | page_directive paragraphs
+        overview = page_attributes
+                 | page_attributes paragraphs
+
+        page_attributes = page_directive
+                        | page_directive subtitle_directive
 
         page_directive = '.page' 'links' DATA
+
+        subtitle_directive = '.subtitle' DATA
 
         paragraphs = PARAGRAPH
                    | PARAGRAPH paragraphs
@@ -166,10 +171,19 @@ class Parser:
         return ProductionResult(True)
 
     def overview(self) -> ProductionResult:
-        result = self.page_directive()
+        result = self.page_attributes()
         if not result:
             return result
         result = self.paragraphs()
+        if result.error:
+            return result
+        return ProductionResult(True)
+
+    def page_attributes(self) -> ProductionResult:
+        result = self.page_directive()
+        if not result:
+            return result
+        result = self.subtitle_directive()
         if result.error:
             return result
         return ProductionResult(True)
@@ -183,8 +197,23 @@ class Parser:
         self.next_token()
         if not self.is_data():
             return ProductionResult(MissingDataError(self.token, 'page title'))
-        self.page_file = PageFile(title=(self.token.text.strip()), notes=[], sections=[])
+        self.page_file = PageFile(
+            title=(self.token.text.strip()),
+            subtitle=None,
+            notes=[],
+            sections=[]
+        )
         self.notes = self.page_file.notes
+        self.next_token()
+        return ProductionResult(True)
+
+    def subtitle_directive(self) -> ProductionResult:
+        if not self.is_directive('subtitle'):
+            return ProductionResult(False)
+        self.next_token()
+        if not self.is_data():
+            return ProductionResult(MissingDataError(self.token, 'page subtitle'))
+        self.page_file.subtitle = self.token.text.strip()
         self.next_token()
         return ProductionResult(True)
 

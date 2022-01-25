@@ -33,5 +33,10 @@ class LinksSection:
 @dataclass
 class PageFile:
     title: str
+    subtitle: Optional[str]
     notes: list[str]
     sections: list[LinksSection]
+
+    @property
+    def full_title(self) -> str:
+        return f'{self.title}: {self.subtitle}' if self.subtitle else self.title

@@ -37,7 +37,7 @@ class PageFile(Page):
         self.page_file = page_file
         with self.body_content:
             with Section(class_names=['overview']):
-                H1(page_file.title)
+                H1(page_file.full_title)
                 for note in page_file.notes:
                     P(note)
             for section in page_file.sections:
