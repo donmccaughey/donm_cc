@@ -17,6 +17,8 @@ def parse(source: str) -> PageFile:
 
 class ParserError(RuntimeError):
     def __init__(self, token: Token, message: str):
+        if token:
+            message = f'{token.start.line}: {message}'
         super().__init__(message)
         self.token = token
 
@@ -24,18 +26,18 @@ class ParserError(RuntimeError):
 class MissingDirectiveError(ParserError):
     def __init__(self, token: Token, directive: str):
         self.directive = directive
-        super().__init__(token, f'Expected {directive} directive')
+        super().__init__(token, f'Expected `.{directive}` directive')
 
 
 class MissingLinkModifierError(ParserError):
     def __init__(self, token: Token):
-        super().__init__(token, f'Expected link modifier: {LINK_MODIFIERS}')
+        super().__init__(token, f'Expected `.link` modifier: {LINK_MODIFIERS}')
 
 
 class MissingModifierError(ParserError):
     def __init__(self, token: Token, modifier: str):
         self.modifier = modifier
-        super().__init__(token, f'Expected {modifier} modifier')
+        super().__init__(token, f'Expected `{modifier}` modifier')
 
 
 class MissingDataError(ParserError):
