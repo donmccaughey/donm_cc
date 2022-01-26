@@ -30,7 +30,8 @@ def home_page():
                  favicon='/macos_packages/package-32x32.png')
             item('Engineering Management', '/engineering_management/',
                  'Software is a team sport')
-            item('Business Novels', '/business_novels/', 'Fictionalized learning')
-            item('Make', '/make/', 'The build tool')
             item('Hashtables', '/hashtables/', 'Keys and values')
+            item('Make', '/make/', 'The build tool')
+            item('Shell', '/shell/', 'Unix glue')
             item('Science Fiction', '/science_fiction/', 'Reading for fun')
+            item('Business Novels', '/business_novels/', 'Fictionalized learning')

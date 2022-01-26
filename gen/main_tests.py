@@ -15,8 +15,6 @@ class MainTestCase(unittest.TestCase):
             ('./banners/Don_and_Molly_Round_Hill_Lake_Tahoe_summer_2019.jpg', '/banners/Don_and_Molly_Round_Hill_Lake_Tahoe_summer_2019.jpg'),
             ('./banners/Don_and_Molly_hiking_Texas_winter_2016.jpg', '/banners/Don_and_Molly_hiking_Texas_winter_2016.jpg'),
             ('./base.css', '/base.css'),
-            ('./bash/', '/bash/'),
-            ('./bash/index.html', '/bash/index.html'),
             ('./business_novels/', '/business_novels/'),
             ('./business_novels/index.html', '/business_novels/index.html'),
             ('./engineering_management/', '/engineering_management/'),
@@ -61,6 +59,8 @@ class MainTestCase(unittest.TestCase):
             ('./science_fiction/james_sa_corey.html', '/science_fiction/james_sa_corey.html'),
             ('./science_fiction/lois_mcmaster_bujold.html', '/science_fiction/lois_mcmaster_bujold.html'),
             ('./science_fiction/walter_jon_williams.html', '/science_fiction/walter_jon_williams.html'),
+            ('./shell/', '/shell/'),
+            ('./shell/index.html', '/shell/index.html'),
         ]
         actual = [(item.path, item.url) for item in all]
         self.assertEqual(expected, actual)

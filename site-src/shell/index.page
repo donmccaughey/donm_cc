@@ -1,0 +1,58 @@
+.page links Shell
+.subtitle Bourne, Bash and Zsh
+
+If you spend any time programming a Unix system, you'll spend some time mucking
+around with <code>sh</code> (the Bourne shell), Bash (the popular GNU
+alternative) or Zsh (the default on macOS).  Whether scripted or interactive,
+the shell is the glue that holds Unix systems together.
+
+
+.section links Manuals
+
+.link docs Manual Page for sh
+.url https://pubs.opengroup.org/onlinepubs/9699919799/utilities/sh.html
+.date 2018
+
+.link docs Shell Command Language
+.url https://pubs.opengroup.org/onlinepubs/9699919799/utilities/V3_chap02.html#tag_18
+.date 2018
+
+.link docs Bash Reference Manual
+.url https://www.gnu.org/software/bash/manual/bash.html
+.date 2020-12-21
+
+.link docs An Introduction to the Z Shell
+.url https://zsh.sourceforge.io/Intro/intro_toc.html
+.date 1995
+
+.link docs A User's Guide to the Z-Shell
+.url https://zsh.sourceforge.io/Guide/zshguide.html
+.author Peter Stephenson
+.date 2003-03-23
+
+.link docs The Z Shell Manual
+.url https://zsh.sourceforge.io/Doc/Release/zsh_toc.html
+.author Paul Falstad
+.author Peter Stephenson
+.date 2020-02-14
+
+
+.section links Tips and Tricks
+
+.link blog Use the Unofficial Bash Strict Mode (Unless You Looove Debugging)
+.url http://redsymbol.net/articles/unofficial-bash-strict-mode/
+.author Aaron Maxwell
+
+.link blog How to write idempotent Bash scripts
+.url https://arslan.io/2019/07/03/how-to-write-idempotent-bash-scripts/
+.author Fatih Arslan
+.date 2019-07-03
+
+.link blog How "Exit Traps" Can Make Your Bash Scripts Way More Robust And Reliable
+.url http://redsymbol.net/articles/bash-exit-traps/
+.author Aaron Maxwell
+
+.link blog What exactly was the point of [ “x$var” = “xval” ]?
+.url https://www.vidarholen.net/contents/blog/?p=1035
+.author Vidar Holen
+.date 2021-04-12
