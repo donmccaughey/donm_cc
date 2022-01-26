@@ -1,6 +1,5 @@
 # TODO
 
-- remove `wwwroot/` directory before regenerating site
 - extend `upload.sh` script to remove deleted pages from S3 
 - look into the quoting for this link:
     `<a class=title href='https://www.vidarholen.net/contents/blog/?p=1035'>`

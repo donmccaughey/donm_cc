@@ -3,6 +3,7 @@ import os
 from typing import Optional
 
 import resources
+import shutil
 from . import with_parent
 from .resource import Resource
 
@@ -98,9 +99,14 @@ class Directory(Resource):
     ):
         path = os.path.join(output_path, self.path)
         path = os.path.normpath(path)
-        print('creating directory', path)
-        if not is_dry_run:
-            os.makedirs(path, exist_ok=overwrite)
+        if os.path.exists(path) and overwrite:
+            print(f'removing existing directory {path}')
+            if not is_dry_run:
+                shutil.rmtree(path)
+        if not os.path.exists(path):
+            print(f'creating directory {path}')
+            if not is_dry_run:
+                os.makedirs(path, exist_ok=overwrite)
         for child in self.children:
             child.generate(output_path, is_dry_run, overwrite)
 
