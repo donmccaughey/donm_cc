@@ -215,16 +215,16 @@ time {
     width: 70ex;
 }
 
-.links a {
+.links li a {
     color: black;
     text-decoration: none;
 }
 
-.links a:hover {
+.links li a:hover {
     text-decoration: underline;
 }
 
-.links a:visited {
+.links li a:visited {
     color: dimgray;
 }
 
