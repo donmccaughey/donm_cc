@@ -56,3 +56,8 @@ obvious and subtle ways while using Make.
 .url http://marmelab.com/blog/2016/02/29/auto-documented-makefile.html
 .author François Zaninotto
 .date 2016-02-29
+
+.link blog A Tutorial on Portable Makefiles
+.url https://nullprogram.com/blog/2017/08/20/
+.author Chris Wellons
+.date 2017-08-20
