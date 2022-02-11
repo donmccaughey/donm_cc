@@ -17,20 +17,18 @@ USER_AGENT = 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.
 
 @dataclass
 class LinkCheckResults:
-    external_links: list[(Resource, str, ParseResult)]
     broken_links: list[(Resource, str, int)]
     elapsed_seconds: int
 
 
-def check_external_links(links: list[(Resource, str)]) -> LinkCheckResults:
+def check_external_links(external_links: list[(Resource, str, ParseResult)]) -> LinkCheckResults:
     start_time = time.monotonic()
 
-    parsed_links = parse_links(links)
-    external_links = only_external_links(parsed_links)
-    http_links = only_http_links(external_links)
-
     broken_links = []
-    for link in http_links:
+    count = 0
+    line_width = 75
+    sys.stdout.write(f' 0% ')
+    for link in external_links:
         resource, href, url = link
         response = requests.get(href, headers={'User-Agent': USER_AGENT})
         if 200 == response.status_code:
@@ -40,16 +38,27 @@ def check_external_links(links: list[(Resource, str)]) -> LinkCheckResults:
             sys.stdout.write('x')
             sys.stdout.flush()
             broken_links.append((resource, href, response.status_code))
+        count += 1
+        if 0 == count % line_width:
+            percent = int(count / len(external_links) * 100)
+            sys.stdout.write('\n')
+            sys.stdout.write(f'{percent:2}% ')
+            sys.stdout.flush()
     sys.stdout.write('\n')
 
     stop_time = time.monotonic()
     elapsed_seconds = int(stop_time - start_time)
 
     return LinkCheckResults(
-        external_links=external_links,
         broken_links=broken_links,
         elapsed_seconds=elapsed_seconds,
     )
+
+
+def http_external_links(links: list[(Resource, str)]) -> list[(Resource, str, ParseResult)]:
+    parsed_links = parse_links(links)
+    external_links = only_external_links(parsed_links)
+    return only_http_links(external_links)
 
 
 def parse_links(links: list[(Resource, str)]) -> list[(Resource, str, ParseResult)]:
