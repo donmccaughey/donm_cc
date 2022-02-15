@@ -39,7 +39,7 @@ def macos_packages():
             package(
                 name='pkg-config',
                 version='0.29.2',
-                package='https://github.com/donmccaughey/pkg-config_pkg/releases/latest/download/pkg-config-0.29.2.pkg',
+                package='https://github.com/donmccaughey/pkg-config_pkg/releases/latest/download/pkg-config-0.29.2-r3.pkg',
                 source='https://github.com/donmccaughey/pkg-config_pkg',
                 project='https://www.freedesktop.org/wiki/Software/pkg-config/',
                 description='A helper tool used when compiling applications and libraries.'
