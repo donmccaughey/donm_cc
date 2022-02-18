@@ -90,6 +90,10 @@ class Directory(Resource):
     def should_include_file(self, name: str) -> bool:
         return not name.startswith('.')
 
+    def build_documents(self):
+        for child in self.children:
+            child.build_documents()
+
     def generate(
             self,
             output_path: str,

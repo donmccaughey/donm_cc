@@ -28,6 +28,7 @@ class Page(Resource):
         self.title = title
         self.head_content = Document()
         self.body_content = Document()
+        self.document = None
 
     def __enter__(self):
         with_node.append(self.body_content)
@@ -35,27 +36,6 @@ class Page(Resource):
 
     def __exit__(self, exc_type, exc_val, exc_tb):
         with_node.pop()
-
-    def build_document(self) -> Document:
-        document = Document()
-        with document:
-            DocType()
-            with HTML():
-                with Head() as head:
-                    MetaCharset('utf-8')
-                    MetaViewport(initial_scale='0.9', width='device-width')
-                    Title(self.title)
-                    Stylesheet(href='/base.css')
-                    head.attach_children(self.head_content.detach_children())
-                with Body() as body:
-                    with Nav(class_names=['menu']):
-                        nav_links = self.find_nav_links()
-                        for i, (url, title) in enumerate(nav_links):
-                            if i:
-                                Text(' &bull; ')
-                            A(href=url, text=title)
-                    body.attach_children(self.body_content.detach_children())
-        return document
 
     def find_nav_links(self) -> list[Tuple[str, str]]:
         directories = self.find_directories()
@@ -82,6 +62,26 @@ class Page(Resource):
         with self.head_content:
             Stylesheet(src)
 
+    def build_documents(self):
+        self.document = Document()
+        with self.document:
+            DocType()
+            with HTML():
+                with Head() as head:
+                    MetaCharset('utf-8')
+                    MetaViewport(initial_scale='0.9', width='device-width')
+                    Title(self.title)
+                    Stylesheet(href='/base.css')
+                    head.attach_children(self.head_content.detach_children())
+                with Body() as body:
+                    with Nav(class_names=['menu']):
+                        nav_links = self.find_nav_links()
+                        for i, (url, title) in enumerate(nav_links):
+                            if i:
+                                Text(' &bull; ')
+                            A(href=url, text=title)
+                    body.attach_children(self.body_content.detach_children())
+
     def generate(
             self,
             output_path: str,
@@ -102,18 +102,16 @@ class Page(Resource):
             omit_styles: bool,
     ):
         if not is_dry_run:
-            document = self.build_document()
             if omit_styles:
-                detached = document.detach_descendants(lambda node: isinstance(node, Stylesheet))
+                self.document.detach_descendants(lambda node: isinstance(node, Stylesheet))
 
             mode = 'w' if overwrite else 'x'
             with open(path, mode, encoding='utf8') as f:
-                f.write(document.markup(80))
+                f.write(self.document.markup(80))
 
     def accumulate_links(self, links: list[(Resource, str)]):
-        document = self.build_document()
         nodes = []
-        document.accumulate_nodes(nodes)
+        self.document.accumulate_nodes(nodes)
         for node in nodes:
             if isinstance(node, A):
                 a: A = node

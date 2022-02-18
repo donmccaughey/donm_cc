@@ -1,0 +1,4 @@
+Sitemap: https://donm.cc/sitemap.txt
+User-agent: *
+Disallow: /banners/
+Disallow: /icons/

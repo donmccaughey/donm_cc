@@ -49,6 +49,7 @@ class MainTestCase(unittest.TestCase):
             ('./random_words/words.table', '/random_words/words.table'),
             ('./resume/', '/resume/'),
             ('./resume/Resume_of_Don_McCaughey.pdf', '/resume/Resume_of_Don_McCaughey.pdf'),
+            ('./robots.txt', '/robots.txt'),
             ('./science_fiction/', '/science_fiction/'),
             ('./science_fiction/alastair_reynolds.html', '/science_fiction/alastair_reynolds.html'),
             ('./science_fiction/david_weber.html', '/science_fiction/david_weber.html'),
@@ -59,6 +60,7 @@ class MainTestCase(unittest.TestCase):
             ('./science_fiction/walter_jon_williams.html', '/science_fiction/walter_jon_williams.html'),
             ('./shell/', '/shell/'),
             ('./shell/index.html', '/shell/index.html'),
+            ('./sitemap.txt', '/sitemap.txt'),
         ]
         actual = [(item.path, item.url) for item in all]
         self.assertEqual(expected, actual)

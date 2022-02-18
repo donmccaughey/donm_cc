@@ -12,3 +12,4 @@ from .directory import Directory
 from .file import File
 from .page_file import PageFile
 from .page import Page
+from .sitemap import Sitemap

@@ -59,6 +59,9 @@ class Resource:
         path_parts = self.path_parts()
         return ('/' + '/'.join(path_parts)) if path_parts else '/'
 
+    def build_documents(self):
+        raise NotImplementedError
+
     def generate(
             self,
             output_path: str,

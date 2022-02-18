@@ -27,6 +27,8 @@ def main():
     args = arg_parser.parse_args()
 
     root.find_files('../site-src')
+    root.build_documents()
+
     if args.check_links:
         check_links(root)
     else:

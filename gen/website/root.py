@@ -1,4 +1,4 @@
-from resources import Directory
+from resources import Directory, Sitemap
 from website.pages.aughey import aughey
 from website.pages.home_page import home_page
 from website.pages.macos_packages import macos_packages
@@ -9,6 +9,8 @@ from website.pages.science_fiction import science_fiction
 
 root = Directory(name='', is_root=True)
 with root:
+    Sitemap('https://donm.cc')
+
     home_page()
 
     Directory('banners')

@@ -20,6 +20,9 @@ class File(Resource):
         )
         self.source = source
 
+    def build_documents(self):
+        pass
+
     def generate(
             self,
             output_path: str,

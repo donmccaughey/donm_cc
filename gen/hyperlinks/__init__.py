@@ -6,7 +6,8 @@ import sys
 import time
 
 from dataclasses import dataclass
-from urllib.parse import ParseResult, urlparse
+from pathlib import PurePosixPath
+from urllib.parse import ParseResult, urlparse, urljoin
 
 if TYPE_CHECKING:
     from resources.resource import Resource
@@ -70,9 +71,28 @@ def parse_links(links: list[(Resource, str)]) -> list[(Resource, str, ParseResul
     return parsed_links
 
 
+def only_internal_links(links: list[(Resource, str, ParseResult)]) -> list[(Resource, str, ParseResult)]:
+    return [link for link in links if not link[2].netloc]
+
+
 def only_external_links(links: list[(Resource, str, ParseResult)]) -> list[(Resource, str, ParseResult)]:
     return [link for link in links if link[2].netloc]
 
 
 def only_http_links(links: list[(Resource, str, ParseResult)]) -> list[(Resource, str, ParseResult)]:
     return [link for link in links if ('http' == link[2].scheme or 'https' == link[2].scheme)]
+
+
+def only_page_links(links: list[(Resource, str, ParseResult)]) -> list[(Resource, str, ParseResult)]:
+    page_links = []
+    for link in links:
+        resource, url, parse_result = link
+        if parse_result.path:
+            path = PurePosixPath(parse_result.path)
+            if not path.suffix or path.suffix in ['.html', '.md', '.pdf', '.txt']:
+                page_links.append(link)
+    return page_links
+
+
+def to_absolute_urls(root_url: str, links: list[(Resource, str, ParseResult)]) -> list[str]:
+    return [urljoin(root_url, link[1]) for link in links]
