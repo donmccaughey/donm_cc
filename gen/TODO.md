@@ -1,9 +1,6 @@
 # TODO
 
 - extend `upload.sh` script to remove deleted pages from S3 
-- look into the quoting for this link:
-    `<a class=title href='https://www.vidarholen.net/contents/blog/?p=1035'>`
-- add language tag to generated html pages
 - add `.tagline` page file directive to specify home page link subtext
 - clean up `random_words.js`
 - investigate removing jQuery-isms from `memory_match.js`
