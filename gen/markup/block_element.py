@@ -131,9 +131,11 @@ class Head(BlockElement):
 
 
 class HTML(BlockElement):
-    def __init__(self, parent: Optional[Node] = None, **kwargs):
+    def __init__(self, lang: Optional[str] = None, parent: Optional[Node] = None, **kwargs):
         super().__init__(name='html', parent=parent, **kwargs)
         self.indent_children = False
+        if lang:
+            self.attributes['lang'] = lang
 
     def omit_end_tag(self) -> bool:
         if self.next_sibling:
@@ -142,7 +144,9 @@ class HTML(BlockElement):
             return True
 
     def omit_start_tag(self) -> bool:
-        if self.children:
+        if self.attributes:
+            return False
+        elif self.children:
             return not isinstance(self.children[0], Comment)
         else:
             return True

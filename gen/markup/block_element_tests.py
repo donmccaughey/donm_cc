@@ -240,6 +240,25 @@ class HTMLTestCase(unittest.TestCase):
             document.markup(width=80)
         )
 
+    def test_markup_with_lang(self):
+        html = HTML(lang='en')
+        with html:
+            with Head():
+                Title('Hello')
+            with Body():
+                Div()
+        self.assertEqual(
+            dedent(
+                """\
+                <html lang=en>
+                <title>Hello</title>
+                <div>
+                </div>
+                """
+            ),
+            html.markup(width=80)
+        )
+
 
 class PTestCase(unittest.TestCase):
     def test_markup_for_empty_body(self):

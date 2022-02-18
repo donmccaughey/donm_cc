@@ -66,7 +66,7 @@ class Page(Resource):
         self.document = Document()
         with self.document:
             DocType()
-            with HTML():
+            with HTML(lang='en'):
                 with Head() as head:
                     MetaCharset('utf-8')
                     MetaViewport(initial_scale='0.9', width='device-width')
