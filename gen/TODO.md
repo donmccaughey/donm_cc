@@ -4,7 +4,6 @@
 - add `.tagline` page file directive to specify home page link subtext
 - clean up `random_words.js`
 - investigate removing jQuery-isms from `memory_match.js`
-- parse page file text blocks as markdown
 - support [OpenLibrary links](https://openlibrary.org/dev/docs/api/books) on book links
 - support ISBN metadata on book links
 - expose ASIN, ISBN, etc in book link HTML as data attributes

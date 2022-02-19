@@ -26,16 +26,16 @@ class Link:
 @dataclass
 class LinksSection:
     title: str
-    notes: list[str]
-    links: list[BookLink | Link]
+    notes: List[str]
+    links: List[BookLink | Link]
 
 
 @dataclass
 class PageFile:
     title: str
     subtitle: Optional[str]
-    notes: list[str]
-    sections: list[LinksSection]
+    notes: List[str]
+    sections: List[LinksSection]
 
     @property
     def full_title(self) -> str:

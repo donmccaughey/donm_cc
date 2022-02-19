@@ -2,9 +2,9 @@
 .subtitle Bourne, Bash and Zsh
 
 If you spend any time programming a Unix system, you'll spend some time mucking
-around with <code>sh</code> (the Bourne shell), Bash (the popular GNU
-alternative) or Zsh (the default on macOS).  Whether scripted or interactive,
-the shell is the glue that holds Unix systems together.
+around with `sh` (the Bourne shell), Bash (the popular GNU alternative) or Zsh
+(the default on macOS).  Whether scripted or interactive, the shell is the glue
+that holds Unix systems together.
 
 
 .section links Manuals

@@ -4,6 +4,7 @@ import os
 
 from file_formats.page_file import Link, BookLink
 from file_formats.page_file.parser import parse
+from markdown import note_to_markup
 from markup import Section, H1, P, Ul
 from website.links import book, link as general_link
 from .directory import Directory
@@ -39,12 +40,12 @@ class PageFile(Page):
             with Section(class_names=['overview']):
                 H1(page_file.full_title)
                 for note in page_file.notes:
-                    P(note)
+                    note_to_markup(note)
             for section in page_file.sections:
                 with Section(class_names=['links']):
                     H1(section.title)
                     for note in section.notes:
-                        P(note)
+                        note_to_markup(note)
                     with Ul():
                         for link in section.links:
                             self.link(link)

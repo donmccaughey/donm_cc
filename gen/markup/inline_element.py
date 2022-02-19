@@ -49,7 +49,7 @@ class A(InlineElement):
 class Code(InlineElement):
     def __init__(
             self,
-            text: str,
+            text: Optional[str] = None,
             class_names: Optional[list[str]] = None,
             parent: Optional[Node] = None,
             **kwargs,
@@ -60,18 +60,20 @@ class Code(InlineElement):
             parent=parent,
             **kwargs,
         )
-        Text(text, parent=self)
+        if text:
+            Text(text, parent=self)
 
 
 class Em(InlineElement):
     def __init__(
             self,
-            text: str,
+            text: Optional[str] = None,
             parent: Optional[Node] = None,
             **kwargs,
     ):
         super().__init__(name='em', parent=parent, **kwargs)
-        Text(text, parent=self)
+        if text:
+            Text(text, parent=self)
 
 
 class Span(InlineElement):
@@ -94,12 +96,13 @@ class Span(InlineElement):
 class Strong(InlineElement):
     def __init__(
             self,
-            text: str,
+            text: Optional[str] = None,
             parent: Optional[Node] = None,
             **kwargs,
     ):
         super().__init__(name='strong', parent=parent, **kwargs)
-        Text(text, parent=self)
+        if text:
+            Text(text, parent=self)
 
 
 class Time(InlineElement):
