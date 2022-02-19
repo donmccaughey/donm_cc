@@ -17,7 +17,6 @@ with root:
     Directory('business_novels')
     Directory('engineering_management')
     Directory('hashtables')
-    Directory('icons')
     Directory('make')
     Directory('resume')
     Directory('shell')

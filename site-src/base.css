@@ -128,14 +128,6 @@ time {
     border: 1pt solid black;
 }
 
-.item.external {
-    border: 1pt solid silver;
-}
-
-.item:hover.external {
-    border: 1pt solid black;
-}
-
 .item a {
     border: 0;
     color: black;
@@ -154,17 +146,8 @@ time {
     font-weight: normal;
 }
 
-.item .favicon {
-    background: whitesmoke;
-    border: 1pt solid whitesmoke;
-    border-radius: 2px;
-    height: 16px;
-    left: -2px;
-    margin: 0;
-    padding: 1px;
-    position: relative;
-    top: 2px;
-    width: 16px;
+.item em {
+    display: block;
 }
 
 .links li:before {

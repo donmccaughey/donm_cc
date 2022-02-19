@@ -112,7 +112,7 @@ class Directory(Resource):
             if not is_dry_run:
                 os.makedirs(path, exist_ok=overwrite)
         for child in self.children:
-            child.generate(output_path, is_dry_run, overwrite)
+            child.generate(output_path, is_dry_run, overwrite, omit_styles)
 
     def accumulate_links(self, links: list[(Resource, str)]):
         for child in self.children:
