@@ -5,6 +5,13 @@ from markup import Text
 
 
 class TextTestCase(unittest.TestCase):
+    def test_markup_html_encoding(self):
+        text = Text('a < b.')
+        self.assertEqual(
+            'a &lt; b.',
+            text.markup(width=80)
+        )
+
     def test_markup_for_short_line(self):
         text = Text('This is some text.')
         self.assertEqual(

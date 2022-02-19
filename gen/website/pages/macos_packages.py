@@ -66,5 +66,5 @@ def macos_packages():
                 package='https://github.com/donmccaughey/xz_pkg/releases/latest/download/xz-5.2.5-r2.pkg',
                 source='https://github.com/donmccaughey/xz_pkg',
                 project='https://tukaani.org/xz/',
-                description='A general purpose data compression tool and library, and includes the <code>xz</code> command line tool.'
+                description='A general purpose data compression tool and library, and includes the `xz` command line tool.'
             )

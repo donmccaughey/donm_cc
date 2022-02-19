@@ -8,8 +8,8 @@ from markup import A, Code, Em, Node, P, Strong, Text
 md = MarkdownIt()
 
 
-def note_to_markup(note: str, parent: Optional[Node] = None) -> P:
-    stack = [(P(parent=parent))]
+def inline_markdown_to_markup(note: str, parent: Optional[Node] = None):
+    stack = [parent]
     root = SyntaxTreeNode(md.parseInline(note))
     for node in root.walk(include_self=False):
         if node.level < len(stack) - 1:
@@ -39,4 +39,3 @@ def note_to_markup(note: str, parent: Optional[Node] = None) -> P:
                 print(f'WARNING: unexpected Markdown {node.type}')
                 print(f'>>> {note}')
                 print()
-    return stack[0]

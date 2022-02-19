@@ -4,6 +4,11 @@ from .node import Node
 from .wrap import wrap_tokens
 
 
+def html_encode(text: str) -> str:
+    text = text.replace('<', '&lt;')
+    return text
+
+
 class Text(Node):
     def __init__(self, text: str, parent: Optional[Node] = None, **kwargs):
         super().__init__(
@@ -18,7 +23,6 @@ class Text(Node):
         return ''.join(wrap_tokens(self.tokens(), width))
 
     def tokens(self) -> List[str]:
-        # TODO: HTML encode text
         tokens = []
         token_is_space = self.text[0].isspace()
         token = ''
@@ -33,4 +37,4 @@ class Text(Node):
             else:
                 token += ch
         tokens.append(token)
-        return tokens
+        return [html_encode(token) for token in tokens]

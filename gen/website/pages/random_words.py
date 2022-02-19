@@ -1,4 +1,4 @@
-from markup import Section, H1, P, Form, Label, Input, Button, Text, A, Ul, Li
+from markup import Section, H1, P, Form, Label, Input, Button, Text, A, Ul, Li, Em, Code
 from resources import Directory, Page
 
 
@@ -9,11 +9,11 @@ def random_words():
             page.add_script('random_words.js')
             with Section(class_names=['overview']):
                 H1('Random Words')
-                P("""
-                    <em>Random Words</em> is a small program that chooses random
-                    entries from <a href=https://github.com/elasticdog/yawl>YAWL</a>,
-                    a public domain list of 264,097 English words.
-                 """)
+                with P():
+                    Em('Random Words')
+                    Text(' is a small program that chooses random entries from ')
+                    A('https://github.com/elasticdog/yawl', 'YAWL')
+                    Text(', a public domain list of 264,097 English words.')
             with Section(class_names=['generator']):
                 H1('Results')
                 P(id='random_words')
@@ -34,12 +34,19 @@ def random_words():
             with Section(id='implementation'):
                 H1('Implementation')
                 with P():
+                    Em('Random Words')
                     Text("""
-                        <em>Random Words</em> is written in JavaScript and runs in the
-                        browser.  To avoid the need to fetch the whole 2.7 MB YAWL
-                        <a href=word.list><code>word.list</code></a> file, I've converted
-                        <code>word.list</code> into a <a href=words.table>table</a> where 
-                        each word is padded with spaces to 45 characters, the length of the
+                        is written in JavaScript and runs in the browser.  To 
+                        avoid the need to fetch the whole 2.7 MB YAWL
+                     """)
+                    with A(href='word.list'):
+                        Code('word.list')
+                    Text(" file, I've converted ")
+                    Code('word.list')
+                    Text(' into a ')
+                    A(href='words.table', text='table')
+                    Text("""
+                        where each word is padded with spaces to 45 characters, the length of the
                      """)
                     A(
                         'https://en.wikipedia.org/wiki/Pneumonoultramicroscopicsilicovolcanoconiosis',
@@ -51,9 +58,8 @@ def random_words():
                     Text("""
                         The program uses the
                      """)
-                    A(
-                        'https://developer.mozilla.org/en-US/docs/Web/API/Crypto/getRandomValues',
-                        '<code>getRandomValues()</code>')
+                    with A(href='https://developer.mozilla.org/en-US/docs/Web/API/Crypto/getRandomValues'):
+                        Code('getRandomValues()')
                     Text("""
                         function to generate a random number in the range [0, 264097) to 
                         select a word, then uses the HTTP

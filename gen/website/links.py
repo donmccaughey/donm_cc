@@ -1,5 +1,6 @@
 from typing import Optional, Sequence
 
+from markdown import inline_markdown_to_markup
 from markup import Li, A, Text, Span, Time
 
 
@@ -21,7 +22,8 @@ def link(
         checked: bool = False
 ):
     with Li(class_names=[modifier]):
-        A(href=href, text=title, class_names=['title'])
+        with A(href=href, class_names=['title']):
+            inline_markdown_to_markup(title)
         if authors:
             Text(', ')
             Span(class_names=['authors'], text=join_authors(list(authors)))

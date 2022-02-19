@@ -1,18 +1,20 @@
 import unittest
 
-from markdown import note_to_markup
+from markdown import inline_markdown_to_markup
 from markup import Text, Code, P, Em, A, Strong
 
 
-class NotesToMarkupTestCase(unittest.TestCase):
+class InlineMarkdownToMarkupTestCase(unittest.TestCase):
 
     def test_empty(self):
-        p = note_to_markup('')
+        p = P()
+        inline_markdown_to_markup('', parent=p)
         self.assertIsInstance(p, P)
         self.assertEqual(0, len(p.children))
 
     def test_codeinline(self):
-        p = note_to_markup('`foobar`')
+        p = P()
+        inline_markdown_to_markup('`foobar`', parent=p)
         self.assertIsInstance(p, P)
         self.assertEqual(1, len(p.children))
         self.assertIsInstance(p.children[0], Code)
@@ -25,7 +27,8 @@ class NotesToMarkupTestCase(unittest.TestCase):
         self.assertEqual('foobar', text.text)
 
     def test_em(self):
-        p = note_to_markup('_foobar_')
+        p = P()
+        inline_markdown_to_markup('_foobar_', parent=p)
         self.assertIsInstance(p, P)
         self.assertEqual(1, len(p.children))
         self.assertIsInstance(p.children[0], Em)
@@ -38,7 +41,8 @@ class NotesToMarkupTestCase(unittest.TestCase):
         self.assertEqual('foobar', text.text)
 
     def test_link(self):
-        p = note_to_markup('[foobar](https://example.com/)')
+        p = P()
+        inline_markdown_to_markup('[foobar](https://example.com/)', parent=p)
         self.assertIsInstance(p, P)
         self.assertEqual(1, len(p.children))
         self.assertIsInstance(p.children[0], A)
@@ -52,7 +56,8 @@ class NotesToMarkupTestCase(unittest.TestCase):
         self.assertEqual('foobar', text.text)
 
     def test_softbreak(self):
-        p = note_to_markup('Line 1\nLine 2')
+        p = P()
+        inline_markdown_to_markup('Line 1\nLine 2', parent=p)
         self.assertIsInstance(p, P)
         self.assertEqual(3, len(p.children))
 
@@ -69,7 +74,8 @@ class NotesToMarkupTestCase(unittest.TestCase):
         self.assertEqual('Line 2', text3.text)
 
     def test_text(self):
-        p = note_to_markup('This is a test.')
+        p = P()
+        inline_markdown_to_markup('This is a test.', parent=p)
         self.assertIsInstance(p, P)
         self.assertEqual(1, len(p.children))
         self.assertIsInstance(p.children[0], Text)
@@ -78,9 +84,10 @@ class NotesToMarkupTestCase(unittest.TestCase):
         self.assertEqual('This is a test.', text.text)
 
     def test_strong(self):
+        p = P()
         # The markdown snipped '**foobar**' parses as "text", not "strong",
         # so pad with spaces for this test.
-        p = note_to_markup(' **foobar** ')
+        inline_markdown_to_markup(' **foobar** ', parent=p)
         self.assertIsInstance(p, P)
         self.assertEqual(3, len(p.children))
 

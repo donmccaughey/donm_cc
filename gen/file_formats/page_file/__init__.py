@@ -5,7 +5,7 @@ from typing import Optional, List
 @dataclass
 class BookLink:
     modifier: str
-    title: str
+    title: str  # markdown
     url: Optional[str]
     asin: Optional[str]
     authors: List[str]
@@ -16,7 +16,7 @@ class BookLink:
 @dataclass
 class Link:
     modifier: str
-    title: str
+    title: str  # markdown
     url: Optional[str]
     authors: List[str]
     date: Optional[str]
@@ -26,7 +26,7 @@ class Link:
 @dataclass
 class LinksSection:
     title: str
-    notes: List[str]
+    notes: List[str]  # markdown
     links: List[BookLink | Link]
 
 
@@ -34,7 +34,7 @@ class LinksSection:
 class PageFile:
     title: str
     subtitle: Optional[str]
-    notes: List[str]
+    notes: List[str]  # markdown
     sections: List[LinksSection]
 
     @property
