@@ -1,6 +1,6 @@
 # TODO
 
-- extend `upload.sh` script to remove deleted pages from S3 
+- extend `upload.sh` script to remove deleted pages from S3
 - add `.tagline` page file directive to specify home page link subtext
 - clean up `random_words.js`
 - investigate removing jQuery-isms from `memory_match.js`

@@ -78,7 +78,7 @@ class Page(Resource):
                         nav_links = self.find_nav_links()
                         for i, (url, title) in enumerate(nav_links):
                             if i:
-                                Text(' &bull; ')
+                                Text(' \u2022 ')
                             A(href=url, text=title)
                     body.attach_children(self.body_content.detach_children())
 

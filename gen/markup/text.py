@@ -1,10 +1,17 @@
 from typing import Optional, List
 
+import re
 from .node import Node
 from .wrap import wrap_tokens
 
 
+# See https://html.spec.whatwg.org/multipage/syntax.html#character-references
+CHAR_REF = re.compile(r'&#?\w+;')
+
+
 def html_encode(text: str) -> str:
+    if re.search(CHAR_REF, text):
+        text = text.replace('&', '&amp;')
     text = text.replace('<', '&lt;')
     return text
 

@@ -5,10 +5,38 @@ from markup import Text
 
 
 class TextTestCase(unittest.TestCase):
-    def test_markup_html_encoding(self):
+    def test_markup_html_encoding_for_lt(self):
         text = Text('a < b.')
         self.assertEqual(
             'a &lt; b.',
+            text.markup(width=80)
+        )
+
+    def test_markup_html_encoding_for_ampersand(self):
+        text = Text('a && b.')
+        self.assertEqual(
+            'a && b.',
+            text.markup(width=80)
+        )
+
+    def test_markup_html_encoding_for_named_character_reference(self):
+        text = Text('a &gt; b.')
+        self.assertEqual(
+            'a &amp;gt; b.',
+            text.markup(width=80)
+        )
+
+    def test_markup_html_encoding_for_decimal_character_reference(self):
+        text = Text('a &#60; b.')
+        self.assertEqual(
+            'a &amp;#60; b.',
+            text.markup(width=80)
+        )
+
+    def test_markup_html_encoding_for_hexadecimal_character_reference(self):
+        text = Text('a &#x3C; b.')
+        self.assertEqual(
+            'a &amp;#x3C; b.',
             text.markup(width=80)
         )
 
