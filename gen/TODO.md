@@ -1,14 +1,24 @@
 # TODO
 
+- parse _Objective-C Tuesdays_ pages out of Blogger dump
+- rework macOS packages page
+- add resume HTML page
+  - update PDF resume
+  - generate text resume
 - extend `upload.sh` script to remove deleted pages from S3
+  - look into using `rclone` https://rclone.org
 - add `.tagline` page file directive to specify home page link subtext
+- insert small images into generated pages as data URLs
+- insert `base.css` into generated pages
+- trace and remove unused css from pages
+- investigate stripping unneeded metadata from images
+- investigate improving accessibility
+  - look into adding roles https://developer.mozilla.org/en-US/docs/Web/Accessibility/ARIA/Roles
 - clean up `random_words.js`
 - investigate removing jQuery-isms from `memory_match.js`
 - support [OpenLibrary links](https://openlibrary.org/dev/docs/api/books) on book links
 - support ISBN metadata on book links
 - expose ASIN, ISBN, etc in book link HTML as data attributes
 - generate alternate representations of links pages (CSV, JSON)
-- generate gemini site
 - set up CI in GitHub Actions
-- insert `base.css` into generated pages
-- trace and remove unused css from pages
+- generate gemini site
