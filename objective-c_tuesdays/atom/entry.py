@@ -189,10 +189,11 @@ def clean_up_pre_tags(soup: BeautifulSoup, section: Tag):
 
 def clean_up_paragraphs(soup: BeautifulSoup, section: Tag):
     clean_up_double_br_paragraphs(soup, section)
+
+    highlight_br_tags(section)
+
     clean_up_text_between_blocks(soup, section)
     convert_bold_section_titles_to_headers(soup, section)
-    for br in section.find_all('br'):
-        add_newline_before(br)
 
 
 def clean_up_double_br_paragraphs(soup: BeautifulSoup, section: Tag):
@@ -237,8 +238,9 @@ def is_paragraph_content(node: PageElement) -> bool:
         return False
     if isinstance(node, Tag):
         tag: Tag = node
-        if tag.name in ['br', 'div', 'p', 'pre']:
-            return False
+        return tag.name not in ['br', 'div', 'p', 'pre']
+    if isinstance(node, NavigableString):
+        return str(node) != '\n' or node.next_sibling is not None
     return True
 
 
@@ -253,6 +255,13 @@ def add_newline_after(tag: Tag):
 def add_newline_before(tag: Tag):
     if (
             not isinstance(tag.previous_sibling, NavigableString)
-            or not tag.previous_sibling.startswith('\n')
+            or not tag.previous_sibling.endswith('\n')
     ):
         tag.insert_before('\n')
+
+
+def highlight_br_tags(section: Tag):
+    for child in section.contents:
+        if isinstance(child, Tag) and child.name == 'br':
+            add_newline_before(child)
+            add_newline_after(child)
