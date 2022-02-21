@@ -46,9 +46,6 @@ def main():
     print(f'Found {len(feed.oc_tuesdays)} Objective-C Tuesdays posts:')
     os.makedirs(args.output_dir, exist_ok=True)
     for entry in feed.oc_tuesdays:
-        print(f'  {entry.title}')
-        print(f'      {entry.original_url}')
-        print(f'      {entry.published}')
         entry.save(args.output_dir)
     print()
 

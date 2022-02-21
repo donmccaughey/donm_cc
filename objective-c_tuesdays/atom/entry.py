@@ -1,7 +1,7 @@
 import os
 
 from bs4 import BeautifulSoup
-from bs4.element import NavigableString, Tag
+from bs4.element import NavigableString, Tag, PageElement
 from datetime import datetime
 from typing import List, Optional
 from xml.etree.ElementTree import Element
@@ -107,23 +107,139 @@ class Entry:
         f.write('<meta charset=utf-8>\n')
         f.write("<meta name=viewport content='initial-scale=0.9, width=device-width'>\n")
         f.write(f'<title>{self.title}</title>\n')
+        f.write('<link rel=stylesheet href=/base.css>\n')
 
     def write_body(self, f):
         soup = BeautifulSoup(self.content, 'html5lib')
-        add_h1(soup, self.title)
-        add_new_lines_after_blocks(soup)
-        convert_br_to_new_line_in_pre_tags(soup)
-        add_new_lines_around_br_tags(soup)
-        for child in soup.body.children:
+        contents = extract_body_contents(soup)
+
+        add_nav(soup)
+        section = add_section(soup, self.title, contents)
+        clean_up_div_tags(soup, section)
+        clean_up_pre_tags(soup, section)
+        clean_up_paragraphs(soup, section)
+        for child in soup.body.contents:
             f.write(str(child))
-        f.write('\n')
 
 
-def add_h1(soup: BeautifulSoup, title: str):
+def extract_body_contents(soup: BeautifulSoup) -> List[PageElement]:
+    node = soup.body.contents[0]
+    contents = [node]
+    while node.next_sibling:
+        node = node.next_sibling
+        contents.append(node)
+    for node in contents:
+        node.extract()
+    return contents
+
+
+def add_nav(soup: BeautifulSoup):
+    nav = soup.new_tag('nav')
+    nav.append('\n    ')
+    a = soup.new_tag('a')
+    a['href'] = '/'
+    a.append('Don McCaughey')
+    nav.append(a)
+
+    nav.append(' • ')
+
+    a = soup.new_tag('a')
+    a['href'] = '/objective-c_tuesdays/'
+    a.append('Objective-C Tuesdays')
+    nav.append(a)
+    nav.append('\n')
+
+    soup.body.insert(0, nav)
+    soup.body.insert(1, '\n')
+
+
+def add_section(soup: BeautifulSoup, title: str, contents: List[PageElement]) -> Tag:
+    section = soup.new_tag('section')
+    soup.body.append(section)
+    soup.body.append('\n')
+
+    section.append('\n')
     h1 = soup.new_tag('h1')
     h1.append(title)
-    soup.body.insert(0, '\n')
-    soup.body.insert(0, h1)
+    section.append(h1)
+    section.append('\n')
+
+    section.extend(contents)
+    section.append('\n')
+
+    return section
+
+
+def clean_up_div_tags(soup: BeautifulSoup, section: Tag):
+    # TODO: clean up "See Also" boxes
+    for div in section.find_all('div'):
+        add_newline_after(div)
+        div.insert(0, '\n    ')
+        div.append('\n')
+
+
+def clean_up_pre_tags(soup: BeautifulSoup, section: Tag):
+    for pre in section.find_all('pre'):
+        add_newline_before(pre)
+        add_newline_after(pre)
+        br_tags = pre.find_all('br')
+        for br in br_tags:
+            br.replace_with('\n')
+
+
+def clean_up_paragraphs(soup: BeautifulSoup, section: Tag):
+    clean_up_double_br_paragraphs(soup, section)
+    clean_up_text_between_blocks(soup, section)
+    convert_bold_section_titles_to_headers(soup, section)
+    for br in section.find_all('br'):
+        add_newline_before(br)
+
+
+def clean_up_double_br_paragraphs(soup: BeautifulSoup, section: Tag):
+    br_groups = []
+    brs = []
+    for child in section.children:
+        if isinstance(child, Tag) and child.name == 'br':
+            brs.append(child)
+        else:
+            if brs and len(brs) > 1:
+                br_groups.append(brs)
+            brs = []
+    if brs and len(brs) > 1:
+        br_groups.append(brs)
+
+    for brs in br_groups:
+        brs[0].insert_before('\n')
+        p = soup.new_tag('p')
+        p.append('\n    ')
+        brs[0].insert_before(p)
+
+        while is_paragraph_content(brs[-1].next_sibling):
+            node = brs[-1].next_sibling.extract()
+            p.append(node)
+        p.append('\n')
+
+        for br in brs:
+            br.extract()
+
+
+def clean_up_text_between_blocks(soup: BeautifulSoup, section: Tag):
+    # TODO: find content between <div>, <pre> and <p> tags
+    pass
+
+
+def convert_bold_section_titles_to_headers(soup: BeautifulSoup, section: Tag):
+    pass
+
+
+def is_paragraph_content(node: PageElement) -> bool:
+    if not node:
+        return False
+    if isinstance(node, Tag):
+        tag: Tag = node
+        if tag.name in ['br', 'div', 'p', 'pre']:
+            return False
+    return True
 
 
 def add_newline_after(tag: Tag):
@@ -140,23 +256,3 @@ def add_newline_before(tag: Tag):
             or not tag.previous_sibling.startswith('\n')
     ):
         tag.insert_before('\n')
-
-
-def add_new_lines_after_blocks(soup: BeautifulSoup):
-    for div in soup.find_all('div'):
-        add_newline_after(div)
-    for div in soup.find_all('pre'):
-        add_newline_after(div)
-
-
-def convert_br_to_new_line_in_pre_tags(soup: BeautifulSoup):
-    for pre in soup.find_all('pre'):
-        br_tags = pre.find_all('br')
-        for br in br_tags:
-            br.replace_with('\n')
-
-
-def add_new_lines_around_br_tags(soup: BeautifulSoup):
-    for br in soup.find_all('br'):
-        add_newline_before(br)
-        add_newline_after(br)
