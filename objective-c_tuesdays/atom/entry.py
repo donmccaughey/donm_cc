@@ -2,17 +2,19 @@ import os
 
 from bs4 import BeautifulSoup
 from bs4.element import NavigableString, Tag, PageElement
+from collections import defaultdict
 from datetime import datetime
 from typing import List, Optional
 from xml.etree.ElementTree import Element
 from . import NAMESPACES
-
 
 HTML_START = '''<!doctype html>
 <html lang=en>
 <meta charset=utf-8>
 <meta name=viewport content='initial-scale=0.9, width=device-width'>
 '''
+
+BLOCK_TAGS = ['div', 'ol', 'p', 'pre', 'table', 'ul']
 
 
 def get_author(entry: Element) -> str:
@@ -111,15 +113,72 @@ class Entry:
 
     def write_body(self, f):
         soup = BeautifulSoup(self.content, 'html5lib')
+
         contents = extract_body_contents(soup)
+        # self.report_on_contents(contents)
+
+        contents = build_paragraphs(soup, contents)
+
+        clean_up_div_tags(soup, contents)
+        clean_up_pre_tags(contents)
+
+        contents = add_linebreaks(contents)
+
+        # TODO: remove "target='_blank'" from links
+        # TODO: remove "class='prettyprint'" from <pre> tags
+        # TODO: rewrite blog.ablepear.com URLs
+        # TODO: find and fix draft.blogger.com URLs
+        # TODO: turn leading <strong> spans into headers
+        # TODO: rewrite "seeAlsoBox" as <aside>?
+        # TODO: clean up tables and related style blocks
+        # TODO: examine <ul> and <ol> blocks
+        # TODO: survey <i>, <b> and <u> tags
 
         add_nav(soup)
-        section = add_section(soup, self.title, contents)
-        clean_up_div_tags(soup, section)
-        clean_up_pre_tags(soup, section)
-        clean_up_paragraphs(soup, section)
+        add_section(soup, self.title, contents)
+
+        # TODO: add footer with link to the original
+
         for child in soup.body.contents:
             f.write(str(child))
+
+    def report_on_contents(self, contents: List[PageElement]):
+        print(self.title)
+        print(f'    {len(contents)} page elements')
+
+        text_nodes = 0
+        blocks = 0
+        block_counts = defaultdict(int)
+        inlines = 0
+        inline_counts = defaultdict(int)
+        others = 0
+        other_counts = defaultdict(int)
+
+        for element in contents:
+            if isinstance(element, NavigableString):
+                text_nodes += 1
+            else:
+                assert isinstance(element, Tag)
+                if element.name in BLOCK_TAGS:
+                    blocks += 1
+                    block_counts[element.name] += 1
+                elif element.name in ['a', 'b', 'code', 'em', 'i', 'span', 'strong', 'u']:
+                    inlines += 1
+                    inline_counts[element.name] += 1
+                else:
+                    others += 1
+                    other_counts[element.name] += 1
+
+        print(f'    {text_nodes} text nodes')
+        print(f'    {blocks} block tags')
+        for key in sorted(block_counts.keys()):
+            print(f'        {key}: {block_counts[key]}')
+        print(f'    {inlines} inline tags')
+        for key in sorted(inline_counts.keys()):
+            print(f'        {key}: {inline_counts[key]}')
+        print(f'    {others} other tags')
+        for key in sorted(other_counts.keys()):
+            print(f'        {key}: {other_counts[key]}')
 
 
 def extract_body_contents(soup: BeautifulSoup) -> List[PageElement]:
@@ -131,6 +190,75 @@ def extract_body_contents(soup: BeautifulSoup) -> List[PageElement]:
     for node in contents:
         node.extract()
     return contents
+
+
+def is_block(node: PageElement) -> bool:
+    return isinstance(node, Tag) and node.name in BLOCK_TAGS
+
+
+def is_br(node: PageElement) -> bool:
+    return isinstance(node, Tag) and node.name == 'br'
+
+
+def inline_to_paragraphs(soup: BeautifulSoup, inline: List[PageElement]) -> List[Tag]:
+    while inline and is_br(inline[0]):
+        del inline[0]
+    while inline and is_br(inline[-1]):
+        del inline[-1]
+
+    paragraphs = [[]]
+    i = 0
+    while i < len(inline):
+        node1 = inline[i]
+        node2 = inline[i + 1] if i < len(inline) - 1 else None
+        if is_br(node1) and node2 and is_br(node2):
+            paragraphs.append([])
+            i += 1
+        else:
+            paragraphs[-1].append(node1)
+        i += 1
+
+    p_tags = []
+
+    for paragraph in paragraphs:
+        p = soup.new_tag('p')
+        p.append('\n    ')
+        for child in paragraph:
+            p.append(child)
+        p.append('\n')
+        p_tags.append(p)
+
+    return p_tags
+
+
+def build_paragraphs(soup: BeautifulSoup, contents: List[PageElement]) -> List[Tag]:
+    blocks = []
+    inline = []
+    for (i, node) in enumerate(contents):
+        if is_block(node):
+            if inline:
+                blocks.extend(inline_to_paragraphs(soup, inline))
+                inline = []
+            blocks.append(node)
+        else:
+            inline.append(node)
+    if inline:
+        blocks.extend(inline_to_paragraphs(soup, inline))
+    return blocks
+
+
+def add_linebreaks(contents: List[Tag]) -> List[Tag]:
+    with_breaks = []
+    for tag in contents:
+        with_breaks.append(tag)
+        with_breaks.append('\n')
+    return with_breaks
+
+
+def get_tags_by_name(contents: List[PageElement], name: str) -> List[Tag]:
+    return [
+        tag for tag in contents if isinstance(tag, Tag) and tag.name == name
+    ]
 
 
 def add_nav(soup: BeautifulSoup):
@@ -165,83 +293,30 @@ def add_section(soup: BeautifulSoup, title: str, contents: List[PageElement]) ->
     section.append('\n')
 
     section.extend(contents)
-    section.append('\n')
-
     return section
 
 
-def clean_up_div_tags(soup: BeautifulSoup, section: Tag):
+def clean_up_div_tags(soup: BeautifulSoup, contents: List[PageElement]):
     # TODO: clean up "See Also" boxes
-    for div in section.find_all('div'):
-        add_newline_after(div)
+    for div in get_tags_by_name(contents, 'div'):
+        while div.contents and is_br(div.contents[-1]):
+            div.contents[-1].decompose()
         div.insert(0, '\n    ')
         div.append('\n')
+        for child in list(div.contents):
+            if is_br(child):
+                add_newline_before(child)
+                add_newline_after(child)
+        for child in list(div.contents):
+            if isinstance(child, Tag):
+                child.insert_before('    ')
 
 
-def clean_up_pre_tags(soup: BeautifulSoup, section: Tag):
-    for pre in section.find_all('pre'):
-        add_newline_before(pre)
-        add_newline_after(pre)
+def clean_up_pre_tags(contents: List[PageElement]):
+    for pre in get_tags_by_name(contents, 'pre'):
         br_tags = pre.find_all('br')
         for br in br_tags:
             br.replace_with('\n')
-
-
-def clean_up_paragraphs(soup: BeautifulSoup, section: Tag):
-    clean_up_double_br_paragraphs(soup, section)
-
-    highlight_br_tags(section)
-
-    clean_up_text_between_blocks(soup, section)
-    convert_bold_section_titles_to_headers(soup, section)
-
-
-def clean_up_double_br_paragraphs(soup: BeautifulSoup, section: Tag):
-    br_groups = []
-    brs = []
-    for child in section.children:
-        if isinstance(child, Tag) and child.name == 'br':
-            brs.append(child)
-        else:
-            if brs and len(brs) > 1:
-                br_groups.append(brs)
-            brs = []
-    if brs and len(brs) > 1:
-        br_groups.append(brs)
-
-    for brs in br_groups:
-        brs[0].insert_before('\n')
-        p = soup.new_tag('p')
-        p.append('\n    ')
-        brs[0].insert_before(p)
-
-        while is_paragraph_content(brs[-1].next_sibling):
-            node = brs[-1].next_sibling.extract()
-            p.append(node)
-        p.append('\n')
-
-        for br in brs:
-            br.extract()
-
-
-def clean_up_text_between_blocks(soup: BeautifulSoup, section: Tag):
-    # TODO: find content between <div>, <pre> and <p> tags
-    pass
-
-
-def convert_bold_section_titles_to_headers(soup: BeautifulSoup, section: Tag):
-    pass
-
-
-def is_paragraph_content(node: PageElement) -> bool:
-    if not node:
-        return False
-    if isinstance(node, Tag):
-        tag: Tag = node
-        return tag.name not in ['br', 'div', 'p', 'pre']
-    if isinstance(node, NavigableString):
-        return str(node) != '\n' or node.next_sibling is not None
-    return True
 
 
 def add_newline_after(tag: Tag):
@@ -258,10 +333,3 @@ def add_newline_before(tag: Tag):
             or not tag.previous_sibling.endswith('\n')
     ):
         tag.insert_before('\n')
-
-
-def highlight_br_tags(section: Tag):
-    for child in section.contents:
-        if isinstance(child, Tag) and child.name == 'br':
-            add_newline_before(child)
-            add_newline_after(child)
