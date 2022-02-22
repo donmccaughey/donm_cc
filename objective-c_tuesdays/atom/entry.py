@@ -122,6 +122,7 @@ class Entry:
         clean_up_div_tags(soup, contents)
         clean_up_pre_tags(contents)
 
+
         contents = add_linebreaks(contents)
 
         # TODO: remove "target='_blank'" from links
