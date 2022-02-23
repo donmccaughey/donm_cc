@@ -93,7 +93,7 @@ class FormattedPage:
 
 def is_block(element: Tag) -> bool:
     return element.name in [
-        'div', 'link', 'meta', 'nav', 'ol', 'p', 'pre', 'section', 'table', 'ul'
+        'br', 'div', 'link', 'meta', 'nav', 'ol', 'p', 'pre', 'section', 'table', 'ul'
     ]
 
 
