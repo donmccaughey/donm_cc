@@ -3,7 +3,7 @@ import os
 import os.path
 from atom import Feed
 from page import Page
-from page.formatter import Formatter
+from page.formatted_page import FormattedPage
 
 
 def get_args():
@@ -25,12 +25,9 @@ def main():
 
     os.makedirs(args.output_dir, exist_ok=True)
     for entry in feed.oc_tuesdays:
-        page = Page(entry)
-        page.cleanup()
-        path = os.path.join(args.output_dir, page.filename)
-        with open(path, 'w') as f:
-            formatter = Formatter()
-            f.write(formatter.format(page))
+        page = Page(entry, args.output_dir)
+        with open(page.path, 'w') as f:
+            f.write(str(FormattedPage(page)))
 
 
 if __name__ == '__main__':
