@@ -2,6 +2,8 @@ import argparse
 import os
 import os.path
 from atom import Feed
+from page import Page
+from page.formatter import Formatter
 
 
 def get_args():
@@ -23,7 +25,12 @@ def main():
 
     os.makedirs(args.output_dir, exist_ok=True)
     for entry in feed.oc_tuesdays:
-        entry.save(args.output_dir)
+        page = Page(entry)
+        page.cleanup()
+        path = os.path.join(args.output_dir, page.filename)
+        with open(path, 'w') as f:
+            formatter = Formatter()
+            f.write(formatter.format(page))
 
 
 if __name__ == '__main__':

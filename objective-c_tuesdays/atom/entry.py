@@ -72,6 +72,7 @@ def get_updated(entry: Element) -> str:
 class Entry:
     def __init__(self, element):
         self.element = element
+
         self.author = get_author(self.element)
         self.categories = get_categories(self.element)
         self.content = get_content(self.element)
