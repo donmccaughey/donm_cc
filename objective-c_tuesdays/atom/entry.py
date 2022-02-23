@@ -4,6 +4,20 @@ from xml.etree.ElementTree import Element
 from . import NAMESPACES
 
 
+class Entry:
+    def __init__(self, element):
+        self.element = element
+
+        self.author = get_author(self.element)
+        self.categories = get_categories(self.element)
+        self.content = get_content(self.element)
+        self.kind = get_kind(self.element)
+        self.original_url = get_original_url(self.element)
+        self.title = get_title(self.element)
+        self.published = get_published(self.element)
+        self.updated = get_updated(self.element)
+
+
 def get_author(entry: Element) -> str:
     name = entry.find('./atom:author/atom:name', NAMESPACES)
     return name.text
@@ -54,17 +68,3 @@ def get_published(entry: Element) -> datetime:
 def get_updated(entry: Element) -> str:
     updated = entry.find('./atom:updated', NAMESPACES)
     return updated.text
-
-
-class Entry:
-    def __init__(self, element):
-        self.element = element
-
-        self.author = get_author(self.element)
-        self.categories = get_categories(self.element)
-        self.content = get_content(self.element)
-        self.kind = get_kind(self.element)
-        self.original_url = get_original_url(self.element)
-        self.title = get_title(self.element)
-        self.published = get_published(self.element)
-        self.updated = get_updated(self.element)
