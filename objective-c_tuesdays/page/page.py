@@ -15,6 +15,7 @@ class Page:
         self.document = BeautifulSoup(self.entry.content, 'html5lib')
         self.filename = get_filename(self.entry)
 
+        self.content = Content(self.document)
         self.path = os.path.join(self.output_dir, self.filename)
 
         self.document.insert(0, Doctype('html'))
@@ -31,8 +32,6 @@ class Page:
                    rel='stylesheet', href='/base.css')
 
         # body
-        content = Content(self.document)
-
         nav = self.__tag(self.document.body, 'nav')
         self.__tag(nav, 'a', text='Don McCaughey', href='/')
         nav.append(' • ')
@@ -42,7 +41,7 @@ class Page:
         section = self.__tag(self.document.body, 'section')
         self.__tag(section, 'h1', text=self.entry.title)
 
-        section.extend(content)
+        section.extend(self.content)
 
     def __str__(self) -> str:
         return str(self.document)
