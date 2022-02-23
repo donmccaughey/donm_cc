@@ -46,6 +46,10 @@ class Page:
     def __str__(self) -> str:
         return str(self.document)
 
+    def print_statistics(self, brief=True):
+        print(self.entry.title)
+        self.content.report.print_statistics(brief=brief)
+
     def __tag(
             self,
             parent: Tag,

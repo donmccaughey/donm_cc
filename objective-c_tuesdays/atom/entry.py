@@ -1,15 +1,7 @@
-import os
-
-from bs4 import BeautifulSoup
-from bs4.element import NavigableString, Tag, PageElement
-from collections import defaultdict
 from datetime import datetime
 from typing import List, Optional
 from xml.etree.ElementTree import Element
 from . import NAMESPACES
-
-
-BLOCK_TAGS = ['div', 'ol', 'p', 'pre', 'table', 'ul']
 
 
 def get_author(entry: Element) -> str:
@@ -76,41 +68,3 @@ class Entry:
         self.title = get_title(self.element)
         self.published = get_published(self.element)
         self.updated = get_updated(self.element)
-
-    def report_on_contents(self, contents: List[PageElement]):
-        print(self.title)
-        print(f'    {len(contents)} page elements')
-
-        text_nodes = 0
-        blocks = 0
-        block_counts = defaultdict(int)
-        inlines = 0
-        inline_counts = defaultdict(int)
-        others = 0
-        other_counts = defaultdict(int)
-
-        for element in contents:
-            if isinstance(element, NavigableString):
-                text_nodes += 1
-            else:
-                assert isinstance(element, Tag)
-                if element.name in BLOCK_TAGS:
-                    blocks += 1
-                    block_counts[element.name] += 1
-                elif element.name in ['a', 'b', 'code', 'em', 'i', 'span', 'strong', 'u']:
-                    inlines += 1
-                    inline_counts[element.name] += 1
-                else:
-                    others += 1
-                    other_counts[element.name] += 1
-
-        print(f'    {text_nodes} text nodes')
-        print(f'    {blocks} block tags')
-        for key in sorted(block_counts.keys()):
-            print(f'        {key}: {block_counts[key]}')
-        print(f'    {inlines} inline tags')
-        for key in sorted(inline_counts.keys()):
-            print(f'        {key}: {inline_counts[key]}')
-        print(f'    {others} other tags')
-        for key in sorted(other_counts.keys()):
-            print(f'        {key}: {other_counts[key]}')
