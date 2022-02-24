@@ -17,6 +17,7 @@ class Page:
         self.filename = get_filename(self.entry)
         self.new_url = f'./{self.filename}'
         self.path = os.path.join(self.output_dir, self.filename)
+        self.title = get_title(self.entry)
 
     def __str__(self) -> str:
         return str(self.document)
@@ -33,7 +34,7 @@ class Page:
             'name': 'viewport',
             'content': 'initial-scale=0.9, width=device-width'
         })
-        self.__tag(self.document.head, 'title', text=self.entry.title)
+        self.__tag(self.document.head, 'title', text=self.title)
         self.__tag(self.document.head, 'link',
                    rel='stylesheet', href='/base.css')
 
@@ -98,3 +99,8 @@ def get_filename(entry: Entry) -> str:
     title = title.replace(',', '')
     title = title.replace(' ', '_')
     return f'{year:04}-{month:02}-{day:02}-{title}.html'
+
+
+def get_title(entry: Entry) -> str:
+    title = entry.title.replace('Objective-C Tuesdays: ', '')
+    return title.title()
