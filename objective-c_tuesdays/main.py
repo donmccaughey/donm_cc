@@ -1,20 +1,11 @@
 import argparse
 import os
 import os.path
+from typing import List
+
 from atom import Feed
 from page import Page
 from page.formatted_page import FormattedPage
-
-
-def get_args():
-    arg_parser = argparse.ArgumentParser('Extract Objective-C Tuesdays')
-    arg_parser.add_argument('--brief', action='store_true', default=False,
-                            help='Show a brief report')
-    arg_parser.add_argument('xml_file', metavar='XML_FILE', type=str,
-                            help='The Blogger XML dump to read')
-    arg_parser.add_argument('output_dir', metavar='OUTPUT_DIR', type=str,
-                            help='Location to write HTML files')
-    return arg_parser.parse_args()
 
 
 def main():
@@ -29,12 +20,7 @@ def main():
     url_map = {page.entry.original_url : page.new_url for page in pages}
     url_map |= URL_UPDATES
 
-    links = set()
-    for page in pages:
-        page.find_links(links)
-    for link in sorted(links):
-        print(f'> {link}')
-    print()
+    print_links(pages, brief=args.brief)
 
     os.makedirs(args.output_dir, exist_ok=True)
     for page in pages:
@@ -43,12 +29,36 @@ def main():
         with open(page.path, 'w') as f:
             f.write(str(FormattedPage(page)))
 
+
+def get_args():
+    arg_parser = argparse.ArgumentParser('Extract Objective-C Tuesdays')
+    arg_parser.add_argument('--brief', action='store_true', default=False,
+                            help='Show a brief report')
+    arg_parser.add_argument('xml_file', metavar='XML_FILE', type=str,
+                            help='The Blogger XML dump to read')
+    arg_parser.add_argument('output_dir', metavar='OUTPUT_DIR', type=str,
+                            help='Location to write HTML files')
+    return arg_parser.parse_args()
+
+
+def print_links(pages: List[Page], brief=False):
     links = set()
     for page in pages:
         page.find_links(links)
-    for link in sorted(links):
-        print(f'> {link}')
-    print()
+    if brief:
+        urls = set([url for (url, title, text) in links])
+        print(f'Found {len(urls)} unique links')
+        for url in sorted(urls):
+            print(f'    {url}')
+    else:
+        print(f'Found {len(links)} links')
+        url_width = 0
+        title_width = 0
+        for (url, title, text) in sorted(links):
+            url_width = max(len(url), url_width)
+            title_width = max(len(title), title_width)
+        for (url, title, text) in sorted(links):
+            print(f'    {url:{url_width}} {title:{title_width}} {text}')
 
 
 URL_UPDATES = {
@@ -141,6 +151,7 @@ URL_UPDATES = {
     'http://www.pragprog.com/articles/tell-dont-ask':
         'https://web.archive.org/web/20200426154726/https://pragprog.com/articles/tell-dont-ask',
 }
+
 
 if __name__ == '__main__':
     main()

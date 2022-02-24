@@ -54,8 +54,9 @@ class Page:
             node = self.document
         if isinstance(node, Tag):
             if node.name == 'a':
-
-                links.add((node['href'], self.entry.title, ' '.join(node.stripped_strings)))
+                links.add(
+                    (node['href'], self.entry.title, ' '.join(node.stripped_strings))
+                )
             for child in node.children:
                 self.find_links(links, child)
 
