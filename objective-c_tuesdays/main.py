@@ -4,8 +4,7 @@ import os.path
 from typing import List
 
 from atom import Feed
-from page import Page
-from page.formatted_page import FormattedPage
+from page import FormattedPage, Page
 
 
 def main():

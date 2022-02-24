@@ -1,6 +1,7 @@
-from bs4.element import Tag, PageElement, NavigableString
 from collections import defaultdict
 from typing import List
+
+from bs4.element import Tag, PageElement, NavigableString
 
 
 class ContentReport:

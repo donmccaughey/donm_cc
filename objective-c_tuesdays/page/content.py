@@ -1,7 +1,9 @@
+from typing import List, Dict
+
 from bs4 import BeautifulSoup
 from bs4.element import Tag, PageElement
+
 from page.content_report import ContentReport
-from typing import List, Dict
 
 
 class Content:

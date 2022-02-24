@@ -1,9 +1,10 @@
 import os
-from atom import Entry
-from bs4 import BeautifulSoup
-from bs4.element import Doctype, Tag, PageElement
 from typing import Dict, Optional, List, Set, Tuple
 
+from bs4 import BeautifulSoup
+from bs4.element import Doctype, Tag, PageElement
+
+from atom import Entry
 from page.content import Content
 
 
