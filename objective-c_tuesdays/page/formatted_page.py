@@ -100,7 +100,8 @@ def html_encode(text: str) -> str:
 
 def is_block(element: Tag) -> bool:
     return element.name in [
-        'br', 'div', 'link', 'meta', 'nav', 'ol', 'p', 'pre', 'section', 'table', 'ul'
+        'aside', 'br', 'div', 'link', 'meta', 'nav', 'ol', 'p', 'pre',
+        'section', 'table', 'ul'
     ]
 
 

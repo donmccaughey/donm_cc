@@ -47,7 +47,7 @@ class Page:
                    href='/objective-c_tuesdays/')
 
         section = self.__tag(self.document.body, 'section')
-        self.__tag(section, 'h1', text=self.entry.title)
+        self.__tag(section, 'h1', text=self.title)
 
         section.extend(self.content)
 

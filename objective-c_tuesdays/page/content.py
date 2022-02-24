@@ -43,6 +43,9 @@ def clean_div_tags(nodes: List[PageElement]) -> List[PageElement]:
             div_contents = extract_children(node)
             strip_br_tags(div_contents)
             node.extend(div_contents)
+            if 'seeAlsoBox' in node['class']:
+                node.name = 'aside'
+                del node['class']
         new_nodes.append(node)
     return new_nodes
 
