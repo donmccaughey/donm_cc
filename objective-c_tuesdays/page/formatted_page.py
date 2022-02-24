@@ -46,7 +46,7 @@ class FormattedPage:
             self.__node(child)
 
     def __text(self, text: NavigableString):
-        self.__write(str(text))
+        self.__write(html_encode(str(text)))
 
     def __element(self, element: Tag):
         if is_document(element):
@@ -90,6 +90,12 @@ class FormattedPage:
     def __omittable(self, element: Tag):
         for child in element.children:
             self.__node(child)
+
+
+def html_encode(text: str) -> str:
+    encoded = text.replace('&', '&amp;')
+    encoded = encoded.replace('<', '&lt;')
+    return encoded
 
 
 def is_block(element: Tag) -> bool:

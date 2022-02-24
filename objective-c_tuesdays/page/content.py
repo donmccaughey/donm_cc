@@ -48,13 +48,20 @@ def clean_div_tags(nodes: List[PageElement]) -> List[PageElement]:
 
 
 def clean_pre_tags(nodes: List[PageElement]) -> List[PageElement]:
+
+    def br_tags_to_new_lines(element: Tag):
+        for child in element.children:
+            if isinstance(child, Tag):
+                if child.name == 'br':
+                    child.replace_with('\n')
+                else:
+                    br_tags_to_new_lines(child)
+
     new_nodes = []
     for node in nodes:
         if is_tag(node, 'pre'):
             pre: Tag = node
-            pre_contents = extract_children(pre)
-            br_tags_to_new_lines(pre_contents)
-            pre.extend(pre_contents)
+            br_tags_to_new_lines(pre)
             remove_class(pre, 'prettyprint')
         new_nodes.append(node)
     return new_nodes
@@ -127,12 +134,6 @@ def split_paragraphs(nodes: List[PageElement]) -> List[List[PageElement]]:
             paragraphs[-1].append(node1)
         i += 1
     return paragraphs
-
-
-def br_tags_to_new_lines(nodes: List[PageElement]):
-    for i in range(len(nodes)):
-        if is_tag(nodes[i], 'br'):
-            nodes[i] = '\n'
 
 
 def remove_class(element: Tag, class_name: str):

@@ -1,6 +1,5 @@
 # TODO
 
-- fix code blocks in "regular expressions" page
 - turn leading <strong> spans into headers
 - rewrite "seeAlsoBox" as <aside>?
 - clean up tables and related style blocks
