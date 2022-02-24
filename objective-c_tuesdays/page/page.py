@@ -15,14 +15,15 @@ class Page:
         self.output_dir = output_dir
 
         self.filename = get_filename(self.entry)
+        self.new_url = f'./{self.filename}'
         self.path = os.path.join(self.output_dir, self.filename)
 
     def __str__(self) -> str:
         return str(self.document)
 
-    def build(self):
+    def build(self, url_map: Dict[str, str]):
         self.document = BeautifulSoup(self.entry.content, 'html5lib')
-        self.content = Content(self.document)
+        self.content = Content(self.document, url_map)
 
         self.document.insert(0, Doctype('html'))
         self.document.html['lang'] = 'en'

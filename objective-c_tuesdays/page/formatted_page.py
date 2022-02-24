@@ -114,7 +114,11 @@ def has_end_tag(element: Tag) -> bool:
 
 
 def q(value: str) -> str:
-    return f"'{value}'"
+    if not "'" in value:
+        return f"'{value}'"
+    if '"' in value:
+        value.replace('"', '&quot;')
+    return f'"{value}"'
 
 
 def start_tag(element: Tag) -> str:

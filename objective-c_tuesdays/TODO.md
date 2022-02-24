@@ -1,6 +1,5 @@
 # TODO
 
-- rewrite blog.ablepear.com URLs
 - find and fix draft.blogger.com URLs
 - drop "Objective-C Tuesdays" from `<title>` tags
 - turn leading <strong> spans into headers

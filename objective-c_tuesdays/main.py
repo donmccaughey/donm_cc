@@ -25,10 +25,12 @@ def main():
     feed = Feed(args.xml_file)
     feed.print_statistics(brief=args.brief)
 
+    pages = [Page(entry, args.output_dir) for entry in feed.oc_tuesdays]
+    url_map = {page.entry.original_url : page.new_url for page in pages}
+
     os.makedirs(args.output_dir, exist_ok=True)
-    for entry in feed.oc_tuesdays:
-        page = Page(entry, args.output_dir)
-        page.build()
+    for page in pages:
+        page.build(url_map)
         page.print_statistics(brief=args.brief)
         with open(page.path, 'w') as f:
             f.write(str(FormattedPage(page)))

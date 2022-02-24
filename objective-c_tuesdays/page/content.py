@@ -1,17 +1,19 @@
 from bs4 import BeautifulSoup
 from bs4.element import Tag, PageElement
 from page.content_report import ContentReport
-from typing import List
+from typing import List, Dict
 
 
 class Content:
-    def __init__(self, document: BeautifulSoup):
+    def __init__(self, document: BeautifulSoup, url_map: Dict[str, str]):
         self.document = document
+        self.url_map = url_map
+
         self.nodes = extract_children(self.document.body)
         self.report = ContentReport(self.nodes)
 
         self.nodes = make_paragraphs(self.document, self.nodes)
-        self.nodes = clean_a_tags(self.nodes)
+        self.nodes = clean_a_tags(self.nodes, self.url_map)
         self.nodes = clean_div_tags(self.nodes)
         self.nodes = clean_pre_tags(self.nodes)
 
@@ -19,12 +21,16 @@ class Content:
         return iter(self.nodes)
 
 
-def clean_a_tags(nodes: List[PageElement]) -> List[PageElement]:
+def clean_a_tags(nodes: List[PageElement], url_map: Dict[str, str]) -> List[PageElement]:
     for node in nodes:
         if isinstance(node, Tag):
             if node.name == 'a':
-                del node['target']
-            clean_a_tags(node.contents)
+                a: Tag = node
+                del a['target']
+                href = a['href']
+                if href in url_map:
+                    a['href'] = url_map[href]
+            clean_a_tags(node.contents, url_map)
     return nodes
 
 
