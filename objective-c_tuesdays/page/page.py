@@ -37,10 +37,10 @@ class Page:
         })
         self.__tag(self.document.head, 'title', text=self.title)
         self.__tag(self.document.head, 'link',
-                   rel='stylesheet', href='/base.css')
+                   rel='stylesheet', href='./base.css')
 
         # body
-        nav = self.__tag(self.document.body, 'nav')
+        nav = self.__tag(self.document.body, 'nav', attrs={'class': 'menu'})
         self.__tag(nav, 'a', text='Don McCaughey', href='/')
         nav.append(' • ')
         self.__tag(nav, 'a', text='Objective-C Tuesdays',
