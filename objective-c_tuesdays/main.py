@@ -28,6 +28,7 @@ def main():
     os.makedirs(args.output_dir, exist_ok=True)
     for entry in feed.oc_tuesdays:
         page = Page(entry, args.output_dir)
+        page.build()
         page.print_statistics(brief=args.brief)
         with open(page.path, 'w') as f:
             f.write(str(FormattedPage(page)))

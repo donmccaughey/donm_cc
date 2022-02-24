@@ -9,14 +9,20 @@ from page.content import Content
 
 class Page:
     def __init__(self, entry: Entry, output_dir: str):
+        self.content = None
+        self.document = None
         self.entry = entry
         self.output_dir = output_dir
 
-        self.document = BeautifulSoup(self.entry.content, 'html5lib')
         self.filename = get_filename(self.entry)
-
-        self.content = Content(self.document)
         self.path = os.path.join(self.output_dir, self.filename)
+
+    def __str__(self) -> str:
+        return str(self.document)
+
+    def build(self):
+        self.document = BeautifulSoup(self.entry.content, 'html5lib')
+        self.content = Content(self.document)
 
         self.document.insert(0, Doctype('html'))
         self.document.html['lang'] = 'en'
@@ -42,9 +48,6 @@ class Page:
         self.__tag(section, 'h1', text=self.entry.title)
 
         section.extend(self.content)
-
-    def __str__(self) -> str:
-        return str(self.document)
 
     def print_statistics(self, brief=True):
         print(self.entry.title)
