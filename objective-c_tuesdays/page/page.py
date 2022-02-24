@@ -2,7 +2,7 @@ import os
 from atom import Entry
 from bs4 import BeautifulSoup
 from bs4.element import Doctype, Tag, PageElement
-from typing import Dict, Optional, List
+from typing import Dict, Optional, List, Set, Tuple
 
 from page.content import Content
 
@@ -10,10 +10,10 @@ from page.content import Content
 class Page:
     def __init__(self, entry: Entry, output_dir: str):
         self.content = None
-        self.document = None
         self.entry = entry
         self.output_dir = output_dir
 
+        self.document = BeautifulSoup(self.entry.content, 'html5lib')
         self.filename = get_filename(self.entry)
         self.new_url = f'./{self.filename}'
         self.path = os.path.join(self.output_dir, self.filename)
@@ -22,7 +22,6 @@ class Page:
         return str(self.document)
 
     def build(self, url_map: Dict[str, str]):
-        self.document = BeautifulSoup(self.entry.content, 'html5lib')
         self.content = Content(self.document, url_map)
 
         self.document.insert(0, Doctype('html'))
@@ -49,6 +48,16 @@ class Page:
         self.__tag(section, 'h1', text=self.entry.title)
 
         section.extend(self.content)
+
+    def find_links(self, links: Set[Tuple[str, str, str]], node: Optional[PageElement] = None):
+        if not node:
+            node = self.document
+        if isinstance(node, Tag):
+            if node.name == 'a':
+
+                links.add((node['href'], self.entry.title, ' '.join(node.stripped_strings)))
+            for child in node.children:
+                self.find_links(links, child)
 
     def print_statistics(self, brief=True):
         print(self.entry.title)

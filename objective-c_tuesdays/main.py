@@ -27,6 +27,14 @@ def main():
 
     pages = [Page(entry, args.output_dir) for entry in feed.oc_tuesdays]
     url_map = {page.entry.original_url : page.new_url for page in pages}
+    url_map |= URL_UPDATES
+
+    links = set()
+    for page in pages:
+        page.find_links(links)
+    for link in sorted(links):
+        print(f'> {link}')
+    print()
 
     os.makedirs(args.output_dir, exist_ok=True)
     for page in pages:
@@ -35,6 +43,104 @@ def main():
         with open(page.path, 'w') as f:
             f.write(str(FormattedPage(page)))
 
+    links = set()
+    for page in pages:
+        page.find_links(links)
+    for link in sorted(links):
+        print(f'> {link}')
+    print()
+
+
+URL_UPDATES = {
+    'http://developer.apple.com/IPhone/library/documentation/Cocoa/Reference/Foundation/Classes/NSArray_Class/NSArray.html':
+        'https://developer.apple.com/documentation/foundation/nsarray?language=objc',
+
+    'http://developer.apple.com/IPhone/library/documentation/Cocoa/Reference/Foundation/Classes/NSEnumerator_Class/Reference/Reference.html#//apple_ref/doc/c_ref/NSEnumerator':
+        'https://developer.apple.com/documentation/foundation/nsenumerator?language=objc',
+
+    'http://developer.apple.com/iPhone/library/documentation/Cocoa/Reference/Foundation/Classes/NSDictionary_Class/Reference/Reference.html':
+        'https://developer.apple.com/documentation/foundation/nsdictionary?language=objc',
+
+    'http://developer.apple.com/iPhone/library/documentation/Cocoa/Reference/Foundation/Classes/NSSet_Class/Reference/Reference.html':
+        'https://developer.apple.com/documentation/foundation/nsset?language=objc',
+
+    'http://developer.apple.com/iphone/library/documentation/Cocoa/Conceptual/Multithreading/Introduction/Introduction.html#//apple_ref/doc/uid/10000057i-CH1-SW1':
+        'https://developer.apple.com/library/archive/documentation/Cocoa/Conceptual/Multithreading/Introduction/Introduction.html',
+
+    'http://developer.apple.com/iphone/library/documentation/system/conceptual/manpages_iphoneos/man3/iconv.3.html':
+        'https://developer.apple.com/library/archive/documentation/System/Conceptual/ManPages_iPhoneOS/man3/iconv.3.html',
+
+    'http://developer.apple.com/library/ios/#DOCUMENTATION/System/Conceptual/ManPages_iPhoneOS/man3/qsort.3.html':
+        'https://developer.apple.com/library/archive/documentation/System/Conceptual/ManPages_iPhoneOS/man3/qsort.3.html',
+
+    'http://developer.apple.com/library/ios/#documentation/System/Conceptual/ManPages_iPhoneOS/man3/regex.3.html':
+        'https://developer.apple.com/library/archive/documentation/System/Conceptual/ManPages_iPhoneOS/man3/regex.3.html',
+
+    'http://developer.apple.com/library/ios/#documentation/cocoa/conceptual/KeyValueCoding/Articles/KeyValueCoding.html':
+        'https://developer.apple.com/library/archive/documentation/Cocoa/Conceptual/KeyValueCoding/index.html',
+
+    'http://en.wikipedia.org/wiki/Basic_Multilingual_Plane#Basic_Multilingual_Plane':
+        'https://en.wikipedia.org/wiki/Plane_(Unicode)#Basic_Multilingual_Plane',
+
+    'http://en.wikipedia.org/wiki/Buffer_overflow':
+        'https://en.wikipedia.org/wiki/Buffer_overflow',
+
+    'http://en.wikipedia.org/wiki/C99':
+        'https://en.wikipedia.org/wiki/C99',
+
+    "http://en.wikipedia.org/wiki/Don't_repeat_yourself":
+        "https://en.wikipedia.org/wiki/Don't_repeat_yourself",
+
+    'http://en.wikipedia.org/wiki/ISO/IEC_8859-7':
+        'https://en.wikipedia.org/wiki/ISO/IEC_8859-7',
+
+    'http://en.wikipedia.org/wiki/POSIX':
+        'https://en.wikipedia.org/wiki/POSIX',
+
+    'http://en.wikipedia.org/wiki/Quicksort':
+        'https://en.wikipedia.org/wiki/Quicksort',
+
+    'http://en.wikipedia.org/wiki/The_C_Programming_Language_(book)':
+        'https://en.wikipedia.org/wiki/The_C_Programming_Language',
+
+    'http://en.wikipedia.org/wiki/UTF-16/UCS-2#Encoding_of_characters_outside_the_BMP':
+        'https://en.wikipedia.org/wiki/UTF-16#Code_points_from_U+010000_to_U+10FFFF',
+
+    'http://en.wikipedia.org/wiki/Unicode_normalization':
+        'https://en.wikipedia.org/wiki/Unicode_equivalence#Normalization',
+
+    'http://en.wiktionary.org/wiki/cromulent':
+        'https://en.wiktionary.org/wiki/cromulent',
+
+    'http://futurama.wikia.com/wiki/Good_news,_everyone!':
+        'https://futurama.fandom.com/wiki/Good_news,_everyone!',
+
+    'http://oreilly.com/catalog/9780596520694/':
+        'https://www.oreilly.com/library/view/regular-expressions-cookbook/9780596802837/',
+
+    'http://oreilly.com/catalog/9780596528126/':
+        'https://www.oreilly.com/library/view/mastering-regular-expressions/0596528124/',
+
+    'http://pubs.opengroup.org/onlinepubs/009695399/basedefs/xbd_chap09.html':
+        'https://pubs.opengroup.org/onlinepubs/9699919799/basedefs/V1_chap09.html',
+
+    'http://site.icu-project.org/': 'https://icu.unicode.org',
+
+    'http://source.icu-project.org/repos/icu/icu/trunk/license.html':
+        'https://github.com/unicode-org/icu/blob/main/icu4c/LICENSE',
+
+    'http://unicode.org/faq/normalization.html':
+        'https://unicode.org/faq/normalization.html',
+
+    'http://www.aarp.org/':
+        'https://www.aarp.org',
+
+    'http://www.pcre.org/':
+        'https://www.pcre.org',
+
+    'http://www.pragprog.com/articles/tell-dont-ask':
+        'https://web.archive.org/web/20200426154726/https://pragprog.com/articles/tell-dont-ask',
+}
 
 if __name__ == '__main__':
     main()
