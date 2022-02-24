@@ -11,12 +11,21 @@ class Content:
         self.report = ContentReport(self.nodes)
 
         self.nodes = make_paragraphs(self.document, self.nodes)
+        self.nodes = clean_a_tags(self.nodes)
         self.nodes = clean_div_tags(self.nodes)
-        self.nodes = clean_pre_tags(self.nodes)
         self.nodes = clean_pre_tags(self.nodes)
 
     def __iter__(self):
         return iter(self.nodes)
+
+
+def clean_a_tags(nodes: List[PageElement]) -> List[PageElement]:
+    for node in nodes:
+        if isinstance(node, Tag):
+            if node.name == 'a':
+                del node['target']
+            clean_a_tags(node.contents)
+    return nodes
 
 
 def clean_div_tags(nodes: List[PageElement]) -> List[PageElement]:
@@ -34,9 +43,11 @@ def clean_pre_tags(nodes: List[PageElement]) -> List[PageElement]:
     new_nodes = []
     for node in nodes:
         if is_tag(node, 'pre'):
-            pre_contents = extract_children(node)
+            pre: Tag = node
+            pre_contents = extract_children(pre)
             br_tags_to_new_lines(pre_contents)
-            node.extend(pre_contents)
+            pre.extend(pre_contents)
+            remove_class(pre, 'prettyprint')
         new_nodes.append(node)
     return new_nodes
 
@@ -114,6 +125,16 @@ def br_tags_to_new_lines(nodes: List[PageElement]):
     for i in range(len(nodes)):
         if is_tag(nodes[i], 'br'):
             nodes[i] = '\n'
+
+
+def remove_class(element: Tag, class_name: str):
+    classes = element.get('class')
+    if classes and class_name in classes:
+        classes.remove(class_name)
+        if len(classes):
+            element['class'] = classes
+        else:
+            del element['class']
 
 
 def strip_br_tags(nodes: List[PageElement]):
