@@ -87,7 +87,8 @@ pre {
     background: whitesmoke;
     border: 0;
     color: black;
-    font: 12pt ui-monospace, monospace;
+    font: 11pt ui-monospace, monospace;
+    line-height: 150%;
     margin: 0;
     padding: 1em;
 }

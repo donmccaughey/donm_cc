@@ -9,7 +9,13 @@ from page.content import Content
 
 
 class Page:
-    def __init__(self, entry: Entry, output_dir: str):
+    def __init__(
+            self,
+            entry: Entry,
+            output_dir: str,
+            topic: Optional[str] = None,
+            is_toc: bool = False
+    ):
         self.content = None
         self.entry = entry
         self.output_dir = output_dir
@@ -19,6 +25,9 @@ class Page:
         self.new_url = f'./{self.filename}'
         self.path = os.path.join(self.output_dir, self.filename)
         self.title = get_title(self.entry)
+        self.published = self.entry.published.strftime('%Y-%m-%d')
+        self.topic = topic
+        self.is_toc = is_toc
 
     def __str__(self) -> str:
         return str(self.document)
@@ -37,7 +46,7 @@ class Page:
         })
         self.__tag(self.document.head, 'title', text=self.title)
         self.__tag(self.document.head, 'link',
-                   rel='stylesheet', href='./base.css')
+                   rel='stylesheet', href='/base.css')
 
         # nav
         nav = self.__tag(self.document.body, 'nav', attrs={'class': 'menu'})
@@ -56,8 +65,7 @@ class Page:
         a = self.__tag(footer, 'a', href=self.entry.original_url)
         self.__tag(a, 'em', text=f'{self.entry.title}')
         footer.append(' was originally published on ')
-        published = self.entry.published.strftime('%Y-%m-%d')
-        self.__tag(footer, 'time', text=published, datetime=published)
+        self.__tag(footer, 'time', text=self.published, datetime=self.published)
         footer.append('.')
 
     def find_links(self, links: Set[Tuple[str, str, str]], node: Optional[PageElement] = None):

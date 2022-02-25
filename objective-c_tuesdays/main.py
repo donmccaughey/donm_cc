@@ -4,7 +4,7 @@ import os.path
 from typing import List
 
 from atom import Feed
-from page import FormattedPage, Page
+from page import FormattedPage, Page, Index
 
 
 def main():
@@ -16,6 +16,8 @@ def main():
     feed.print_statistics(brief=args.brief)
 
     pages = [Page(entry, args.output_dir) for entry in feed.oc_tuesdays]
+    set_topics(pages)
+
     url_map = {page.entry.original_url : page.new_url for page in pages}
     url_map |= URL_UPDATES
 
@@ -27,6 +29,9 @@ def main():
         page.print_statistics(brief=args.brief)
         with open(page.path, 'w') as f:
             f.write(str(FormattedPage(page)))
+
+    index = Index(pages)
+    index.write(args.output_dir)
 
 
 def get_args():
@@ -59,6 +64,53 @@ def print_links(pages: List[Page], brief=False):
         for (url, title, text) in sorted(links):
             print(f'    {url:{url_width}} {title:{title_width}} {text}')
 
+
+def set_topics(pages: List[Page]):
+    for page in pages:
+        page.topic, page.is_toc = TOPIC_MAP[page.entry.original_url]
+
+
+TOPIC_MAP = {
+    'http://blog.ablepear.com/2009/10/objective-c-tuesdays-for-loop.html': ('looping', False),
+    'http://blog.ablepear.com/2009/10/objective-c-tuesdays-for-loop_13.html': ('looping', False),
+    'http://blog.ablepear.com/2009/10/objective-c-tuesdays-forin-loop.html': ('looping', False),
+    'http://blog.ablepear.com/2009/10/objective-c-tuesdays-while-loop.html': ('looping', False),
+    'http://blog.ablepear.com/2009/11/objective-c-tuesdays-break-out-of-loop.html': ('looping', False),
+    'http://blog.ablepear.com/2009/11/objective-c-tuesdays-continue.html': ('looping', False),
+    'http://blog.ablepear.com/2009/11/objective-c-tuesdays-dowhile-loop.html': ('looping', False),
+    'http://blog.ablepear.com/2009/12/objective-c-tuesdays-common-uses-for.html': ('looping', False),
+    'http://blog.ablepear.com/2009/12/objective-c-tuesdays-global-variables.html': ('variables', False),
+    'http://blog.ablepear.com/2009/12/objective-c-tuesdays-goto.html': ('looping', False),
+    'http://blog.ablepear.com/2009/12/objective-c-tuesdays-looping-in.html': ('looping', True),
+    'http://blog.ablepear.com/2010/01/objective-c-tuesdays-extern-and-global.html': ('variables', False),
+    'http://blog.ablepear.com/2010/01/objective-c-tuesdays-static-variables.html': ('variables', False),
+    'http://blog.ablepear.com/2010/03/objective-c-tuesdays-static-variables.html': ('variables', False),
+    'http://blog.ablepear.com/2010/04/objective-c-tuesdays-instance-variables.html': ('variables', False),
+    'http://blog.ablepear.com/2010/04/objective-c-tuesdays-instance-variables_20.html': ('variables', False),
+    'http://blog.ablepear.com/2010/04/objective-c-tuesdays-local-variables.html': ('variables', False),
+    'http://blog.ablepear.com/2010/04/objective-c-tuesdays-property-and.html': ('variables', False),
+    'http://blog.ablepear.com/2010/05/objective-c-tuesdays-atomic-and.html': ('variables', False),
+    'http://blog.ablepear.com/2010/05/objective-c-tuesdays-changing-default.html': ('variables', False),
+    'http://blog.ablepear.com/2010/05/objective-c-tuesdays-synthesizing.html': ('variables', False),
+    'http://blog.ablepear.com/2010/06/objective-c-tuesdays-c-strings.html': ('strings', False),
+    'http://blog.ablepear.com/2010/06/objective-c-tuesdays-variables-in.html': ('variables', True),
+    'http://blog.ablepear.com/2010/06/objective-c-tuesdays-writing-thread.html': ('variables', False),
+    'http://blog.ablepear.com/2010/07/objective-c-tuesdays-string-literals.html': ('strings', False),
+    'http://blog.ablepear.com/2010/07/objective-c-tuesdays-unicode-string.html': ('strings', False),
+    'http://blog.ablepear.com/2010/07/objective-c-tuesdays-wide-character.html': ('strings', False),
+    'http://blog.ablepear.com/2010/08/objective-c-tuesdays-concatenating.html': ('strings', False),
+    'http://blog.ablepear.com/2010/09/objective-c-tuesdays-searching-in.html': ('strings', False),
+    'http://blog.ablepear.com/2010/09/objective-c-tuesdays-slicing-and-dicing.html': ('strings', False),
+    'http://blog.ablepear.com/2010/09/objective-c-tuesdays-string-comparison.html': ('strings', False),
+    'http://blog.ablepear.com/2010/10/objective-c-tuesdays-replacing-in.html': ('strings', False),
+    'http://blog.ablepear.com/2011/07/objective-c-tuesdays-arrays.html': ('data structures', False),
+    'http://blog.ablepear.com/2011/07/objective-c-tuesdays-dynamic-arrays.html': ('data structures', False),
+    'http://blog.ablepear.com/2011/07/objective-c-tuesdays-regular.html': ('strings', False),
+    'http://blog.ablepear.com/2011/07/objective-c-tuesdays-strings-in.html': ('strings', True),
+    'http://blog.ablepear.com/2011/08/objective-c-tuesdays-more-about-dynamic.html': ('data structures', False),
+    'http://blog.ablepear.com/2011/11/objective-c-tuesdays-sorting-arrays.html': ('data structures', False),
+    'http://blog.ablepear.com/2011/12/objective-c-tuesdays-more-nsarray.html': ('data structures', False),
+}
 
 URL_UPDATES = {
     'http://developer.apple.com/IPhone/library/documentation/Cocoa/Reference/Foundation/Classes/NSArray_Class/NSArray.html':
