@@ -9,6 +9,21 @@
  *      #000000 black 
  */
 
+aside {
+    background: whitesmoke;
+    border: 1pt solid dimgray;
+    color: dimgray;
+    font-size: 11pt;
+    float: right;
+    line-height: 133%;
+    margin: 0 0 1ex 1ex;
+    padding: 1ex 2ex;
+}
+
+aside a {
+    text-decoration: none;
+}
+
 body, html {
     background: white;
     border: 0;
@@ -20,6 +35,20 @@ body, html {
 
 body {
     padding-top: 24pt; /* space for fixed menu */
+}
+
+footer {
+    background: white;
+    border-top: 1pt solid dimgray;
+    color: dimgray;
+    font-size: 11pt;
+    margin: 1.5em 0 0 0;
+    padding: 1em 0em;
+    text-align: center;
+}
+
+footer a {
+    color: gray;
 }
 
 h1 {
@@ -54,6 +83,15 @@ li {
     margin-bottom: 0.5em;
 }
 
+pre {
+    background: whitesmoke;
+    border: 0;
+    color: black;
+    font: 12pt ui-monospace, monospace;
+    margin: 0;
+    padding: 1em;
+}
+
 section {
     border: 0;
     margin: 0.5em auto;
@@ -62,8 +100,6 @@ section {
 }
 
 time {
-    color: gray;
-    font: italic 12pt Helvetica, Arial, sans-serif;
     white-space: nowrap;
 }
 
@@ -209,6 +245,12 @@ time {
 
 .links li a:visited {
     color: dimgray;
+}
+
+.links time {
+    color: gray;
+    font: italic 12pt Helvetica, Arial, sans-serif;
+    white-space: nowrap;
 }
 
 .menu {
