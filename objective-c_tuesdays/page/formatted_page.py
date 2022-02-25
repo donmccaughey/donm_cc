@@ -118,7 +118,7 @@ def is_omittable(element: Tag) -> bool:
 
 
 def has_end_tag(element: Tag) -> bool:
-    return element.name not in ['br', 'html', 'link', 'meta']
+    return element.name not in ['br', 'html', 'img', 'link', 'meta']
 
 
 def q(value: str) -> str:
