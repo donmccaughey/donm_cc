@@ -3,7 +3,10 @@
 # https://github.com/validator/validator
 
 vnu \
-    --no-langdetect \
     --skip-non-html wwwroot \
     --also-check-css wwwroot
+
+vnu \
+    --skip-non-html objective-c_tuesdays/tmp \
+    --also-check-css objective-c_tuesdays/tmp
 
