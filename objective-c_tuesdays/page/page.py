@@ -39,17 +39,28 @@ class Page:
         self.__tag(self.document.head, 'link',
                    rel='stylesheet', href='./base.css')
 
-        # body
+        # nav
         nav = self.__tag(self.document.body, 'nav', attrs={'class': 'menu'})
         self.__tag(nav, 'a', text='Don McCaughey', href='/')
         nav.append(' • ')
         self.__tag(nav, 'a', text='Objective-C Tuesdays',
                    href='/objective-c_tuesdays/')
 
+        # section
         section = self.__tag(self.document.body, 'section')
         self.__tag(section, 'h1', text=self.title)
-
         section.extend(self.content)
+
+        # section footer
+        footer = self.__tag(section, 'footer')
+        a = self.__tag(footer, 'a', href=self.entry.original_url)
+        self.__tag(a, 'em', text=f'{self.entry.title}')
+        footer.append(' was originally published at ')
+        self.__tag(footer, 'a', text='blog.ablepear.com', href='http://blog.ablepear.com')
+        footer.append(' on ')
+        published = self.entry.published.strftime('%Y-%m-%d')
+        self.__tag(footer, 'time', text=published, datetime=published)
+        footer.append('.')
 
     def find_links(self, links: Set[Tuple[str, str, str]], node: Optional[PageElement] = None):
         if not node:

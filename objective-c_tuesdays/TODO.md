@@ -1,6 +1,6 @@
 # TODO
 
-- add <footer> with link to the original article and original publication date
+- build index of posts
 - turn leading <strong> spans into headers
 - clean up tables and related style blocks
 - look at images
