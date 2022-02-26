@@ -121,4 +121,6 @@ def get_filename(entry: Entry) -> str:
 
 def get_title(entry: Entry) -> str:
     title = entry.title.replace('Objective-C Tuesdays: ', '')
-    return title.title()
+    title = title.title()
+    title = title.replace('Nsarray', 'NSArray')
+    return title

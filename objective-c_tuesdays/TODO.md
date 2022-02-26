@@ -2,7 +2,6 @@
 
 - In http://localhost:8080/objective-c_tuesdays/2011-07-26-dynamic_arrays.html, add "next time" link
   - "Next time, we'll cover more ways to manipulate the mutable array contents."
-- fix capitalization of `Nsarray` in "More Nsarray Sorting"
 - Remove "Next time, we will look at sorting NSMutableArrays in place" from http://localhost:8080/objective-c_tuesdays/2011-12-06-more_nsarray_sorting.html
 - turn leading <strong> spans into headers
 - clean up style blocks
