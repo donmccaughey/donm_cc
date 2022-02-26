@@ -21,6 +21,7 @@ class Content:
         self.nodes = clean_div_tags(self.nodes)
         self.nodes = clean_pre_tags(self.nodes)
         self.nodes = transform_i_tags(self.nodes)
+        self.nodes = transform_u_tags(self.nodes)
 
     def __iter__(self):
         return iter(self.nodes)
@@ -112,6 +113,16 @@ def transform_i_tags(nodes: List[PageElement]) -> List[PageElement]:
             i_tags = pre.find_all('i')
             for i in i_tags:
                 i.name = 'mark'
+    return nodes
+
+
+def transform_u_tags(nodes: List[PageElement]) -> List[PageElement]:
+    for node in nodes:
+        if isinstance(node, Tag):
+            tag: Tag = node
+            u_tags = tag.find_all('u')
+            for u in u_tags:
+                u.name = 'mark'
     return nodes
 
 
