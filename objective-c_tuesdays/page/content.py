@@ -79,9 +79,7 @@ def promote_subsection_headers(nodes: List[PageElement]) -> List[PageElement]:
     for node in nodes:
         if is_tag(node, 'p'):
             p: Tag = node
-            if not p.contents:
-                print(f'>>>> WARNING: Found empty {p}')
-            if p.contents and (is_tag(p.contents[0], 'b') or is_tag(p.contents[0], 'strong')):
+            if is_tag(p.contents[0], 'b') or is_tag(p.contents[0], 'strong'):
                 header = p.contents[0].extract()
                 header.name = 'h2'
                 new_nodes.append(header)
@@ -188,6 +186,7 @@ def split_blocks(nodes: List[PageElement]) -> List[Tag | List[PageElement]]:
 
 
 def split_paragraphs(nodes: List[PageElement]) -> List[List[PageElement]]:
+    strip_br_tags(nodes)
     paragraphs = [[]]
     i = 0
     while i < len(nodes):
