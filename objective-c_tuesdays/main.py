@@ -23,7 +23,6 @@ def main():
 
     print_links(pages, brief=args.brief)
     print_style_blocks(pages, brief=args.brief)
-    print_tags(pages, 'u')
 
     os.makedirs(args.output_dir, exist_ok=True)
     for page in pages:
@@ -32,7 +31,7 @@ def main():
         with open(page.path, 'w') as f:
             f.write(str(FormattedPage(page)))
 
-    print_tags(pages, 'h2')
+    print_tags(pages, 'b')
 
     index = Index(pages)
     index.write(args.output_dir)

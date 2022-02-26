@@ -1,8 +1,9 @@
 # TODO
 
-- turn leading <strong> spans into headers
-- examine <ul> and <ol> blocks
 - survey <i>, <b> and <u> tags
+- transform <i> in paragraphs into <em>
+- transform <i> in <pre> into <mark>
+- transform <u> into <mark>
 - indent formatted page
 - CSS for wide <pre> code blocks 
 - address HTML check issues

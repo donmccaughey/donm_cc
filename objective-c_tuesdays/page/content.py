@@ -20,6 +20,7 @@ class Content:
         self.nodes = clean_a_tags(self.nodes, self.url_map)
         self.nodes = clean_div_tags(self.nodes)
         self.nodes = clean_pre_tags(self.nodes)
+        self.nodes = transform_i_tags(self.nodes)
 
     def __iter__(self):
         return iter(self.nodes)
@@ -97,6 +98,21 @@ def strip_leading_header_junk(p: Tag):
         p.contents[0].replace_with(s)
     while p.contents and is_tag(p.contents[0], 'br'):
         p.contents[0].extract()
+
+
+def transform_i_tags(nodes: List[PageElement]) -> List[PageElement]:
+    for node in nodes:
+        if is_tag(node, 'p'):
+            p: Tag = node
+            i_tags = p.find_all('i')
+            for i in i_tags:
+                i.name = 'em'
+        elif is_tag(node, 'pre'):
+            pre: Tag = node
+            i_tags = pre.find_all('i')
+            for i in i_tags:
+                i.name = 'mark'
+    return nodes
 
 
 def remove_style_tags(nodes: List[PageElement]) -> List[PageElement]:
