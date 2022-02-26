@@ -5,7 +5,7 @@ from page import Page
 
 class FormattedPage:
     def __init__(self, page: Page):
-        self.indent_stack = [0]
+        self.indent = ''
         self.line = 1
         self.offset = 0
         self.out = ''
@@ -21,29 +21,20 @@ class FormattedPage:
                 self.line += 1
                 self.offset = 0
                 self.out += ch
-                if self.indent_stack[-1]:
-                    indent = self.__get_indent()
-                    self.offset += len(indent)
-                    self.out += indent
+                self.offset += len(self.indent)
+                self.out += self.indent
             else:
                 self.offset += 1
                 self.out += ch
 
-    def __get_indent(self):
-        return ' ' * (4 * self.indent_stack[-1])
-
     def __indent(self):
-        current = self.indent_stack[-1]
-        self.indent_stack.append(current + 1)
-
-    def __no_indent(self):
-        self.indent_stack.append(0)
+        self.indent += '    '
 
     def __unindent(self):
-        self.indent_stack.pop()
+        self.indent = self.indent[0:-4]
 
     def __ensure_newline(self):
-        if self.out and not self.out[-1].endswith('\n'):
+        if self.out and not self.out.endswith('\n' + self.indent):
             self.__write('\n')
 
     def __node(self, node: PageElement):
@@ -82,11 +73,11 @@ class FormattedPage:
     def __block(self, element: Tag):
         self.__ensure_newline()
         self.__write(start_tag(element))
-        # self.__no_indent() if element.name == 'pre' else self.__indent()
+        self.__indent()
         self.__ensure_newline()
         for child in element.children:
             self.__node(child)
-        # self.__unindent()
+        self.__unindent()
         self.__ensure_newline()
         if has_end_tag(element):
             self.__write(end_tag(element))
@@ -95,8 +86,13 @@ class FormattedPage:
     def __compact(self, element: Tag):
         self.__ensure_newline()
         self.__write(start_tag(element))
+        if element.name == 'pre':
+            old_indent = self.indent
+            self.indent = ''
         for child in element.children:
             self.__node(child)
+        if element.name == 'pre':
+            self.indent = old_indent
         if has_end_tag(element):
             self.__write(end_tag(element))
             self.__ensure_newline()
@@ -121,13 +117,13 @@ def html_encode(text: str) -> str:
 
 def is_block(element: Tag) -> bool:
     return element.name in [
-        'aside', 'br', 'div', 'footer', 'li', 'link', 'meta', 'nav', 'ol', 'p',
+        'aside', 'br', 'div', 'footer', 'li', 'nav', 'ol', 'p',
         'section', 'table', 'tr', 'ul'
     ]
 
 
 def is_compact(element: Tag) -> bool:
-    return element.name in ['h1', 'h2', 'pre', 'title']
+    return element.name in ['h1', 'h2', 'link', 'meta', 'pre', 'title']
 
 
 def is_document(element: Tag) -> bool:
