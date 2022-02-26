@@ -31,7 +31,7 @@ def main():
         with open(page.path, 'w') as f:
             f.write(str(FormattedPage(page)))
 
-    print_tags(pages, 'table')
+    print_tags(pages, 'b')
 
     index = Index(pages)
     index.write(args.output_dir)
