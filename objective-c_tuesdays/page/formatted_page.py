@@ -5,6 +5,7 @@ from page import Page
 
 class FormattedPage:
     def __init__(self, page: Page):
+        self.indent_stack = [0]
         self.line = 1
         self.offset = 0
         self.out = ''
@@ -19,9 +20,27 @@ class FormattedPage:
             if ch == '\n':
                 self.line += 1
                 self.offset = 0
+                self.out += ch
+                if self.indent_stack[-1]:
+                    indent = self.__get_indent()
+                    self.offset += len(indent)
+                    self.out += indent
             else:
                 self.offset += 1
-        self.out += s
+                self.out += ch
+
+    def __get_indent(self):
+        return ' ' * (4 * self.indent_stack[-1])
+
+    def __indent(self):
+        current = self.indent_stack[-1]
+        self.indent_stack.append(current + 1)
+
+    def __no_indent(self):
+        self.indent_stack.append(0)
+
+    def __unindent(self):
+        self.indent_stack.pop()
 
     def __ensure_newline(self):
         if self.out and not self.out[-1].endswith('\n'):
@@ -63,9 +82,11 @@ class FormattedPage:
     def __block(self, element: Tag):
         self.__ensure_newline()
         self.__write(start_tag(element))
+        # self.__no_indent() if element.name == 'pre' else self.__indent()
         self.__ensure_newline()
         for child in element.children:
             self.__node(child)
+        # self.__unindent()
         self.__ensure_newline()
         if has_end_tag(element):
             self.__write(end_tag(element))
@@ -101,12 +122,12 @@ def html_encode(text: str) -> str:
 def is_block(element: Tag) -> bool:
     return element.name in [
         'aside', 'br', 'div', 'footer', 'li', 'link', 'meta', 'nav', 'ol', 'p',
-        'pre', 'section', 'table', 'tr', 'ul'
+        'section', 'table', 'tr', 'ul'
     ]
 
 
 def is_compact(element: Tag) -> bool:
-    return element.name in ['h1', 'title']
+    return element.name in ['h1', 'h2', 'pre', 'title']
 
 
 def is_document(element: Tag) -> bool:
@@ -122,8 +143,12 @@ def is_omittable(element: Tag) -> bool:
 
 def has_end_tag(element: Tag) -> bool:
     return element.name not in [
-        'br', 'hr', 'html', 'img', 'li', 'link', 'meta'
+        'br', 'hr', 'html', 'img', 'li', 'link', 'meta', 'p'
     ]
+
+
+def should_indent_children(element: Tag) -> bool:
+    return element.name not in ['body', 'head', 'html', 'pre']
 
 
 # See "ASCII whitespace" in https://infra.spec.whatwg.org/#ascii-whitespace
