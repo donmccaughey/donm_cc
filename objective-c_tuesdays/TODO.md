@@ -1,6 +1,6 @@
 # TODO
 
-- survey <i>, <b> and <u> tags
+- survey <b> tags
 - indent formatted page
 - CSS for wide <pre> code blocks 
 - address HTML check issues

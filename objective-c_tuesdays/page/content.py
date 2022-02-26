@@ -190,7 +190,6 @@ def split_paragraphs(nodes: List[PageElement]) -> List[List[PageElement]]:
     paragraphs = [[]]
     i = 0
     while i < len(nodes):
-        # TODO: handle runs of 3+ <br> tags
         node1 = nodes[i]
         node2 = nodes[i + 1] if i < len(nodes) - 1 else None
         if is_tag(node1, 'br') and node2 and is_tag(node2, 'br'):
