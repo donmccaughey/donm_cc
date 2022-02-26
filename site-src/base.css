@@ -9,21 +9,6 @@
  *      #000000 black 
  */
 
-aside {
-    background: whitesmoke;
-    border: 1pt solid dimgray;
-    color: dimgray;
-    font-size: 11pt;
-    float: right;
-    line-height: 133%;
-    margin: 0 0 1ex 1ex;
-    padding: 1ex 2ex;
-}
-
-aside a {
-    text-decoration: none;
-}
-
 body, html {
     background: white;
     border: 0;
@@ -313,7 +298,7 @@ time {
     border: 1pt solid whitesmoke;
     border-radius: 4px;
     margin-bottom: 2em;
-    padding: 0em 2em;
+    padding: 0 2em;
 }
 
 .package .item {

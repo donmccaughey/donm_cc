@@ -43,14 +43,8 @@ def clean_a_tags(nodes: List[PageElement], url_map: Dict[str, str]) -> List[Page
 def clean_div_tags(nodes: List[PageElement]) -> List[PageElement]:
     new_nodes = []
     for node in nodes:
-        if is_tag(node, 'div'):
-            div_contents = extract_children(node)
-            strip_br_tags(div_contents)
-            node.extend(div_contents)
-            if 'seeAlsoBox' in node['class']:
-                node.name = 'aside'
-                del node['class']
-        new_nodes.append(node)
+        if not is_tag(node, 'div'):
+            new_nodes.append(node)
     return new_nodes
 
 
