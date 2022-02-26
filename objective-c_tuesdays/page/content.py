@@ -14,6 +14,7 @@ class Content:
         self.nodes = extract_children(self.document.body)
         self.report = ContentReport(self.nodes)
 
+        self.nodes = remove_style_tags(self.nodes)
         self.nodes = make_paragraphs(self.document, self.nodes)
         self.nodes = clean_a_tags(self.nodes, self.url_map)
         self.nodes = clean_div_tags(self.nodes)
@@ -67,6 +68,14 @@ def clean_pre_tags(nodes: List[PageElement]) -> List[PageElement]:
             br_tags_to_new_lines(pre)
             remove_class(pre, 'prettyprint')
         new_nodes.append(node)
+    return new_nodes
+
+
+def remove_style_tags(nodes: List[PageElement]) -> List[PageElement]:
+    new_nodes = []
+    for node in nodes:
+        if not is_tag(node, 'style'):
+            new_nodes.append(node)
     return new_nodes
 
 

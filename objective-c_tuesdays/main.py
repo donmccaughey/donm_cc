@@ -22,6 +22,7 @@ def main():
     url_map |= URL_UPDATES
 
     print_links(pages, brief=args.brief)
+    print_style_blocks(pages, brief=args.brief)
 
     os.makedirs(args.output_dir, exist_ok=True)
     for page in pages:
@@ -63,6 +64,16 @@ def print_links(pages: List[Page], brief=False):
             title_width = max(len(title), title_width)
         for (url, title, text) in sorted(links):
             print(f'    {url:{url_width}} {title:{title_width}} {text}')
+
+
+def print_style_blocks(pages: List[Page], brief=False):
+    for page in pages:
+        style_tags = page.document.find_all('style')
+        if style_tags:
+            print(f'Found {len(style_tags)} <style> tags in "{page.title}"')
+            if not brief:
+                for style_tag in style_tags:
+                    print(f'    {style_tag}')
 
 
 def set_topics(pages: List[Page]):

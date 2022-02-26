@@ -101,7 +101,7 @@ def html_encode(text: str) -> str:
 def is_block(element: Tag) -> bool:
     return element.name in [
         'aside', 'br', 'div', 'footer', 'link', 'meta', 'nav', 'ol', 'p', 'pre',
-        'section', 'table', 'ul'
+        'section', 'table', 'tr', 'ul'
     ]
 
 
@@ -114,7 +114,7 @@ def is_document(element: Tag) -> bool:
 
 
 def is_omittable(element: Tag) -> bool:
-    return len(element.attrs) == 0 and element.name in ['body', 'head', 'html']
+    return len(element.attrs) == 0 and element.name in ['body', 'head', 'html', 'tbody']
 
 
 def has_end_tag(element: Tag) -> bool:
