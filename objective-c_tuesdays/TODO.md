@@ -1,6 +1,5 @@
 # TODO
 
-- look at images
 - In http://localhost:8080/objective-c_tuesdays/2011-07-26-dynamic_arrays.html, add "next time" link
   - "Next time, we'll cover more ways to manipulate the mutable array contents."
 - Remove "Next time, we will look at sorting NSMutableArrays in place" from http://localhost:8080/objective-c_tuesdays/2011-12-06-more_nsarray_sorting.html

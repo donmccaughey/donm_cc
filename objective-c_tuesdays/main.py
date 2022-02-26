@@ -23,6 +23,7 @@ def main():
 
     print_links(pages, brief=args.brief)
     print_style_blocks(pages, brief=args.brief)
+    print_tags(pages, 'u')
 
     os.makedirs(args.output_dir, exist_ok=True)
     for page in pages:
@@ -74,6 +75,13 @@ def print_style_blocks(pages: List[Page], brief=False):
             if not brief:
                 for style_tag in style_tags:
                     print(f'    {style_tag}')
+
+
+def print_tags(pages: List[Page], tag: str):
+    for page in pages:
+        img_tags = page.document.find_all(tag)
+        if img_tags:
+            print(f'Found {len(img_tags)} <{tag}> tags in {page.title}')
 
 
 def set_topics(pages: List[Page]):
