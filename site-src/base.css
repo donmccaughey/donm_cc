@@ -261,6 +261,10 @@ time {
     width: 2em;
 }
 
+.memory_map td.blank {
+    border: none;
+}
+
 .menu {
     background: rgba(192, 192, 192, 0.9); /* silver */
     border: 0;
