@@ -1,7 +1,7 @@
 from typing import List, Dict
 
 from bs4 import BeautifulSoup
-from bs4.element import Tag, PageElement
+from bs4.element import Tag, PageElement, NavigableString
 
 from page.content_report import ContentReport
 
@@ -16,6 +16,7 @@ class Content:
 
         self.nodes = remove_style_tags(self.nodes)
         self.nodes = make_paragraphs(self.document, self.nodes)
+        self.nodes = promote_subsection_headers(self.nodes)
         self.nodes = clean_a_tags(self.nodes, self.url_map)
         self.nodes = clean_div_tags(self.nodes)
         self.nodes = clean_pre_tags(self.nodes)
@@ -69,6 +70,33 @@ def clean_pre_tags(nodes: List[PageElement]) -> List[PageElement]:
             remove_class(pre, 'prettyprint')
         new_nodes.append(node)
     return new_nodes
+
+
+def promote_subsection_headers(nodes: List[PageElement]) -> List[PageElement]:
+    new_nodes = []
+    for node in nodes:
+        if is_tag(node, 'p'):
+            p: Tag = node
+            if not p.contents:
+                print(f'>>>> WARNING: Found empty {p}')
+            if p.contents and (is_tag(p.contents[0], 'b') or is_tag(p.contents[0], 'strong')):
+                header = p.contents[0].extract()
+                header.name = 'h2'
+                new_nodes.append(header)
+                strip_leading_header_junk(p)
+        new_nodes.append(node)
+    return new_nodes
+
+
+def strip_leading_header_junk(p: Tag):
+    if p.contents and isinstance(p.contents[0], NavigableString):
+        s = str(p.contents[0])
+        if s.startswith(':'):
+            s = s[1:]
+        s = s.lstrip()
+        p.contents[0].replace_with(s)
+    while p.contents and is_tag(p.contents[0], 'br'):
+        p.contents[0].extract()
 
 
 def remove_style_tags(nodes: List[PageElement]) -> List[PageElement]:
