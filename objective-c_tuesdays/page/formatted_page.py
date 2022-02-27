@@ -186,7 +186,7 @@ def should_indent_children(element: Tag) -> bool:
 
 
 def should_wrap_content(element: Tag) -> bool:
-    return element.name in ['p', 'footer']
+    return element.name in ['footer', 'li', 'p']
 
 
 # See "ASCII whitespace" in https://infra.spec.whatwg.org/#ascii-whitespace
