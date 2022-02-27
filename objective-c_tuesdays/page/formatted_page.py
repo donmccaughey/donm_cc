@@ -13,6 +13,7 @@ class FormattedPage:
 
     def __str__(self) -> str:
         self.__node(self.page.document)
+        self.__write('\n')
         return self.out
 
     def __write(self, s: str):
@@ -78,10 +79,9 @@ class FormattedPage:
         for child in element.children:
             self.__node(child)
         self.__unindent()
-        self.__ensure_newline()
         if has_end_tag(element):
-            self.__write(end_tag(element))
             self.__ensure_newline()
+            self.__write(end_tag(element))
 
     def __compact(self, element: Tag):
         self.__ensure_newline()
