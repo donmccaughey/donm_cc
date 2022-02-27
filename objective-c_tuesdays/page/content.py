@@ -64,6 +64,10 @@ def clean_pre_tags(nodes: List[PageElement]) -> List[PageElement]:
             pre: Tag = node
             br_tags_to_new_lines(pre)
             remove_class(pre, 'prettyprint')
+            if pre.contents and isinstance(pre.contents[0], NavigableString):
+                pre.contents[0].replace_with(str(pre.contents[0]).lstrip())
+            if pre.contents and isinstance(pre.contents[-1], NavigableString):
+                pre.contents[-1].replace_with(str(pre.contents[-1]).rstrip())
         new_nodes.append(node)
     return new_nodes
 
