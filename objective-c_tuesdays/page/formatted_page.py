@@ -1,3 +1,5 @@
+from typing import List
+
 from bs4.element import Doctype, NavigableString, Tag, PageElement
 
 from page import Page
@@ -7,16 +9,28 @@ class FormattedPage:
     def __init__(self, page: Page):
         self.indent = ''
         self.line = 1
+        self.max_width = 80
         self.offset = 0
         self.out = ''
         self.page = page
+        self.wrap = False
+        self.wrap_buffer = []
 
     def __str__(self) -> str:
         self.__node(self.page.document)
         self.__write('\n')
         return self.out
 
-    def __write(self, s: str):
+    def __write(self, s: str, wrappable: bool=False):
+        if self.wrap:
+            if wrappable:
+                self.wrap_buffer.extend(divide_words(s))
+            else:
+                self.wrap_buffer.append(s)
+        else:
+            self.__chars_out(s)
+
+    def __chars_out(self, s: str):
         for ch in s:
             if ch == '\n':
                 self.line += 1
@@ -27,6 +41,26 @@ class FormattedPage:
             else:
                 self.offset += 1
                 self.out += ch
+
+    def __is_at_line_start(self) -> bool:
+        return self.offset == len(self.indent)
+
+    def __is_too_long(self, word: str) -> bool:
+        return self.offset + len(word) > self.max_width
+
+    def __wrap_on(self):
+        self.wrap = True
+
+    def __wrap_off(self):
+        self.wrap = False
+        wrap_buffer = join_unwrappable_words(self.wrap_buffer)
+        for word in wrap_buffer:
+            # TODO: trim leading/trailing spaces
+            # TODO: two spaces after a period
+            if self.__is_too_long(word) and not self.__is_at_line_start():
+                self.__chars_out('\n')
+            self.__chars_out(word)
+        self.wrap_buffer = []
 
     def __indent(self):
         self.indent += '    '
@@ -57,7 +91,7 @@ class FormattedPage:
             self.__node(child)
 
     def __text(self, text: NavigableString):
-        self.__write(html_encode(str(text)))
+        self.__write(html_encode(str(text)), wrappable=True)
 
     def __element(self, element: Tag):
         if is_document(element):
@@ -76,8 +110,12 @@ class FormattedPage:
         self.__write(start_tag(element))
         self.__indent()
         self.__ensure_newline()
+        if should_wrap_content(element):
+            self.__wrap_on()
         for child in element.children:
             self.__node(child)
+        if should_wrap_content(element):
+            self.__wrap_off()
         self.__unindent()
         if has_end_tag(element):
             self.__ensure_newline()
@@ -147,6 +185,10 @@ def should_indent_children(element: Tag) -> bool:
     return element.name not in ['body', 'head', 'html', 'pre']
 
 
+def should_wrap_content(element: Tag) -> bool:
+    return element.name in ['p', 'footer']
+
+
 # See "ASCII whitespace" in https://infra.spec.whatwg.org/#ascii-whitespace
 ASCII_WHITESPACE = {
     '\t',  # tab
@@ -201,3 +243,32 @@ def start_tag(element: Tag) -> str:
 
 def end_tag(element: Tag):
     return f'</{element.name}>'
+
+
+def divide_words(s: str) -> List[str]:
+    words = []
+    begin = 0
+    end = 0
+    while end < len(s):
+        if s[end].isspace():
+            end += 1
+            words.append(s[begin:end])
+            begin = end
+        else:
+            end += 1
+    if begin < end:
+        words.append(s[begin:end])
+    return words
+
+
+def join_unwrappable_words(words: List[str]) -> List[str]:
+    first_word = words[0]
+    new_words = [first_word]
+    last_word = first_word
+    for word in words[1:]:
+        if not last_word[-1].isspace() and not word[0].isspace():
+            new_words.pop()
+            word = last_word + word
+        new_words.append(word)
+        last_word = word
+    return new_words
