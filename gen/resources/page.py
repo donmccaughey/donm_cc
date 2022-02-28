@@ -117,4 +117,5 @@ class Page(Resource):
                 a: A = node
                 href = a.attributes['href']
                 if href:
+                    # TODO: create absolute path for link
                     links.append((self, href))

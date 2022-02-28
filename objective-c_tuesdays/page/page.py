@@ -22,7 +22,7 @@ class Page:
 
         self.document = BeautifulSoup(self.entry.content, 'html5lib')
         self.filename = get_filename(self.entry)
-        self.new_url = f'./{self.filename}'
+        self.new_url = f'/objective-c_tuesdays/{self.filename}'
         self.path = os.path.join(self.output_dir, self.filename)
         self.title = get_title(self.entry)
         self.published = self.entry.published.strftime('%Y-%m-%d')
@@ -106,17 +106,13 @@ class Page:
 
 
 def get_filename(entry: Entry) -> str:
-    year = entry.published.year
-    month = entry.published.month
-    day = entry.published.day
-
     title = entry.title.lower()
     title = title.replace('objective-c tuesdays: ', '')
     title = title.replace('@', 'at-')
     title = title.replace('...', '-')
     title = title.replace(',', '')
     title = title.replace(' ', '_')
-    return f'{year:04}-{month:02}-{day:02}-{title}.html'
+    return f'{title}.html'
 
 
 def get_title(entry: Entry) -> str:

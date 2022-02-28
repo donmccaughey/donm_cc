@@ -1,6 +1,10 @@
 # TODO
 
-- parse _Objective-C Tuesdays_ pages out of Blogger dump
+- fix sitemap to account for relative paths in internal links
+- convert absolute paths to relative paths in internal links
+- accumulate links from static HTML files -- maybe subclass `File` to `HTMLFile`?
+- add link checking for internal links
+- add link checking for `sitemap.txt`
 - rework macOS packages page
 - add resume HTML page
   - update PDF resume
