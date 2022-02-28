@@ -1,0 +1,74 @@
+<!doctype html>
+<html lang=en>
+<meta charset=utf-8>
+<meta content='initial-scale=0.9, width=device-width' name=viewport>
+<title>Static Variables</title>
+<link href=/base.css rel=stylesheet>
+<nav class=menu>
+    <a href=/ >Don McCaughey</a> • <a href=/objective-c_tuesdays/ >Objective-C Tuesdays</a>
+</nav>
+<section>
+    <h1>Static Variables</h1>
+    <p>
+        In our last episode we looked at 
+        <a href=/objective-c_tuesdays/extern_and_global_variables.html>the 
+        <code>extern</code> keyword and how it's used with global 
+        variables</a>.  Today we'll look at using the <code>static</code> 
+        keyword to make global variables "private" to one <code>.m</code> or 
+        <code>.c</code> file.
+    <p>
+        By default, every global variable in a <code>.m</code> or 
+        <code>.c</code> file is <em>external</em> or "public".  After each 
+        <code>.m</code> or <code>.c</code> file is compiled, the linker 
+        combines them together and matches up every global variable declaration 
+        with its corresponding definition.  If a definition is missing, or a 
+        global variable is defined more than once, the linker generates an 
+        error.
+    <p>
+        But sometimes you want a global variable that's only "global" to one 
+        <code>.m</code> or <code>.c</code> file.  For example, you might have 
+        two similar <code>UIView</code> subclasses that each use a global 
+        variable named <code>defaultHeight</code>:
+    <pre>// ERROR: won't link
+
+// CoolView.m
+// ...
+CGFloat defaultHeight = 400.0f;
+// ...
+
+// HotView.m
+// ...
+CGFloat defaultHeight = 300.0f; // ERROR: duplicate global variable definition
+// ...</pre>
+    <p>
+        The linker sees the same global variable name defined in two different 
+        <code>.m</code> files and fails with an error.  One solution is to give 
+        the variables unique names, like <code>coolViewDefaultHeight</code> and 
+        <code>hotViewDefaultHeight</code>.  But if you don't need to use those 
+        global variables outside the <code>.m</code> file, you can make them 
+        <code>static</code> instead.
+    <p>
+        When used with a global variable, the <code>static</code> keyword makes 
+        the global variable "private" to the <code>.m</code> or <code>.c</code> 
+        file where it's defined.  So our example would look like:
+    <pre>// CoolView.m
+// ...
+<mark>static</mark> CGFloat defaultHeight = 400.0f; // only visible in CoolView.m
+// ...
+
+// HotView.m
+// ...
+<mark>static</mark> CGFloat defaultHeight = 300.0f; // only visible in HotView.m
+// ...</pre>
+    <p>
+        Using <code>static</code> where possible helps you avoid name 
+        collisions in larger programs.  Next time, we'll look at using 
+        <a href=/objective-c_tuesdays/static_variables_in_functions.html><code>static</code>
+         to make a global variable visible only within a single function</a> or 
+        method.
+    <footer>
+        <a href=http://blog.ablepear.com/2010/01/objective-c-tuesdays-static-variables.html><em>Objective-C 
+        Tuesdays: static variables</em></a> was originally published on 
+        <time datetime=2010-01-19>2010-01-19</time>.
+    </footer>
+</section>

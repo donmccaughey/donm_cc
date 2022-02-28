@@ -1,0 +1,297 @@
+<!doctype html>
+<html lang=en>
+<meta charset=utf-8>
+<meta content='initial-scale=0.9, width=device-width' name=viewport>
+<title>Instance Variables, Getters And Setters</title>
+<link href=/base.css rel=stylesheet>
+<nav class=menu>
+    <a href=/ >Don McCaughey</a> • <a href=/objective-c_tuesdays/ >Objective-C Tuesdays</a>
+</nav>
+<section>
+    <h1>Instance Variables, Getters And Setters</h1>
+    <p>
+        Last time we looked at 
+        <a href=/objective-c_tuesdays/instance_variables.html>instance 
+        variables of Objective-C classes</a>.  Today we're going to look at 
+        writing getters and setters for instance variables.
+    <p>
+        As we saw, instance variables have <em>protected</em> scope by default, 
+        which makes them visible in instance methods of the class that defines 
+        them and all subclasses, but hidden to all other code and classes by 
+        default.  Hiding the inner workings of a class is a principal of object 
+        oriented programming known as <em>encapsulation</em>.  In general, it's 
+        better to 
+        <a href=https://web.archive.org/web/20200426154726/https://pragprog.com/articles/tell-dont-ask>tell 
+        your objects what to do</a> rather than ask them for their data.  But 
+        there are times when you need to get and set an object's data directly, 
+        particularly for objects that correspond to those things your 
+        application and users directly manipulate, like address book contacts 
+        or cookie recipes.  The typical way to do this is to write 
+        <em>getter</em> and <em>setter</em> methods.  Before Objective-C 2.0, 
+        these were always written by hand, and there are still times when you 
+        would want to write your own rather have the compiler generate them for 
+        you using the <code>@property</code> and <code>@synthesize</code> 
+        directives.
+    <h2>Getters</h2>
+    <p>
+        A conventional getter method in Objective-C has the same name as the 
+        instance variable:
+    <pre>// getter method example
+@interface CookieRecipe : NSObject {
+  NSString *<mark>name</mark>;  // instance variable <mark>name</mark>
+}
+- (NSString *)<mark>name</mark>; // getter method for <mark>name</mark> ivar
+@end
+
+@implementation CookieRecipe
+
+- (NSString *)<mark>name</mark> { // getter method for <mark>name</mark> ivar
+  return <mark>name</mark>;
+}
+
+@end</pre>
+    <p>
+        This works because instance variables and instance methods live in 
+        separate namespaces.  The compiler can always figure out whether you're 
+        calling a method or accessing an instance variable, so there's never a 
+        problem.  Getter methods are generally very simple and rarely have side 
+        effects.
+    <p>
+        Compiler generated getters are as simple as the example above.  There 
+        are two common cases where you might want to write them by hand: 
+        calculated properties and defensive copying.
+    <p>
+        Sometimes a class has a property that's easily calculated from other 
+        properties, such as a <code>fullName</code> property that can be 
+        created on the fly by joining <code>firstName</code> and 
+        <code>lastName</code>, or a <code>yearsWithCompany</code> property 
+        that's calculated by subtracting <code>hireDate</code> from today's 
+        date.  These types of properties are usually <em>read only</em> and 
+        quick to calculate.
+    <p>
+        Defensive copying is done when your object has some mutable internal 
+        data that it needs to share with other code, but which other code 
+        should not change.  For example, you might have a <code>User</code> 
+        class that has an <code>NSMutableArray</code> containing the user's 
+        <code>friends</code>:
+    <pre>// example of exposing mutable internals
+@interface User : NSObject {
+  NSMutableArray *<mark>friends</mark>; // contains other Users
+}
+- (NSMutableArray *)<mark>friends</mark>;
+@end
+
+@implementation User
+
+- (NSMutableArray *)friends {
+  return <mark>friends</mark>;
+}
+
+@end</pre>
+    <p>
+        The <code>friends</code> getter returns the <code>friends</code> 
+        instance variable directly.  This might work out okay if all the code 
+        that uses <code>friends</code> is polite and only reads the list of 
+        friends.  But it's all to easy to innocently do something like this:
+    <pre>// accidentally changing internal state
+
+NSMutableArray *<mark>boneheads</mark> = [user friends]; 
+// <mark>boneheads</mark> now points to same mutable array that 
+// the friends instance variable does
+
+NSPredicate *boneheadsOnly = [NSPredicate predicateWithFormat:@"species == 'Minbari'"];
+[<mark>boneheads</mark> filterUsingPredicate: boneheadsOnly]; 
+// oops! all the user's non-Minbari friends are gone
+// -filterUsingPredicate: removes items that don't match</pre>
+    <p>
+        Mutable objects like <code>NSMutableArray</code> naturally have methods 
+        like <code>-filterUsingPredicate:</code> that change the data they 
+        contain.  By sharing a mutable instance variable directly, the 
+        <code>User</code> class allows other code to intentionally or 
+        unintentionally muck around with its internal state, breaking 
+        encapsulation.  While bugs caused by unintentional mucking aren't 
+        usually too hard to track down, it's the intentional mucking that 
+        causes more trouble in the long run.  By exposing its internals like 
+        this, the <code>User</code> class allows itself to become closely 
+        coupled with the code that calls it, since callers can add or remove 
+        items directly to or from the <code>friends</code> collection.  The 
+        rules for adding and removing friends get spread around the app in 
+        numerous locations rather than centralized in <code>User</code>, making 
+        the system harder to understand, harder to change; small changes in 
+        <code>User</code> then affect more of the code than necessary.
+    <p>
+        So rather than return a mutable internal value directly, there are a 
+        couple of options in Objective-C.  When you're using a class like 
+        <code>NSMutableArray</code> that has an immutable superclass, you can 
+        <em>upcast</em> the returned instance variable to the immutable 
+        superclass:
+    <pre>// getter that upcasts to immutable superclass
+@interface User : NSObject {
+  <mark>NSMutableArray</mark> *friends; // instance variable is mutable
+}
+- (<mark>NSArray</mark> *)friends;
+@end
+
+@implementation User
+
+// return type of getter is immutable
+- (<mark>NSArray</mark> *)friends {
+  return friends;
+}
+
+@end</pre>
+    <p>
+        It's called <em>upcasting</em> since it casts a subclass reference "up" 
+        to a superclass reference.  Because this is always a safe cast, 
+        Objective-C will do this automatically for you with no explicit cast is 
+        needed.  While this won't prevent a malicious programmer from 
+        downcasting the result back to its mutable type and mucking around, in 
+        practice this works pretty well (and if you have a malicious programmer 
+        on your team, you have a bigger problem than a little code can solve).
+    <p>
+        Sometimes the instance variable you want to share doesn't have an 
+        immutable superclass, or most callers of the getter need to filter or 
+        manipulate the returned value.  In that case, you can do an actual 
+        defensive copy:
+    <pre>// getter that does a defensive copy
+@interface User : NSObject {
+  <mark>NSMutableArray</mark> *friends; // instance variable is mutable
+}
+- (<mark>NSMutableArray</mark> *)friends;
+@end
+
+@implementation User
+
+// return type of getter is mutable
+- (<mark>NSMutableArray</mark> *)friends {
+  // return an autoreleased copy
+  return [[friends <mark>mutableCopy</mark>] <mark>autorelease</mark>];
+}
+
+@end</pre>
+    <p>
+        Now the caller can delete your friends all they want.  You can use 
+        whichever creation or copy method is appropriate for the mutable data; 
+        just make sure to properly <code>autorelease</code> the return value.
+    <h2>Setters</h2>
+    <p>
+        The Objective-C convention for setter names is similar to Java's: 
+        capitalize the instance variable name and prefix with <code>set</code>. 
+         Setters come in different varieties, depending on the type of instance 
+        variable.  The simplest kind is used for primitive types like 
+        <code>int</code>s and object references that aren't retained, like 
+        delegates.
+    <pre>// assignment setter
+- (void)setAge:(int)anAge {
+  age = anAge;
+}</pre>
+    <p>
+        Assignment setters are trivial, but the fun starts when you have to 
+        deal with memory management and retain counts.  Here's an example of a 
+        setter that retains the new value and releases the old one, but it has 
+        a subtle bug:
+    <pre>// retain setter WITH BUG
+- (void)setAddress:(Address *)theAddress {
+  [address release];             // release old address
+  address = [theAddress retain]; // retain new address
+}</pre>
+    <p>
+        This setter might never give you a problem, if you're lucky.  But what 
+        happens if the new address and old address are the same object?  What 
+        happens when that object's retain count is 1?
+    <pre>// retain setter WITH BUG
+// suppose <mark>address</mark> == <mark>theAddress</mark>
+// and retain count is 1
+- (void)setAddress:(Address *)theAddress { 
+                                 // retain count is 1
+  [address release];             // retain count now 0, 
+                                 //     dealloc called
+  address = [theAddress retain]; // oops! theAddress points at  
+                                 //     invalid memory
+}</pre>
+    <p>
+        There are two common ways to write a setter to get around this.  The 
+        first way is to check for self-assignment:
+    <pre>// retain setter with self-assignment check
+- (void)setAddress:(Address *)theAddress {
+  if (theAddress != address) {
+    [address release];             // release old address
+    address = [theAddress retain]; // retain new address
+  }
+}</pre>
+    <p>
+        The second way is to retain first and release last:
+    <pre>// retain setter that retains first
+- (void)setAddress:(Address *)theAddress {
+  [theAddress retain];  // retain new address
+  [address release];    // release old address
+  address = theAddress;
+}</pre>
+    <p>
+        This will prevent the retain count from going to zero in the case of 
+        self-assignment.
+    <p>
+        Just as you may want to defensively copy in a getter, you may want to 
+        do the same in a setter.  Here's an example a malicious programmer 
+        would love:
+    <pre>// be careful with that setter
+@interface User : NSObject {
+  NSString *name;
+}
+- (void)setName:(NSString *)aName;
+@end
+
+@implementation User
+
+- (void)setName:(NSString *)aName {
+  if (aName != name) {
+    [name release];
+    name = [aName retain];
+  }
+}
+
+@end</pre>
+    <p>
+        Looks normal, right?  But what if I do this:
+    <pre>// don't change that mutable object!
+NSMutableString *someName = [@"Joe User" mutableCopy];
+
+User user = // ...
+[user setName: someName];
+// okay cool, user's name is now "Joe User"
+
+[someName appendString:@" Doodoo Head"];
+// oops, user's name and someName point to the same object
+// which now contains "Joe User Doodoo Head"</pre>
+    <p>
+        So even though you thought you were using an <em>immutable</em> 
+        <code>NSString</code> for your user's name, many common Cocoa Touch 
+        classes like <code>NSString</code> and <code>NSArray</code> have 
+        <em>mutable</em> subclasses, and your object's callers can accidentally 
+        give you a mutable instance that they modify later.  So when you're 
+        writing setters in this situation, you should defensively copy the 
+        value you receive.
+    <pre>// setter that defensively copies
+
+- (void)setName:(NSString *)aName {
+  if (aName != name) {
+    [name release];
+    name = [<mark>aName copy</mark>];
+  }
+}</pre>
+    <p>
+        You can use the <code>-copy</code> method if the object implements the 
+        <code>NSCopying</code> protocol, or any creation method that produces a 
+        new independent object.  (Just make sure to retain that copy if 
+        appropriate).
+    <p>
+        Next time, we'll look at how the 
+        <a href=/objective-c_tuesdays/at-property_and_at-synthesize.html><code>@property</code>
+         and <code>@synthesize</code> directives</a> are used in modern 
+        Objective-C to generate getters and setters automatically.
+    <footer>
+        <a href=http://blog.ablepear.com/2010/04/objective-c-tuesdays-instance-variables_20.html><em>Objective-C 
+        Tuesdays: instance variables, getters and setters</em></a> was 
+        originally published on <time datetime=2010-04-20>2010-04-20</time>.
+    </footer>
+</section>

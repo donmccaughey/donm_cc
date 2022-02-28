@@ -1,0 +1,94 @@
+<!doctype html>
+<html lang=en>
+<meta charset=utf-8>
+<meta content='initial-scale=0.9, width=device-width' name=viewport>
+<title>Goto</title>
+<link href=/base.css rel=stylesheet>
+<nav class=menu>
+    <a href=/ >Don McCaughey</a> • <a href=/objective-c_tuesdays/ >Objective-C Tuesdays</a>
+</nav>
+<section>
+    <h1>Goto</h1>
+    <p>
+        <a href=/objective-c_tuesdays/continue.html>Last time</a> we looked at 
+        using the <code>continue</code> statement to skip to the next iteration 
+        of a loop.  This week, we will finish looking at loops with the most 
+        primitive looping statement of all: the <code>goto</code> statement.
+    <p>
+        A <code>goto</code> statement always references a <em>label</em>, which 
+        is simply an identifier followed by a colon (:).  When the 
+        <code>goto</code> statement is reached, execution jumps to the label 
+        and continues from that point.  The label can be before or after the 
+        <code>goto</code> statement.
+    <pre>// goto and label examples
+
+start: // label named "start"
+  // do some stuff
+  if (...) {
+    <mark>goto</mark> start;
+  }
+  // do more stuff
+  if (...) {
+    <mark>goto</mark> end;
+  }
+  // and more stuff
+end: // label named "end"</pre>
+    <p>
+        Labels do nothing by themselves except mark places in code that you can 
+        jump to using <code>goto</code>.
+    <p>
+        The <code>goto</code> statement has one big limitation: it only works 
+        within a single function.  If you write something like this:
+    <pre>// goto may only jump to labels within a function
+// THIS CODE DOESN'T COMPILE
+
+void function1(void) {
+  label1:
+  goto label2;
+}
+
+void function2(void) {
+  label2:
+  goto label1;
+}</pre>
+    <p>
+        The compiler will produce error messages like <em>label ‘label1’ used 
+        but not defined</em>.  Without this restriction, <code>goto</code> 
+        could be abused to create difficult to understand spaghetti code (ask 
+        any old time BASIC programmer about this).  Because of this 
+        restriction, label names are local to the function that contains them, 
+        so you can use the same label name in different functions.
+    <p>
+        Though mostly eschewed in favor of the 
+        <a href=/objective-c_tuesdays/the_for_loop.html><code>for</code></a>, 
+        <a href=/objective-c_tuesdays/the_for-in_loop.html><code>for...in</code></a>, 
+        <a href=/objective-c_tuesdays/the_while_loop.html><code>while</code></a>
+         and 
+        <a href=/objective-c_tuesdays/the_do-while_loop.html><code>do...while</code></a>
+         loops, the <code>goto</code> can be used to implement loops:
+    <pre>int i = 0;
+<mark>startLoop:</mark> // label "startLoop"
+  NSLog(@"%d", i);
+  i++;
+  if (i &lt; 10) {
+    <mark>goto startLoop</mark>;
+  }</pre>
+    <p>
+        This loop logs the numbers from 0 to 9.  It's equivalent to this while 
+        loop:
+    <pre>int i = 0;
+while (i &lt; 10) {
+  NSLog(@"%d", i);
+  i++;
+}</pre>
+    <p>
+        Because the other looping statements are more compact and expressive, 
+        you will rarely see <code>goto</code> used to build loops.  
+        <a href=/objective-c_tuesdays/common_uses_for_goto.html>Next time</a>, 
+        we'll look at common uses for <code>goto</code>.
+    <footer>
+        <a href=http://blog.ablepear.com/2009/12/objective-c-tuesdays-goto.html><em>Objective-C 
+        Tuesdays: goto</em></a> was originally published on 
+        <time datetime=2009-12-01>2009-12-01</time>.
+    </footer>
+</section>

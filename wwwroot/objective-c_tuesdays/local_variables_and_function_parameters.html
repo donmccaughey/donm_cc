@@ -1,0 +1,122 @@
+<!doctype html>
+<html lang=en>
+<meta charset=utf-8>
+<meta content='initial-scale=0.9, width=device-width' name=viewport>
+<title>Local Variables And Function Parameters</title>
+<link href=/base.css rel=stylesheet>
+<nav class=menu>
+    <a href=/ >Don McCaughey</a> • <a href=/objective-c_tuesdays/ >Objective-C Tuesdays</a>
+</nav>
+<section>
+    <h1>Local Variables And Function Parameters</h1>
+    <p>
+        Last time when we looked at 
+        <a href=/objective-c_tuesdays/static_variables_in_functions.html><code>static</code>
+         variables declared inside functions</a>, we touched on local 
+        variables.  Today we'll focus on local variables and function 
+        parameters.
+    <p>
+        Local variables in C and Objective-C are declared like this:
+    <pre>// local variable examples
+void myFunction() {
+  // declare some local variables ...
+  <mark>int i</mark>; // uninitialized, will have some random value
+  <mark>NSString *s</mark> = @"foobar";
+  <mark>double sqrtOf2</mark> = sqrt(2);
+  
+  // do stuff ...
+}</pre>
+    <p>
+        Local variables are <strong>not</strong> initialized to zero, 
+        <code>NULL</code> or <code>nil</code> by default the way global 
+        variables are.  It's important to initialize a local variable before 
+        you use it, otherwise its initial value will be something random and 
+        almost certainly not something useful.  Function parameters are very 
+        similar to local variables, except that their value is defined by the 
+        caller of the function.
+    <pre>// function parameter examples
+void yourFunction(<mark>int i, NSString *s, double d</mark>) {
+  // do stuff ...
+}</pre>
+    <p>
+        In very old C code, you may sometimes see function parameters declared 
+        like this:
+    <pre>// old function parameter style
+myOldFunction(<mark>i, s, d</mark>) // only parameter names go here
+  <mark>int i</mark>;
+  <mark>NSString *s</mark>;
+  <mark>double d</mark>;
+  // parameter types are defined between
+  // the parameter list and curly brace
+{
+  // do stuff ...
+}</pre>
+    <p>
+        This old style is called K&amp;R C (for Kernighan &amp; Ritchie, the 
+        authors of 
+        <a href=https://en.wikipedia.org/wiki/The_C_Programming_Language><em>The 
+        C Programming Language</em></a> book) and has been replaced by the 
+        modern ANSI C style you're used to, but you many occasionally see it in 
+        very old code or examples.  (In fact, the function return type is 
+        optional in K&amp;R C and defaults to <code>int</code> if not given.)
+    <p>
+        Function parameters are available for the complete time that the 
+        function is executing.  Local variables however can have a more limited 
+        lifespan.  Typically, local variables are local to a function body, but 
+        they can also be local to the body of an <code>if</code>, 
+        <code>for</code>, <code>while</code> and <code>do-while</code> 
+        statement:
+    <pre>void printSquares() {
+  <mark>int x</mark>;
+  
+  for (x = 0; x &lt; 10; ++x) {
+    <mark>int x_squared</mark> = x * x; // only valid in the for loop
+
+    printf("%i^2 = %i\n", x, x_squared);
+  }
+  // x_squared no longer valid
+  // x still valid
+}</pre>
+    <p>
+        In fact, you can even use a set of curly braces alone to create a new 
+        local variable scope:
+    <pre>void someFunction() {
+  <mark>int x</mark>;
+  
+  // new local scope
+  {
+    <mark>int foo</mark> = 10; // local variable foo now valid
+    // ... do something with foo
+  }
+
+  // foo no longer valid
+  // x still valid
+}</pre>
+    <p>
+        In older versions of C and Objective-C, all local variables had to be 
+        declared at the start of a function or statement block.  So something 
+        like this:
+    <pre>void someFunction() {
+  <mark>int x</mark> = 10;
+  printf("x = %d\n", x);
+  
+  <mark>int y</mark> = 20; // not allowed before C99
+  printf("y = %d\n", y);
+}</pre>
+    <p>
+        would not compile.  The <a href=https://en.wikipedia.org/wiki/C99>C99 
+        standard</a> changed this to allow local variables to be declared at 
+        any point in a function, something that C++ has always allowed.  By 
+        default, Xcode Objective-C projects compile using C99 rules (this is 
+        set by the <em>C Language Dialect</em> build setting in Xcode or the 
+        <code>-std=c99</code> command line parameter to <code>gcc</code>).
+    <p>
+        Next time, we will look at 
+        <a href=/objective-c_tuesdays/instance_variables.html>instance 
+        variables of Objective-C classes</a>.
+    <footer>
+        <a href=http://blog.ablepear.com/2010/04/objective-c-tuesdays-local-variables.html><em>Objective-C 
+        Tuesdays: local variables and function parameters</em></a> was 
+        originally published on <time datetime=2010-04-06>2010-04-06</time>.
+    </footer>
+</section>

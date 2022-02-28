@@ -1,0 +1,134 @@
+<!doctype html>
+<html lang=en>
+<meta charset=utf-8>
+<meta content='initial-scale=0.9, width=device-width' name=viewport>
+<title>Extern And Global Variables</title>
+<link href=/base.css rel=stylesheet>
+<nav class=menu>
+    <a href=/ >Don McCaughey</a> • <a href=/objective-c_tuesdays/ >Objective-C Tuesdays</a>
+</nav>
+<section>
+    <h1>Extern And Global Variables</h1>
+    <p>
+        Welcome back and happy new year!  Last time we looked at 
+        <a href=/objective-c_tuesdays/global_variables.html>global variables 
+        and their initialization</a>.  Today we'll look at how to share global 
+        variables between <code>.c</code> and <code>.m</code> code files.
+    <p>
+        Frequently, you define a global variable in one code file and use it in 
+        another.  For instance, the file <code>MyView.m</code> might contain 
+        the  global variable <code>doubleTapEnabled</code>:
+    <pre>// MyView.m
+#include &lt;Foundation/Foundation.h>
+// ...
+BOOL doubleTapEnabled = YES;
+// ...</pre>
+    <p>
+        To use this variable in <code>main.m</code> you might do this:
+    <pre>// main.m
+#include &lt;Foundation/Foundation.h>
+
+<mark>BOOL doubleTapEnabled;</mark>
+
+int main(void) {
+  // ...
+  NSLog(@"doubleTapEnabled = %i", doubleTapEnabled);
+  // ...
+}</pre>
+    <p>
+        This will work the way you expect, but there's a subtle potential 
+        gotcha here.  Notice that in <code>MyView.m</code> we initialize 
+        <code>doubleTapEnabled</code> to <code>YES</code>.  When the compiler 
+        sees that, it interprets that statement as a global variable 
+        <em>definition</em> and allocates space for the 
+        <code>doubleTapEnabled</code> variable and sets its initial value.  
+    <p>
+        However, in <code>main.m</code> we don't give 
+        <code>doubleTapEnabled</code> an initial value, which makes that 
+        statement ambiguous: it could be a global variable <em>declaration</em> 
+        for <code>doubleTapEnabled</code> or a <em>definition</em>, with 
+        <code>doubleTapEnabled</code> initialized to zero (<code>NO</code>).
+    <p>
+        The difference between a <em>declaration</em> and a <em>definition</em> 
+        can be confusing since they're closely related (and the two words are 
+        unfortunately very similar).  A <em>declaration</em> tells the compiler 
+        that a global variable, struct, class or function exists somewhere.  A 
+        <em>definition</em> gives the compiler all the information it needs to 
+        generate the code for a global variable, struct, class or function.
+    <p>
+        A statement like
+    <pre>BOOL doubleTapEnabled;</pre>
+    <p>
+        can be either a <em>declaration</em> or a <em>definition</em>.  At link 
+        time, if an unambiguous <em>definition</em> isn't found, the global 
+        variable will be created and initialized to zero; if an unambiguous 
+        <em>definition</em> is found, that definition will be used to create 
+        the global variable.
+    <p>
+        So if you do something like this:
+    <pre>// ERROR: won't link
+
+// MyView.m
+// ...
+<mark>BOOL doubleTapEnabled = YES;</mark> // unambiguous definition
+// ...
+
+// main.m
+// ...
+<mark>BOOL doubleTapEnabled = YES;</mark> // unambiguous definition
+// ...</pre>
+    <p>
+        You will get a linker error like "duplicate symbol _doubleTapEnabled" 
+        because you told the compiler to create the same global variable in two 
+        different places.
+    <p>
+        This is where the <code>extern</code> keyword comes in.  You use 
+        <code>extern</code> with global variables to create unambiguous 
+        declarations.  In addition to helping the compiler, it also clues in 
+        anyone reading the code that the global variable is defined (and 
+        possibly initialized) elsewhere, but you're simply using it here.  So 
+        we can rewrite our example like this:
+    <pre>// MyView.m
+// ...
+BOOL doubleTapEnabled = YES; // unambiguous definition
+// ...
+
+// main.m
+// ...
+<mark>extern</mark> BOOL doubleTapEnabled; // defined in MyView.m
+// ...</pre>
+    <p>
+        And now <code>doubleTapEnabled</code> is happily unambiguous everywhere.
+    <p>
+        It's common style to add <code>extern</code> to all global variable 
+        declarations in your header (<code>.h</code>) files and provide a 
+        corresponding definition in a source (<code>.m</code> or 
+        <code>.c</code>) file.  So the header file <code>MyView.h</code> would 
+        look like:
+    <pre>// MyView.h
+// ...
+<mark>extern</mark> BOOL doubleTapEnabled;
+// ...</pre>
+    <p>
+        The source file <code>MyView.m</code> is the same:
+    <pre>// MyView.m
+// ...
+BOOL doubleTapEnabled = YES; // unambiguous definition
+// ...</pre>
+    <p>
+        And <code>main.m</code> now looks like:
+    <pre>// main.m
+// ...
+<mark>#include "MyView.h"</mark>
+// ...</pre>
+    <p>
+        Next time, we'll look at using 
+        <a href=/objective-c_tuesdays/static_variables.html>the 
+        <code>static</code> keyword</a> to make to make a global variable 
+        "private" to a source file.
+    <footer>
+        <a href=http://blog.ablepear.com/2010/01/objective-c-tuesdays-extern-and-global.html><em>Objective-C 
+        Tuesdays: extern and global variables</em></a> was originally published 
+        on <time datetime=2010-01-05>2010-01-05</time>.
+    </footer>
+</section>

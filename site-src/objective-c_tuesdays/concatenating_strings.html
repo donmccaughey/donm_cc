@@ -1,0 +1,182 @@
+<!doctype html>
+<html lang=en>
+<meta charset=utf-8>
+<meta content='initial-scale=0.9, width=device-width' name=viewport>
+<title>Concatenating Strings</title>
+<link href=/base.css rel=stylesheet>
+<nav class=menu>
+    <a href=/ >Don McCaughey</a> • <a href=/objective-c_tuesdays/ >Objective-C Tuesdays</a>
+</nav>
+<section>
+    <h1>Concatenating Strings</h1>
+    <p>
+        Last week we reviewed 
+        <a href=/objective-c_tuesdays/wide_character_strings.html>wide 
+        character strings</a>.  Today we'll begin looking at common string 
+        operations using C strings and <code>NSString</code>s, starting with 
+        string concatenation.
+    <p>
+        Many languages have built in support for string concatenation, but C 
+        and Objective-C isn't among them.  Instead, joining strings is 
+        accomplished using library functions in C and member functions of the 
+        <code>NSString</code> class in Objective-C.
+    <h2>C strings</h2>
+    <p>
+        Concatenating two C strings is particularly error prone, since it 
+        typically requires manually calculating the required buffer size and 
+        allocating it.
+    <pre>// concatenating two C strings
+char const *s1 = "foo";
+char const *s2 = "bar";
+size_t size = (strlen(s1) * sizeof(char)) + (strlen(s2) * sizeof(char)) + sizeof('\0');
+char *s3 = malloc(size);
+if (s3) {
+  strcpy(s3, s1);
+  strcat(s3, s2);
+} else {
+  // handle memory allocation failure
+}</pre>
+    <p>
+        Exploring this code in logical chunks, the first two lines are specific 
+        to this example: they define the two strings we're going to join, 
+        <code>s1</code> and <code>s2</code>.  The next line calculates the 
+        number of bytes required to hold the new string.
+    <pre>// calculate size of new string
+size_t size = (strlen(s1) * sizeof(char)) + (strlen(s2) * sizeof(char)) + sizeof('\0');</pre>
+    <p>
+        The <code>strlen()</code> function counts the number of 
+        <code>char</code>s in a string, <em>not</em> including the null 
+        terminator.  To be pedantically correct, we multiply the length of each 
+        string by the size of a <code>char</code>, but since the 
+        <code>char</code> integer type is one byte in size, we can write the 
+        size calculation this way instead:
+    <pre>size_t size = strlen(s1) + strlen(s2) + sizeof('\0');</pre>
+    <p>
+        If we were concatenating two wide character strings instead, we 
+        wouldn't be able to take that shortcut:
+    <pre>size_t size = (wcslen(ws1) * sizeof(wchar_t)) + (wcslen(ws2) * sizeof(wchar_t)) + sizeof(L'\0');</pre>
+    <p>
+        As a matter of style, I like to use the expression 
+        <code>sizeof('\0')</code> to account for the size of the null 
+        terminator, but it's more common to simply add one:
+    <pre>size_t size = strlen(s1) + strlen(s2) + 1;</pre>
+    <p>
+        The <code>malloc()</code> function allocates a block of memory.  If 
+        <code>malloc()</code> succeeds, it returns a non-<code>NULL</code> 
+        pointer to the memory you requested.
+    <pre>char *s3 = malloc(size);</pre>
+    <p>
+        After checking that the value of pointer <code>s3</code> is not 
+        <code>NULL</code>, we first call <code>strcpy()</code> 
+        ("<mark>str</mark>ing <mark>c</mark>o<mark>py</mark>") to copy the 
+        string pointed to by <code>s1</code> into the memory pointed to 
+        <code>s3</code>.
+    <pre>if (s3) {
+  strcpy(s3, s1);</pre>
+    <p>
+        The <code>strcpy()</code> function always places a null terminator at 
+        the end of the destination string.  When <code>strcpy()</code> returns, 
+        <code>s1</code> and <code>s3</code> point to identical C strings at 
+        different locations in memory.
+    <p>
+        Finally, we call <code>strcat()</code> ("<mark>str</mark>ing 
+        <mark>cat</mark>enate") to append <code>s2</code> to the end of 
+        <code>s3</code>.  ("Catenate" is a synonym for "concatenate".  Isn't 
+        English strange?)
+    <pre>strcat(s3, s2);</pre>
+    <p>
+        The <code>strcat()</code> function first walks down the destination 
+        string until it finds the null terminator, then it copies the source 
+        string there, overwriting the original null terminator and putting a 
+        new null terminator at the end of the appended string.  When using 
+        <code>strcat()</code> you need to be sure that the destination memory 
+        block contains enough space to hold the concatenated strings.  If it's 
+        too small, you will overwrite memory some other memory block, causing 
+        data corruption or a program crash.
+    <p>
+        If there isn't enough memory available, <code>malloc()</code> returns 
+        <code>NULL</code>.
+    <pre>if (s3) {
+  // ...
+} else {
+  // handle memory allocation failure
+}</pre>
+    <p>
+        Checking this return value is important; trying to use a 
+        <code>NULL</code> pointer will cause your program to be killed by the 
+        system.  Unfortunately handling errors like this deep in your code is 
+        generally a pain in the butt; frequently there's no good option except 
+        to abort the current operation.
+    <h2>using a fixed buffer</h2>
+    <p>
+        If you know the maximum size of the strings before hand and the 
+        concatenated string is an intermediate value, you can often use a fixed 
+        buffer instead of a call to <code>malloc()</code>:
+    <pre>// concatenating two C strings
+// using a fixed buffer
+char const *s1 = "foo";
+char const *s2 = "bar";
+char buffer[80];
+
+strcpy(buffer, s1);
+strcat(buffer, s2);
+// buffer now holds concatenated strings</pre>
+    <p>
+        This greatly simplifies C string concatenation, but if your input 
+        strings are too big, you'll overflow your buffer and cause a program 
+        crash.
+    <h2><code>NSString</code>s</h2>
+    <p>
+        Appending one <code>NSString</code> to another is pretty straight 
+        forward.  The <code>-stringByAppendingString:</code> instance method 
+        performs string concatenation, returning a new <code>NSString</code> 
+        instance
+    <pre>// concatenating two NSStrings
+NSString *s1 = @"foo";
+NSString *s2 = @"bar";
+NSString *s3 = [s1 stringByAppendingString:s2];</pre>
+    <p>
+        The resulting <code>NSString</code> (<code>s3</code>) is autoreleased 
+        and contains "foobar".
+    <h2>appending a formatted string</h2>
+    <p>
+        There's an alternate way to do <code>NSString</code> concatenation by 
+        using <code>-stringByAppendingFormat:</code>
+    <pre>// concatenating two NSStrings using a format
+NSString *s1 = @"foo";
+NSString *s2 = @"bar";
+NSString *s3 = [s1 stringByAppendingFormat:@"%@", s2];</pre>
+    <p>
+        Here, we specify a format string that contains an object replacement 
+        (<code>%@</code>) only.  Additional arguments after the format string 
+        must match the replacement specifiers in the format string.  This 
+        method first generates the formatted string then appends it to the 
+        receiver (<code>s1</code>).  It's not as efficient as using 
+        <code>-stringByAppendingString:</code> directly, but it's more 
+        flexible.  You can just as easily append an integer or a C string:
+    <pre>NSString *s1 = @"foo";
+
+// appending a number
+NSString *s2 = [s1 stringByAppendingFormat:@"%i", 1234];
+// s2 is "foo1234"
+
+// appending a C string
+char const *s3 = "bar";
+NSString *s4 = [s1 stringByAppendingFormat:@"%s", s3];
+// s4 is "foobar"</pre>
+    <h2><code>NSString</code> preferred</h2>
+    <p>
+        It should be apparent that <code>NSString</code> concatenation is much 
+        easier to deal with than the multi-step procedure required for C 
+        strings.  In iOS programs, you should generally use 
+        <code>NSString</code> whenever possible.
+    <p>
+        Next time, we'll look at 
+        <a href=/objective-c_tuesdays/string_comparison_and_equality.html>comparison 
+        operations and equality of C strings and <code>NSString</code>s</a>.
+    <footer>
+        <a href=http://blog.ablepear.com/2010/08/objective-c-tuesdays-concatenating.html><em>Objective-C 
+        Tuesdays: concatenating strings</em></a> was originally published on 
+        <time datetime=2010-08-03>2010-08-03</time>.
+    </footer>
+</section>

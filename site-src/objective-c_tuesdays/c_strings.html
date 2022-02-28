@@ -1,0 +1,198 @@
+<!doctype html>
+<html lang=en>
+<meta charset=utf-8>
+<meta content='initial-scale=0.9, width=device-width' name=viewport>
+<title>C Strings</title>
+<link href=/base.css rel=stylesheet>
+<nav class=menu>
+    <a href=/ >Don McCaughey</a> • <a href=/objective-c_tuesdays/ >Objective-C Tuesdays</a>
+</nav>
+<section>
+    <h1>C Strings</h1>
+    <p>
+        Welcome to the start of a new topic: <em>strings</em>.  We'll cover 
+        both plain old C strings as well as the much nicer 
+        <code>NSString</code>s of Objective-C (and their <code>CFString</code> 
+        siblings).  Today we start at the beginning with C strings.
+    <p>
+        C strings are also called null (or nul) terminated strings, zero 
+        terminated strings or sometimes z-strings.  A C string is simply a 
+        block of memory where bytes represent characters.  The last byte in the 
+        block contains a zero value (the nul character) to mark the end of the 
+        string.
+    <p>
+        Here is the memory layout of the string "iPhone" in ASCII encoding.  
+        The string starts at memory address 48:
+    <table class=memory_map>
+        <tr>
+                 <th>Address</th>     <th>48</th>     <th>49</th>     <th>50</th>     <th>51</th>     <th>52</th>     <th>53</th>     <th>54</th>   
+        </tr>
+        <tr>
+                 <td>Value</td>     <td>105</td>     <td>80</td>     <td>104</td>     <td>111</td>     <td>110</td>     <td>101</td>     <td>0</td>   
+        </tr>
+        <tr>
+                 <td>Character</td>     <td>'i'</td>     <td>'P'</td>     <td>'h'</td>     <td>'o'</td>     <td>'n'</td>     <td>'e'</td>     <td>'\0'</td>   
+        </tr>
+    </table>
+    <p>
+        Notice that "iPhone" is six characters long but uses seven bytes of 
+        memory, since it has a zero value after the last character to mark the 
+        end of the string.  Functions that work with C strings depend on the 
+        zero terminator being there to know how long the string is.  Forgetting 
+        to write a zero at the end, or overwriting it by accident is a common 
+        programming error when working with C strings.   This is a type of 
+        <a href=https://en.wikipedia.org/wiki/Buffer_overflow><em>buffer 
+        overrun</em></a> error that can lead to security breaches and program 
+        crashes.
+    <p>
+        Since C strings are just memory blocks, you declare C string variables 
+        as pointers to type <code>char</code> for mutable C strings or type 
+        <code>const char</code> or <code>char const</code> for constant 
+        (immutable) C strings.  (The <code>const</code> has the same meaning 
+        before or directly after the <code>char</code>.)
+    <pre>// example C string variable declarations
+char *mutable_c_string;
+const char *immutable_c_string1;
+char const *immutable_c_string2;</pre>
+    <p>
+        Since C string literals are immutable, variables that point to literals 
+        should be declared <code>const</code>, or the compiler will complain:
+    <pre>char const *string1 = "foobar"; // okay
+char *string2 = "barfoo";       // WARNING! should be const</pre>
+    <p>
+        When you need some temporary storage to receive a C string, it's common 
+        to declare a <code>char</code> array.
+    <pre>char buffer[81];
+sprintf(buffer, "The answer is %d\n", 42);</pre>
+    <p>
+        Here we use the <code>sprintf()</code> function to write formatted data 
+        to a string that's placed in <code>buffer</code>.
+    <p>
+        You may also sometimes see a C string declared like this:
+    <pre>char const name[] = "foo";</pre>
+    <p>
+        This is almost the same as:
+    <pre>char const *name = "foo";</pre>
+    <p>
+        There's a subtle and mostly unimportant difference between these two 
+        declarations.  The first one declares an array, the second one declares 
+        a pointer to an array.  We'll look at the difference between these two 
+        in the future when we cover arrays. 
+    <h2>Character Encodings</h2>
+    <p>
+        C doesn't mandate any specific character encoding for strings.  C 
+        strings frequently contain single byte encodings like ASCII or 
+        ISO-8859-1 (Latin-1).  In a single byte encoding, each byte in the C 
+        string corresponds to a character, and the encoding defines 256 
+        characters (or fewer -- some byte values may not be valid characters).  
+        C strings can also contain multibyte encodings such as UTF-8 or Shift 
+        JIS where some characters are represented by two or more bytes.  It's 
+        up to the application programmer to keep track of character encoding 
+        issues when using C strings.
+    <p>
+        Most encodings used today are ASCII compatible, meaning that character 
+        values from zero to 127 represent the same characters defined by the 
+        ASCII encoding.  If your program only ever processes ASCII text, you're 
+        in luck: you can ignore most encoding issues (at least until some pesky 
+        user decides to enter "San José" or "Björk").  In the real world, 
+        people use many more characters than the measly 128 in the ASCII set, 
+        so it's necessary to pay a little attention to character encodings when 
+        working with C strings.  When you have mismatched encodings, you get 
+        data corruption and unhappy users.
+    <p>
+        For example, here is the word "Γεεκ" ("Geek" in Greek letters) at 
+        memory address 64 using the 
+        <a href=https://en.wikipedia.org/wiki/ISO/IEC_8859-7>ISO-8859-7 single 
+        byte encoding</a>:
+    <table class=memory_map>
+        <tr>
+                 <th>Address</th>     <th>64</th>     <th>65</th>     <th>66</th>     <th>67</th>     <th>68</th>   
+        </tr>
+        <tr>
+                 <td>Value</td>     <td>195</td>     <td>229</td>     <td>229</td>     <td>234</td>     <td>0</td>   
+        </tr>
+        <tr>
+                 <td>Character</td>     <td>'Γ'</td>     <td>'ε'</td>     <td>'ε'</td>     <td>'κ'</td>     <td>'\0'</td>   
+        </tr>
+    </table>
+    <p>
+        And here is the word "Γεεκ" at memory address 64 using the multibyte 
+        UTF-8 encoding:
+    <table class=memory_map>
+        <tr>
+                 <th>Address</th>     <th>64</th>     <th>65</th>     <th>66</th>     <th>67</th>     <th>68</th>     <th>69</th>     <th>70</th>     <th>71</th>     <th>72</th>   
+        </tr>
+        <tr>
+                 <td>Value</td>     <td>206</td>     <td>147</td>     <td>206</td>     <td>181</td>     <td>206</td>     <td>181</td>     <td>206</td>     <td>186</td>     <td>0</td>   
+        </tr>
+        <tr>
+                 <td>Character</td>     <td colspan=2>'Γ'</td>     <td colspan=2>'ε'</td>     <td colspan=2>'ε'</td>     <td colspan=2>'κ'</td>     <td>'\0'</td>   
+        </tr>
+    </table>
+    <p>
+        Even though they represent the same text, the two strings have very 
+        different representations in memory.  If you fed one string into a 
+        function expecting the other encoding, you would get an error at best.  
+        Data corruption would be the usual result.
+    <h2>Converting Between Encodings</h2>
+    <p>
+        The standard C library doesn't provide support for converting between 
+        encodings.  On modern Unix and Unix-derived systems, the 
+        <a href=https://developer.apple.com/library/archive/documentation/System/Conceptual/ManPages_iPhoneOS/man3/iconv.3.html><code>iconv()</code></a>
+         function is commonly used to convert between encodings.  Objective-C 
+        programs usually use the facilities provided by <code>NSString</code> 
+        or <code>CFString</code>.  Since <code>NSString</code> and 
+        <code>CFString</code> objects are represented internally as Unicode, 
+        they can store text from any encoding.  To translate a C string to an 
+        <code>NSString</code>:
+    <pre>char const *c_string = "foobar";
+NSString *ns_string = [NSString stringWithCString:c_string 
+                                encoding:NSASCIIStringEncoding];</pre>
+    <p>
+        And to translate an <code>NSString</code> to a C string:
+    <pre>NSString *ns_string = @"foobar";
+NSData *c_string_data = [ns_string dataUsingEncoding:NSASCIIStringEncoding];
+char const *c_string = c_string_data.bytes;</pre>
+    <p>
+        When converting to a C string, the <code>-dataUsingEncoding:</code> 
+        method returns an <code>NSData</code> object to manage the memory that 
+        needs to be allocated for the C string.  You simply use the 
+        <code>-bytes</code> method to retrieve the C string pointer.
+    <p>
+        If you're using the UTF-8 encoding, you can do this in one step using 
+        the convenience method <code>-UTF8String</code>.
+    <pre>char const *c_string = ns_string.UTF8String;</pre>
+    <p>
+        Note that this is just a short cut for calling 
+        <code>-dataUsingEncoding:</code> with the 
+        <code>NSUTF8StringEncoding</code>; the returned C string lives in an 
+        autoreleased <code>NSData</code> object.  (This is great if you just 
+        need to pass a C string along to a C function, but you'll need to copy 
+        the returned C string if you want to keep it around.)
+    <p>
+        Core Foundation provides similar C functions.  You use <code> 
+        CFStringCreateWithCString()</code> to create a <code>CFString</code> 
+        from a C string:
+    <pre>char const *c_string = "foobar";
+CFStringRef cf_string = CFStringCreateWithCString(kCFAllocatorDefault, c_string, kCFStringEncodingASCII);</pre>
+    <p>
+        Converting from a <code>CFString</code> to a C string requires that you 
+        provide a buffer to receive the converted C string.
+    <pre>CFStringRef cf_string = (CFStringRef)@"foobar";
+char buffer[7];
+Boolean result = CFStringGetCString(cf_string, buffer, 7, kCFStringEncodingASCII);
+if (result == true) {
+  // ... conversion succeeded, okay to use string in buffer
+  printf("%s\n", buffer);
+}</pre>
+    <p>
+        There's a lot more to cover.  Computers may be all about numbers, but 
+        it seems to me that programming is 90% text processing.  Next time, 
+        we'll look at <a href=/objective-c_tuesdays/string_literals.html>C 
+        string literals and <code>NSString</code> literals</a>.
+    <footer>
+        <a href=http://blog.ablepear.com/2010/06/objective-c-tuesdays-c-strings.html><em>Objective-C 
+        Tuesdays: C strings</em></a> was originally published on 
+        <time datetime=2010-06-15>2010-06-15</time>.
+    </footer>
+</section>

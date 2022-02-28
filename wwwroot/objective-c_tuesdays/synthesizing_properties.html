@@ -1,0 +1,195 @@
+<!doctype html>
+<html lang=en>
+<meta charset=utf-8>
+<meta content='initial-scale=0.9, width=device-width' name=viewport>
+<title>Synthesizing Properties</title>
+<link href=/base.css rel=stylesheet>
+<nav class=menu>
+    <a href=/ >Don McCaughey</a> • <a href=/objective-c_tuesdays/ >Objective-C Tuesdays</a>
+</nav>
+<section>
+    <h1>Synthesizing Properties</h1>
+    <p>
+        Welcome to another episode of <em>Objective-C Tuesdays</em>.  Today we 
+        pick up 
+        <a href=/objective-c_tuesdays/at-property_and_at-synthesize.html>where 
+        we left off</a> and dive into the <code>@synthesize</code> directive 
+        that tells the compiler to write getters and setters automatically.
+    <p>
+        We already saw that the <code>@property</code> directive can shrink the 
+        boilerplate code in a class <code>@interface</code> declaration 
+        somewhat.  We started with this:
+    <pre>@interface Person : NSObject {
+  int age;
+  Address *address;
+  NSString *name;
+}
+
+- (int)age;
+- (void)setAge:(int)anAge;
+
+- (Address *)address;
+- (void)setAddress:(Address *)anAddress;
+
+- (NSString *)name;
+- (void)setName:(NSString *)aName;
+
+// ...
+@end</pre>
+    <p>
+        And by using properties, we end up with this:
+    <pre>@interface Person : NSObject {
+  int age;
+  Address *address;
+  NSString *name;
+}
+
+<mark>@property int age;</mark>
+<mark>@property (retain) Address *address;</mark>
+<mark>@property (copy) NSString *name;</mark>
+
+// ...
+@end</pre>
+    <p>
+        It's not a giant difference, but it's an improvement.  As well as 
+        making the code more compact, it separates the logical properties of 
+        the class from the rest of the methods.  Where <code>@property</code> 
+        really starts to pay off is when we combine it with 
+        <code>@synthesize</code>.  The <code>@implementation</code> for the 
+        <code>Person</code> class looks like this:
+    <pre>// hand written getter and setter methods
+@implementation Person
+
+- (int)age {
+  return age;
+}
+
+// assign-type setter
+- (void)setAge:(int)anAge {
+  age = anAge;
+}
+
+- (Address *)address {
+  return address;
+}
+
+// retain-type setter
+- (void)setAddress:(Address *)anAddress {
+  if (address != anAddress) {
+    [address release];
+    address = [anAddress retain];
+  }
+}
+
+- (NSString *)name {
+  return name;
+}
+
+// copy-type setter
+- (void)setName:(NSString *)aName {
+  if (name != aName) {
+    [name release];
+    name = [aName copy];
+  }
+}
+
+// ...
+
+@end</pre>
+    <p>
+        That's a lot of boilerplate code to churn out, and memory management in 
+        the retain and copy type setters makes it more error prone than simple 
+        assign type setters.  It's just begging to be machine generated, so 
+        let's do that:
+    <pre>// synthesized getter and setter methods
+@implementation Person
+
+<mark>@synthesize age, address, name;</mark>
+
+// ...
+@end</pre>
+    <p>
+        All that onerous code can be deleted, and the compiler now generates 
+        the correct type of getters and setters based on the attributes of the 
+        corresponding <code>@property</code> directive.  Note that to use 
+        <code>@synthesize</code>, you <em>must</em> have a corresponding 
+        <code>@property</code> in the <code>@interface</code> section.  I like 
+        to put the property names in a list after <code>@synthesize</code>, but 
+        you can have multiple <code>@synthesize</code> lines if you like, with 
+        one or several property names per line:
+    <pre>@implementation Person
+
+<mark>@synthesize age;</mark>
+<mark>@synthesize address, name;</mark>
+
+// ...
+@end</pre>
+    <p>
+        If you need to provide a particular getter or setter yourself, but you 
+        want the compiler to write the rest of them, you simply add it to your 
+        <code>@implementation</code>.  The compiler looks first to see what you 
+        provided before it generates anything.  So if we need to do a check 
+        when setting the <code>age</code> of a <code>Person</code> instance, we 
+        simply write our own setter:
+    <pre>// synthesized getter and setter methods
+// with one custom setter
+@implementation Person
+
+@synthesize age, address, name;
+
+- (void)setAge:(int)anAge {
+  age = anAge;
+  if (age >= 55) {
+    [[JunkMailer sharedJunkMailer] addPersonTo<a href=https://www.aarp.org>AARP</a>MailingList:self];
+  }
+}
+
+// ...
+@end</pre>
+    <p>
+        This is great, but sometimes you want the property to have a different 
+        name than the instance variable that backs it up.  For example, we 
+        might call the instance variable <code>ageInYears</code>, but want to 
+        call the property <code>age</code>:
+    <pre>@interface Person : NSObject {
+  int <mark>ageInYears</mark>;
+  // ...
+}
+
+@property int <mark>age</mark>;
+
+// ...
+@end
+
+
+@implementation Person
+
+@synthesize <mark>age</mark>, address, name;
+
+// ...
+@end</pre>
+    <p>
+        This confuses the compiler and it complains:
+    <pre>synthesized property 'age' must either be named the same as a compatible ivar or must explicitly name an ivar</pre>
+    <p>
+        So how do we tell it to use the instance variable 
+        <code>ageInYears</code> when generating the <code>age</code> property?  
+        The <code>@synthesize</code> directive has one modifier, which solves 
+        our problem:
+    <pre>@implementation Person
+
+@synthesize <mark>age = ageInYears</mark>, address, name;
+
+// ...
+@end</pre>
+    <p>
+        That wraps up normal usage of <code>@synthesize</code>.  Next week, we 
+        look at one attribute of <code>@property</code> that we've neglected so 
+        far: 
+        <a href=/objective-c_tuesdays/atomic_and_nonatomic_properties.html><code>nonatomic</code></a>.
+    <footer>
+        <a href=http://blog.ablepear.com/2010/05/objective-c-tuesdays-synthesizing.html><em>Objective-C 
+        Tuesdays: synthesizing properties</em></a> was originally published on 
+        <time datetime=2010-05-04>2010-05-04</time>.
+    </footer>
+</section>

@@ -1,0 +1,252 @@
+<!doctype html>
+<html lang=en>
+<meta charset=utf-8>
+<meta content='initial-scale=0.9, width=device-width' name=viewport>
+<title>Atomic And Nonatomic Properties</title>
+<link href=/base.css rel=stylesheet>
+<nav class=menu>
+    <a href=/ >Don McCaughey</a> • <a href=/objective-c_tuesdays/ >Objective-C Tuesdays</a>
+</nav>
+<section>
+    <h1>Atomic And Nonatomic Properties</h1>
+    <p>
+        Two weeks ago we looked at 
+        <a href=/objective-c_tuesdays/at-property_and_at-synthesize.html>the 
+        <code>@property</code> directive</a> and last week we saw how to use 
+        <a href=/objective-c_tuesdays/synthesizing_properties.html>the 
+        <code>@synthesize</code> directive</a> to tell the compiler to generate 
+        getters and setters for properties.  We've covered the most commonly 
+        used attributes of the <code>@property</code> directive: 
+        <code>readonly</code>/<code>readwrite</code> and 
+        <code>assign</code>/<code>retain</code>/<code>copy</code>.  Today we'll 
+        look at the <code>nonatomic</code> attribute and talk about what it's 
+        for and why you should (or should not) use it.
+    <h2>Threads and data</h2>
+    <p>
+        By default, your app's code executes on the main thread of your app's 
+        process, along with most Cocoa Touch framework code.  Any particular 
+        method or function runs uninterrupted from start to finish and as long 
+        as that method or function leaves all the data it touches in a good 
+        state when it returns, your program runs correctly.
+    <p>
+        When you have multiple threads in your application, things aren't so 
+        easy.  One key challenge when using multiple threads is to make sure 
+        you only read data when it's in a consistent state.  This is similar in 
+        concept to using a transaction in a SQL database.
+    <p>
+        Suppose you have a custom UI object that's defined like this:
+    <pre>@interface MyWidget {
+  CGPoint center;
+  // ...
+}
+@property CGPoint center;
+// ...
+@end
+
+@implementation
+
+@synthesize center;
+
+// ...
+@end</pre>
+    <p>
+        If you treat instances of this class as read only when you share them 
+        between threads, you're safe.  The trouble appears when one or both 
+        threads start to make changes to the object.  If we were to write the 
+        getter and setter for <code>center</code>, it would look like this:
+    <pre>// example assign-type getter and setter
+- (CGPoint) center {
+  return center;
+}
+- (void)setCenter:(CGPoint)theCenter {
+  center = theCenter;
+}</pre>
+    <p>
+        This looks simple enough, but the compiler is helping us out here.  The 
+        <code>center</code> instance variable is a <code>struct</code> that's 
+        defined like this:
+    <pre>// struct CGPoint
+struct CGPoint {
+  CGFloat x;
+  CGFloat y;
+};</pre>
+    <p>
+        The <code>setCenter:</code> method is actually doing something like 
+        this:
+    <pre>- (void)setCenter:(CGPoint)theCenter {
+  center.x = theCenter.x;
+  center.y = theCenter.y;
+}</pre>
+    <p>
+        Let's look at what happens when one thread calls the setter and a 
+        second thread calls the getter.  In the simple case, the setter and 
+        getter calls don't overlap:
+    <pre>// given MyWidget instance myWidget:
+
+// thread 1 calls setter:
+[myWidget setCenter:CGPointMake(<mark>1.0f, 2.0f</mark>)];
+
+// setCenter method executes:
+- (void)setCenter:(CGPoint)theCenter {
+  center.x = theCenter.x; // 1.0f
+  center.y = theCenter.y; // 2.0f
+}
+// center is now {<mark>1.0f, 2.0f</mark>}
+
+// ... thread 1 preempted by thread 2 ...
+
+                    // thread 2 calls getter:
+                    CGPoint point = [myWidget center];
+                    
+                    // center method executes:
+                    - (CGPoint) center {
+                      return center; // 1.0f, 2.0f
+                    }
+                    
+                    // point is now {<mark>1.0f, 2.0f</mark>}</pre>
+    <p>
+        In this case, we get the answer we expect.  Now suppose we do this 
+        again, only thread 1 gets preempted by thread 2 in the middle of the 
+        <code>setCenter</code> method:
+    <pre>// myWidget.center is {1.0f, 2.0f}
+
+// thread 1 calls setter:
+[myWidget setCenter:CGPointMake(3.0f, 5.0f)];
+
+// setCenter method executes:
+- (void)setCenter:(CGPoint)theCenter {
+  center.x = theCenter.x; // 3.0f
+
+// ... thread 1 preempted by thread 2 ...
+
+                    // thread 2 calls getter:
+                    CGPoint point = [myWidget center];
+                    
+                    // center method executes:
+                    - (CGPoint) center {
+                      return center; // 3.0f, <mark>2.0f</mark>
+                    }
+                    
+                    // point is now {3.0f, <mark>2.0f</mark>}
+
+  center.y = theCenter.y; // 5.0f
+}
+
+// myWidget.center is now {3.0f, <mark>5.0f</mark>}
+// but thread 2 read {3.0f, <mark>2.0f</mark>}</pre>
+    <p>
+        Now thread 2 is working off of a corrupt value and things are likely to 
+        go haywire.  To solve this problem, we need to prevent all threads from 
+        reading <code>center</code> until the <code>setCenter:</code> method is 
+        finished.  Because this is a common problem in multithreaded code, 
+        Objective-C has a special directive to accomplish this: 
+        <code>@synchronized</code>.  We can rewrite our getter and setter for 
+        the <code>center</code> property like this:
+    <pre>// adding @synchronized to getter and setter
+- (CGPoint) center {
+  CGPoint theCenter;
+  <mark>@synchronized(self)</mark> {
+    theCenter = center;
+  }
+  return theCenter;
+}
+- (void)setCenter:(CGPoint)theCenter {
+  <mark>@synchronized(self)</mark> {
+    center = theCenter;
+  }
+}</pre>
+    <p>
+        Now when we read and write <code>center</code> from two threads, 
+        <code>@synchronized</code> causes other threads to pause whenever one 
+        thread is inside either of the <code>@synchronized</code> blocks:
+    <pre>// myWidget.center is {1.0f, 2.0f}
+
+// thread 1 calls setter:
+[myWidget setCenter:CGPointMake(3.0f, 5.0f)];
+
+// setCenter method executes:
+- (void)setCenter:(CGPoint)theCenter {
+  <mark>@synchronized(self)</mark> {
+    center.x = theCenter.x; // 3.0f
+
+// ... thread 1 preempted by thread 2 ...
+
+                    // thread 2 calls getter:
+                    CGPoint point = [myWidget center];
+                    
+                    // center method executes:
+                    - (CGPoint) center {
+                      CGPoint theCenter;
+                      <mark>@synchronized(self)</mark> {
+                      // thread 1 is already synchronized on 
+                      // <mark>self</mark> so thread 2 pauses here
+
+// ... thread 2 yields and thread 1 runs again ...
+
+    // still inside @synchronized on thread 1
+    center.y = theCenter.y; // 5.0f
+  }
+}
+
+// ... thread 1 preempted by thread 2 again ...
+
+                      <mark>@synchronized(self)</mark> {
+                        // now thread 2 resumes
+                        theCenter = center; // 3.0f, 5.0f
+                      }
+                      return theCenter; // 3.0f, <mark>5.0f</mark>
+                    }
+                    
+                    // point is now {3.0f, <mark>5.0f</mark>}</pre>
+    <p>
+        I'm glossing over many of the details of <code>@synchronized</code>  
+        here.  If you're writing multithreaded code, you should read the 
+        <a href=https://developer.apple.com/library/archive/documentation/Cocoa/Conceptual/Multithreading/Introduction/Introduction.html>Threading 
+        Programming Guide</a>.  The key concept here is that by default, the 
+        <code>@synthesize</code> directive generates this type of 
+        synchronization for you.
+    <h2>Atomic or <code>nonatomic</code></h2>
+    <p>
+        Behind the scenes, the <code>@synchronized</code> directive uses a lock 
+        to prevent two threads from accessing a <code>@synchronized</code> 
+        block simultaneously.  Although acquiring and releasing the lock is 
+        very quick, it's not free.  Occasionally you have a property that is so 
+        frequently accessed that all this locking and unlocking adds up to a 
+        noticeable penalty.  In these rare cases, you can declare the property 
+        to be <code>nonatomic</code>:
+    <pre>@interface MyWidget {
+  CGPoint center;
+  // ...
+}
+@property (<mark>nonatomic</mark>) CGPoint center;
+// ...
+@end</pre>
+    <p>
+        The compiler omits the synchronization code when generating 
+        <code>nonatomic</code> getters and setters.  Note that there isn't a 
+        corresponding <code>atomic</code> attribute for <code>@property</code>; 
+        generated getters and setters are synchronized by default.
+    <h2>Don't prematurely optimize</h2>
+    <p>
+        Acquiring a lock is very fast in the common case where no other thread 
+        is holding it.  According to Apple's docs, it takes about 0.0000002 
+        seconds (that's 0.2 microseconds) on a modern Mac.  Even though the 
+        iPhone is much slower, you need to be acquiring locks hundreds of 
+        thousands of times before you should consider synchronization overhead 
+        as anything significant.  For the vast majority of code, you should 
+        simply not even worry about <code>nonatomic</code>.
+    <p>
+        Also, keep in mind that the attributes you set on your 
+        <code>@property</code> declarations only apply when you use 
+        <code>@synthesize</code> to have the compiler generate the getter and 
+        setter methods.  If you write the getter or setter yourself, the 
+        attributes are ignored.  
+        <a href=/objective-c_tuesdays/changing_default_property_names.html>Next 
+        week</a> we'll look a little more at synchronization and show you how 
+        to write a thread safe getter when returning an Objective-C object.
+    <footer>
+        <a href=http://blog.ablepear.com/2010/05/objective-c-tuesdays-atomic-and.html><em>Objective-C 
+        Tuesdays: atomic and nonatomic properties</em></a> was originally 
+        published on <time datetime=2010-05-11>2010-05-11</time>.
+    </footer>
+</section>

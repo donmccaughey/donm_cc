@@ -1,0 +1,139 @@
+<!doctype html>
+<html lang=en>
+<meta charset=utf-8>
+<meta content='initial-scale=0.9, width=device-width' name=viewport>
+<title>Continue</title>
+<link href=/base.css rel=stylesheet>
+<nav class=menu>
+    <a href=/ >Don McCaughey</a> • <a href=/objective-c_tuesdays/ >Objective-C Tuesdays</a>
+</nav>
+<section>
+    <h1>Continue</h1>
+    <p>
+        <a href=/objective-c_tuesdays/break_out_of_a_loop.html>Last week</a> we 
+        looked at how to end a loop early using the <code>break</code> keyword. 
+         Today we will look at a similar action: how to skip to the next 
+        iteration.
+    <p>
+        Sometimes you need to process each item in a collection or sequence, 
+        but some of those items get full processing and some don't.  For 
+        example, you may want to skip empty strings in a collection.  
+        Frequently you do this using an <code>if...else</code> statement:
+    <pre>NSArray *collection = [NSArray arrayWithObjects: @"foo", @"", @"bar", @"baz", @"", nil];
+int wordCount = 0;
+for (NSString *item in collection) {
+  NSLog(@"found '%@'", item);
+  if (item.length > 0) {
+    wordCount++;
+  }
+}
+NSLog(@"word count = %d", wordCount);</pre>
+    <p>
+        This is generally a good approach, but sometimes you have complex 
+        nested logic:
+    <pre>NSArray *collection = [NSArray arrayWithObjects: @"foo", @"\n", @"bar", @"baz", @"", nil];
+int wordCount = 0;
+for (NSString *item in collection) {
+  NSLog(@"found '%@'", item);
+  if (item.length > 0) {
+    if ( ! [item isEqualToString:@"\n"]) {
+      wordCount++;
+      if (item.length &lt; 4) {
+        NSLog(@"short word");
+      } else {
+        NSLog(@"long word");
+      }
+    }
+  }
+}
+NSLog(@"word count = %d", wordCount);</pre>
+    <p>
+        The <code>continue</code> statement can help you simplify complicated 
+        cases like this by stopping the execution of the loop body for the 
+        current item and advancing to the next.  Using <code>continue</code>, 
+        we can rewrite the example like this:
+    <pre>NSArray *collection = [NSArray arrayWithObjects: @"foo", @"\n", @"bar", @"baz", @"", nil];
+int wordCount = 0;
+for (NSString *item in collection) {
+  NSLog(@"found '%@'", item);
+  if (item.length > 0) <mark>continue</mark>;
+  if ([@item isEqualToString:"\n"]) <mark>continue</mark>;
+
+  wordCount++;
+  if (item.length &lt; 4) {
+    NSLog(@"short word");
+  } else {
+    NSLog(@"long word");
+  }
+}
+NSLog(@"word count = %d", wordCount);</pre>
+    <p>
+        Like <code>break</code>, a <code>continue</code> statement only works 
+        on the innermost loop that encloses it:
+    <pre>// outer loop
+for (int i = 0; i &lt; 10; i++) { // loop A
+  if (...) continue; // skips to next item in A
+  
+  // inner loop
+  for (int j = 0; j &lt; 10; j++) { // loop B
+    if (...) continue; // skips to next item in B
+  }
+  
+  if (...) continue; // skips to next item in A
+  
+}</pre>
+    <p>
+        The <code>continue</code> statement is most useful with a 
+        <code>for</code> or <code>for...in</code> loop, but can be used with a 
+        <code>while</code> and <code>do...while</code> loop with care.  It's 
+        easy to create an infinite <code>while</code> loop using 
+        <code>continue</code>:
+    <pre>NSArray *collection = [NSArray arrayWithObjects: @"foo", @"", @"bar", @"baz", @"", nil];
+int wordCount = 0;
+int i = 0;
+while (i &lt; collection.count) {
+  NSString *item = [collection objectAtIndex:i];
+  NSLog(@"found '%@'", item);
+  if (item.length > 0) {
+    <mark>continue</mark>; // OOPS! forgot to increment i
+  }
+
+  wordCount++;
+  i++;
+}
+NSLog(@"word count = %d", wordCount);</pre>
+    <p>
+        This loop will reach the second item in the collection and get stuck 
+        there -- it never reaches the <code>i++</code> at the end of the loop 
+        body.  The solution is simple:
+    <pre>NSArray *collection = [NSArray arrayWithObjects: @"foo", @"", @"bar", @"baz", @"", nil];
+int wordCount = 0;
+int i = 0;
+while (i &lt; collection.count) {
+  NSString *item = [collection objectAtIndex:i];
+  NSLog(@"found '%@'", item);
+  if (item.length > 0) {
+    <mark>i++;</mark>;  // move to next item
+    <mark>continue</mark>;
+  }
+
+  wordCount++;
+  i++;
+}
+NSLog(@"word count = %d", wordCount);</pre>
+    <p>
+        This is a consequence of the free-form nature of the <code>while</code> 
+        and <code>do...while</code> loops.  The compiler knows how to make a 
+        <code>for</code> or <code>for...in</code> loop advance to the next 
+        item, but the other loops leave that up to you; <code>continue</code> 
+        acts more like a special <code>goto</code> statement with 
+        <code>while</code> and <code>do...while</code> loops.
+    <p>
+        <a href=/objective-c_tuesdays/goto.html>Next time</a>, we'll look at 
+        the mother of all loops, the <code>goto</code> statement.
+    <footer>
+        <a href=http://blog.ablepear.com/2009/11/objective-c-tuesdays-continue.html><em>Objective-C 
+        Tuesdays: continue</em></a> was originally published on 
+        <time datetime=2009-11-24>2009-11-24</time>.
+    </footer>
+</section>

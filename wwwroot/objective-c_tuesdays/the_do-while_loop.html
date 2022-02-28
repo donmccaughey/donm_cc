@@ -1,0 +1,98 @@
+<!doctype html>
+<html lang=en>
+<meta charset=utf-8>
+<meta content='initial-scale=0.9, width=device-width' name=viewport>
+<title>The Do...While Loop</title>
+<link href=/base.css rel=stylesheet>
+<nav class=menu>
+    <a href=/ >Don McCaughey</a> • <a href=/objective-c_tuesdays/ >Objective-C Tuesdays</a>
+</nav>
+<section>
+    <h1>The Do...While Loop</h1>
+    <p>
+        <a href=/objective-c_tuesdays/the_while_loop.html>Last time</a> we 
+        looked at the <code>while</code> loop.  Today we'll examine it's 
+        sibling the <code>do...while</code> loop.
+    <p>
+        Unlike the <code>while</code> loop, the <code>do...while</code> loop is 
+        guaranteed to execute the loop body at least once.  The loop 
+        <em>condition</em> is checked at the end of each loop iteration.
+    <p>
+        The <code>do...while</code> loop starts with the keyword <code>do</code>
+         followed by a single <em>statement</em> or <em>block</em> that makes 
+        up the body of the loop.  The loop body is followed by the keyword 
+        <code>while</code> and parentheses containing the <em>condition</em> 
+        with a semicolon at the end.
+    <p>
+        The <code>do...while</code> loop is almost always written on three or 
+        more lines, and almost always with a block instead of a single 
+        statement.
+    <pre>/* do...while loop with a single statement */
+do
+  <mark>statement</mark>;
+while (<mark>condition</mark>);
+
+/* do...while loop with a block */
+do {
+  <mark>block</mark>;
+} while (<mark>condition</mark>);</pre>
+    <p>
+        Initialization of the loop counter or other loop variables must be done 
+        before the <code>do...while</code> statement; this often means 
+        declaring and initializing a local variable:
+    <pre>int i = 0;
+do {
+  /* ... */
+} while (i &lt; 10);</pre>
+    <p>
+        When using a loop counter, it's important to remember to advance the 
+        counter to the next value in the body of the loop.  For instance, to 
+        log the numbers 0 through 9: 
+    <pre>int i = 0;
+do {
+  NSLog(@"%d", i);
+  <mark>i++; /* advance the loop counter */</mark>
+} while (i &lt; 10);</pre>
+    <p>
+        If you forget to advance the loop counter, you'll create an infinite 
+        loop. 
+    <pre>int i = 0;
+/* warning, infinite loop, i is always 0 */
+do {
+  NSLog(@"%d", i);
+  <mark>/* oops, forgot to increment i */</mark>
+} while (i &lt; 10);</pre>
+    <p>
+        The key thing that differentiates the <code>do...while</code> loop from 
+        the <code>while</code> loop is that it always executes the loop body at 
+        least once; the <code>while</code> loop doesn't guarantee that.  An 
+        example of this difference: 
+    <pre>BOOL looping = NO;
+
+NSLog(@"before while loop:");
+while (looping) {
+  NSLog(@"  executing the while loop");
+}
+NSLog(@"after while loop:");
+
+NSLog(@"before do...while loop:");
+do {
+  NSLog(@"  executing the do...while loop");
+} while (looping);
+NSLog(@"after do...while loop:");</pre>
+    <p>
+        The output of these two loops looks like this: 
+    <pre>before while loop:
+after while loop:
+before do...while loop:
+  executing the do...while loop
+after do...while loop:</pre>
+    <p>
+        <a href=/objective-c_tuesdays/break_out_of_a_loop.html>Next week</a>, 
+        we'll look at using <code>break</code> to break out of a loop.
+    <footer>
+        <a href=http://blog.ablepear.com/2009/11/objective-c-tuesdays-dowhile-loop.html><em>Objective-C 
+        Tuesdays: the do...while loop</em></a> was originally published on 
+        <time datetime=2009-11-10>2009-11-10</time>.
+    </footer>
+</section>

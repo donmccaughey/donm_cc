@@ -1,0 +1,348 @@
+<!doctype html>
+<html lang=en>
+<meta charset=utf-8>
+<meta content='initial-scale=0.9, width=device-width' name=viewport>
+<title>Sorting Arrays</title>
+<link href=/base.css rel=stylesheet>
+<nav class=menu>
+    <a href=/ >Don McCaughey</a> • <a href=/objective-c_tuesdays/ >Objective-C Tuesdays</a>
+</nav>
+<section>
+    <h1>Sorting Arrays</h1>
+    <p>
+        <a href=https://futurama.fandom.com/wiki/Good_news,_everyone!>Good news 
+        everyone!</a> Objective-C Tuesdays is back! We left off a few weeks ago 
+        talking about 
+        <a href=/objective-c_tuesdays/more_about_dynamic_arrays.html>techniques 
+        for inserting and removing items in arrays</a>. Today we will cover 
+        sorting C arrays as well as <code>NSArray</code>s and 
+        <code>NSMutableArray</code>s.
+    <h2>Sorting C arrays with <code>qsort()</code></h2>
+    <p>
+        The C standard library includes only one built-in way to sort C arrays: 
+        the <code>qsort()</code> function. <code>qsort()</code> is an 
+        implementation of the 
+        <a href=https://en.wikipedia.org/wiki/Quicksort>quicksort 
+        algorithm</a>, a good general purpose sorting algorithm. 
+        <code>qsort()</code> sorts an array in place.
+    <p>
+        The <code>qsort()</code> prototype looks like this:
+    <pre>qsort(void *array, size_t itemCount, size_t itemSize,
+     int (*comparator)(void const *, void const *));</pre>
+    <p>
+        If you're not experienced using function pointers in C, the declaration 
+        of <code>qsort()</code> will look confusing. That's because declaring a 
+        C function pointer type <em>is</em> confusing. I'll use a 
+        <code>typedef</code> to make things easier to understand:
+    <pre>// alternate declaration of qsort using a <code>typedef</code>:
+typedef int (*<mark>Comparator</mark>)(void const *, void const *);
+
+qsort(void *array, size_t itemCount, size_t itemSize,
+     <mark>Comparator</mark> comparator);</pre>
+    <p>
+        Function pointers are declared in the same way that functions are 
+        declared in C, except they have a <code>*</code> before the function 
+        name like other pointer variables do. But there's one hitch. In a 
+        function pointer declaration, the <code>*</code> is ambiguous; by 
+        default, C will assume the <code>*</code> is part of the return type of 
+        the function. So when you declare a function pointer, you need a set of 
+        parentheses around the <code>*</code> and the function name in order to 
+        clue in the compiler.
+    <pre>// declare a function returning a pointer to an int
+<mark>int *</mark>returnAPointerToSomeInt(void);
+// which is interpreted as:
+// <mark>(int *)</mark>returnAPointerToSomeInt(void);
+
+// declare a pointer to a function returning an int
+int <mark>(*</mark>returnSomeInt<mark>)</mark>(void);</pre>
+    <p>
+        Now that we've cleared that up, let's look at the declaration of 
+        <code>qsort()</code> again.
+    <pre>typedef int (*<mark>Comparator</mark>)(void const *, void const *);
+
+qsort(void *<mark>array</mark>, size_t <mark>itemCount</mark>, size_t <mark>itemSize</mark>,
+     Comparator <mark>comparator</mark>);</pre>
+    <p>
+        The first three parameters of <code>qsort()</code> specify the array to 
+        sort, the count of items in the array and the size (in bytes) of a 
+        single item. Note that the array is of type <code>void *</code>, which 
+        allows us to pass any type of C array into <code>qsort()</code>.
+    <p>
+        The last parameter is the comparator function.
+    <pre>typedef int (*Comparator)(void const *<mark>item1</mark>, void const *<mark>item2</mark>);</pre>
+    <p>
+        The comparator takes pointers to two items from the array and returns a 
+        negative number if <code>item1</code> belongs <em>before</em> 
+        <code>item2</code>, a positive number if <code>item1</code> belongs 
+        <em>after</em> <code>item2</code> and zero if the two items are equal 
+        (or have equivalent ordering). This style of comparator function is 
+        used in many languages for sorting. I think of the items positioned on 
+        a number line when trying to understand a comparator:
+    <pre>  item1 &lt;=====&lt;&lt; item2
+&lt;-+------+-----+------+------+->
+ -2     -1     0      1      2
+
+          item2 >>=====> item1
+&lt;-+------+-----+------+------+->
+ -2     -1     0      1      2</pre>
+    <p>
+        When item1 belongs <em>before</em> item2, the comparator function will 
+        return a negative number; when item1 belongs <em>after</em> item2, the 
+        comparator returns a positive number. This relationship is the 
+        difference between item1 and item2, or <code>item1 - item2</code>.
+    <p>
+        The C standard library doesn't include many comparator functions, but 
+        they're easy to write. Here's an example of a comparator for 
+        <code>int</code>s to sort them in natural order:
+    <pre>int compareInts(void const *item1, void const *item2) {
+ int const *int1 = item1;
+ int const *int2 = item2;
+ return *int1 - *int2;
+}</pre>
+    <p>
+        We create local variables <code>int1</code> and <code>int2</code> since 
+        a void pointer will automatically convert to a typed pointer in C, and 
+        we know that <code>qsort()</code> will actually be giving us pointers 
+        to <code>int</code>s.  The two parameters are also <code>const</code>, 
+        so we can't modify the <code>int</code> values that the items point to 
+        (which would cause <code>qsort()</code> to go haywire). Then we can 
+        simply return the difference between the two <code>int</code> values to 
+        determine their sort order. We could do this in one line using casts 
+        and parentheses:
+    <pre>int compareInts(void const *item1, void const *item2) {
+ return *( (int const *) item1) - *( (int const *) item2);
+}</pre>
+    <p>
+        Either way, now we can use our <code>compareInts()</code> function to 
+        sort an array of <code>int</code>s:
+    <pre>int array[6] = { 42, 17, 57, 19, 11, 5 };
+
+qsort(array, 6, sizeof(int), compareInts);
+// array now contains 5, 11, 17, 19, 42, 57</pre>
+    <p>
+        Now suppose we wanted to sort our array in reverse order? We would 
+        still use <code>qsort()</code> to do the job, but employ a different 
+        comparator function. Here is <code>compareIntsReversed()</code>:
+    <pre>int compareIntsReversed(void const *item1, void const *item2) {
+ int const *int1 = item1;
+ int const *int2 = item2;
+ return -(*<mark>int1</mark> - *<mark>int2</mark>);
+ // or simply return *<mark>int2</mark> - *<mark>int1</mark>;
+}</pre>
+    <p>
+        By reversing the sign of the comparator's return value, you can reverse 
+        the order of sorting.
+    <pre>int array[6] = { 42, 17, 57, 19, 11, 5 };
+
+qsort(array, 6, sizeof(int), <mark>compareIntsReversed</mark>);
+// array now contains 57, 42, 19, 17, 11, 5</pre>
+    <p>
+        The <code>qsort()</code> function is very flexible. You can sort arrays 
+        of complex types as easily as arrays of <code>int</code>s.  To sort an 
+        array of C strings in lexicographic order, use the <code>strcmp()</code>
+         function from the C standard library.
+    <pre>char const *array[3] = { "red", "green", "blue" };
+
+qsort(array, 3, sizeof(char const *), <mark>strcmp</mark>);
+// array now contains "blue", "green", "red"</pre>
+    <p>
+        Sorting an array of <code>CGPoint</code>s, first write a comparator:
+    <pre>int compareCGPoints(void const *item1, void const *item2) {
+ struct CGPoint const *point1 = item1;
+ struct CGPoint const *point2 = item2;
+
+ if (point1->x &lt; point2->x) {
+   return -1;
+ } else if (point1->x > point2->x) {
+   return 1;
+ }
+
+ if (point1->y &lt; point2->y) {
+   return -1;
+ } else if (point1->y > point2->y) {
+   return 1;
+ }
+
+ return 0;
+}</pre>
+    <p>
+        Notice that we first compare the X coordinates of the points and only 
+        check the Y coordinates if the X coordinates are equal. This is a 
+        common pattern when sorting over multiple fields in a 
+        <code>struct</code>. Here's an example of the <code>CGPoint</code> 
+        comparator in action:
+    <pre>struct CGPoint pointArray[4] = {
+ { 4.0f, 3.0f },
+ { 2.0f, 1.0f },
+ { 4.0f, 1.0f },
+ { 2.0f, 3.0f }
+};
+qsort(pointArray, 4, sizeof(struct CGPoint), compareCGPoints);
+// pointArray now contains:
+//  { 2.0f, 1.0f }
+//  { 2.0f, 3.0f }
+//  { 4.0f, 1.0f }
+//  { 4.0f, 3.0f }</pre>
+    <h2>Other C sorting functions</h2>
+    <p>
+        For most common sorting jobs, <code>qsort()</code> it a reasonable 
+        choice, and it's the only choice that's included in the C standard 
+        library. OS X and iOS also include a couple of other sorting functions 
+        worth mentioning: <code>heapsort()</code> and <code>mergesort()</code>, 
+        which have the same parameters as <code>qsort()</code> and are detailed 
+        on the 
+        <a href=https://developer.apple.com/library/archive/documentation/System/Conceptual/ManPages_iPhoneOS/man3/qsort.3.html><code>qsort()</code>
+         man page</a>. <code>heapsort()</code> is slower than 
+        <code>qsort()</code> but uses a limited amount of memory while sorting, 
+        whereas <code>qsort()</code> uses recursion and can potentially 
+        overflow the stack when sorting huge arrays. <code>mergesort()</code> 
+        can be significantly faster than <code>qsort()</code> when the array is 
+        mostly in sorted order already, but is significantly slower when the 
+        array is in random order.
+    <h2>Sorting an <code>NSArray</code></h2>
+    <p>
+        Objective-C provides a number of ways to sort an <code>NSArray</code>. 
+        Because <code>NSArray</code> objects are immutable, all the sorting 
+        methods on <code>NSArray</code> return a new sorted <code>NSArray</code>
+         object and leave the original one unchanged. The most basic sorting 
+        method is <code>-sortedArrayUsingFunction:context:</code>, which is 
+        similar to sorting a C array with <code>qsort()</code>. The full method 
+        declaration looks like this:
+    <pre>- (NSArray *)sortedArrayUsingFunction:(NSInteger (*)(id, id, void *))comparator 
+                              context:(void *)context</pre>
+    <p>
+        The first parameter is a pointer to a comparator function. As we did 
+        for <code>qsort()</code>, I'll rewrite the method declaration using a 
+        typedef for the function pointer to make it a little easier to read:
+    <pre>typedef NSInteger (*<mark>Comparator</mark>)(id item1, id item2, void *context);
+
+- (NSArray *)sortedArrayUsingFunction:(<mark>Comparator</mark>)comparator 
+                              context:(void *)context</pre>
+    <p>
+        The comparator function for <code>NSArray</code> sorting has a few 
+        differences from the <code>qsort()</code> one. It returns an 
+        <code>NSInteger</code>, which is simply a <code>typedef</code> for 
+        <code>int</code>. Instead of two items of type <code>void const 
+        *</code>, it takes two items of type <code>id</code> since 
+        <code>NSArray</code>s can only hold object types. And finally, there's 
+        an extra <code>context</code> parameter, a void pointer that allows you 
+        to pass extra information to the comparator if you need to (but you can 
+        safely ignore it if you don't need it).
+    <p>
+        Let's write a comparator function that orders <code>NSString</code>s by 
+        their length.
+    <pre>static NSInteger compareStringsByLength(id item1, id item2, void *context) {
+  return [item1 length] - [item2 length];
+}</pre>
+    <p>
+        Since we can send any message to a variable of type <code>id</code>, we 
+        don't even need casts or intermediate variables here. (Of course, we'll 
+        get a runtime error if we put the wrong type of objects into our array, 
+        but comparators for <code>qsort()</code> have the similar problems.)
+    <p>
+        And now let's see it in action:
+    <pre>NSArray *array = [NSArray arrayWithObjects:@"Florida", 
+                    @"Texas", @"Mississippi", @"Delaware", nil];
+
+NSArray *sortedArray = [array sortedArrayUsingFunction:compareStringsByLength 
+                                               context:NULL];
+// sortedArray contains:
+// @"Texas"
+// @"Florida"
+// @"Delaware"
+// @"Mississippi"</pre>
+    <p>
+        Now let's use the <code>context</code> parameter to make it easy to 
+        switch between normal and reversed sort order.  We can pass a pointer 
+        to any kind of data we want, so we will use a pointer to a 
+        <code>BOOL</code>, where a <code>YES</code> value means reversed and a 
+        <code>NO</code> value means normal ordering.
+    <pre>NSInteger compareStringsByLength(id item1, id item2, void *context) {
+  BOOL *reversed = context;
+  NSInteger order = [item1 length] - [item2 length];
+  if (*reversed) {
+    return -order;
+  } else {
+    return order;
+  }
+}</pre>
+    <p>
+        Now we need to pass something to the <code>context</code> parameter 
+        when we call <code>-sortedArrayUsingFunction:context:</code>
+    <pre>NSArray *array = [NSArray arrayWithObjects:@"Florida", 
+                    @"Texas", @"Mississippi", @"Delaware", nil];
+
+BOOL <mark>reversed</mark> = YES;
+NSArray *sortedArray = [array sortedArrayUsingFunction:compareStringsByLength 
+                                               context:<mark>&amp;reversed</mark>];
+// sortedArray contains:
+// @"Mississippi"
+// @"Delaware"
+// @"Florida"
+// @"Texas"</pre>
+    <p>
+        Note that we use the <code>&amp;</code> operator to pass the 
+        <em>address of</em> the <code>reversed</code> variable as the context.
+    <p>
+        If you target iOS 3.2, OS X 10.6 or later, you can use the block 
+        version, <code>-sortedArrayUsingComparator:</code>. Blocks make one-off 
+        comparator functions easier to read and understand by putting the 
+        comparator definition right along side the sort method call. We can 
+        rewrite our example this way:
+    <pre>NSArray *array = [NSArray arrayWithObjects:@"Florida", 
+                    @"Texas", @"Mississippi", @"Delaware", nil];
+
+BOOL <mark>reversed</mark> = YES;
+NSArray *sortedArray = [array sortedArrayUsingComparator:^(id item1, id item2) {
+  NSInteger order = [item1 length] - [item2 length];
+  if (<mark>reversed</mark>) {
+    return -order;
+  } else {
+    return order;
+  }
+}];
+// sortedArray contains:
+// @"Mississippi"
+// @"Delaware"
+// @"Florida"
+// @"Texas"</pre>
+    <p>
+        Since a block copies the value of variables like <code>reversed</code> 
+        in the enclosing scope at the time it's created, there's no need for a 
+        second context parameter to <code>-sortedArrayUsingComparator:</code>. 
+        Blocks are really handy, but if you find yourself writing the same 
+        comparator block in multiple places in your code, you might be better 
+        off using a plain old comparator function and 
+        <code>-sortedArrayUsingFunction:</code> instead to prevent duplicate 
+        code, in keeping with the 
+        <a href="https://en.wikipedia.org/wiki/Don't_repeat_yourself">DRY</a> 
+        principle. (Or you might consider how to restructure your code so that 
+        sorting is defined in only one place.)
+    <p>
+        Since items in an <code>NSArray</code> are all objects, very often the 
+        items themselves have a useful comparator method. When this is the 
+        case, the <code>-sortedArrayUsingSelector:</code> method is very handy. 
+        <code>NSArray</code>s of <code>NSString</code>s are very common, as is 
+        the need to sort in a case-insensitive manner. Using 
+        <code>NSString</code>'s <code>-caseInsensitiveCompare:</code> method, 
+        we can sort this way:
+    <pre>NSArray *tagNames = [NSArray arrayWithObjects:@"H1", 
+                    @"body", @"A", @"Head", nil];
+
+NSArray *sortedTagNames = [tagNames sortedArrayUsingSelector:@selector(caseInsensitiveCompare:)];
+// sortedTagNames contains:
+// @"A"
+// @"body"
+// @"H1"
+// @"Head"</pre>
+    <p>
+        There's one more interesting way to sort an <code>NSArray</code>: we'll 
+        look at the 
+        <a href=/objective-c_tuesdays/more_nsarray_sorting.html><code>-sortedArrayUsingDescriptors:</code>
+         method and the <code>NSSortDescriptor</code> class</a> next week.
+    <footer>
+        <a href=http://blog.ablepear.com/2011/11/objective-c-tuesdays-sorting-arrays.html><em>Objective-C 
+        Tuesdays: sorting arrays</em></a> was originally published on 
+        <time datetime=2011-11-29>2011-11-29</time>.
+    </footer>
+</section>

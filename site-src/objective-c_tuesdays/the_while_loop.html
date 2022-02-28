@@ -1,0 +1,111 @@
+<!doctype html>
+<html lang=en>
+<meta charset=utf-8>
+<meta content='initial-scale=0.9, width=device-width' name=viewport>
+<title>The While Loop</title>
+<link href=/base.css rel=stylesheet>
+<nav class=menu>
+    <a href=/ >Don McCaughey</a> • <a href=/objective-c_tuesdays/ >Objective-C Tuesdays</a>
+</nav>
+<section>
+    <h1>The While Loop</h1>
+    <p>
+        After the standard C 
+        <a href=/objective-c_tuesdays/the_for_loop.html><code>for</code> 
+        loop</a> and the Objective-C 2.0 
+        <a href=/objective-c_tuesdays/the_for-in_loop.html><code>for...in</code>
+         loop</a>, the <code>while</code> loop is the most common.  Unlike the 
+        full-featured <code>for</code> loop and the specialized 
+        <code>for...in</code> loop, the <code>while</code> is simpler and more 
+        free-form.
+    <p>
+        The <code>while</code> loop starts with the keyword <code>while</code> 
+        followed by parentheses containing the <em>condition</em>.  After the 
+        parentheses, a single <em>statement</em> or <em>block</em> makes up the 
+        body of the loop.
+    <pre>/* while loop with a single statement */
+while (<em>condition</em>) <em>statement</em>;
+
+/* while loop with a block */
+while (<em>condition</em>)
+{
+  <em>block</em>;
+}</pre>
+    <p>
+        Watch out for a hard to spot bug when the <code>while</code> loop is 
+        followed by an empty statement created by an extra semicolon:
+    <pre>while (<em>condition</em>); /* &lt;-- warning! empty statement! */
+{
+  /* this block is not part of the loop */
+  /* it's always executed exactly once  */
+}</pre>
+    <p>
+        The <em>condition</em> in a <code>while</code> loop is evaluated before 
+        the body of the loop is executed, so you can create loops that execute 
+        zero or more times.  If you want the body of the loop to execute one or 
+        more times, you can use a <code>do...while</code> loop instead.
+    <p>
+        The initialization of the loop counter or other loop variables must be 
+        done before the <code>while</code> loop statement; often this means 
+        declaring and initializing a local variable:
+    <pre>int i = 0;
+while (i &lt; 10)</pre>
+    <p>
+        When using a loop counter, it is important to remember to advance the 
+        counter to the next value in the body of the loop.  For instance, to 
+        log the numbers 0 through 9:
+    <pre>int i = 0;
+while (i &lt; 10) {
+  NSLog(@"%d", i);
+  <mark>i++;</mark> /* advance the loop counter */
+}</pre>
+    <p>
+        If you forget to advance the loop counter, you will create an infinite 
+        loop.
+    <pre>int i = 0;
+/* warning, infinite loop, i is always 0 */
+while (i &lt; 10) {
+  NSLog(@"%d", i);
+  <mark>/* oops, forgot to increment i */</mark>
+}</pre>
+    <p>
+        The <code>while</code> loop is frequently used when iterating over a 
+        stream or sequence of unknown size where a loop counter is unnecessary. 
+         For instance, to iterate over a null-terminated string by incrementing 
+        the string pointer:
+    <pre>char const *s = "foobar";
+while (*s) {        /* while current character isn't zero */
+  NSLog(@"%c", *s); /* log the current character */
+  s++;              /* increment address in s to next character */
+}</pre>
+    <p>
+        Similarly, the idiomatic way to read characters from a standard C 
+        <code>FILE</code> is:
+    <pre>FILE *file = /* open file for reading ... */;
+int ch;
+while ( (ch = fgetc(file)) != EOF) {
+  NSLog(@"%c", ch);
+}</pre>
+    <p>
+        The loop condition <code>( (ch = fgetc(file)) != EOF)</code> in this 
+        idiom does three things:
+    <ol>
+        <li>
+            <code>fgetc(file)</code> gets the current character and advances to 
+            the next
+        <li>
+            <code>(ch = fgetc(file))</code> assigns the current character to 
+            <code>ch</code>
+        <li>
+            <code>(ch = ...) != EOF</code> checks that the value of 
+            <code>ch</code> is not <code>EOF</code>
+    </ol>
+    <p>
+        <a href=/objective-c_tuesdays/the_do-while_loop.html>Next time</a>, we 
+        will look at the <code>do...while</code> loop.
+    <footer>
+        <a href=http://blog.ablepear.com/2009/10/objective-c-tuesdays-while-loop.html><em>Objective-C 
+        Tuesdays: the while loop</em></a> was originally published on 
+        <time datetime=2009-10-27>2009-10-27</time>.
+    </footer>
+</section>

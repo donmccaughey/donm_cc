@@ -1,0 +1,106 @@
+<!doctype html>
+<html lang=en>
+<meta charset=utf-8>
+<meta content='initial-scale=0.9, width=device-width' name=viewport>
+<title>Break Out Of A Loop</title>
+<link href=/base.css rel=stylesheet>
+<nav class=menu>
+    <a href=/ >Don McCaughey</a> • <a href=/objective-c_tuesdays/ >Objective-C Tuesdays</a>
+</nav>
+<section>
+    <h1>Break Out Of A Loop</h1>
+    <p>
+        <a href=/objective-c_tuesdays/the_do-while_loop.html>Last week</a> we 
+        finished looking at the four looping statements in Objective-C: the 
+        <code>for</code> loop, the Objective-C 2.0 <code>for...in</code> loop, 
+        the <code>while</code> loop and the <code>do...while</code> loop.  
+        Today we'll look at how you break out of a loop early.
+    <p>
+        Sometimes you want to stop a loop prematurely.  A common example of 
+        this is when you need to iterate over an unsorted collection or array 
+        looking for an item:
+    <pre>NSArray *collection = [NSArray arrayWithObjects:@"foo", @"a", @"bar", @"baz", @"b", nil];
+for (NSUInteger i = 0; i &lt; collection.count; i++) {
+  NSString *item = [collection objectAtIndex:i];
+  NSLog(@"Checking item '%@'", item);
+  if (item.length == 1) {
+    NSLog(@"Found single letter at index %u", i);
+    /* no need to look at the rest -- we can stop now */
+  }
+}</pre>
+    <p>
+        Once you find the item you're looking for, there's no need to finish 
+        the loop.  In fact, if you search the whole collection, you will always 
+        find the <em>last</em> item that matches your criteria, which isn't 
+        always what you want.
+    <p>
+        You can use a boolean flag variable to indicate when you're done:
+    <pre>NSArray *collection = [NSArray arrayWithObjects:@"foo", @"a", @"bar", @"baz", @"b", nil];
+BOOL foundFirst = NO;
+for (NSUInteger i = 0; i &lt; collection.count &amp;&amp; ! foundFirst; i++) {
+  NSString *item = [collection objectAtIndex:i];
+  NSLog(@"Checking item '%@'", item);
+  if (item.length == 1) {
+    NSLog(@"Found first single letter at index %u", i);
+    foundFirst = YES;
+  }
+}</pre>
+    <p>
+        This approach works, but is somewhat complicated and error-prone.  A 
+        nicer way to exit a loop early is to use the <code>break</code> 
+        keyword.  Using <code>break</code>, the example becomes:
+    <pre>NSArray *collection = [NSArray arrayWithObjects:@"foo", @"a", @"bar", @"baz", @"b", nil];
+for (NSUInteger i = 0; i &lt; collection.count; i++) {
+  NSString *item = [collection objectAtIndex:i];
+  NSLog(@"Checking item '%@'", item);
+  if (item.length == 1) {
+    NSLog(@"Found first single letter at index %u", i);
+    break;
+  }
+}</pre>
+    <p>
+        When the <code>break</code> statement is encountered, loop processing 
+        is stopped and execution resumes with the first statement after the 
+        loop; you can think of <code>break</code> as a sort of 
+        <code>return</code> statement for loops.
+    <p>
+        You can use <code>break</code> to exit any of the loop statements.  If 
+        we don't care about the index of the first item, we can simplify the 
+        example further by using the <code>for...in</code> loop:
+    <pre>NSArray *collection = [NSArray arrayWithObjects:@"foo", @"", @"bar", @"baz", @"", nil];
+for (NSString *item in collection) {
+  NSLog(@"Checking item '%@'", item);
+  if (item.length == 1) {
+    NSLog(@"Found first single letter");
+    break;
+  }
+}</pre>
+    <p>
+        The <code>break</code> statement only works on the innermost loop that 
+        encloses it:
+    <pre>// outer loop
+for (int i = 0; i &lt; 10; i++) {
+  if (...) break; // skips to A
+  
+  // inner loop
+  for (int j = 0; j &lt; 10; j++) {
+    if (...) break; // skips to B
+  }
+  // B
+  
+}
+// A</pre>
+    <p>
+        The first <code>break</code> statement is inside the outer loop, and 
+        will skip to <em>A</em>.  The second <code>break</code> statement is 
+        inside the inner loop; it skips to <em>B</em>, ending the inner loop 
+        but staying inside the outer loop.
+    <p>
+        <a href=/objective-c_tuesdays/continue.html>Next week</a> we will look 
+        at the other loop flow modifier, <code>continue</code> statement.
+    <footer>
+        <a href=http://blog.ablepear.com/2009/11/objective-c-tuesdays-break-out-of-loop.html><em>Objective-C 
+        Tuesdays: break out of a loop</em></a> was originally published on 
+        <time datetime=2009-11-17>2009-11-17</time>.
+    </footer>
+</section>

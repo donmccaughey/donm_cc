@@ -1,0 +1,400 @@
+<!doctype html>
+<html lang=en>
+<meta charset=utf-8>
+<meta content='initial-scale=0.9, width=device-width' name=viewport>
+<title>String Comparison And Equality</title>
+<link href=/base.css rel=stylesheet>
+<nav class=menu>
+    <a href=/ >Don McCaughey</a> • <a href=/objective-c_tuesdays/ >Objective-C Tuesdays</a>
+</nav>
+<section>
+    <h1>String Comparison And Equality</h1>
+    <p>
+        Welcome back after an end-of-Summer hiatus.  Last time we looked at 
+        <a href=/objective-c_tuesdays/concatenating_strings.html>concatenating 
+        strings in Objective-C</a>.  Today we look at another common string 
+        operation: comparison.
+    <h2>Identity</h2>
+    <p>
+        Comparing two variables or objects can sometimes be a tricky 
+        proposition.  There are several different senses of equality.  The most 
+        fundamental type of equality is <em>identity</em>: do two variables 
+        represent the same thing in memory.  Identity only makes sense for 
+        reference types, like C strings, <code>NSString</code>s and other 
+        pointer types.  Value types like <code>int</code>s always designate 
+        separate things in memory.  In C and Objective-C, identity equality is 
+        determined by comparing pointer values using the <code>==</code> 
+        operator.
+    <pre>// comparing two strings for identity
+char const s1 = "foo";
+char const s2 = s1;
+if (s1 == s2) {
+  NSLog(@"s1 is identical to s2");
+}
+
+NSString *s3 = @"foo";
+NSString *s4 = @"bar";
+if (s3 != s4) {
+  NSLog(@"s3 is not identical to s4");
+}</pre>
+    <h2>Equivalence</h2>
+    <p>
+        A more useful type of equality is <em>equivalence of value</em>: do two 
+        variables represent equivalent data.  Equivalence is useful when 
+        comparing value types as well as reference types, and is usually what 
+        programmers think of when comparing two strings.
+    <p>
+        For C strings, the primary equivalence test is done with the 
+        <code>strcmp()</code> function.  The <code>strcmp()</code> function 
+        compares the data of two C strings <code>char</code> by 
+        <code>char</code>; if two C strings represent the same sequence of 
+        <code>char</code> values in memory, they are equivalent and 
+        <code>strcmp()</code> returns zero.
+    <pre>// checking two C strings for equal value
+char const *s1 = "foo";
+char const *s2 = "bar";
+
+if (strcmp(s1, s2) == 0) {
+  NSLog(@"s1 is equivalent to s2");
+} else {
+  NSLog(@"s1 is not equivalent to s2");
+}</pre>
+    <p>
+        In addition to checking for equivalence, <code>strcmp()</code> also 
+        categorizes the sort order of the two C strings.  If the first argument 
+        comes <em>before</em> the second, a negative value is returned; if the 
+        first argument comes <em>after</em> the second, a positive value is 
+        returned.  The <code>strcmp()</code> function uses a lexicographic 
+        comparison, which means that the comparison is strictly on the basis of 
+        the integer values of the <code>char</code>s in the C strings.  For 
+        ASCII strings, the string <code>"2"</code> (ASCII code 50) comes before 
+        <code>"A"</code> (ASCII code 64), which precedes <code>"a"</code> 
+        (ASCII code 97).  Many sorting algorithms, including the 
+        <code>qsort()</code> function in the C standard library, require a 
+        function like <code>strcmp()</code>.
+    <pre>// using strcmp() result
+
+int compareResult = strcmp(s1, s2);
+if (compareResult &lt; 0) {
+  NSLog(@"s1 comes before s2");
+} else if (compareResult > 0) {
+  NSLog(@"s1 comes after s2");
+}</pre>
+    <p>
+        Sometimes you only want to see if two strings have a common prefix, or 
+        you're working with character buffers that aren't null terminated.  The 
+        <code>str<mark>n</mark>cmp()</code> function will compare a limited 
+        number of characters, stopping early if it encounters a null terminator 
+        in either string.  Thus these two strings are equivalent when the first 
+        three characters are compared:
+    <pre>if (<mark>strncmp</mark>("foo", "fooey", <mark>3</mark>) == 0) {
+  NSLog(@"both start with foo");
+}
+// prints "both start with foo"</pre>
+    <p>
+        When sorting with <code>strncmp()</code>, short strings come first:
+    <pre>if (<mark>strncmp</mark>("foo", "fooey", <mark>5</mark>) &lt; 0) {
+  NSLog(@"foo comes before fooey");
+}
+// prints "foo comes before fooey"</pre>
+    <h2>Case Insensitive</h2>
+    <p>
+        In languages that have upper and lower case letters, you often need to 
+        do a case insensitive comparisons.  The C standard library doesn't 
+        define a case insensitive string comparison function, but one is part 
+        of the <a href=https://en.wikipedia.org/wiki/POSIX>POSIX</a> standard, 
+        and most compiler vendors and operating systems include one.  The POSIX 
+        version is called <code>strcasecmp()</code>.  Most modern Unix and 
+        Linux systems (including iOS and Mac OS X) have 
+        <code>strcasecmp()</code> available in the standard library.  Older 
+        Unix systems and other operating systems may call this function 
+        <code>stricmp()</code> or <code>strcmpi()</code>.  There is usually 
+        also a length limited version called 
+        <code>str<mark>n</mark>casecmp()</code> or 
+        <code>str<mark>n</mark>icmp()</code>.
+    <p>
+        The case insensitive comparison functions usually compare only ASCII 
+        characters, which limits their usefulness.
+    <pre>// case insensitive comparison
+char const *s = "&lt;HTML>&lt;HEAD>...";
+
+if (strncasecmp(s, "&lt;html>", 6) == 0) {
+  NSLog(@"looks like HTML");
+}</pre>
+    <h2>Encoding Issues</h2>
+    <p>
+        The <code>strcmp()</code> function was created in the era when most 
+        computers used ASCII or other simple single byte encodings.  In ASCII, 
+        there is only one byte sequence that represents any particular 
+        character sequence.  This isn't true of many modern encodings, 
+        including Unicode.  The Unicode character set contains both accented 
+        characters such as "é" as well as a <em>combining</em> accent character 
+        "´", so there are two ways to represent "é" in UTF-8 encoding:
+    <table class=memory_map>
+        <tr>
+            <th>Address</th><th>64</th><th>65</th><th>66</th>
+        </tr>
+        <tr>
+            <td>Character</td><td colspan=2>'é'</td><td class=blank></td>
+        </tr>
+        <tr>
+            <td>Value</td><td>195</td><td>169</td><td class=blank></td>
+        </tr>
+        <tr>
+            <td>Character</td><td>'e'</td><td colspan=2>'´'</td>
+        </tr>
+        <tr>
+            <td>Value</td><td>101</td><td>204</td><td>129</td>
+        </tr>
+    </table>
+    <p>
+        Obviously a lexicographic comparison function like <code>strcmp()</code>
+         will not see these two strings as equivalent.  Accounting for this 
+        requires performing 
+        <a href=https://en.wikipedia.org/wiki/Unicode_equivalence#Normalization>normalization 
+        on the Unicode characters</a> in the string before doing the 
+        comparison.  Unicode has several different types of normalization, 
+        which we won't dive into here.  If you need to do a lot of low level 
+        processing of UTF-8 or other Unicode encoded text, you should look at 
+        the <a href=https://icu.unicode.org>International Components for 
+        Unicode</a>, a library of C functions for Unicode processing that is 
+        included as part of iOS.  Better yet, in most cases you should use 
+        <code>NSString</code>s when working with text.
+    <h2><code>NSString</code> equality</h2>
+    <p>
+        The <code>NSString</code> class defines the 
+        <code>-isEqualToString:</code> instance method for testing if an 
+        <code>NSString</code> is equivalent to another <code>NSString</code>:
+    <pre>// compare two NSStrings
+NSString *s1 = @"foo";
+NSString *s2 = @"bar";
+
+if ( [s1 isEqualToString:s2] ) {
+  NSLog(@"The strings are equivalent.");
+}</pre>
+    <p>
+        You can also use the <code>-isEqual:</code> instance method defined by 
+        <code>NSObject</code> to compare two <code>NSString</code>s, or to 
+        compare an <code>NSString</code> with any other object:
+    <pre>// compare two NSStrings using -isEqual:
+NSString *s1 = @"foo";
+NSString *s2 = @"bar";
+
+if ( [s1 isEqual:s2] ) {
+  NSLog(@"The strings are equivalent.");
+}</pre>
+    <p>
+        The difference between the two methods is in their declarations.  The 
+        <code>-isEqualToString:</code> method is only for comparing one 
+        <code>NSString</code> to another; it's declaration looks like:
+    <pre>// declaration of -isEqualToString:
+- (BOOL)isEqualToString:(NSString *)aString</pre>
+    <p>
+        The <code>-isEqual:</code> method is for comparing any kind of 
+        <code>NSObject</code> to another object; it's declaration looks like:
+    <pre>// declaration of -isEqual:
+- (BOOL)isEqual:(id)anObject</pre>
+    <p>
+        It's possible to use <code>-isEqual:</code> to compare an 
+        <code>NSString</code> with an object of a different type, such as an 
+        <code>NSNumber</code>:
+    <pre>NSString *fiveString = @"5";
+NSNumber *fiveNumber = [NSNumber numberWithInt:5];
+
+if ( [fiveString isEqual:fiveNumber] ) {
+  NSLog(@"fiveString equals fiveNumber");
+} else {
+  NSLog(@"Strings aren't equivalent to numbers, silly!");
+}</pre>
+    <p>
+        You might hope that the <code>NSString</code> "5" is equivalent to the 
+        <code>NSNumber</code> "5" but unfortunately they are not; the code 
+        above will print out "Strings aren't equivalent to numbers, silly!".  
+        In general, objects of different classes aren't considered to be 
+        equivalent with one common exception: immutable classes like 
+        <code>NSString</code> can be equivalent to their mutable subclasses 
+        (<code>NSMutableString</code> in this case) and vice versa.
+    <pre>NSString *fiveString = @"5";
+NSMutableString *fiveMutableString = [NSMutableString stringWithString:@"5"];
+
+if ( [fiveString isEqual:fiveMutableString] ) {
+  NSLog(@"immutable and mutable strings can be equivalent");
+}</pre>
+    <p>
+        And since <code>NSMutableString</code> is a subclass of 
+        <code>NSString</code>, you can also use <code>-isEqualToString:</code> 
+        to compare them:
+    <pre>if ( [fiveString isEqualToString:fiveMutableString] ) {
+  NSLog(@"immutable and mutable strings can be equivalent");
+}</pre>
+    <h2><code>-compare:</code></h2>
+    <p>
+        In addition to testing for equivalence using <code>-isEqual:</code> or 
+        <code>-isEqualToString:</code>, you can also discover the relative 
+        order of two <code>NSString</code> objects using the 
+        <code>-compare:</code> family of methods.  The <code>-compare:</code> 
+        method is very similar to the <code>strcmp()</code> method in C.  The 
+        <code>-compare:</code> method returns a <code>NSComparisonResult</code> 
+        value, which is simply an integer value.  Similar to 
+        <code>strcmp()</code>, <code>-compare:</code> will return zero if the 
+        two <code>NSString</code>s are equivalent, though you can also use the 
+        constant <code>NSOrderedSame</code> instead of zero:
+    <pre>// compare two NSStrings
+NSString *s1 = @"foo";
+NSString *s2 = @"bar";
+
+if ( [s1 compare:s2] == NSOrderedSame] ) {
+  NSLog(@"s1 is equivalent to s2");
+} else {
+  NSLog(@"s1 is not equivalent to s2");
+}</pre>
+    <p>
+        Like <code>strcmp()</code>, if the receiver of the 
+        <code>-compare:</code> message (the first <code>NSString</code>) comes 
+        <em>before</em> the first argument (the second <code>NSString</code>), 
+        negative one is returned; if the receiver comes <em>after</em> the 
+        first argument, positive one is returned.  The constants 
+        <code>NSOrderedAscending</code> and <code>NSOrderedDescending</code> 
+        can be used instead of -1 and 1 respectively.
+    <pre>// using NSComparisonResult
+
+NSComparisonResult comparisonResult = [s1 compare:s2];
+if (comparisonResult == NSOrderedAscending) {
+  NSLog(@"s1 comes before s2");
+} else if (comparisonResult == NSOrderedAscending) {
+  NSLog(@"s1 comes after s2");
+}</pre>
+    <h2>Case Insensitive <code>-compare:</code></h2>
+    <p>
+        To test the equivalence of two <code>NSString</code> objects in a case 
+        insensitive manner, use <code>-compare:options:</code> with the 
+        <code>NSCaseInsensitiveSearch</code> flag.
+    <pre>// case insensitive compare
+NSString *s1 = @"foo";
+NSString *s2 = @"FOO";
+
+if ( [s1 compare:s2 options:NSCaseInsensitiveSearch] == NSOrderedSame) {
+  NSLog(@"s1 is equivalent to s2");
+}</pre>
+    <p>
+        Since case insensitive comparison is a common operation, 
+        <code>NSString</code> has a convenience method, 
+        <code>-caseInsensitiveCompare:</code> which does the same thing.
+    <pre>// case insensitive compare
+NSString *s1 = @"foo";
+NSString *s2 = @"FOO";
+
+if ( [s1 caseInsensitiveCompare:s2] == NSOrderedSame) {
+  NSLog(@"s1 is equivalent to s2");
+}</pre>
+    <h2>Unicode and <code>-compare:</code></h2>
+    <p>
+        By default, <code>NSString</code> is pretty smart about Unicode and 
+        automatically understands things like Unicode combining characters.  
+        For instance, you can represent é two ways, but <code>NSString</code> 
+        knows that they represent equivalent strings:
+    <pre>// comparing equivalent Unicode strings
+NSString *eAcute = @"\u00e9";      // single character 'é'
+NSString *ePlusAcute = @"e\u0301"; // 'e' + combining '´'
+
+if ( [eAcute isEqualToString:ePlusAcute] ) {
+  NSLog(@"'é' is equivalent to 'e' + '´'");
+}</pre>
+    <p>
+        This can be surprising if you've only worked with ASCII or other single 
+        byte encodings.  With <code>NSString</code>, you can't assume that 
+        equivalent strings have the same length and character sequence.  
+        Usually you don't care about the Unicode representation, but 
+        occasionally it's important.  You can use the 
+        <code>NSLiteralSearch</code> flag along with 
+        <code>-compare:options:</code> to do a lexicographic comparison that 
+        compares strings character value by character value.
+    <pre>// lexicographic comparison of Unicode strings
+
+if ( [eAcute compare:ePlusAcute options:NSLiteralSearch] != NSOrderedSame) {
+  NSLog(@"'é' is not lexicographically equivalent to 'e' + '´'");
+}</pre>
+    <h2>combining options</h2>
+    <p>
+        The options constants used in the <code>-compare:options:</code> method 
+        are bit flags.  You combine them using the bitwise or operator 
+        (<code>|</code>).
+    <pre>// using multiple options
+NSString *eAcute = @"\u00e9";        // 'é'
+NSString *capitalEAcute = @"\u00c9"; // 'É'
+
+if ( [eAcute compare:capitalEAcute 
+             options:NSCaseInsensitiveSearch | NSLiteralSearch] 
+         != NSOrderedSame) 
+{
+  NSLog(@"'é' is equivalent to 'É'");
+}</pre>
+    <h2>comparing substrings</h2>
+    <p>
+        If you only want to compare parts of two <code>NSString</code> objects, 
+        you can use <code>-compare:options:range:</code> method and specify an 
+        <code>NSRange</code> structure.  The <code>NSRange</code> structure is 
+        composed of two parts: a starting location field named <code>loc</code> 
+        and a length field named <code>len</code>.  Usually it's convenient to 
+        use the <code>NSMakeRange()</code> function to generate the 
+        <code>NSRange</code>.
+    <pre>// compare substrings
+NSString *s1 = @"foo";
+NSString *s2 = @"fooey";
+
+if ( [s1 compare:s2 
+         options:0 
+           range:MakeRange(0, 3)] == NSOrderedSame)
+{
+  NSLog(@"both strings start with 'foo'");
+}</pre>
+    <p>
+        You pass in zero for the options to use the default comparison.  
+        <code>-compare:options:range:</code> is similar to 
+        <code>str<mark>n</mark>cmp()</code> with one important difference: the 
+        <code>NSRange</code> you give must fall completely inside the receiver 
+        (the first string) or an <code>NSRangeException</code> will be thrown.
+    <h2>comparing using a specific locale</h2>
+    <p>
+        By default, the <code>-compare:</code> methods use the current locale 
+        to determine the ordering of two strings.  The current locale is 
+        controlled by the user when they set their language and region for 
+        their iOS device.  Most of the time you should respect the user's 
+        settings, but sometimes it's appropriate to compare strings using a 
+        fixed locale.  Perhaps your app teaches French vocabulary and you want 
+        your French word list to sort in standard French order whether the 
+        user's phone is set to English, German or Japanese.  In French, 
+        accented letters at the end of a word sort before accented letters 
+        earlier in a word, thus "coté" should come before "côte".  If you use 
+        the default locale, the result of comparing "coté" and "côte" varies 
+        but will probably not give you the correct ordering.
+    <pre>// compare using default locale
+NSString *coteAcute = @"cot\u00e9";      // "coté"
+NSString *coteCircumflex = @"c\u00f4te"; // "côte"
+
+if ( [coteAcute compare:coteCircumflex] == NSOrderedAscending) {
+  NSLog(@"Not using a French locale");
+}</pre>
+    <p>
+        To remedy this, you can set the locale explicitly when you do your 
+        comparison:
+    <pre>// compare using specific locale
+NSLocale *frenchLocale = [[[NSLocale alloc] initWithLocaleIdentifier:@"fr_FR"] autorelease];
+NSComparisonResult comparisonResult = [coteAcute compare:coteCircumflex 
+                                                 options:0 
+                                                   range:NSMakeRange(0, 4)
+                                                  locale:frenchLocale];
+if (comparisonResult == NSOrderedDescending) {
+  NSLog(@"Using a French locale");
+}</pre>
+    <p>
+        That sums up the options for comparing C strings and 
+        <code>NSString</code>s.  Next time, we'll look at 
+        <a href=/objective-c_tuesdays/slicing_and_dicing_strings.html>slicing 
+        and dicing strings by creating substrings</a>.
+    <footer>
+        <a href=http://blog.ablepear.com/2010/09/objective-c-tuesdays-string-comparison.html><em>Objective-C 
+        Tuesdays: string comparison and equality</em></a> was originally 
+        published on <time datetime=2010-09-14>2010-09-14</time>.
+    </footer>
+</section>

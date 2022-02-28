@@ -1,0 +1,181 @@
+<!doctype html>
+<html lang=en>
+<meta charset=utf-8>
+<meta content='initial-scale=0.9, width=device-width' name=viewport>
+<title>More NSArray Sorting</title>
+<link href=/base.css rel=stylesheet>
+<nav class=menu>
+    <a href=/ >Don McCaughey</a> • <a href=/objective-c_tuesdays/ >Objective-C Tuesdays</a>
+</nav>
+<section>
+    <h1>More NSArray Sorting</h1>
+    <p>
+        Welcome to another Objective-C Tuesdays. Last week, we looked at 
+        <a href=/objective-c_tuesdays/sorting_arrays.html>sorting C arrays and 
+        <code>NSArray</code>s</a>. Today, we will continue looking at sorting 
+        <code>NSArray</code>s using <code>NSSortDescriptor</code>s.
+    <p>
+        As we saw last week, the sorting methods of <code>NSArray</code> 
+        require you to specify a comparator in one form or another. When 
+        sorting an <code>NSArray</code> of simple objects like 
+        <code>NSString</code>s or <code>NSDate</code>s, the comparators are 
+        usually pretty simple to write and common objects often have useful 
+        comparator methods like <code>-caseInsensitiveCompare:</code> and 
+        <code>-localizedCompare:</code>.
+    <p>
+        When sorting <code>NSArray</code>s of more complex objects, writing 
+        comparators is often more tedious and error-prone. Here's the interface 
+        for simple <code>Person</code> class:
+    <pre>// Person.h
+@interface Person : NSObject
+
+@property (strong) Address *address;
+@property (strong) NSDate *birthdate;
+@property (copy) NSString *firstName;
+@property (copy) NSString *lastName;
+
+@end</pre>
+    <p>
+        And here's the <code>Address</code> class used by <code>Person</code>:
+    <pre>// Address.h
+@interface Address : NSObject
+
+@property (copy, nonatomic) NSString *street;
+@property (copy, nonatomic) NSString *city;
+@property (copy, nonatomic) NSString *state;
+@property (copy, nonatomic) NSString *country;
+@property (copy, nonatomic) NSString *postalCode;
+
+@end</pre>
+    <p>
+        If we have an <code>NSArray</code> of <code>Person</code> objects, we 
+        may want to sort them in <code>country</code>, <code>lastName</code>, 
+        <code>firstName</code> order. Here's one way to do that, using a 
+        comparator block:
+    <pre>// sort Person objects by lastName, firstName
+Person *frodo = [Person new];
+[frodo setFirstName:@"Frodo"];
+[frodo setLastName:@"Baggins"];
+// ...
+[[frodo address] setCountry:@"Shire"];
+
+Person *bilbo = [Person new];
+[bilbo setFirstName:@"Bilbo"];
+[bilbo setLastName:@"Baggins"];
+// ...
+[[bilbo address] setCountry:@"Shire"];
+
+Person *legolas = [Person new];
+[legolas setFirstName:@"Legolas"];
+[legolas setLastName:@"Greenleaf"];
+// ...
+[[legolas address] setCountry:@"Mirkwood"];
+
+NSArray *people = [NSArray arrayWithObjects:frodo, bilbo, legolas, nil];
+NSArray *sortedPeople = [people sortedArrayUsingComparator:^(id item1, id item2) {
+  Person *person1 = item1;
+  Person *person2 = item2;
+  
+  // NSComparisonResult is a typedef for int
+  NSComparisonResult result = [[[person1 address] country] compare:[[person2 address] lastName]];
+  if (result) {
+    return result;
+  }
+  
+  result = [[person1 lastName] compare:[person2 lastName]];
+  if (result) {
+    return result;
+  }
+  
+  result = [[person1 firstName] compare:[person2 firstName]];
+  if (result) {
+    return result;
+  }
+  
+  return NSOrderedSame; // NSOrderedSame == 0
+}];
+// sortedPeople contains:
+// Legolas Greenleaf (Mirkwood)
+// Bilbo Baggins (Shire)
+// Frodo Baggins (Shire)</pre>
+    <p>
+        The general pattern of a multi-field comparator is simple: check each 
+        field in turn, stop and return the comparison result if non-zero; if 
+        all fields are equal, return zero (or <code>NSOrderedSame</code> to be 
+        more descriptive). This quickly becomes tedious when you have many 
+        fields to sort by or you need to dig down into child or grandchild 
+        objects for fields.
+    <p>
+        Fortunately, there's an easier way to do this. <code>NSArray</code> has 
+        a method called <code>-sortedArrayUsingDescriptors:</code> that takes 
+        an array of <code>NSSortDescriptor</code> objects. Each 
+        <code>NSSortDescriptor</code> specifies a <em>key path</em> and sort 
+        direction (ascending or descending). The order of 
+        <code>NSSortDescriptor</code>s in the array determines the precedence 
+        of each field. If you're not familiar with 
+        <a href=https://developer.apple.com/library/archive/documentation/Cocoa/Conceptual/KeyValueCoding/index.html>Key 
+        Value Coding</a> (KVC), you may not have encountered key paths before. 
+        KVC is similar reflection in Java and other dynamic languages. KVC 
+        allows you to get and set fields on an object using the field names as 
+        strings, called <em>keys</em>. To access fields on child objects, you 
+        use keys separated by dots to form a key path; KVC knows how to drill 
+        down your object graph and access fields on child objects. There are a 
+        lot of interesting things you can do with KVC, but today we will stick 
+        to building an array of <code>NSSortDescriptor</code>s:
+    <pre>NSSortDescriptor *byCountry = [NSSortDescriptor sortDescriptorWithKey:@"address.country" 
+                                                            ascending:YES];
+NSSortDescriptor *byLastName = [NSSortDescriptor sortDescriptorWithKey:@"lastName" 
+                                                             ascending:YES];
+NSSortDescriptor *byFirstName = [NSSortDescriptor sortDescriptorWithKey:@"firstName" 
+                                                              ascending:YES];
+NSArray *sortDescriptors = [NSArray arrayWithObjects:byCountry, byLastName, byFirstName, nil];</pre>
+    <p>
+        Notice that the <code>byCountry</code> sort descriptor uses the key 
+        path <code>@"address.country"</code>: it will first get the value of 
+        the <code>address</code> property of the <code>Person</code> object, 
+        then get the <code>country</code> property of the <code>address</code>. 
+        Key paths can be as deep as your object graph.
+    <p>
+        Using the array of sort descriptors is easy:
+    <pre>NSArray *sortedPeople = [people sortedArrayUsingDescriptors:sortDescriptors];
+// sortedPeople contains:
+// Legolas Greenleaf (Mirkwood)
+// Bilbo Baggins (Shire)
+// Frodo Baggins (Shire)</pre>
+    <p>
+        This certainly makes creating complex sort criteria much easier, and 
+        you're not limited to the default comparator for a field. You can 
+        specify a selector for a comparator method on the field this way:
+    <pre>// specify a method to call on the lastName object
+NSSortDescriptor *byLastName = [NSSortDescriptor sortDescriptorWithKey:@"lastName" 
+                                                             ascending:YES
+                                                              selector:@selector(caseInsensitiveCompare:)];</pre>
+    <p>
+        Or for more specialized comparisons, you can pass in a 
+        <code>NSComparator</code> block this way:
+    <pre>// sort descriptor using length of last name
+NSSortDescriptor *byLastNameLength = [NSSortDescriptor sortDescriptorWithKey:@"lastName" 
+                                                                   ascending:YES 
+                                                                  comparator:^(id item1, id item2) {
+  NSString *lastName1 = item1;
+  NSString *lastName2 = item2;
+  // cast result to NSComparisonResult so that the 
+  // compiler infers the correct return type
+  return (NSComparisonResult) ([lastName1 length] - [lastName2 length]);
+}];</pre>
+    <p>
+        Specifying complex sort orders with <code>NSSortDescriptor</code>s is 
+        the type of higher level, declarative code that is easy to write, easy 
+        to read and easy to maintain, and in most cases you should consider 
+        using <code>NSSortDescriptor</code> rather than writing your own 
+        comparator methods, functions or blocks.
+    <p>
+        Next time, we will look at sorting <code>NSMutableArray</code>s in 
+        place, rather than producing a sorted copy like the various 
+        <code>-sortedArray</code> methods.
+    <footer>
+        <a href=http://blog.ablepear.com/2011/12/objective-c-tuesdays-more-nsarray.html><em>Objective-C 
+        Tuesdays: more NSArray sorting</em></a> was originally published on 
+        <time datetime=2011-12-06>2011-12-06</time>.
+    </footer>
+</section>

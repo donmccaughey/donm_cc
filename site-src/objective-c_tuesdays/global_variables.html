@@ -1,0 +1,101 @@
+<!doctype html>
+<html lang=en>
+<meta charset=utf-8>
+<meta content='initial-scale=0.9, width=device-width' name=viewport>
+<title>Global Variables</title>
+<link href=/base.css rel=stylesheet>
+<nav class=menu>
+    <a href=/ >Don McCaughey</a> • <a href=/objective-c_tuesdays/ >Objective-C Tuesdays</a>
+</nav>
+<section>
+    <h1>Global Variables</h1>
+    <p>
+        <a href=/objective-c_tuesdays/looping_in_objective-c.html>Last time</a> 
+        we finished up our series on looping with a look at common uses for 
+        <code>goto</code>.  Today we're starting a new series examining 
+        variables in Objective-C.  Our first topic in the series is <em>global 
+        variables</em>.
+    <p>
+        Any variable declared outside of a function or method, class 
+        <code>@interface</code> or <code>struct</code> declaration is a global 
+        variable:
+    <pre>int count1; // global
+
+int main(int argc, char *argv[]) {
+  int count2; // local to main()
+  ...
+}</pre>
+    <h2>Initialization</h2>
+    <p>
+        By default, global variables are initialized to zero.  For regular 
+        pointer types (including regular C strings) this means <code>NULL</code>
+         is the default value; for Objective-C object pointers, it's 
+        <code>nil</code> by default.  (This is different than local variables, 
+        which don't have a guaranteed initial value and thus should always be 
+        explicitly initialized.)
+    <p>
+        A global variable can be assigned an initial value when defined, but 
+        there's a tricky restriction: the initial value must be something the 
+        compiler can calculate at compile time.  In general, this means you can 
+        only use literal values like numbers, characters and string literals, 
+        and you can only use basic numeric operators.  Here are some examples 
+        of global variables with legal initial values:
+    <pre>int count; // defaults to 0
+int daysPerYear = 365;
+int secondsPerDay = 24 * 60 * 60;</pre>
+    <p>
+        Unfortunately you can't call functions or methods or use other global 
+        variables when assigning initial values.  Here are some examples of 
+        illegal initial values for global variables:
+    <pre>// WARNING: WON'T COMPILE
+
+// ERROR: function call not allowed
+size_t titleLength = strlen("Objective-C Tuesdays");
+
+// ERROR:  method call not allowed
+NSUInteger subtitleLength = [@"global variables" length];
+
+// ERROR:  calculation uses other global variables
+unsigned long totalLength = titleLength + subtitleLength;</pre>
+    <p>
+        This restriction generally means that global Objective-C object types 
+        can't be initialized when they're declared:
+    <pre>// WARNING: WON'T COMPILE
+NSArray *array = [[NSArray alloc] initWithObjects:@"one", @"two", nil];</pre>
+    <p>
+        There is one exception: <code>NSString</code> global variables can be 
+        initialized with Objective-C string literals (those special 
+        <code>@</code> strings):
+    <pre>NSString *title = @"Objective-C Tuesdays";</pre>
+    <p>
+        If you need to do some complex initialization on your global variables, 
+        your only choice is to do it explicitly when your program starts.  
+        There are a few common places to do this sort of work:
+    <ul>
+        <li>
+            at the start of <code>main()</code>
+        <li>
+            in your application delegate's <code>-init</code> method
+        <li>
+            in your application delegate's 
+            <code>-applicationDidFinishLaunching:</code> method
+        <li>
+            in the <code>+initialize</code> method of one of your classes
+    </ul>
+    <p>
+        If the global variable is closely associated with a particular class, 
+        the <code>+initialize</code> method for that class is a good way to 
+        keep related code grouped together.  Otherwise, 
+        <code>-applicationDidFinishLaunching:</code> is commonly used in 
+        Cocoa-touch programs while the start of <code>main()</code> is the 
+        traditional place in C programs.
+    <p>
+        <a href=/objective-c_tuesdays/extern_and_global_variables.html>Next 
+        time</a>, we'll look at accessing global variables from multiple 
+        <code>.m</code> and <code>.c</code> files.
+    <footer>
+        <a href=http://blog.ablepear.com/2009/12/objective-c-tuesdays-global-variables.html><em>Objective-C 
+        Tuesdays: global variables</em></a> was originally published on 
+        <time datetime=2009-12-15>2009-12-15</time>.
+    </footer>
+</section>

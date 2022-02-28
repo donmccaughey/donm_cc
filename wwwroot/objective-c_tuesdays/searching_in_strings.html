@@ -1,0 +1,227 @@
+<!doctype html>
+<html lang=en>
+<meta charset=utf-8>
+<meta content='initial-scale=0.9, width=device-width' name=viewport>
+<title>Searching In Strings</title>
+<link href=/base.css rel=stylesheet>
+<nav class=menu>
+    <a href=/ >Don McCaughey</a> • <a href=/objective-c_tuesdays/ >Objective-C Tuesdays</a>
+</nav>
+<section>
+    <h1>Searching In Strings</h1>
+    <p>
+        Last week we looked at 
+        <a href=/objective-c_tuesdays/slicing_and_dicing_strings.html>creating 
+        substrings of C strings and <code>NSString</code>s</a>.  Today we look 
+        at another common string operation: searching within a string.
+    <h2>Find a character in a C string</h2>
+    <p>
+        As with all operations on C strings, searching requires you to deal 
+        with pointers.  To find the first occurrence of a character in a C 
+        string, use the <code>strchr()</code> function.  If the character is 
+        found, a pointer to that character is returned.  If the character isn't 
+        present in the string, <code>NULL</code> is returned.
+    <pre>// find a character in a C string
+char const *s = "foobar";
+
+char const *character = strchr(s, 'b');
+if (character) {
+  NSLog(@"Found b");
+} else {
+  NSLog(@"Didn't find b");
+}
+// prints "Found b"</pre>
+    <p>
+        As we saw last week when we looked at 
+        <a href=/objective-c_tuesdays/slicing_and_dicing_strings.html>substrings</a>, 
+        the pointer returned by <code>strchr()</code> is effectively a 
+        substring of the source string starting at the first occurrence of the 
+        character you were searching for:
+    <pre>char const *s = "foobar";
+
+char const *substring = strchr(s, 'b');
+if (substring) {
+  NSLog(@"The substring is %s", substring);
+}
+// prints "The substring is bar"</pre>
+    <p>
+        Once you find the character you're looking for, it's common to want to 
+        create a substring containing everything <em>up to</em> that position 
+        in the string:
+    <pre>char const *filename = "myfile.txt";
+
+char const *dot = strchr(filename, '.');
+if (dot) {
+  size_t length = dot - filename;
+  char *baseFilename = calloc(length + 1, sizeof(char));
+  if (baseFilename) {
+    str<mark>n</mark>cpy(baseFilename, filename, length);
+    NSLog(@"The base filename is %s");
+  }
+}
+// prints "The base filename is myfile"</pre>
+    <p>
+        You use the difference between the two string pointers to calculate the 
+        number of <code>char</code>s up to (but not including) the character 
+        you searched for.  After allocating a buffer to hold the new substring 
+        (and the null terminator), you use the 
+        <code>str<mark>n</mark>cpy()</code> function to copy the first part of 
+        the source string.  Because we called <code>calloc()</code>, the last 
+        <code>char</code> in our buffer is already set to zero; if you use 
+        <code>malloc()</code> or a fixed buffer instead, you need to remember 
+        to set the null terminator since <code>str<mark>n</mark>cpy()</code> 
+        isn't guaranteed to do it for you. 
+    <p>
+        Very often, you want to find the <em>last</em> occurrence of a 
+        character; you can use the <code>str<mark>r</mark>chr()</code> function 
+        to search in reverse:
+    <pre>// find a character in reverse
+char const *filename = "myfile.txt";
+
+char const *extension = str<mark>r</mark>chr(filename, '.');
+if (extension) {
+  NSLog(@"The extension is %s", extension);
+}
+// prints "The extension is .txt"</pre>
+    <h2>Find one C string in another</h2>
+    <p>
+        To find the first occurrence of one C string in another, use the 
+        <code>strstr()</code> function.  Like <code>strchr()</code>, it returns 
+        a pointer to the first occurrence of the string, or <code>NULL</code> 
+        if it wasn't found.
+    <pre>// find one C string in another
+char const *s1 = "The quick brown fox";
+
+char const *s2 = strchr(s1, "ick");
+if (s2) {
+  NSLog(@"Found ick");
+} else {
+  NSLog(@"Didn't find ick");
+}
+// prints "Found ick"</pre>
+    <p>
+        Unfortunately the C standard library doesn't have a 
+        <code>str<mark>r</mark>str()</code> function to search for the last 
+        occurrence of one string in another.  You'll need to roll your own by 
+        calling <code>strstr()</code> in a loop until you reach the end of the 
+        string.  (The implementation of this is left as an exercise for the 
+        reader, or better yet convert your C string to an <code>NSString</code> 
+        and keep reading :-)
+    <h2>C string encoding issues</h2>
+    <p>
+        The standard library functions for searching C strings work great with 
+        ASCII and similar single byte encodings.  If you need to search inside 
+        UTF-8 encoded C strings, you'll quickly realize that 
+        <code>strchr()</code> and <code>strrchr()</code> are only useful for 
+        finding the basic ASCII characters (which are also valid UTF-8 
+        characters).  If you need to find non-ASCII characters like 'é', you'll 
+        need to use <code>strstr()</code> to search for the byte sequence that 
+        UTF-8 uses to represent it ("\xc3\xa9" for 'é').  Even then, Unicode 
+        characters like 'é' can be represented two ways: as the single Unicode 
+        character 'é' or as the base character 'e' followed by the combining 
+        character '´'.  In general, it's better to use a C library designed to 
+        deal with the encoding such as the 
+        <a href=https://icu.unicode.org>International Components for Unicode</a>
+         for handling UTF-8 encoded strings.  Or if you're developing for iOS 
+        or Mac OS X, use <code>NSString</code> instead.
+    <h2>Find one <code>NSString</code> in another</h2>
+    <p>
+        The <code>NSString</code> class doesn't have separate methods to search 
+        for a single character or a string; you use <code>-rangeOfString:</code>
+         to do either:
+    <pre>// find a character in an NSString
+NSString *s = @"foobar";
+
+NSRange range = [s rangeOfString:@"b"];
+if (range.location != NSNotFound) {
+  NSLog(@"Found b at %u", range.location);
+}
+// prints "Found b at 3"</pre>
+    <p>
+        Searching for the last occurrence of a string is done using the related 
+        method <code>-rangeOfString:options:</code> with the 
+        <code>NSBackwardsSearch</code> option.
+    <pre>// find last occurrence in an NSString
+NSString *s = @"The rain in Spain falls mainly on the plain";
+
+NSRange range = [s rangeOfString:@"ain" options:NSBackwardsSearch];
+if (range.location != NSNotFound) {
+  NSLog(@"Found ain at %u", range.location);
+}
+// prints "Found ain at 40"</pre>
+    <p>
+        The options are a combination of the following bit flags: 
+        <code>NSCaseInsensitiveSearch</code>, <code>NSLiteralSearch</code>, 
+        <code>NSBackwardsSearch</code> and <code>NSAnchoredSearch</code>.  You 
+        use the bitwise or (<code>|</code>) operator to combine them together, 
+        or pass in zero for no options.
+    <p>
+        Use the <code>NSCaseInsensitiveSearch</code> option to find the first 
+        match, ignoring the case of both strings.  The 
+        <code>NSLiteralSearch</code> option is used when you want to match a 
+        specific Unicode string form, such as the single character 'é' (Unicode 
+        character U+00E9) and not match equivalent character sequences like 'e' 
+        + '´' (Unicode characters U+0065 and U+0301).  Most applications won't 
+        care about this option, but it's really handy when you need it.
+    <p>
+        <code>NSAnchoredSearch</code> checks for a match only at the start of 
+        the string (or the end if combined with 
+        <code>NSBackwardsSearch</code>).  This option is occasionally handy, 
+        but the methods <code>-hasPrefix:</code> and <code>-hasSuffix:</code> 
+        are easier to read equivalents.
+    <pre>// anchored search
+NSString *s = @"The rain in Spain falls mainly on the plain";
+
+NSRange range = [s rangeOfString:@"ain" 
+                         options:NSAnchoredSearch];
+if (range.location == NSNotFound) {
+  NSLog(@"Doesn't start with ain");
+}
+// prints "Doesn't start with ain"
+
+// same thing using -hasPrefix:
+if ( ! [s hasPrefix:@"ain"]) {
+  NSLog(@"Doesn't have prefix ain");
+}
+// prints "Doesn't have prefix ain"
+
+
+// now from the end
+range = [s rangeOfString:@"ain"
+                 options:NSAnchoredSearch | NSBackwardsSearch];
+if (range.location != NSNotFound) {
+  NSLog(@"Ends with ain");
+}
+// prints "Ends with ain"
+
+// same thing using -hasSuffix:
+if ([s hasSuffix:@"ain"]) {
+  NSLog(@"Has suffix ain");
+}
+// prints "Has suffix ain"</pre>
+    <p>
+        There are two other variations of <code>-rangeOfString:</code>.  The 
+        first, <code>-rangeOfString:options:range:</code>, allows you to search 
+        within a section of a larger string without having to create a 
+        substring.
+    <p>
+        The second, <code>-rangeOfString:options:range:locale:</code>, allows 
+        you to specify a locale as well as a range.  In most cases you want to 
+        use the current locale, which is taken from the language setting on the 
+        user's device.  The other variations of <code>-rangeOfString:</code> 
+        use the current locale, and you can pass <code>nil</code> for the 
+        locale to use the current one.  Sometimes you know that the string 
+        contains text in a particular language, in an app that teaches German 
+        for instance.  In this case you should specify a locale when searching 
+        the string; the locale can affect how text is matched, especially when 
+        using the <code>NSCaseInsensitiveSearch</code> option.
+    <p>
+        Next week, we'll look at 
+        <a href=/objective-c_tuesdays/replacing_in_strings.html>replacing 
+        characters in C strings and <code>NSString</code>s</a>.
+    <footer>
+        <a href=http://blog.ablepear.com/2010/09/objective-c-tuesdays-searching-in.html><em>Objective-C 
+        Tuesdays: searching in strings</em></a> was originally published on 
+        <time datetime=2010-09-28>2010-09-28</time>.
+    </footer>
+</section>

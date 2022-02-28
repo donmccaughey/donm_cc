@@ -1,0 +1,147 @@
+<!doctype html>
+<html lang=en>
+<meta charset=utf-8>
+<meta content='initial-scale=0.9, width=device-width' name=viewport>
+<title>Unicode String Literals</title>
+<link href=/base.css rel=stylesheet>
+<nav class=menu>
+    <a href=/ >Don McCaughey</a> • <a href=/objective-c_tuesdays/ >Objective-C Tuesdays</a>
+</nav>
+<section>
+    <h1>Unicode String Literals</h1>
+    <p>
+        Last week we started looking into 
+        <a href=/objective-c_tuesdays/string_literals.html>C string and 
+        <code>NSString</code> literals</a>.  Today we'll continue this topic by 
+        looking at embedding Unicode characters in literals using Unicode 
+        escape sequences.
+    <p>
+        Unicode escape sequences were added to the C language in the TC2 
+        amendment to C99, and to the Objective-C language (for 
+        <code>NSString</code> literals) with Mac OS X 10.5.  The C99 standard 
+        actually refers to these escape sequences as <em>universal character 
+        names</em> since C doesn't require that the compiler use a particular 
+        character set or encoding scheme, but iOS and most modern systems use 
+        the Unicode character set so we'll continue to call them "Unicode 
+        escapes".
+    <p>
+        There are two flavors of Unicode escapes.  The first begins with a 
+        backslash (\) followed by a lower case 'u' and four hexadecimal digits, 
+        allowing the encoding of Unicode characters from 0 to 65535.  This 
+        Unicode range encodes the 
+        <a href=https://en.wikipedia.org/wiki/Plane_(Unicode)#Basic_Multilingual_Plane>basic 
+        multilingual plane</a>, which includes most characters in common use 
+        today.  The second Unicode escape type begins with a backslash (\) 
+        followed by an upper case 'U' and <em>eight</em> hexadecimal digits, 
+        which can encode every possible Unicode character, including historical 
+        languages and special character sets such as musical notation.
+    <pre>// Examples of Unicode escapes
+
+char const *gamma1 = "\u0393";    // capital Greek letter gamma (Γ)
+NSString *gamma2 = @"\U00000393"; // also Γ</pre>
+    <p>
+        Unlike hexadecimal escape sequences, Unicode escapes are required to 
+        have four or eight digits after the 'u' or 'U' respectively.  If you 
+        have too few digits, the compiler generates a "incomplete universal 
+        character name" error.
+    <p>
+        If you're familiar with character encoding issues, you're probably 
+        wondering how Unicode characters get encoded in plain old C strings.  
+        Since the <code>char</code> data type can only hold a character value 
+        from zero to 255, what does the compiler do when it encounters a 
+        capital gamma (Γ) with a Unicode character value of 915 (or 393 in 
+        hex)?  The C99 standard leaves this up to the compiler.  In the version 
+        of GCC that ships with Xcode and the iOS SDK, the answer is UTF-8 
+        encoding.
+    <p>
+        This is one potential gotcha when using Unicode escape sequences.  Even 
+        though the string literal in our example specifies a single 
+        <em>logical</em> character, capital gamma (Γ)
+    <pre>char const *gamma1 = "\u0393";</pre>
+    <p>
+        the compiler has no way to encode that <em>logical</em> character in a 
+        single <code>char</code>.  We would expect that
+    <pre>NSLog(@"%u", strlen(gamma1));</pre>
+    <p>
+        would print <code>1</code> for the length of the string, but it 
+        actually prints <code>2</code>.
+    <p>
+        If you read <a href=/objective-c_tuesdays/c_strings.html>the first post 
+        in the <em>strings</em> series</a>, you might remember this table 
+        showing the memory layout of the word "Geek" in Greek letters (Γεεκ) in 
+        the UTF-8 encoding:
+    <table class=memory_map>
+        <tr>
+                 <th>Address</th>     <th>64</th>     <th>65</th>     <th>66</th>     <th>67</th>     <th>68</th>     <th>69</th>     <th>70</th>     <th>71</th>     <th>72</th>   
+        </tr>
+        <tr>
+                 <td>Value</td>     <td>206</td>     <td>147</td>     <td>206</td>     <td>181</td>     <td>206</td>     <td>181</td>     <td>206</td>     <td>186</td>     <td>0</td>   
+        </tr>
+        <tr>
+                 <td>Character</td>     <td colspan=2>'Γ'</td>     <td colspan=2>'ε'</td>     <td colspan=2>'ε'</td>     <td colspan=2>'κ'</td>     <td>'\0'</td>   
+        </tr>
+    </table>
+    <p>
+        In UTF-8, letters in the Greek alphabet take up two bytes (or 
+        <code>char</code>s) each.  (And other characters may use three or four 
+        bytes.)  The standard C <code>strlen()</code> function actually counts 
+        <code>char</code>s (or bytes) in the string rather than logical 
+        characters, which made perfect sense in 1970 when computers used ASCII 
+        or another single byte character set like Latin-1.
+    <p>
+        <code>NSString</code> literals suffer from a similar problem.  
+        Internally, <code>NSString</code> uses 16 bit words to encode each 
+        character.  This made sense when <code>NSString</code> was created, 
+        since early versions of the Unicode standard only encoded up to 65,535 
+        characters, so a 16 bit word value could hold any Unicode character (at 
+        the time).
+    <p>
+        Unfortunately the Unicode consortium discovered there was a strong 
+        desire to encode historical scripts and special character sets like 
+        music and math notation along with modern languages, and 16 bits wasn't 
+        large enough to accommodate all the symbols.  The Unicode character set 
+        was expanded to 32 bits and the UTF-16 encoding was created.  In the 
+        UTF-16 encoding, characters in the hexadecimal ranges DC00-DFFF (the 
+        low surrogates) and D800-DB7F (the high surrogates) are used in pairs 
+        to encode Unicode characters with values greater than 65,535.  This is 
+        analogous to how UTF-8 uses multiple bytes to encode a single logical 
+        character.
+    <p>
+        So the musical G clef symbol (<span style='font-size: 18pt;'>𝄞</span>) 
+        which has Unicode value 1D11E in hex (119,070 in decimal), is encoded 
+        as two "characters" in an <code>NSString</code>.
+    <pre>// NSString sometimes has a misleading "length"
+NSString *gClef = @"\U0001d11e"; // musical G clef symbol (<span style='font-size: 18pt;'>𝄞</span>)
+NSLog(@"%u", [gClef length]);</pre>
+    <p>
+        The log statement prints out <code>2</code> instead of <code>1</code>.
+    <p>
+        In memory, the <code>NSString</code> data looks like this:
+    <table class=memory_map>
+        <tr>
+                 <th>Address</th>     <th>64</th>     <th>65</th>     <th>66</th>     <th>67</th>     <th>68</th>     <th>69</th>     
+        </tr>
+        <tr>
+                 <td>Value</td>     <td colspan=2>0xD834</td>     <td colspan=2>0xDD1E</td>      <td colspan=2>0</td>   
+        </tr>
+        <tr>
+                 <td>Character</td>     <td colspan=4>'<span style='font-size: 18pt;'>𝄞</span>'</td><td colspan=2>'\0'</td>   
+        </tr>
+    </table>
+    <p>
+        Like the <code>strlen()</code> function for C strings, the 
+        <code>-length</code> method actually returns the number of 
+        <em>words</em> in the <code>NSString</code>, which is usually but not 
+        always the number of logical characters in the <code>NSString</code> 
+        object.
+    <p>
+        Next time, we'll continue our dive into Unicode string madness by 
+        looking at 
+        <a href=/objective-c_tuesdays/wide_character_strings.html>wide 
+        character strings</a>.
+    <footer>
+        <a href=http://blog.ablepear.com/2010/07/objective-c-tuesdays-unicode-string.html><em>Objective-C 
+        Tuesdays: Unicode string literals</em></a> was originally published on 
+        <time datetime=2010-07-20>2010-07-20</time>.
+    </footer>
+</section>

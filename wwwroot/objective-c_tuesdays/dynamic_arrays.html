@@ -1,0 +1,210 @@
+<!doctype html>
+<html lang=en>
+<meta charset=utf-8>
+<meta content='initial-scale=0.9, width=device-width' name=viewport>
+<title>Dynamic Arrays</title>
+<link href=/base.css rel=stylesheet>
+<nav class=menu>
+    <a href=/ >Don McCaughey</a> • <a href=/objective-c_tuesdays/ >Objective-C Tuesdays</a>
+</nav>
+<section>
+    <h1>Dynamic Arrays</h1>
+    <p>
+        Another week, another Objective-C Tuesdays. Last week we began our 
+        series on data structures with a look at 
+        <a href=/objective-c_tuesdays/arrays.html>arrays in C and the 
+        <code>NSArray</code> class</a>. Both C arrays and <code>NSArray</code> 
+        objects have serious limitations: C arrays are fixed in size and 
+        <code>NSArray</code>s are immutable. Today we will look at overcoming 
+        those limitations.
+    <h2>Dynamically allocated memory</h2>
+    <p>
+        C arrays are fixed in size when they are declared:
+    <pre>int lotteryNumbers[6];</pre>
+    <p>
+        Here we declare an array that can hold six <code>int</code>s. We can 
+        freely change the six <code>int</code> values we store in the array, 
+        but we can't make the array larger or smaller once it's declared. But 
+        there's nothing really magical about arrays in C: in essence they're 
+        blocks of memory managed by the compiler. When we declare an array, we 
+        tell the compiler the number of items we need to store and the type of 
+        item and it calculates the number of bytes of memory it needs to set 
+        aside for the array. We can do the same thing with a dynamically 
+        allocated memory block. Let's dynamically allocate the same amount of 
+        storage using <code>malloc()</code>:
+    <pre>// dynamically allocating an array
+#include &lt;stdlib.h>
+
+int *lotteryNumbers = <mark>malloc</mark>(sizeof(int) * 6);
+if (lotteryNumbers) {
+  lotteryNumbers[0] = 7;
+  lotteryNumbers[1] = 11;
+  // ...
+}</pre>
+    <p>
+        The <code>malloc()</code> function is part of the standard C library, 
+        and it allocates a memory block on the <em>heap</em>. As we saw last 
+        time, you can use the same square bracket index notation with an array 
+        variable or a pointer to a block of memory.
+    <p>
+        Unlike global variables (which persist for the whole life span of your 
+        program) and local variables (which live only as long as the current 
+        function call), you control the life span of memory you allocate on the 
+        heap. Just as you need to match <code>-retain</code> with 
+        <code>-release</code> in Objective-C, you need to match calls to 
+        <code>malloc()</code> with corresponding calls to <code>free()</code>:
+    <pre>// always free dynamically allocating arrays
+#include &lt;stdlib.h>
+// ...
+
+int *lotteryNumbers = malloc(sizeof(int) * 6);
+
+// use lotteryNumbers for a while...
+
+<mark>free</mark>(lotteryNumbers);</pre>
+    <p>
+        The <code>malloc()</code> function takes one argument: the number of 
+        <em>bytes</em> to allocate. Since most useful items require more than 
+        one byte each, you need to use the <code>sizeof()</code> operator to 
+        get the size of the item type and multiply it by the number of items 
+        required.
+    <pre>// calculate the number of bytes required
+// using the <mark>sizeof()</mark> operator
+int *lotteryNumbers = malloc(<mark>sizeof(int) * 6</mark>);
+if (lotteryNumbers) {
+  // ...</pre>
+    <p>
+        The <code>malloc()</code> function returns a pointer to the newly 
+        allocated memory block on success. If <code>malloc()</code> fails, it 
+        returns <code>NULL</code>. You should always check the result of memory 
+        allocation and take appropriate action. The typical C idiom is to use 
+        the returned pointer as a boolean value, since <code>NULL</code> 
+        pointers in C evaluate to <em>false</em> while non-<code>NULL</code> 
+        pointers are <em>true</em>, similar to <code>nil</code> values in 
+        Objective-C.
+    <pre>// always test the returned pointer
+int *lotteryNumbers = malloc(<mark>sizeof(int) * 6</mark>);
+if (lotteryNumbers) {
+  // okay to use...
+} else {
+  // we're out of memory...
+}</pre>
+    <h2>Handling <code>malloc()</code> failures</h2>
+    <p>
+        If a call to <code>malloc()</code> fails and returns <code>NULL</code>, 
+        it's almost always because you've run out of available memory. There 
+        are two broad strategies for coping with a memory allocation failure: 
+        fail fast or abort the operation. In general, I recommend that you fail 
+        fast by doing something like this:
+    <pre>// fail fast when out of memory
+
+int *lotteryNumbers = malloc(sizeof(int) * 6);
+if ( ! lotteryNumbers) {
+  fprintf(stderr, "%s:%i: Out of memory\n", __FILE__, __LINE__);
+  exit(EXIT_FAILURE);
+}
+// okay to use memory
+lotteryNumbers[0] = 7;
+// ...</pre>
+    <p>
+        In an Objective-C program, you would use <code>NSLog()</code> instead 
+        of <code>fprintf()</code>. When small to medium size memory allocations 
+        fail, the system is seriously constrained and there's not much else 
+        your program can do to cope. In fact, iOS will likely terminate your 
+        app before you ever reach this condition.
+    <p>
+        Sometimes your program is trying to do something particularly memory 
+        intensive, like editing a large image or sound file. In cases like 
+        this, you should be prepared for large memory allocations to fail and 
+        try to abort the operation gracefully. The strategy in this case is to 
+        free all resources allocated for the operation so far and alert the 
+        user. 
+    <h2>Using <code>calloc()</code> instead of <code>malloc()</code></h2>
+    <p>
+        When you dynamically allocate a memory block, you frequently want to 
+        set all the items to zero. <code>malloc()</code> doesn't do any 
+        initialization to the memory block, so the initial contents are 
+        effectively random garbage. The <code>calloc()</code> function is 
+        similar to <code>malloc()</code>, but also <em>clears</em> the bytes in 
+        the memory block to zeros before returning.
+    <pre>// using calloc()
+size_t itemCount = 6;
+size_t itemSize = sizeof(int);
+int *lotteryNumbers = <mark>calloc(itemCount, itemSize)</mark>;
+if (lotteryNumbers) {
+  // okay to use...</pre>
+    <p>
+        Unlike <code>malloc()</code> which takes the size of the memory block 
+        in bytes, <code>calloc()</code> takes the number of items and the size 
+        of each item and does the math for you. Under the covers, 
+        <code>calloc()</code> allocates memory from the same heap that 
+        <code>malloc()</code> uses, so you need to call <code>free()</code> on 
+        the memory block when you're done.
+    <p>
+        There's a lot more to managing dynamically allocated memory blocks. 
+        We'll look at resizing a memory block using <code>realloc()</code> next 
+        time but for now let's move on to a more pleasant topic: 
+        <code>NSMutableArray</code>.
+    <h2><code>NSMutableArray</code></h2>
+    <p>
+        Like its immutable super class <code>NSArray</code>, the 
+        <code>NSMutableArray</code> class takes mutable array management to a 
+        higher level. You can create an <code>NSMutableArray</code> the same 
+        way you create an <code>NSArray</code>:
+    <pre>NSMutableArray *colors = [NSMutableArray arrayWithObjects:@"red", 
+                                                          @"green", 
+                                                          @"blue", 
+                                                          nil];</pre>
+    <p>
+        Another common creation technique is to duplicate an existing immutable 
+        <code>NSArray</code> using the <code>+arrayWithArray:</code> or 
+        <code>-initWithArray:</code> methods.
+    <pre>NSArray *rgbColors = [NSArray arrayWithObjects:@"red", 
+                                               @"green", 
+                                               @"blue", 
+                                               nil];
+NSMutableArray *colors = [NSMutableArray <mark>arrayWithArray:</mark>rgbColors];</pre>
+    <p>
+        Often, you simply want an empty array to start with. The 
+        <code>+array</code> or <code>-init</code> methods from 
+        <code>NSArray</code> will do the trick here. (You can create empty 
+        immutable <code>NSArray</code> objects this way too, they're just 
+        usually not very useful.) 
+    <p>
+        Adding items to the end of the array is easily done with 
+        <code>-addObject:</code> and <code>-addObjectsFromArray:</code>
+    <pre>NSMutableArray *colors = [NSMutableArray array];
+// colors is empty
+
+[colors <mark>addObject:</mark>@"yellow"];
+[colors <mark>addObject:</mark>@"purple"];
+// colors holds yellow, purple
+
+NSArray *designerColors = [NSArray arrayWithObjects:@"mauve", 
+                                                    @"chartreuse", 
+                                                    @"seafoam", 
+                                                    nil];
+[colors <mark>addObjectsFromArray:</mark>designerColors];
+// colors now holds yellow, purple, mauve, chartreuse and seafoam</pre>
+    <p>
+        <code>NSMutableArray</code> has many ways to remove objects. The 
+        <code>-removeLastObject</code> method is the inverse of 
+        <code>-addObject:</code>. The <code>-removeObjectAtIndex:</code> method 
+        removes an item at a particular index. Continuing with our array of 
+        colors:
+    <pre>// colors holds yellow, purple, mauve, chartreuse and seafoam
+[colors removeLastObject];
+// colors holds yellow, purple, mauve and chartreuse
+[colors removeObjectAtIndex:0];
+// colors holds purple, mauve and chartreuse</pre>
+    <p>
+        That covers the basics of adding and removing objects from an 
+        <code>NSMutableArray</code>. Next time, we'll cover more ways to 
+        <a href=/objective-c_tuesdays/more_about_dynamic_arrays.html>manipulate 
+        the mutable array contents</a>.
+    <footer>
+        <a href=http://blog.ablepear.com/2011/07/objective-c-tuesdays-dynamic-arrays.html><em>Objective-C 
+        Tuesdays: Dynamic arrays</em></a> was originally published on 
+        <time datetime=2011-07-26>2011-07-26</time>.
+    </footer>
+</section>

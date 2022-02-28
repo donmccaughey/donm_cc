@@ -1,0 +1,94 @@
+<!doctype html>
+<html lang=en>
+<meta charset=utf-8>
+<meta content='initial-scale=0.9, width=device-width' name=viewport>
+<title>Static Variables In Functions</title>
+<link href=/base.css rel=stylesheet>
+<nav class=menu>
+    <a href=/ >Don McCaughey</a> • <a href=/objective-c_tuesdays/ >Objective-C Tuesdays</a>
+</nav>
+<section>
+    <h1>Static Variables In Functions</h1>
+    <p>
+        Welcome back to Objective-C Tuesdays after a long hiatus.  Picking up 
+        from <a href=/objective-c_tuesdays/static_variables.html>where we left 
+        off</a>, today we'll look at <code>static</code> variables declared at 
+        function scope.
+    <p>
+        Normal local variables are declared inside the body of a function:
+    <pre>int countCharInString(char c, char const *s) {
+  <mark>int count = 0;</mark> // plain old local variable
+  do {
+    if (*s == c) ++count;
+  } while (*s++);
+  return count;
+  // after we return, count ceases to exist
+}</pre>
+    <p>
+        Plain old local variables exist only for the time that the function is 
+        executing.  When the function returns, local variables vanish.
+    <p>
+        Sometimes you want to keep a value around between calls to a function.  
+        Typically you use a global variable for this, but if the variable is 
+        only ever used inside a single function, you can use a 
+        <code>static</code> variable declared inside the function instead.  One 
+        common use for this is to automatically initialize a singleton object 
+        or data structure before its first use.  For example:
+    <pre>// static variable declared in a function
+NSArray *getDaysOfTheWeek() {
+  <mark>static</mark> NSArray *daysOfTheWeek = nil;
+  if ( ! daysOfTheWeek) {
+    daysOfTheWeek = [[NSArray alloc] initWithObjects:@"Sunday",
+                     @"Monday", @"Tuesday", @"Wednesday", 
+                     @"Thursday", @"Friday", @"Saturday", nil];
+  }
+  return daysOfTheWeek;
+}</pre>
+    <p>
+        The <code>static</code> variable <code>daysOfTheWeek</code> is actually 
+        a global variable and follows the same rules as global variables with 
+        one difference: it's only visible inside the 
+        <code>getDaysOfTheWeek()</code> function.  This makes it seem like some 
+        magical kind of local variable that keeps its value between function 
+        calls, but in fact, you can rewrite <code>getDaysOfTheWeek()</code> to 
+        use a normal <code>static</code> global like this:
+    <pre>// same function using a static global variable instead
+<mark>static</mark> NSArray *daysOfTheWeek = nil;
+
+NSArray *getDaysOfTheWeek() {
+  if ( ! daysOfTheWeek) {
+    daysOfTheWeek = [[NSArray alloc] initWithObjects:@"Sunday",
+                     @"Monday", @"Tuesday", @"Wednesday", 
+                     @"Thursday", @"Friday", @"Saturday", nil];
+  }
+  return daysOfTheWeek;
+}</pre>
+    <p>
+        There are only a couple of minor advantages to using a 
+        <code>static</code> variable declared in a function rather than a 
+        normal global:
+    <ol>
+        <li>
+            the <code>static</code> variable lives near the code that uses it
+        <li>
+            global variable name clashes are avoided
+    </ol>
+    <p>
+        However, because it's a global variable, it suffers from all the 
+        problems that global variables do.  Code that make extensive use of 
+        global variables is often harder to understand and difficult to reuse.  
+        In a multithreaded application, global variables need to be carefully 
+        synchronized between threads to avoid data corruption and deadlocks.  
+        Global variables also make writing automated tests more difficult and 
+        sometimes even impossible.  In general, it's best to avoid using global 
+        variables.
+    <p>
+        Next time, we'll take a look at 
+        <a href=/objective-c_tuesdays/local_variables_and_function_parameters.html>local 
+        variables and function parameters</a>.
+    <footer>
+        <a href=http://blog.ablepear.com/2010/03/objective-c-tuesdays-static-variables.html><em>Objective-C 
+        Tuesdays: static variables in functions</em></a> was originally 
+        published on <time datetime=2010-03-30>2010-03-30</time>.
+    </footer>
+</section>

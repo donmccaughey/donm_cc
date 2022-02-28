@@ -1,0 +1,115 @@
+<!doctype html>
+<html lang=en>
+<meta charset=utf-8>
+<meta content='initial-scale=0.9, width=device-width' name=viewport>
+<title>Wide Character Strings</title>
+<link href=/base.css rel=stylesheet>
+<nav class=menu>
+    <a href=/ >Don McCaughey</a> • <a href=/objective-c_tuesdays/ >Objective-C Tuesdays</a>
+</nav>
+<section>
+    <h1>Wide Character Strings</h1>
+    <p>
+        Last week we looked at 
+        <a href=/objective-c_tuesdays/unicode_string_literals.html>Unicode 
+        escape sequences</a> in C string and <code>NSString</code> literal.  
+        Today we'll take a quick overview of <em>wide character strings</em> 
+        and talk about where they fit into the iOS development.
+    <p>
+        When the C language was developed in the early 1970's, little thought 
+        was given to representing non-English languages.  By default, most C 
+        compilers assumed that both code files and application output used 
+        7-bit ASCII encoding and that each logical character in a string fit 
+        into a single 8-bit byte or <code>char</code> value.  By the time C was 
+        first standardized by ANSI in 1989 (and by ISO in 1990), the need to 
+        handle many more characters than ASCII was obvious, but the Unicode 
+        standard was still nascent.  So the ANSI C committee included a wide 
+        character type and wide character string functions in the C89 standard, 
+        but didn't tie wide character support to any specific character 
+        encoding scheme.
+    <h2><code>wchar_t</code></h2>
+    <p>
+        C89 introduced a new integer type, <code>wchar_t</code>.  This is 
+        similar to a <code>char</code>, but typically "wider".  On many 
+        systems, including Windows, a <code>wchar_t</code> is 16 bits.  This is 
+        typical of systems that implemented their Unicode support using earlier 
+        versions of the Unicode standard, which originally defined fewer than 
+        65,535 characters.  Unicode was later expanded to support historical 
+        and special purpose character sets, so on some systems, including Mac 
+        OS X and iOS, the <code>wchar_t</code> type is 32 bits in size.  This 
+        is often poorly documented, but you can use a simple test like this to 
+        find out:
+    <pre>// how big is wchar_t?
+NSLog(@"wchar_t is %u bits wide", 8 * sizeof(wchar_t));</pre>
+    <p>
+        On a Mac or iPhone, this will print "wchar_t is 32 bits wide".  
+        Additionally, <code>wchar_t</code> is a <code>typedef</code> for 
+        another integer type in C.  In C++, <code>wchar_t</code> is a built-in 
+        integer type.  In practice, this means you need to <code>#include 
+        &lt;wchar.h></code> in C when using wide characters.
+    <h2>signed or unsigned?</h2>
+    <p>
+        The <code>char</code> integer type is almost always a signed integer 
+        with a range from -128 to 127.  You can use the <code>CHAR_MIN</code> 
+        and <code>CHAR_MAX</code> constants defined in 
+        <code>&lt;limits.h></code> to find out the range for a particular 
+        compiler:
+    <pre>NSLog(@"CHAR_MIN = %0.f", (double)CHAR_MIN);
+NSLog(@"CHAR_MAX = %0.f", (double)CHAR_MIN);</pre>
+    <p>
+        The <code>wchar_t</code> type can be signed or unsigned.  The 
+        <code>WCHAR_MIN</code> and <code>WCHAR_MAX</code> constants hold the 
+        range of a <code>wchar_t</code> and are defined in both 
+        <code>&lt;wchar.h></code> and <code>&lt;stdint.h></code>.
+    <pre>NSLog(@"WCHAR_MIN = %0.f", (double)WCHAR_MIN);
+NSLog(@"WCHAR_MAX = %0.f", (double)WCHAR_MIN);</pre>
+    <p>
+        On Windows, <code>wchar_t</code> is an unsigned 16-bit integer.  On Mac 
+        and iPhone, <code>wchar_t</code> is a <em>signed</em> 32-bit integer, 
+        so the code above will print out "WCHAR_MAX = 2147483647" and 
+        "WCHAR_MIN = -2147483648".  For the most part you don't need to worry 
+        about whether <code>wchar_t</code> is signed or unsigned; it only 
+        becomes important if you need to do comparisons and operations that mix 
+        <code>wchar_t</code> with other integer types (a rarity).
+    <h2>wide character literals</h2>
+    <p>
+        We looked at <a href=/objective-c_tuesdays/string_literals.html>C 
+        string literals</a> in previous entries.  Wide character string 
+        literals are very similar, but are prefixed with 'L':
+    <pre>// example of a wide character string literal
+wchar_t const *s = L"foobarf!";</pre>
+    <p>
+        Like C string literals, wide strings separated by only whitespace are 
+        considered one logical string:
+    <pre>// wide strings written in segments
+wchar_t const *s1 = L"foo" "bar";
+wchar_t const *s2 = L"Hello, " L"world!";</pre>
+    <h2>wide character functions</h2>
+    <p>
+        Most string functions in the standard C library are defined in the 
+        <code>&lt;string.h></code> header.  A very similar set of functions for 
+        wide character strings are defined in <code>&lt;wchar.h></code>.  The 
+        functions follow a similar naming convention.  Where string functions 
+        are prefixed with <code>str</code>, the wide character equivalents are 
+        prefixed with <code>wcs</code> (for <mark>w</mark>ide 
+        <mark>c</mark>haracter <mark>s</mark>tring).  So the 
+        <code>strlen()</code> function calculates the length of a string and 
+        the corresponding <code>wcslen()</code> function calculates the length 
+        of a wide character string.
+    <h2>not used much</h2>
+    <p>
+        In practice, you won't use wide character strings very often in 
+        Objective-C since the <code>NSString</code> class does just about 
+        everything wide character strings are meant to do, but you may 
+        occasionally run across them in other C libraries.
+    <p>
+        Next time, we'll begin looking at common string operations using C 
+        strings and <code>NSString</code>s, starting with 
+        <a href=/objective-c_tuesdays/concatenating_strings.html>string 
+        concatenation</a>.
+    <footer>
+        <a href=http://blog.ablepear.com/2010/07/objective-c-tuesdays-wide-character.html><em>Objective-C 
+        Tuesdays: wide character strings</em></a> was originally published on 
+        <time datetime=2010-07-27>2010-07-27</time>.
+    </footer>
+</section>

@@ -1,0 +1,322 @@
+<!doctype html>
+<html lang=en>
+<meta charset=utf-8>
+<meta content='initial-scale=0.9, width=device-width' name=viewport>
+<title>Instance Variables</title>
+<link href=/base.css rel=stylesheet>
+<nav class=menu>
+    <a href=/ >Don McCaughey</a> • <a href=/objective-c_tuesdays/ >Objective-C Tuesdays</a>
+</nav>
+<section>
+    <h1>Instance Variables</h1>
+    <p>
+        Last time we talked about 
+        <a href=/objective-c_tuesdays/local_variables_and_function_parameters.html>local 
+        variables and function parameters</a>.  Today we will look at instance 
+        variables of Objective-C classes and we'll touch on methods as well.
+    <p>
+        Objective-C classes are defined by an <code>@interface</code> section 
+        and an <code>@implementation</code> section.  The 
+        <code>@interface</code> section declares the instance variables and 
+        looks like this:
+    <pre>@interface Cat : NSObject <mark>{
+  NSString *name;
+  int age;
+}</mark>
+
+- (id)initWithName:(NSString *)aName
+            andAge:(int)anAge;
+
+// ...
+@end</pre>
+    <p>
+        The instance variables (or <em>ivars</em>) are declared between the 
+        curly braces, after the class name and superclass but before method 
+        declarations.  Instance variables are declared like any local or global 
+        variable, but have a different scope.  By default, instance variables 
+        are visible in all instance methods of a class and its subclasses.  
+        (Instance methods are the ones that begin with a minus  sign.)  The 
+        implementation of the <code>-init</code> method might look like this:
+    <pre>// example of using instance variables
+@implementation Cat
+
+- (id)initWithName:(NSString *)aName
+            andAge:(int)anAge
+{
+  self = [super init];
+  if ( ! self) return nil;
+  
+  <mark>name</mark> = [aName copy];
+  <mark>age</mark> = anAge;
+  
+  return self;
+}
+
+// ...
+@end</pre>
+    <p>
+        This is a pretty standard Objective-C <code>-init</code> method.  Note 
+        that unlike JavaScript, Python, Ruby and many other languages, there's 
+        no need to prefix instance variables with <code>this</code>, 
+        <code>self</code>, <code>@</code> or something similar.  But this leads 
+        to a problem: what if a method parameter has the same name as an 
+        instance variable?  If our <code>-init</code> method was defined like 
+        this:
+    <pre>// example of name shadowing
+- (id)initWithName:(NSString *)<mark>name</mark>
+            andAge:(int)<mark>age</mark>
+{
+  self = [super init];
+  if ( ! self) return nil;
+  
+  <mark>name</mark> = [<mark>name</mark> copy]; // causes a warning
+  <mark>age</mark> = <mark>age</mark>;          // causes a warning
+  
+  return self;
+}</pre>
+    <p>
+        If you compile this code, you'll see warnings like <code>local 
+        declaration of 'name' hides instance variable</code>.  You should heed 
+        these warnings! Code like
+    <pre>age = age;</pre>
+    <p>
+        assigns parameter <code>age</code> to itself, leaving the instance 
+        variable <code>age</code> unchanged.
+    <p>
+        Unfortunately there's no elegant way to deal with parameters shadowing 
+        instance variables.  Objective-C does allow you to use the "pointer to 
+        member" or "arrow" (<code>-></code>) operator on <code>self</code> to 
+        access instance variables, like this:
+    <pre>// example of pointer to member
+- (id)initWithName:(NSString *)name
+            andAge:(int)age
+{
+  self = [super init];
+  if ( ! self) return nil;
+  
+  <mark>self->name</mark> = [name copy]; // still causes a warning
+  <mark>self->age</mark> = age;          // still causes a warning
+  
+  return self;
+}</pre>
+    <p>
+        If you know C++ or Java, you would think this would work, but the 
+        Objective-C compiler still produces a warning.  This is probably one of 
+        the most niggling little differences between Objective-C and other 
+        languages that you just need to get over.  The only practical solution 
+        is make sure that parameter names don't clash with instance variables.  
+        For initializers and setters, most Objective-C programmers simply 
+        prefix their parameter names with "<code>a</code>", "<code>an</code>" 
+        or "<code>the</code>".  It's not very elegant, but it works.  If you're 
+        tempted to simply prefix your instance variable names with an 
+        underscore, I recommend against that.  Apple uses the leading 
+        underscore convention in framework classes in order to prevent name 
+        clashes when application writers have to extend framework classes.
+    <h2>The <code>struct</code> behind the curtain</h2>
+    <p>
+        If you're familiar with C or C++, seeing an expression like 
+        <code>self->name</code> should give you a clue to the inner workings of 
+        Objective-C.  Underneath, Objective-C objects are pretty much just 
+        <code>struct</code>s and functions.  The <code>@interface</code> of our 
+        <code>Cat</code> class:
+    <pre>@interface Cat : NSObject {
+  NSString *name;
+  int age;
+}
+// ...
+@end</pre>
+    <p>
+        becomes a <code>struct</code> that looks something like:
+    <pre>// pseudocode for struct generated for Cat class
+struct Cat {
+  Class isa;       // inherited from NSObject
+  NSString *name;
+  int age;
+};</pre>
+    <p>
+        The instance variables you define are tacked on to those defined by the 
+        superclass, and its superclass and so on.  So if we defined a subclass 
+        of <code>Cat</code>:
+    <pre>@interface LolCat : Cat {
+  UIImage *picture;
+  NSString *caption;
+  int upVotes;
+}
+@end</pre>
+    <p>
+        the Objective-C compiler would generate a structure in memory that 
+        looked something like:
+    <pre>// pseudocode for struct generated for LolCat class
+struct LolCat {
+  Class isa;         // inherited from NSObject
+  NSString *name;    // inherited from Cat
+  int age;           // inherited from Cat
+  UIImage *picture;
+  NSString *caption;
+  int upVotes;
+};</pre>
+    <p>
+        Similarly, Objective-C methods are simply regular C functions 
+        underneath with extra parameters automatically added by the compiler.  
+        So our <code>-init</code> method
+    <pre>- (id)initWithName:(NSString *)aName
+            andAge:(int)anAge
+{
+  // ...
+}</pre>
+    <p>
+        is compiled into something that resembles:
+    <pre>// pseudocode for function generated for -initWithName:andAge: method
+id initWithName_andAge(<mark>id self</mark>, <mark>SEL _cmd</mark>, NSString *aName, int anAge) {
+  // ...
+}</pre>
+    <p>
+        The parameters <code>self</code> and <code>_cmd</code> are added to 
+        each instance method by the compiler.  Naturally, <code>self</code> is 
+        a pointer to the memory for the instance, organized like a 
+        <code>struct</code> as we've shown.  The <code>_cmd</code> parameter 
+        holds the method <em>selector</em> (which is basically the method name) 
+        and can be used to do very crazy dynamic stuff we won't dive into today.
+    <h2>Instance variable scope</h2>
+    <p>
+        We mentioned earlier that by default, instance variables are visible in 
+        all instance methods of a class and its subclasses.  This is referred 
+        to as <em>protected</em> scope in Objective-C.  You can change the 
+        scope of instance variables to be <em>private</em>, <em>public</em> or 
+        <em>package</em> as well as protected, but in general these other 
+        scopes aren't used very frequently in Objective-C.  Going back to our 
+        <code>Cat</code> example, you would use the scope specifiers like this:
+    <pre>@interface Cat : NSObject {
+  // protected by default
+    double weight;
+  @private
+    int lives;
+  @protected
+    int age;
+  @public
+    NSString *name;
+  @package
+    UIColor *color;
+}
+
+// ...
+@end</pre>
+    <p>
+        Private scope restricts visibility of the instance variable to the 
+        class it's defined in; subclasses are not allowed to use it.  Protected 
+        is the default if you don't specify a scope, and allows all subclasses 
+        to read and write to the instance variable.  Public scope is rarely 
+        seen in Objective-C; the pointer to member or arrow (->) operator is 
+        used to access public instance variables:
+    <pre>// accessing public instance variables
+Cat *cat = [[Cat alloc] init];
+NSLog(@"The cat's name is %@", <mark>cat->name</mark>);</pre>
+    <p>
+        Package scope is used by framework creators; it makes the instance 
+        variable public within the framework and private outside it.
+    <h2>Properties</h2>
+    <p>
+        Since instance variables aren't visible outside classes by default, 
+        most Objective-C programmers create getters and setters when they want 
+        to expose instance variables.  Before Objective-C 2.0, these were 
+        written by hand for each instance variable:
+    <pre>// getter and setter declarations
+@interface Cat : NSObject {
+  NSString *name;
+  int age;
+}
+
+- (NSString *)name;
+- (void)setName:(NSString *)aName;
+
+- (id)age;
+- (void)setAge:(int)anAge;
+
+// ...
+@end</pre>
+    <p>
+        The normal Objective-C convention is to give the getter the same name 
+        as the instance variable and to prefix the setter with "set".  The 
+        implementation of simple setters is boilerplate but not trivial due to 
+        the need to manage retain counts:
+    <pre>// getter and setter definitions
+@implementation Cat
+
+- (NSString *)name {
+  return name;
+}
+- (void)setName:(NSString *)aName {
+  if (name != aName) {
+    [name release];
+    name = [aName copy];
+  }
+}
+
+// ...
+@end</pre>
+    <p>
+        Writing setters manually is both laborious and error prone, so 
+        Objective-C 2.0 introduced properties, allowing getters and setters to 
+        be generated automatically.  Rewriting the <code>Cat</code> class using 
+        properties:
+    <pre>// property declaration
+@interface Cat : NSObject {
+  NSString *name;
+  int age;
+}
+
+<mark>@property(copy, nonatomic) NSString *name;</mark>
+<mark>@property(assign, nonatomic) int age;</mark>
+
+// ...
+@end</pre>
+    <p>
+        And its implementation:
+    <pre>// property implementation
+@implementation Cat
+
+<mark>@synthesize name, age;</mark>
+
+// ...
+@end</pre>
+    <p>
+        Which is much better.  Properties can be called in two ways.  Dot 
+        notation is the most terse and similar to many other languages:
+    <pre>// property dot notation example
+Cat *cat = [[Cat alloc] init];
+NSLog(@"The cat is %d years old", <mark>cat.age</mark>);
+<mark>cat.name</mark> = @"Ritz";</pre>
+    <p>
+        But you can use normal method calls as well:
+    <pre>// property method call example
+Cat *cat = [[Cat alloc] init];
+NSLog(@"The cat is %d years old", <mark>[cat age]</mark>);
+<mark>[cat setName:@"Ritz"]</mark>;</pre>
+    <p>
+        These two examples are exactly equivalent.  Dot notation is simply 
+        syntactic sugar for getter and setter method calls.
+    <h2>Which is which?</h2>
+    <p>
+        While it's very convenient, property dot notation makes Objective-C a 
+        little confusing at first.  You will sometimes see properties and 
+        instance variables mixed together in the same method:
+    <pre>- (void)celebrateBirthday {
+  <mark>age</mark>++; // instance variable
+  if (age > 9) {
+    <mark>self.name</mark> = // property
+            [NSString stringWithFormat:@"Old %@", 
+                                <mark>name</mark>]; // instance variable
+  }
+}</pre>
+    <p>
+        At first glance, <code>name</code> and <code>self.name</code> don't 
+        seem that different but they are.  We'll examine those differences, and 
+        look more at 
+        <a href=/objective-c_tuesdays/instance_variables_getters_and_setters.html>properties</a>, 
+        next time.
+    <footer>
+        <a href=http://blog.ablepear.com/2010/04/objective-c-tuesdays-instance-variables.html><em>Objective-C 
+        Tuesdays: instance variables</em></a> was originally published on 
+        <time datetime=2010-04-13>2010-04-13</time>.
+    </footer>
+</section>

@@ -1,0 +1,278 @@
+<!doctype html>
+<html lang=en>
+<meta charset=utf-8>
+<meta content='initial-scale=0.9, width=device-width' name=viewport>
+<title>@Property And @Synthesize</title>
+<link href=/base.css rel=stylesheet>
+<nav class=menu>
+    <a href=/ >Don McCaughey</a> • <a href=/objective-c_tuesdays/ >Objective-C Tuesdays</a>
+</nav>
+<section>
+    <h1>@Property And @Synthesize</h1>
+    <p>
+        Last time we looked at 
+        <a href=/objective-c_tuesdays/instance_variables_getters_and_setters.html>writing 
+        getters and setters for Objective-C classes</a>.  Today we'll look at 
+        generating them automatically using the <code>@property</code> and 
+        <code>@synthesize</code> directives.
+    <p>
+        Before Objective-C 2.0 was introduced, if you wanted to add getters and 
+        setters to a class, you wrote them yourself using instance methods, 
+        which caused some classes to become heavy with boilerplate code:
+    <pre>// example of hand-written getters and setters
+@interface Person : NSObject {
+  int age;
+  Address *address;
+  NSString *name;
+}
+
+- (int)age;
+- (void)setAge:(int)anAge;
+
+- (Address *)address;
+- (void)setAddress:(Address *)anAddress;
+
+- (NSString *)name;
+- (void)setName:(NSString *)aName;
+
+// ...
+
+@end
+
+
+@implementation Person
+
+- (int)age {
+  return age;
+}
+
+// assign-type setter
+- (void)setAge:(int)anAge {
+  age = anAge;
+}
+
+- (Address *)address {
+  return address;
+}
+
+// retain-type setter
+- (void)setAddress:(Address *)anAddress {
+  if (address != anAddress) {
+    [address release];
+    address = [anAddress retain];
+  }
+}
+
+- (NSString *)name {
+  return name;
+}
+
+// copy-type setter
+- (void)setName:(NSString *)aName {
+  if (name != aName) {
+    [name release];
+    name = [aName copy];
+  }
+}
+
+// ...
+
+@end</pre>
+    <p>
+        This is a lot of code to write, and the <code>Person</code> class 
+        barely does anything yet.  The <code>@property</code> directive will 
+        remove some of the boilerplate code from the <code>@interface</code> 
+        section of the class and the <code>@synthesize</code> directive will 
+        clean up the <code>@implementation</code>
+    <h2>Declaring properties</h2>
+    <p>
+        A getter and setter form a logical <em>property</em> of a class.  
+        Properties typically correspond directly to instance variables, but 
+        don't have to.  Sometimes a property is calculated on the fly, or the 
+        name of the instance variable is different than the name of the 
+        property.  The <code>@property</code> directive replaces the getter and 
+        setter method declarations in the <code>@interface</code> of the class. 
+         
+    <pre>// declaring <mark>age</mark> property
+@interface Person : NSObject {
+  int age;
+  Address *address;
+  NSString *name;
+}
+
+<mark>@property int age</mark>;
+
+// ...
+@end</pre>
+    <p>
+        Notice that the property declaration looks a lot like an instance 
+        variable declaration.  At a high level, a property is very similar to 
+        an instance variable.  But as far as the compiler cares, a 
+        <code>@property</code> is simply a replacement for declaring the getter 
+        and setter methods:
+    <pre>@property int age;</pre>
+    <p>
+        is just a substitute for
+    <pre>- (int)age;
+- (void)setAge:(int)anAge;</pre>
+    <p>
+        If you don't write the corresponding getter and setter methods in the 
+        <code>@implementation</code> section, you'll see compiler warnings like 
+        this:
+    <pre>property 'age' requires method '-age' to be defined - use @synthesize, @dynamic or provide a method implementation
+property 'age' requires the method 'setAge:' to be defined - use @synthesize, @dynamic or provide a method implementation</pre>
+    <h2>Read-only properties</h2>
+    <p>
+        Sometimes, you want properties to be read-only.  For example, we might 
+        store the person's birthdate instead of age:
+    <pre>// <mark>age</mark> property calculated on the fly
+@interface Person : NSObject {
+  NSDate *birthDate;
+  Address *address;
+  NSString *name;
+}
+
+<mark>@property int age</mark>;
+
+// ...
+@end
+
+@implementation Person
+
+- (int)age {
+  NSCalendar *calendar = [NSCalendar currentCalendar];
+  NSDate *today = [NSDate date];
+  NSDateComponents *components = [calendar components:NSYearCalendarUnit 
+                                             fromDate:birthDate 
+                                               toDate:today 
+                                              options:0];
+  return components.year;
+}
+
+// ...
+@end</pre>
+    <p>
+        Yet it doesn't make sense to write the corresponding 
+        <code>setAge:</code> method here.  If we compile this code, we'll still 
+        get nagged about the setter:
+    <pre>property 'age' requires the method 'setAge:' to be defined - use @synthesize, @dynamic or provide a method implementation</pre>
+    <p>
+        To silence this, we need to add an <em>attribute</em> to the property.  
+        Property attributes go in parentheses after the <code>@property</code> 
+        keyword but before the type and name:
+    <pre>@property <mark>(readonly)</mark> int age;</pre>
+    <p>
+        Here we've told the compiler that the <code>age</code> property is 
+        <code>readonly</code>, so not to worry about the setter.  By default, 
+        properties are <code>readwrite</code>.  You can label them with the 
+        <code>readwrite</code> attribute, but since it's the default, it's 
+        redundant and you'll rarely see it.
+    <h2>Object properties</h2>
+    <p>
+        Let's set aside the calculated <code>age</code> property and go with 
+        our plain old <code>int</code> version.  The next property of the 
+        <code>Person</code> class is <code>address</code>:
+    <pre>// declaring <mark>address</mark> property
+@interface Person : NSObject {
+  int age;
+  Address *address;
+  NSString *name;
+}
+
+@property int age;
+<mark>@property Address *address</mark>;
+
+// ...
+@end</pre>
+    <p>
+        When you compile this, you'll see warnings like:
+    <pre>no 'assign', 'retain', or 'copy' attribute is specified - 'assign' is assumed
+assign attribute (default) not appropriate for non-gc object property 'address'</pre>
+    <p>
+        The compiler has noticed that <code>address</code> is an Objective-C 
+        object type and is reminding you to do the appropriate memory 
+        management.  (Those lucky Mac developers don't have to worry about this 
+        any more since they now have garbage collection.)  In addition to 
+        <code>readwrite</code>/<code>readonly</code> there's another set of 
+        property attributes: <code>assign</code>, <code>retain</code> and 
+        <code>copy</code>.  Since <code>address</code> uses retain memory 
+        management, we'll change it to look like
+    <pre>@property <mark>(retain)</mark> Address *address;</pre>
+    <p>
+        At this stage, <code>assign</code>, <code>retain</code> and 
+        <code>copy</code> are simply documentation to other programmers about 
+        the memory management strategy for the property.  If you write the 
+        setter yourself, the compiler isn't smart enough to tell if you 
+        actually wrote the correct type of setter, so be careful!  There's 
+        nothing worse than code that says it's doing one thing and actually 
+        does another.  So what's the point?  We'll see when we get to 
+        <code>@synthesize</code>.
+    <p>
+        Finishing up the properties for our class, we declare a property for 
+        <code>name</code> that uses a copy memory management scheme.  
+        (<a href=/objective-c_tuesdays/instance_variables_getters_and_setters.html>Last 
+        week's post</a> explained why we use <code>copy</code> for 
+        <code>NSString</code> properties.)
+    <pre>// declaring <mark>name</mark> property
+@interface Person : NSObject {
+  int age;
+  Address *address;
+  NSString *name;
+}
+
+@property int age;
+@property (retain) Address *address;
+<mark>@property (copy) NSString *name</mark>;
+
+// ...
+@end</pre>
+    <h2>Plain old pointer properties</h2>
+    <p>
+        Most Objective-C code uses objects instead of plain old C 
+        <code>struct</code>s, strings and arrays, but sometimes you'll need to 
+        use them, often when working with low level C libraries.  You might be 
+        tempted to document your memory management for these plain old pointers 
+        as you would Objective-C objects:
+    <pre>// ERROR: won't compile
+@interface Person : NSObject {
+  int age;
+  Address *address;
+  NSString *name;
+  char const *username; // plain old C string
+}
+
+@property int age;
+@property (retain) Address *address;
+@property (copy) NSString *name;
+@property (<mark>copy</mark>) char const *username; // plain old C string
+
+// ...
+@end</pre>
+    <p>
+        Unfortunately, since plain old C types don't have 
+        <code>retain</code>/<code>release</code> memory management like 
+        Objective-C objects, this muddies the meaning of <code>copy</code> and 
+        the compiler will stop with an error like:
+    <pre>property 'username' with 'copy' attribute must be of object type</pre>
+    <p>
+        Unfortunately, marking a property like this <code>assign</code> when 
+        your setter actually makes a copy doesn't seem right either:
+    <pre>// not quite right
+@property (<mark>assign</mark>) char const *username;</pre>
+    <p>
+        My advice is to leave off <code>assign</code>, <code>retain</code> and 
+        <code>copy</code> from properties for plain old C pointers and use a 
+        comment to note your memory management strategy.
+    <p>
+        I'm out of time right now, so I'll have to finish this up next week.  
+        Coming up, the 
+        <a href=/objective-c_tuesdays/atomic_and_nonatomic_properties.html><code>nonatomic</code>
+         property attribute</a>, and the 
+        <a href=/objective-c_tuesdays/synthesizing_properties.html><code>@synthesize</code>
+         directive</a>.
+    <footer>
+        <a href=http://blog.ablepear.com/2010/04/objective-c-tuesdays-property-and.html><em>Objective-C 
+        Tuesdays: @property and @synthesize</em></a> was originally published 
+        on <time datetime=2010-04-27>2010-04-27</time>.
+    </footer>
+</section>

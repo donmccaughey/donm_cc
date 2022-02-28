@@ -1,0 +1,134 @@
+<!doctype html>
+<html lang=en>
+<meta charset=utf-8>
+<meta content='initial-scale=0.9, width=device-width' name=viewport>
+<title>The For...In Loop</title>
+<link href=/base.css rel=stylesheet>
+<nav class=menu>
+    <a href=/ >Don McCaughey</a> • <a href=/objective-c_tuesdays/ >Objective-C Tuesdays</a>
+</nav>
+<section>
+    <h1>The For...In Loop</h1>
+    <p>
+        We've looked at the standard <code>for</code> loop for the last 
+        <a href=/objective-c_tuesdays/the_for_loop.html>two</a> 
+        <a href=/objective-c_tuesdays/for_loop_variations.html>weeks</a>.  This 
+        week we will dive into the <code>for...in</code> loop introduced in 
+        Objective-C 2.0.  Unlike the standard <code>for</code> loop, the 
+        <code>for...in</code> loop is not available in plain old C.
+    <p>
+        In Objective-C, collection classes such as 
+        <a href='https://developer.apple.com/documentation/foundation/nsarray?language=objc'><code>NSArray</code></a>, 
+        <a href='https://developer.apple.com/documentation/foundation/nsset?language=objc'><code>NSSet</code></a>
+         and 
+        <a href='https://developer.apple.com/documentation/foundation/nsdictionary?language=objc'><code>NSDictionary</code></a>
+         are a key part of the Objective-C Foundation framework.  Collections 
+        provide high level ways to group and organize objects.
+    <p>
+        In older versions of Objective-C, looping over items in a collection is 
+        done using an 
+        <a href='https://developer.apple.com/documentation/foundation/nsenumerator?language=objc'>NSEnumerator</a>
+         object in a <code>while</code> loop:
+    <pre>NSSet *items = [NSSet setWithObjects:@"foo", @"bar", nil];
+NSEnumerator *enumerator = [items objectEnumerator];
+NSString *item = nil;
+while (item = [enumerator nextObject]) {
+  // do something with item
+}</pre>
+    <p>
+        It's possible to loop over items in a <code>NSArray</code> using a 
+        standard <code>for</code> loop, since <code>NSArray</code> has a well 
+        defined order:
+    <pre>NSArray *items = [NSArray arrayWithObjects:@"foo", @"bar", nil];
+for (NSUInteger i = 0; i &lt; [items count]; i++) {
+  NSString *item = [items objectAtIndex:i];
+  // do something with item
+}</pre>
+    <p>
+        Unfortunately, some collection classes (such as <code>NSSet</code>) 
+        don't have a well defined order; <code>NSEnumerator</code> used to be 
+        the only option.
+    <p>
+        The <code>for...in</code> loop works on any collection that conforms to 
+        the <code>NSFastEnumeration</code> protocol (all the standard ones do). 
+         The <code>for...in</code> loop is similar to a standard 
+        <code>for</code> loop but simpler.  Instead of the three sections of a 
+        standard <code>for</code> loop, there are two, the <em>loop 
+        variable</em> and the <em>collection expression</em>:
+    <pre>for (<em>loop variable</em> in <em>collection expression</em>) {
+  // do something with loop variable
+}</pre>
+    <h2>Loop Variable</h2>
+    <p>
+        The <em>loop variable</em> can be a previous declared variable:
+    <pre>NSString *item = nil;
+// ...
+for (<mark>item</mark> in <em>collection expression</em>) {
+  // do something with item
+}</pre>
+    <p>
+        or it can be declared inside the parentheses:
+    <pre>for (<mark>NSString *item</mark> in <em>collection expression</em>) {
+  // do something with item
+}</pre>
+    <h2>Collection Expression</h2>
+    <p>
+        The <em>collection expression</em> can be any expression that evaluates 
+        to an object conforming to <code>NSFastEnumeration</code>.  Typically, 
+        this is simply a collection variable defined elsewhere:
+    <pre>NSSet *items = [NSSet setWithObjects:@"foo", @"bar", nil];
+// ...
+for (NSString *item in <mark>items</mark>) {
+  // do something with item
+}</pre>
+    <p>
+        but can be a function call or method call:
+    <pre>for (NSString *item in <mark>[NSSet setWithObjects:@"foo", @"bar", nil]</mark>) {
+  // do something with item
+}</pre>
+    <h2>Dictionaries</h2>
+    <p>
+        When using a <code>for...in</code> loop with a 
+        <code>NSDictionary</code>, the loop variable receives the dictionary 
+        keys; to work with the dictionary values inside the loop, use 
+        <code>objectForKey:</code>
+    <pre>NSDictionary *numbers = [NSDictionary dictionaryWithObjectsAndKeys:
+    @"zero", @"0", 
+    @"one", @"1", 
+    nil];
+for (NSString *key in numbers) {
+  NSString *value = [numbers objectForKey:key];
+  // do something with key and value
+}</pre>
+    <h2>Mutation Guard</h2>
+    <p>
+        Modifying a collection while iterating over it can cause very 
+        unintuitive behavior, so the <code>for...in</code> loop uses a 
+        <em>mutation guard</em> behind the scenes.  If items are added or 
+        removed from a collection while your <code>for...in</code> loop is 
+        running, an exception is thrown.  This is generally a good thing, but 
+        it makes filtering a collection somewhat tricky:
+    <pre>NSMutableSet *items = [NSMutableSet setWithObjects:@"", @"a", @"aa", @"aaa", nil];
+for (NSString *item in items) {
+  if (item.length &lt; 2) {
+    [items removeObject:item]; // WARNING: exception thrown on mutation
+  }
+}</pre>
+    <p>
+        The way to get around this restriction is to iterate over a copy of the 
+        collection and modify the original (or vice versa):
+    <pre>NSMutableSet *items = [NSMutableSet setWithObjects:@"", @"a", @"aa", @"aaa", nil];
+for (NSString *item in <mark>[[items copy] autorelease]</mark>) {
+  if (item.length &lt; 2) {
+    [items removeObject:item]; // OKAY: looping over copy, changing original
+  }
+}</pre>
+    <p>
+        <a href=/objective-c_tuesdays/the_while_loop.html>Next week</a>, we 
+        will look at the <code>while</code> loop.
+    <footer>
+        <a href=http://blog.ablepear.com/2009/10/objective-c-tuesdays-forin-loop.html><em>Objective-C 
+        Tuesdays: The for...in loop</em></a> was originally published on 
+        <time datetime=2009-10-20>2009-10-20</time>.
+    </footer>
+</section>

@@ -1,0 +1,270 @@
+<!doctype html>
+<html lang=en>
+<meta charset=utf-8>
+<meta content='initial-scale=0.9, width=device-width' name=viewport>
+<title>More About Dynamic Arrays</title>
+<link href=/base.css rel=stylesheet>
+<nav class=menu>
+    <a href=/ >Don McCaughey</a> • <a href=/objective-c_tuesdays/ >Objective-C Tuesdays</a>
+</nav>
+<section>
+    <h1>More About Dynamic Arrays</h1>
+    <p>
+        Welcome back to Objective-C Tuesdays. Last time we were talking about 
+        <a href=/objective-c_tuesdays/dynamic_arrays.html>dynamic arrays in C 
+        and <code>NSMutableArray</code> in Objective-C</a>. We'll continue 
+        looking at both today.
+    <p>
+        We looked at using <code>malloc()</code> or <code>calloc()</code> to 
+        dynamically allocate a block of memory that you can treat like an 
+        array. This is very useful when you don't know the number of items you 
+        need to store until run time or when you need the array to exist longer 
+        than the current function call.
+    <p>
+        But what happens when you need to grow or shrink the memory block? 
+        Well, the straightforward way would be to allocate a new memory block, 
+        copy over the contents and free the old block. You use the 
+        <code>memcpy()</code> function in the C standard library to do the 
+        copying.
+    <pre>// resizing a memory block
+int *lotteryNumbers = malloc(sizeof(int) * 6);
+if ( ! lotteryNumbers) {
+  // memory allocation failed
+  exit(EXIT_FAILURE);
+}
+lotteryNumbers[0] = 7;
+// ...lotteryNumbers[5] = 29;
+// now we need to store more numbers
+// so allocate a bigger memory block
+int *biggerMemoryBlock = malloc(sizeof(int) * 12);
+if ( ! biggerMemoryBlock) {
+  // memory allocation failed
+  exit(EXIT_FAILURE);
+}
+// copy lotteryNumbers into biggerMemoryBlock
+<mark>memcpy(biggerMemoryBlock, lotteryNumbers, sizeof(int) * 6);</mark>
+// free old memory block
+free(lotteryNumbers);
+// replace old memory block pointer with new one
+lotteryNumbers = biggerMemoryBlock;
+lotteryNumbers[6] = 31;
+// ...lotteryNumbers[11] = 49;</pre>
+    <p>
+        When copying blocks of memory, be careful to specify the correct size 
+        in bytes. In the example above, we use the same expression to calculate 
+        the size, <code>sizeof(int) * 6</code> for both the original call to 
+        <code>malloc()</code> and to <code>memcpy()</code>. Using the 
+        <code>sizeof</code> operator like this serves two purposes. It makes 
+        the code portable, since the size of an <code>int</code> may be 
+        different on some systems (it's four bytes on iOS). More importantly, 
+        it tells anyone reading the code that you intended to allocate six 
+        <code>int</code>s. If you had specified simply <code>malloc(24)</code> 
+        or even <code>malloc(6 * 4)</code>, your intention is not as clear.
+    <h2>Resizing a memory block with <code>realloc()</code></h2>
+    <p>
+        Allocating a larger or smaller memory block and copying over the 
+        contents works perfectly, but it is tedious. Fortunately, the C 
+        standard library includes the <code>realloc()</code> function which 
+        does exactly this for you in one function call. It can operate on any 
+        memory block allocated with <code>malloc()</code> or 
+        <code>calloc()</code>. In addition, because it's part of the standard 
+        library, <code>realloc()</code> can do things that you can't: it will 
+        try to grow or shrink the memory block in place, skipping the copy 
+        step. Sometimes the memory manager will give you a block of memory 
+        somewhat bigger than you requested, other times the memory area after 
+        your memory block is currently unused. Because <code>realloc()</code> 
+        is privy to the implementation details of the memory manager, it can 
+        figure out when it's safe to grow your memory block in place.
+    <p>
+        The <code>realloc()</code> function returns a pointer to either the 
+        original memory block or a new memory block on success, or 
+        <code>NULL</code> if memory allocation fails. If the new memory block 
+        is bigger than the original, the new items will be set to zero, just as 
+        if you allocated the memory block with <code>calloc()</code>. Like 
+        <code>malloc()</code>, <code>realloc()</code> requires you to calculate 
+        the size of the memory block in bytes.
+    <pre>// using realloc()
+int *lotteryNumbers = malloc(sizeof(int) * 2);
+if ( ! lotteryNumbers) {
+  // out of memory
+  exit(EXIT_FAILURE);
+}
+lotteryNumbers[0] = 7;
+lotteryNumbers[1] = 11;
+// ...
+int *resizedLotteryNumbers = realloc(lotteryNumbers, sizeof(int) * 6);
+if ( ! resizedLotteryNumbers) {
+  // out of memory but lotteryNumbers memory block
+  // is still valid and unchanged
+  exit(EXIT_FAILURE);
+}
+// replace the old pointer with the new one
+lotteryNumbers = resizedLotteryNumbers;
+lotteryNumbers[2] = 19;
+// ...</pre>
+    <p>
+        If <code>realloc()</code> fails, it leaves the original memory block 
+        unchanged. Just as for <code>calloc()</code> and <code>malloc()</code>, 
+        you must remember to call <code>free()</code> on the memory block when 
+        you're done with it.
+    <h2>Inserting items into a C array</h2>
+    <p>
+        It should be obvious by now how to add items to the end of a C array 
+        (if it's big enough) or a dynamically allocated memory block that 
+        you've enlarged using <code>realloc()</code>. But how do you insert an 
+        item at the beginning or middle of an array while keeping all of the 
+        current items? There's no magic here, you have to shift items to higher 
+        indices to make space for the new one.
+    <pre>// insert an item at the start of a C array
+int lotteryNumbers[6] = { 11, 17 }; // has room for six items
+// shift current items up
+lotteryNumbers[2] = lotteryNumbers[1];
+lotteryNumbers[1] = lotteryNumbers[0];
+// array now holds { 11, 11, 17 }
+lotteryNumbers[0] = 7; // insert new item
+// array now holds { 7, 11, 17 }</pre>
+    <p>
+        Note that you need to shift items starting at the end of the array, 
+        otherwise you'll overwrite items you want to preserve. Obviously 
+        writing a line of code for each item you need to shift isn't a 
+        practical solution. You might be tempted to use the 
+        <code>memcpy()</code> function to shift items, but <code>memcpy()</code>
+         has an important restriction: the source and destination memory blocks 
+        may not overlap. (This is because <code>memcpy()</code> may copy items 
+        front to back and thus overwrite items you want to preserve.) The 
+        <code>memmove()</code> function is meant to be used when the memory 
+        blocks overlap and will always shift items in the correct order to 
+        preserve the contents.
+    <pre>// using memmove() to insert an item
+int lotteryNumbers[6] = { 11, 17 }; // has room for six items
+// shift current items up
+int *destination = lotteryNumbers + 1;
+int *source = lotteryNumbers;
+size_t size = sizeof(int) * 2;
+<mark>memmove(destination, source, size);</mark>
+// array now holds { 11, 11, 17 }
+lotteryNumbers[0] = 7; // insert new item
+// array now holds { 7, 11, 17 }</pre>
+    <p>
+        Because <code>memmove()</code> can operate on any kind of array or 
+        memory block, we need to do some pointer arithmetic to determine the 
+        source and destination addresses and the number of bytes to move. 
+        Again, the <code>sizeof</code> operator helps make our intentions 
+        clear. An alternate way specify the source and destination addresses is 
+        to use the address of operator (<code>&amp;</code>) on indexed items in 
+        the array.
+    <pre>// determine source and destination using address of
+// ...
+int *destination = <mark>&amp;</mark>lotteryNumbers[1];
+int *source = <mark>&amp;</mark>lotteryNumbers[0];
+size_t size = sizeof(int) * 2;
+<mark>memmove(destination, source, size);</mark>
+// array now holds { 11, 11, 17 }
+// ...</pre>
+    <p>
+        These are equivalent notations and choosing one over the other is a 
+        matter of style.
+    <p>
+        You can use this technique to insert items into both C arrays and 
+        dynamically allocated memory blocks. Just make sure that there is 
+        enough space to move items around and that you don't write items past 
+        the end of your array or memory. As with all things in C, there is no 
+        safety net. To remove items from the beginning or middle of an array, 
+        follow the same procedure using <code>memmove()</code>, only shift 
+        items down and intentionally overwrite the items you want to delete. 
+        I'll leave this one as an exercise for the reader ☺.
+    <h2>Inserting items into an <code>NSMutableArray</code></h2>
+    <p>
+        While using <code>memmove()</code> to shift items around isn't 
+        <em>too</em> terrible, the equivalent operations using 
+        <code>NSMutableArray</code> are naturally much more direct. To insert a 
+        single item at a particular index, you naturally use 
+        <code>-insertObject:atIndex:</code>
+    <pre>// inserting an item into an NSMutableArray
+NSMutableArray *colors = [NSMutableArray arrayWithObjects:@"red",
+                                                          @"green",
+                                                          @"blue",
+                                                          nil];
+[colors <mark>insertObject:</mark>@"orange" <mark>atIndex:</mark>1];
+// colors now holds "red", "orange", "green" and "blue"</pre>
+    <p>
+        Inserting multiple items at one time is trickier. With the 
+        <code>-insertObjects:atIndexes:</code> method, you can insert items 
+        from an <code>NSArray</code> into your <code>NSMutableArray</code>. The 
+        tricky part here is that you need to also pass in an 
+        <code>NSIndexSet</code> (or <code>NSMutableIndexSet</code>) along with 
+        the array. Here's how you would insert an <code>NSArray</code> 
+        containing one item.
+    <pre>// inserting an item into an NSMutableArray
+NSMutableArray *colors = [NSMutableArray arrayWithObjects:@"red",
+                                                          @"green",
+                                                          @"blue",
+                                                          nil];
+NSArray *newColors = [NSArray arrayWithObject:@"orange"];
+NSIndexSet *indexSet = [NSIndexSet indexSetWithIndex:1];
+[colors <mark>insertObjects:</mark>newColors <mark>atIndexes:</mark>indexSet];
+// colors now holds "red", "orange", "green" and "blue"</pre>
+    <p>
+        You must make sure that there is an index in the <code>NSIndexSet</code>
+         for each item you are inserting. If you want to insert the new items 
+        all in one spot, the <code>+indexSetWithIndexesInRange:</code> method 
+        of <code>NSIndexSet</code> makes this easy.
+    <pre>// inserting multiple items into an NSMutableArray
+NSMutableArray *colors = [NSMutableArray arrayWithObjects:@"red",
+                                                          @"green",
+                                                          @"blue",
+                                                          nil];
+NSArray *rainbowColors = [NSArray arrayWithObjects:@"orange",
+                                                   @"yellow",
+                                                   @"indigo",
+                                                   @"violet",
+                                                   nil];
+NSIndexSet *indexSet = [NSIndexSet <mark>indexSetWithIndexesInRange:</mark>NSMakeRange(1, 4)];
+[colors insertObjects:rainbowColors atIndexes:indexSet];
+// colors now holds "red", "orange", "yellow", "indigo", "violet", "green" and "blue"</pre>
+    <p>
+        Sometimes you want to insert different items at different points in 
+        your <code>NSMutableArray</code>. This is where 
+        <code>-insertObjects:atIndexes:</code> really shines.  You'll want to 
+        use <code>NSMutableIndexSet</code> to create the index set in this 
+        case. Lets modify the previous example to insert the colors in standard 
+        rainbow order.
+    <pre>// inserting multiple items into an NSMutableArray
+NSMutableArray *colors = [NSMutableArray arrayWithObjects:@"red",
+                                                          @"green",
+                                                          @"blue",
+                                                          nil];
+NSArray *rainbowColors = [NSArray arrayWithObjects:@"orange",
+                                                   @"yellow",
+                                                   @"indigo",
+                                                   @"violet",
+                                                   nil];
+NSMutableIndexSet *indexSet = [NSMutableIndexSet indexSet];
+[indexSet addIndex:1];
+[indexSet addIndex:2];
+[indexSet addIndex:5];
+[indexSet addIndex:6];
+[colors <mark>insertObjects:</mark>rainbowColors <mark>atIndexes:</mark>indexSet];
+// colors now holds "red", "orange", "yellow", "green", "blue", "indigo" and "violet"</pre>
+    <p>
+        To figure out the correct indices can be tricky. Inside the 
+        <code>-insertObjects:atIndexes:</code> method, new items will be 
+        inserted one at a time, starting with the lowest index in the index 
+        set. While inserting a group of items is a very powerful capability of 
+        <code>NSMutableArray</code>, often times I think it's easier and faster 
+        to write correct code that uses <code>-subarrayWithRange:</code> to 
+        break the items up into contiguous blocks before inserting them, or 
+        even to use <code>-insertObject:atIndex:</code> repeatedly to insert 
+        items one by one. But when it is straightforward to figure out the 
+        index set, <code>-insertObjects:atIndexes:</code> makes your code very 
+        succinct.
+    <p>
+        Next time, we'll look at 
+        <a href=/objective-c_tuesdays/sorting_arrays.html>sorting C arrays, 
+        <code>NSArray</code>s and <code>NSMutableArray</code>s</a>.
+    <footer>
+        <a href=http://blog.ablepear.com/2011/08/objective-c-tuesdays-more-about-dynamic.html><em>Objective-C 
+        Tuesdays: more about dynamic arrays</em></a> was originally published 
+        on <time datetime=2011-08-02>2011-08-02</time>.
+    </footer>
+</section>

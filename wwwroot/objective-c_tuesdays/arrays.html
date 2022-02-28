@@ -1,0 +1,312 @@
+<!doctype html>
+<html lang=en>
+<meta charset=utf-8>
+<meta content='initial-scale=0.9, width=device-width' name=viewport>
+<title>Arrays</title>
+<link href=/base.css rel=stylesheet>
+<nav class=menu>
+    <a href=/ >Don McCaughey</a> • <a href=/objective-c_tuesdays/ >Objective-C Tuesdays</a>
+</nav>
+<section>
+    <h1>Arrays</h1>
+    <p>
+        Welcome back to Objective-C Tuesdays. Last time we wrapped up our 
+        series on strings by looking at 
+        <a href=/objective-c_tuesdays/regular_expressions.html>regular 
+        expressions in Objective-C</a>. Today we begin a new series: <em>data 
+        structures</em>. The first data structure that we will examine is the 
+        array.
+    <p>
+        Most languages have some concept of an array, though it is sometimes 
+        called a list. In general, an <em>array</em> is an <em>ordered 
+        sequence</em>: a collection of items that has a distinct order. The 
+        term "array" implies that each item in the collection is individually 
+        accessible in <em>constant time</em>; in other words, it takes the same 
+        amount of time to access items at the beginning, middle or end of the 
+        sequence.
+    <h2>Arrays in C</h2>
+    <p>
+        The C language includes the ability to define and create strongly typed 
+        arrays. You must always declare the type of the items that the array 
+        contains.
+    <pre>// declare an array of ints
+int lotteryNumbers[6];</pre>
+    <p>
+        This declares an array that holds six integers. When the array variable 
+        is declared, the number between the square brackets indicates the 
+        number of items that the array can hold, usually referred to as the 
+        size, length or count.
+    <p>
+        C99 (which is the default for iOS projects) allows you to use a 
+        function parameter or other variable to determine the length of an 
+        array. This feature is naturally called "variable length arrays".
+    <pre>// use a variable as the length of an array
+int length = 6;
+int lotteryNumbers[length];</pre>
+    <p>
+        Unless you're an old time C programmer, you're probably thinking "yeah, 
+        so what?" In earlier versions of C, you could only declare arrays with 
+        <em>constant</em> length. In old C code (or code written old C hands), 
+        it's common to see code like this:
+    <pre>// constant array length
+#define LOTTERY_NUMBERS_LENGTH 6
+
+int lotteryNumbers[LOTTERY_NUMBERS_LENGTH];</pre>
+    <h2>C array initialization</h2>
+    <p>
+        You can optionally provide an array with an initializer. An array 
+        initializer uses curly braces and looks like this:
+    <pre>// array initializer
+int lotteryNumbers[6] = { 7, 11, 19, 23, 29, 31 };</pre>
+    <p>
+        You can specify fewer items than the array can hold; the remaining 
+        items will be initialized to zero.
+    <pre>// array with partial initializer
+int lotteryNumbers[6] = { 7, 11 };</pre>
+    <p>
+        You can even specify an empty initializer and all the items in the 
+        array will be set to zero.
+    <pre>// array with empty initializer
+int lotteryNumbers[6] = {};</pre>
+    <p>
+        This is redundant for arrays declared at global scope since global 
+        variables are initialized to zero by default, but can be useful for 
+        local variables.
+    <p>
+        If you use an initializer list when you declare your array, you can 
+        leave the array length out of the declaration:
+    <pre>// array initializer without length
+int lotteryNumbers[] = { 7, 11, 19, 23, 29, 31 };</pre>
+    <p>
+        The compiler will count the items in the initializer list and size your 
+        array to fit.
+    <p>
+        If you are initializing an array of <code>char</code>s, you can use a 
+        string literal as the initializer.
+    <pre>char favoriteColor[4] = "red";
+char favoriteFlavor[] = "vanilla";</pre>
+    <p>
+        Remember that C strings contain an extra <code>char</code>, the 
+        <em>null terminator</em>, so when you initialize an array of 
+        <code>char</code>s with the string <code>"red"</code>, it actually 
+        stores four items. You can make the equivalent initializers using 
+        character literals:
+    <pre>char favoriteColor[4] = { 'r', 'e', 'd', 0 };
+char favoriteFlavor[] = { 'v', 'a', 'n', 'i', 'l', 'l', 'a', '\0' };</pre>
+    <h2>Accessing items in an array</h2>
+    <p>
+        You get items out of an array by using an array index number in square 
+        brackets:
+    <pre>int lotteryNumbers[6] = { 7, 11, 19, 23, 29, 31 };
+
+NSLog(@"%i is at index 1", lotteryNumbers[1]);
+NSLog(@"%i is at index 2", lotteryNumbers[2]);</pre>
+    <p>
+        The code snippet above produces this output:
+    <pre>11 is at index 1
+19 is at index 2</pre>
+    <p>
+        If this is surprising, it's because the first item in a C array is 
+        always at index 0.
+    <p>
+        Assigning items to an array is naturally very similar:
+    <pre>int lotteryNumbers[6] = { 7, 11, 19, 23, 29, 31 };
+
+lotteryNumbers[1] = 13;
+lotteryNumbers[2] = 17;
+NSLog(@"%i is at index 1", lotteryNumbers[1]);
+NSLog(@"%i is at index 2", lotteryNumbers[2]);</pre>
+    <p>
+        which will print out:
+    <pre>13 is at index 1
+17 is at index 2</pre>
+    <h2>Arrays automatically convert to pointers</h2>
+    <p>
+        Like all things in C, arrays are very low level constructs. Under the 
+        hood, an array is simply a block of memory managed by the compiler 
+        that's large enough to hold all its items. Because an array corresponds 
+        directly to a memory block, an array variable will automatically 
+        convert into a pointer to the first item in the array.
+    <pre>// automatic array to pointer conversion
+int lotteryNumbers[6] = { 7, 11, 19, 23, 29, 31 };
+int *luckyNumber = lotteryNumbers;
+
+NSLog(@"My lucky number is %i", *luckyNumber</pre>
+    <p>
+        This will produce the output:
+    <pre>My lucky number is 7</pre>
+    <p>
+        You can set the pointer to items after the first by using <em>pointer 
+        arithmetic</em>:
+    <pre>// pointer arithmetic
+int lotteryNumbers[6] = { 7, 11, 19, 23, 29, 31 };
+int *luckyNumber = lotteryNumbers;
+
+NSLog(@"My NEW lucky number is %i", <mark>*(luckyNumber + 1)</mark></pre>
+    <p>
+        which prints out the 
+    <pre>My NEW lucky number is 11</pre>
+    <p>
+        While pointer arithmetic is a perfectly 
+        <a href=https://en.wiktionary.org/wiki/cromulent>cromulent</a> way to 
+        access items in an array, you can use an index in square brackets on a 
+        pointer just as you can on an array:
+    <pre>// array index using a pointer variable
+int lotteryNumbers[6] = { 7, 11, 19, 23, 29, 31 };
+int *luckyNumber = lotteryNumbers;
+
+NSLog(@"My NEW lucky number is %i", <mark>luckyNumber[1]</mark></pre>
+    <p>
+        Under the hood, the compiler automatically converts uses of an array 
+        variable into a pointer to the first item in the array, then converts 
+        array index expressions into the equivalent pointer arithmetic. An 
+        expression like <code>myArray[2]</code> is converted to <code>*(myArray 
+        + 2)</code>, or a pointer to the third item in the array. (Remember 
+        that the first item is <code>myArray[0]</code>.)
+    <p>
+        While this is a very convenient way to work with low level memory in a 
+        structured way, it can also be very dangerous. The compiler won't stop 
+        you from accessing items past the end of your array. You can easily and 
+        efficiently read memory that may contain garbage values and overwrite 
+        memory belonging to other parts of your program. As with many things in 
+        C, with great power comes great responsibility.
+    <h2>Calculating the length of an array</h2>
+    <p>
+        The <code>sizeof</code> operator can be applied to an array variable to 
+        find out how many <em>bytes</em> of memory the array occupies.
+    <pre>// size of an array in bytes
+int lotteryNumbers[6] = { 7, 11, 19, 23, 29, 31 };
+
+NSLog(@"The array uses %lu bytes", <mark>sizeof lotteryNumbers</mark>);</pre>
+    <p>
+        This produces:
+    <pre>The lotteryNumbers array uses 24 bytes</pre>
+    <p>
+        <code>int</code>s in iOS use four bytes each, so an array of six 
+        <code>int</code>s uses 24 bytes. (The <code>sizeof</code> operator 
+        returns a value of type <code>size_t</code>, an unsigned long integer 
+        type.) To get the number of items the array contains, you can divide 
+        the size of the array by the size of its first item:
+    <pre>// size of an array in bytes
+int lotteryNumbers[6] = { 7, 11, 19, 23, 29, 31 };
+
+size_t length = <mark>sizeof lotteryNumbers / sizeof lotteryNumbers[0]</mark>;
+NSLog(@"The array contains %lu items", length);</pre>
+    <p>
+        Be careful to only use this on actual <em>array</em> variables—you 
+        won't get the answer you expect if you try this on a pointer.
+    <p>
+        C arrays have one big limitation: you can't resize them. We'll talk 
+        about using dynamically allocated memory blocks as arrays next time.
+    <h2><code>NSArray</code></h2>
+    <p>
+        If you're ready for a safer, higher level way to manage an ordered 
+        sequence of items, it's time to get to know <code>NSArray</code>.
+    <p>
+        You can create an <code>NSArray</code> containing one item using 
+        <code>+arrayWithObject:</code> or <code>-initWithObject:</code>
+    <pre>// creating an NSArray with one item
+NSArray *colors = [NSArray arrayWithObject:@"red"];
+NSArray *flavors = [[NSArray alloc] initWithObject:@"vanilla"];</pre>
+    <p>
+        <code>NSArray</code> creation methods follow the common Cocoa and Cocoa 
+        Touch conventions. Class methods like <code>+arrayWithObject:</code> 
+        return a new autoreleased object. If you need to hold on to the object 
+        beyond the current method, remember to call <code>-retain</code> on it. 
+        Instance methods like <code>-initWithObject:</code> produce new objects 
+        that you own—don't forget to call <code>-release</code> or 
+        <code>-autorelease</code> on the object when you're done with it.
+    <p>
+        Sometimes an array containing one item is handy, but usually you want 
+        to hold onto multiple items. To do that, use 
+        <code>+arrayWithObjects:</code> or <code>-initWithObjects:</code>:
+    <pre>// creating an NSArray with multiple items
+NSArray *colors = [NSArray arrayWithObjects:@"red", 
+                                            @"green", 
+                                            @"blue", 
+                                            <mark>nil</mark>];
+NSArray *flavors = [[NSArray alloc] initWithObjects:@"vanilla", 
+                                                    @"chocolate", 
+                                                    @"strawberry", 
+                                                    <mark>nil</mark>];</pre>
+    <p>
+        The <code>+arrayWithObjects:</code> or <code>-initWithObjects:</code> 
+        methods take a variable number of arguments, but have a special caveat: 
+        you must mark the end of the list with <code>nil</code>. If you forget 
+        the <code>nil</code>, your program will probably crash with an 
+        <code>EXC_BAD_ACCESS</code> error as it tries to add random memory 
+        locations to the <code>NSArray</code>. Fortunately, the LLVM 2.0 
+        compiler in Xcode 4.0 will warn you if you forget the <code>nil</code>. 
+        Always pay attention to compiler warnings!
+    <p>
+        If you have a plain old C array of object pointers, you can use the 
+        <code>+arrayWithObjects:count:</code> or 
+        <code>-initWithObjects:count</code> methods to create an 
+        <code>NSArray</code> from the C array.
+    <pre>// creating an NSArray from a C array
+NSString *colors1[] = { @"red", @"green", @"blue" };
+NSArray *colors2 = [NSArray arrayWithObjects:colors1 count:3];
+
+NSString *flavors1[] = { @"vanilla", @"chocolate", @"strawberry" };
+NSArray *flavors2 = [[NSArray alloc] initWithObjects:flavors1 count:3];</pre>
+    <p>
+        Accessing an item in an array is done with the 
+        <code>-objectAtIndex:</code> method.
+    <pre>// my favorite color is green
+NSArray *colors = [NSArray arrayWithObjects:@"red", 
+                                            @"green", 
+                                            @"blue", 
+                                            nil];
+
+NSLog(@"My favorite color is %@", [colors objectAtIndex:1]);</pre>
+    <p>
+        You can ask an <code>NSArray</code> object how many items it contains 
+        using the <code>-count</code> method.
+    <pre>NSArray *favoriteColors = [NSArray arrayWithObject:@"green"];
+NSArray *favoriteFlavors = [NSArray arrayWithObjects:@"vanilla", @"chocolate", nil];
+
+NSLog(@"I have %u favorite color(s) and %u favorite flavor(s)", 
+      [favoriteColors count], [favoriteFlavors count]);</pre>
+    <h2>Only for objects, but heterogeneous</h2>
+    <p>
+        <code>NSArray</code> has one big limitation: it can only contain object 
+        types. If you try to create an <code>NSArray</code> of 
+        <code>int</code>s or a similar primitive C type, you'll get a warning 
+        like "Incompatible integer to pointer conversion sending 'int' to 
+        parameter of type 'id'". If you need to store numbers in an 
+        <code>NSArray</code>, you can store <code>NSNumber</code> objects 
+        instead.
+    <pre>// wrap primitive types in objects to store them in an NSArray
+NSNumber *one = [NSNumber numberWithInt:1];
+NSNumber *pi = [NSNumber numberWithDouble:3.14];
+NSDate *today = [NSDate date];
+NSString *foo = [NSString stringWithContentsOfCString:"foo" encoding:NSUTF8Encoding];
+
+NSArray *myStuff = [NSArray arrayWithObjects:one, pi, today, foo, nil];</pre>
+    <p>
+        This example shows an interesting characteristic of 
+        <code>NSArray</code>s: they can hold items of many different object 
+        types in a single container. While occasionally this feature is useful, 
+        more often than not you'll only store items of one type in a given 
+        <code>NSArray</code>, and errors related to finding an unexpected type 
+        in your <code>NSArray</code>s are pretty rare.
+    <h2><code>NSArray</code>s are immutable</h2>
+    <p>
+        Like plain old C arrays, once you create an <code>NSArray</code>, you 
+        can't change its size. But <code>NSArray</code>s are even more 
+        restrictive; you can't change the contents either. 
+        <code>NSArray</code>s are <em>immutable</em>. This is something of a 
+        pain in the rump, but it means that you can safely share an 
+        <code>NSArray</code> between threads, as long as the items in it are 
+        also immutable.
+    <p>
+        Next time, we'll look at 
+        <a href=/objective-c_tuesdays/dynamic_arrays.html>using memory blocks 
+        as resizable C arrays, and <code>NSArray</code>'s more flexible cousin, 
+        <code>NSMutableArray</code></a>.
+    <footer>
+        <a href=http://blog.ablepear.com/2011/07/objective-c-tuesdays-arrays.html><em>Objective-C 
+        Tuesdays: arrays</em></a> was originally published on 
+        <time datetime=2011-07-19>2011-07-19</time>.
+    </footer>
+</section>

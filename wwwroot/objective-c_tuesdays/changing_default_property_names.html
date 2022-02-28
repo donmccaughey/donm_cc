@@ -1,0 +1,134 @@
+<!doctype html>
+<html lang=en>
+<meta charset=utf-8>
+<meta content='initial-scale=0.9, width=device-width' name=viewport>
+<title>Changing Default Property Names</title>
+<link href=/base.css rel=stylesheet>
+<nav class=menu>
+    <a href=/ >Don McCaughey</a> • <a href=/objective-c_tuesdays/ >Objective-C Tuesdays</a>
+</nav>
+<section>
+    <h1>Changing Default Property Names</h1>
+    <p>
+        Last week we looked at declaring 
+        <a href=/objective-c_tuesdays/atomic_and_nonatomic_properties.html>atomic 
+        and nonatomic properties</a>.  I promised to talk about 
+        <a href=/objective-c_tuesdays/writing_a_thread_safe_getter_method.html>writing 
+        a thread safe getter</a> this week, but I'm pressed for time today so 
+        I'm going to shoe horn in another short topic instead.
+    <p>
+        When you declare a property in a class, the getter has the same name as 
+        the property, while the setter is the capitalized property name with 
+        <code>set</code> prepended.  For illustration, here is a 
+        <code>User</code> class with a property named <code>active</code>:
+    <pre>@interface User : NSObject {
+  BOOL active;
+}
+@property BOOL active;
+
+@end
+
+
+@implementation User
+
+@synthesize active;
+
+@end</pre>
+    <p>
+        The compiler will generate a getter method named <code>active</code> 
+        and a setter method named <code>setActive</code>.  Sometimes the 
+        default method names aren't exactly what you want; for instance, it's a 
+        common convention that getters for <code>BOOL</code> properties be 
+        prefixed with <code>is</code>.  In the case of our <code>User</code> 
+        class, we would like to have the getter named <code>isActive</code>.
+    <p>
+        The <code>@property</code> directive has two attributes to do just 
+        this: <code>getter=<em>name</em></code> and 
+        <code>setter=<em>name</em></code>.  Just like the other attributes of 
+        <code>@property</code>, <code>getter</code> and <code>setter</code> are 
+        placed in parentheses after the <code>@property</code> directive and 
+        before the property type and name.  So the <code>active</code> property 
+        in our example would look like:
+    <pre>@interface User : NSObject {
+  BOOL active;
+}
+@property (<mark>getter=isActive</mark>) BOOL active;
+
+@end
+
+@implementation User
+
+@synthesize active;
+
+@end</pre>
+    <p>
+        And usage the <code>active</code> property now looks like:
+    <pre>// example use of isActive getter
+User *user = [[User alloc] init];
+
+// getter/setter called as methods
+if ( ! [user <mark>isActive</mark>] ) {
+  [user <mark>setActive:</mark>YES];
+}
+
+// getter/setter called with dot syntax
+if (user.<mark>isActive</mark>) {
+  user.<mark>active</mark> = NO;
+}</pre>
+    <p>
+        We'll take a closer look at dot syntax in the near future, but 
+        basically when the compiler sees code like this:
+    <pre>if ( <mark>user.isActive</mark> ) {
+  <mark>user.active = NO</mark>;
+}</pre>
+    <p>
+        it translates it into this:
+    <pre>if ( <mark>[user isActive]</mark> ) {
+  <mark>[user setActive:NO]</mark>;
+}</pre>
+    <p>
+        Dot syntax is complementary to properties, but is separate and unaware 
+        of them.  When translating a setter call in dot syntax to the 
+        corresponding method call, the compiler always looks for a method 
+        beginning with <code>set</code>.  If you change your setter name to 
+        something different, you'll see a compiler error like
+    <pre>object cannot be set - either readonly property or no setter found</pre>
+    <p>
+        or
+    <pre>request for member '<em>setter name</em>' in something not a structure or union</pre>
+    <p>
+        if you call it using dot syntax.  So if we rename the setter for the 
+        <code>active</code> property to <code>makeActive</code> instead of the 
+        default <code>setActive</code>:
+    <pre>@interface User : NSObject {
+  BOOL active;
+}
+@property (getter=isActive, <mark>setter=makeActive</mark>) BOOL active;
+
+@end</pre>
+    <p>
+        then using method call syntax, we can now do this:
+    <pre>if ( [user isActive] ) {
+  <mark>[user <mark>makeActive:</mark>NO]</mark>;
+}</pre>
+    <p>
+        but because the compiler expects setters to begin with 
+        <code>set</code>, using dot syntax generates an error:
+    <pre>if (user.isActive) {
+  <mark>user.<mark>makeActive</mark> = NO</mark>; // ERROR: request for member 'makeActive' 
+                               // in something not a structure or union
+}</pre>
+    <p>
+        In general you should follow the standard conventions and use the 
+        default getter and setter names; it's less work for you and your code 
+        is easier for others to understand.
+    <p>
+        Next week, we'll look at the 
+        <a href=/objective-c_tuesdays/writing_a_thread_safe_getter_method.html>thread 
+        safety of getters</a> that return retained objects.
+    <footer>
+        <a href=http://blog.ablepear.com/2010/05/objective-c-tuesdays-changing-default.html><em>Objective-C 
+        Tuesdays: changing default property names</em></a> was originally 
+        published on <time datetime=2010-05-18>2010-05-18</time>.
+    </footer>
+</section>

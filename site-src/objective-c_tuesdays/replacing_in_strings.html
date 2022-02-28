@@ -1,0 +1,302 @@
+<!doctype html>
+<html lang=en>
+<meta charset=utf-8>
+<meta content='initial-scale=0.9, width=device-width' name=viewport>
+<title>Replacing In Strings</title>
+<link href=/base.css rel=stylesheet>
+<nav class=menu>
+    <a href=/ >Don McCaughey</a> • <a href=/objective-c_tuesdays/ >Objective-C Tuesdays</a>
+</nav>
+<section>
+    <h1>Replacing In Strings</h1>
+    <p>
+        Welcome back to Objective-C Tuesdays!  Today we follow closely on last 
+        week's topic of 
+        <a href=/objective-c_tuesdays/searching_in_strings.html>searching in 
+        strings</a> with it's sibling, replacing in strings.
+    <h2>It's a nightmare in C</h2>
+    <p>
+        In our series on strings in Objective-C, we've usually started by 
+        looking at C strings then moved on to <code>NSString</code>s.  Today is 
+        no different.  In most cases, using <code>NSString</code> is easier 
+        than doing the equivalent operation on C strings.  When it comes to 
+        replacing characters in a string, using <code>NSString</code> is 
+        <em>significantly</em> easier and safer.  The standard C library 
+        doesn't provide much support for doing common string replacement 
+        operations, so you have to implement them yourself.  Because of all the 
+        manual memory management required when working with C strings, this 
+        code is very error prone -- writing off the end of a buffer and 
+        forgetting to add the null terminator are two very common types of 
+        errors you have to watch out for when working with C strings.
+    <h2>Replacing a character</h2>
+    <p>
+        The only replacement operation that's fairly straightforward on C 
+        strings is replacing a single character with another character.  Since 
+        C strings are just pointers to arrays of <code>char</code>s, you simply 
+        calculate the pointer to the <code>char</code> you want to change, 
+        dereference the pointer and assign the new <code>char</code> value.
+    <p>
+        There are two variations of this.  The first one uses array notation 
+        and the second pointer operations.  In both examples below, we use the 
+        <code>strdup()</code> function to make a copy of our original C string. 
+         The <code>strdup()</code> function isn't part of the C standard 
+        library, but most systems have one available (possibly named 
+        <code>_strdup()</code>) and it's easy to write one if it's missing on 
+        your system (it's available on iOS).  You own the string returned by 
+        <code>strdup()</code> and are responsible for calling 
+        <code>free()</code> when you're done with it.
+    <p>
+        Here's how you change a character in a C string by treating it as an 
+        array of <code>char</code>s:
+    <pre>char const *source = "foobar";
+
+char *copy = strdup(source); // make a non-const copy of source
+
+copy[3] = 'B';               // change char at index 3
+
+NSLog(@"copy = %@", copy);
+// prints "copy = foo<mark>B</mark>ar"
+
+free(copy);                  // free copy when done</pre>
+    <p>
+        The alternative way uses pointer arithmetic:
+    <pre>char const *source = "foobar";
+
+char *copy = strdup(source); // make a non-const copy of source
+
+char *c3 = copy + 3;         // get pointer to char at index 3
+
+*c3 = 'B';                   // change char at address of c3
+
+NSLog(@"copy = %@", copy);
+// prints "copy = foo<mark>B</mark>ar"
+
+free(copy);                  // free copy when done</pre>
+    <p>
+        As far as the compiler is concerned, this is basically the same code so 
+        use whichever method makes the most sense.  If you know the index of 
+        the <code>char</code> you want to change, use array notation.  If you 
+        already have a pointer to the <code>char</code>, perhaps from calling 
+        <code>strchr()</code>, use the pointer directly.
+    <h2>Replacing a substring</h2>
+    <p>
+        Replacing a substring of a C string is harder.  In the case where the 
+        original and the replacement have the same number of 
+        <code>char</code>s, you can call <code>str<mark>n</mark>cpy()</code> to 
+        copy over the characters.
+    <pre>// replacing a substring of equal length
+char const *source = "foobar";
+
+char *copy = strdup(source); // make a non-const copy of source
+
+char *c2 = copy + 2;         // get pointer to char at index 2
+
+strncpy(c2, "OBA", 3);       // copy 3 chars
+
+NSLog(@"copy = %s", copy);
+// prints "copy = foOBAr"
+
+free(copy);                  // free copy when done</pre>
+    <p>
+        Replacing a substring with a different sized one is even more complex.  
+        There are three special cases that need to be handled: the substring to 
+        replace is at the start of the original, in the middle, or at the end.  
+        When the replacement substring is smaller than the original, there are 
+        some short cuts you can take to make the code a little simpler, but 
+        we'll only show the general case.
+    <p>
+        We'll look at the second case, replacing a substring in the middle of 
+        the original.  With a little extra logic, this code can be adapted to 
+        handle all three of our cases.
+    <pre>char const *source = "The rain in Spain";
+char const *original = "rain";     // substring to find
+char const *replacement = "plane"; // substring to replace
+
+// calculate the required buffer size
+// including space for the null terminator
+size_t size = strlen(source) - strlen(original) 
+            + strlen(replacement) + sizeof(char);
+
+// allocate buffer
+char *buffer = calloc(size, sizeof(char));
+if ( ! buffer) {
+  // handle allocation failure
+}
+
+// find original substring in source and
+// calculate the length of the unchanged prefix
+char *originalInSource = strstr(source, original);
+size_t prefixLength = originalInSource - source;
+
+// copy prefix "The " into buffer
+strncpy(buffer, source, prefixLength);
+
+// calculate where the replacement substring goes in the buffer
+char *replacementInBuffer = buffer + prefixLength;
+
+// copy replacement "plane" into buffer
+strcpy(replacementInBuffer, replacement);
+
+// find position of unchanged suffix in source and
+// calculate where it goes in the buffer
+char const *suffixInSource = originalInSource + strlen(original);
+char *suffixInBuffer = replacementInBuffer + strlen(replacement);
+
+// copy suffix " in Spain" into buffer
+strcpy(suffixInBuffer, suffixInSource);
+
+NSLog(@"buffer = %s", buffer);
+// prints "buffer = The plane in Spain"
+
+free(buffer); // free buffer when done</pre>
+    <p>
+        I won't even waste your time explaining this in detail.  <em>No one 
+        programming in a modern computer language should have to write this 
+        code!</em>  It's extremely error prone and is one of the main causes of 
+        security vulnerabilities.  If you find yourself doing this, <em>stop 
+        immediately</em> and seek out one of the 
+        <a href=http://www.and.org/vstr/comparison>many managed string 
+        libraries for C</a> that are available.  If you're writing code for 
+        iOS, you should be using <code>NSString</code> to do this.
+    <h2>Replacing using <code>NSString</code></h2>
+    <p>
+        The <code>NSString</code> class has a number of useful methods for 
+        replacing characters and substrings in an <code>NSString</code>.  
+        Because <code>NSString</code> is immutable, these methods all return a 
+        new <code>NSString</code> instance containing the replacements, leaving 
+        the source <code>NSString</code> unchanged.
+    <p>
+        When you know the exact area of the string you want to replace, you can 
+        use the <code>-stringByReplacingCharactersInRange:withString:</code> 
+        method with an <code>NSRange</code> structure, which has fields for 
+        <code>location</code> (the zero-based index to start at) and 
+        <code>length</code> (the number of characters in the source string to 
+        replace).  Because <code>NSString</code> does all the memory management 
+        for you and returns a new autoreleased <code>NSString</code>, it's 
+        child's play compared to doing this with C strings.
+    <pre>// replace a range in an NSString
+NSString *source = @"The rain in Spain";
+NSRange range;
+
+range.location = 4; // starting index in source
+range.length = 3;   // number of characters to replace in source
+
+NSString *copy = [source stringByReplacingCharactersInRange:range 
+                                                 withString:@"trai"];
+
+NSLog(@"copy = %@", copy);
+// prints "copy = The train in Spain"
+
+// no need to release anything
+// copy is autoreleased</pre>
+    <p>
+        This is a definite improvement over working with C strings.  You might 
+        actually do this in real code without tearing your hair out or causing 
+        a <a href=https://en.wikipedia.org/wiki/Buffer_overflow>buffer 
+        overrun</a> bug.  We can make this code even more compact by using the 
+        <code>NSMakeRange()</code> function to create the <code>NSRange</code> 
+        structure.
+    <pre>// replace a range in an NSString
+NSString *source = @"The rain in Spain";
+
+// create range in line
+NSString *copy = [source stringByReplacingCharactersInRange:<mark>NSMakeRange(4, 3)</mark>
+                                                 withString:@"trai"];
+
+NSLog(@"copy = %@", copy);
+// prints "copy = The train in Spain"
+
+// no need to release anything
+// copy is autoreleased</pre>
+    <p>
+        If you don't know ahead of time what part of the string you want to 
+        replace, you can do a find and replace in one method.  The 
+        <code>-stringByReplacingOccurrencesOfString:withString:</code> method 
+        will find <em>all</em> occurrences of one <code>NSString</code> in 
+        another and replace them, returning a new autoreleased 
+        <code>NSString</code>.
+    <pre>// find and replace one substring with another
+NSString *source = @"The rain in Spain";
+
+NSString *copy = [source stringByReplacingOccurrencesOfString:@"ain"
+                                                   withString:@"oof"];
+
+NSLog(@"copy = %@", copy);
+// prints "copy = The roof in Spoof"</pre>
+    <p>
+        There is another variation of this method that gives you more control 
+        over how substrings are found and replaced.  The 
+        <code>-stringByReplacingOccurrencesOfString:withString:options:range:</code>
+         method allows you to specify a mask containing one or more options and 
+        an <code>NSRange</code> structure allowing you to restrict the 
+        operation to a section of the string.  The most common option is 
+        <code>NSCaseInsensitiveSearch</code>, which matches the substring 
+        without regard to case.
+    <pre>// case insensitive replace
+NSString *source = @"&lt;BR>The rain&lt;BR>in Spain";
+
+NSString *copy = [source stringByReplacingOccurrencesOfString:@"&lt;br>"
+                                                   withString:@"&lt;p>"
+                                                      options:NSCaseInsensitiveSearch
+                                                        range:NSMakeRange(0, [source length])];
+
+NSLog(@"copy = %@", copy);
+// prints "copy = "&lt;p>The rain&lt;p>in Spain"</pre>
+    <p>
+        Another handy search option is <code>NSAnchoredSearch</code>, which 
+        searches only at the start of the source string.  Notice that you use 
+        the bitwise or (<code>|</code>) operator to combine multiple options 
+        together.
+    <pre>// anchored, case insensitive replace
+NSString *source = @"&lt;BR>The rain&lt;BR>in Spain";
+
+NSString *copy = [source stringByReplacingOccurrencesOfString:@"&lt;br>"
+                                                   withString:@"&lt;p>"
+                                                      options:NSAnchoredSearch | NSCaseInsensitiveSearch
+                                                        range:NSMakeRange(0, [source length])];
+
+NSLog(@"copy = %@", copy);
+// prints "copy = "&lt;p>The rain&lt;BR>in Spain"</pre>
+    <p>
+        You can combine the <code>NSBackwardsSearch</code> with 
+        <code>NSAnchoredSearch</code> to only replace the substring if it 
+        occurs at the end of the source instead of at the beginning.
+    <h2>Replacing in <code>NSMutableString</code></h2>
+    <p>
+        If you're working with an <code>NSMutableString</code>, you can still 
+        call any of the <code>-stringByReplacing...</code> methods to produce a 
+        new <code>NSString</code>, but you have the option of making the 
+        replacements in the <code>NSMutableString</code> directly.  The method 
+        <code>-replaceCharactersInRange:withString:</code> is very similar to 
+        the <code>-stringByReplacingCharactersInRange:withString</code> method:
+    <pre>// replace a range in an NSMutableString
+NSMutableString *source = [NSMutableString stringWithString:@"The rain in Spain"];
+
+[source replaceCharactersInRange:NSMakeRange(4, 3)
+                      withString:@"trai"];
+
+NSLog(@"source = %@", source);
+// prints "source = The train in Spain"</pre>
+    <p>
+        The method 
+        <code>-replaceOccurrencesOfString:withString:options:range:</code> 
+        works similarly.
+    <p>
+        In most cases, there's not much of an advantage to replacing in place 
+        in an <code>NSMutableString</code> versus creating a new 
+        <code>NSString</code> containing the replacement.  Use whichever 
+        operation is most convenient.  If you need to make many replacements on 
+        a very long string, there <em>may</em> be an advantage to replacing in 
+        place rather than creating many large temporary <code>NSString</code> 
+        instances that live in the autorelease pool.
+    <p>
+        So far, the searching and replacing methods we've seen have done only 
+        simple string matching.  Next week, we'll look at 
+        <a href=/objective-c_tuesdays/regular_expressions.html>more powerful 
+        string matching using regular expressions</a>.
+    <footer>
+        <a href=http://blog.ablepear.com/2010/10/objective-c-tuesdays-replacing-in.html><em>Objective-C 
+        Tuesdays: replacing in strings</em></a> was originally published on 
+        <time datetime=2010-10-05>2010-10-05</time>.
+    </footer>
+</section>

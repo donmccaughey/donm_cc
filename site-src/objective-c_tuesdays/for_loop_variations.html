@@ -1,0 +1,71 @@
+<!doctype html>
+<html lang=en>
+<meta charset=utf-8>
+<meta content='initial-scale=0.9, width=device-width' name=viewport>
+<title>For Loop Variations</title>
+<link href=/base.css rel=stylesheet>
+<nav class=menu>
+    <a href=/ >Don McCaughey</a> • <a href=/objective-c_tuesdays/ >Objective-C Tuesdays</a>
+</nav>
+<section>
+    <h1>For Loop Variations</h1>
+    <p>
+        <a href=/objective-c_tuesdays/the_for_loop.html>Last week</a>, we 
+        examined the structure of the <code>for</code> loop.  Today we will 
+        look at some <code>for</code> loop idioms.
+    <h2>Infinite loop</h2>
+    <p>
+        If you omit the <em>initialization</em>, <em>condition</em> and 
+        <em>action</em> expressions, you get an infinite loop:
+    <pre>for (;;) {
+  NSLog(@":-)");
+}</pre>
+    <h2>Missing loop expression</h2>
+    <p>
+        Sometimes, there's no need to initialize a variable before looping, so 
+        the <em>initialization</em> expression is omitted:
+    <pre>char *process_line(char *buffer) {
+  for ( ; *buffer != '\n'; buffer++) {
+    /* do something with characters */
+  }
+  return buffer;
+}</pre>
+    <p>
+        Similarly the <em>condition</em> or <em>action</em> expressions are 
+        sometimes omitted.
+    <h2>Nested loops</h2>
+    <p>
+        When building or processing tables of information, put one 
+        <code>for</code> loop inside another:
+    <pre>for (int i = 1; i &lt;= 10; i++) {
+  for (int j = 1; j &lt;= 10; j++) {
+    NSLog(@"%d X %d = %d", i, j, i * j);
+  }
+}</pre>
+    <h2>Parallel iteration</h2>
+    <p>
+        You can use multiple loop counter variables by using the comma 
+        (<code>,</code>) operator to squeeze multiple expressions into 
+        <em>initialization</em> and <em>action</em>: 
+    <pre>int i, j;
+for (i = 0, j = 9; i &lt; 10; i++, j--) {
+  destination[i] = source[j];
+}</pre>
+    <p>
+        There's a gotcha with the <em>initialization</em> expression however: 
+        only one loop counter variable can be declared there.  It seems logical 
+        to do this: 
+    <pre>for (int i = 0, <mark>int j = 9</mark>; i &lt; 10; i++, j--) ...</pre>
+    <p>
+        but unfortunately you can only do this: 
+    <pre><mark>int j;</mark>
+for (int i = 0, <mark>j = 9</mark>; i &lt; 10; i++, j--) ...</pre>
+    <p>
+        <a href=/objective-c_tuesdays/the_for-in_loop.html>Next week</a>, we'll 
+        look at the Objective-C 2.0 <code>for...in</code> loop.
+    <footer>
+        <a href=http://blog.ablepear.com/2009/10/objective-c-tuesdays-for-loop_13.html><em>Objective-C 
+        Tuesdays: for loop variations</em></a> was originally published on 
+        <time datetime=2009-10-13>2009-10-13</time>.
+    </footer>
+</section>

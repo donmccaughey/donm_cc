@@ -1,0 +1,517 @@
+<!doctype html>
+<html lang=en>
+<meta charset=utf-8>
+<meta content='initial-scale=0.9, width=device-width' name=viewport>
+<title>Regular Expressions</title>
+<link href=/base.css rel=stylesheet>
+<nav class=menu>
+    <a href=/ >Don McCaughey</a> • <a href=/objective-c_tuesdays/ >Objective-C Tuesdays</a>
+</nav>
+<section>
+    <h1>Regular Expressions</h1>
+    <p>
+        Welcome back to Objective-C Tuesdays after a long hiatus. In the last 
+        couple of entries, we looked at 
+        <a href=/objective-c_tuesdays/searching_in_strings.html>searching</a> 
+        and <a href=/objective-c_tuesdays/replacing_in_strings.html>replacing 
+        in C strings and 
+        </a><code><a href=/objective-c_tuesdays/replacing_in_strings.html>NSString</a></code><a href=/objective-c_tuesdays/replacing_in_strings.html>s</a>. 
+        Today we'll look at a more powerful way to search and replace in 
+        strings: regular expressions.
+    <h2>A mini language</h2>
+    <p>
+        Regular expressions is a small, specialized programming language for 
+        matching text. In addition to being specialized in scope, regular 
+        expressions are also very compact, which can make them very hard to 
+        read. I won't cover regular expression grammar in dept here—there are 
+        plenty of regular expression tutorials, references and cheat sheets out 
+        there. If you're looking for a good reference, I recommend O'Reilly's 
+        <a href=https://www.oreilly.com/library/view/mastering-regular-expressions/0596528124/ ><em>Mastering 
+        Regular Expressions</em></a> and the 
+        <a href=https://www.oreilly.com/library/view/regular-expressions-cookbook/9780596802837/ ><em>Regular 
+        Expressions Cookbook</em></a>.
+    <p>
+        Some programming languages have first class support for regular 
+        expressions, including Perl, Ruby and JavaScript. Modern languages like 
+        Python and Java support regular expressions as part of the language's 
+        standard library. Unfortunately C doesn't have regular expression 
+        support as part of its standard library. For Objective-C, regular 
+        expression support first appeared with iOS 3.2 on iPad and 4.0 on 
+        iPhone. Before that, developers needed to use a third party library to 
+        use regular expressions in their apps.
+    <h2>Some simple examples</h2>
+    <p>
+        Most characters in regular expressions match themselves, but some 
+        characters have special meaning. Here's a simple regular expression 
+        that matches the word "foobar":
+    <pre>foobar</pre>
+    <p>
+        To match "foo" followed by one 'b' character, you could use:
+    <pre>foob?</pre>
+    <p>
+        Here, the '?' character is a special character that modifies the 
+        expression before it, (in this case the character 'b') and matches it 
+        zero or one times. Thus <code>foob?</code> will match "foo" or "foob" 
+        but not "foe".
+    <p>
+        To match "foo" followed by zero or more 'b' characters, you could use:
+    <pre>foob*</pre>
+    <p>
+        The '*' special character matches the preceding expression zero or more 
+        times. <code>foob*</code> will match "foo", "foob" and "foobbbbbb" but 
+        not "fod".
+    <p>
+        To match "foo" followed by one or more 'b' characters, you could use:
+    <pre>foob+</pre>
+    <p>
+        The '+' special character matches the preceding expression one or more 
+        times. <code>foob+</code> will match "foob" and "foobbbbbb" but not 
+        "foo" or "food".
+    <p>
+        Regular expression languages have many more capabilities. Though 
+        different regular expression implementations have different 
+        capabilities, most share a large set of common operations,.
+    <h2>C libraries for regular expressions</h2>
+    <p>
+        The <a href=https://www.pcre.org><strong>PCRE</strong> or Perl 
+        Compatible Regular Expressions</a> library is a widely used C library 
+        that implements the same regular expression language that's used in 
+        Perl 5. The PCRE library is open source and distributed under a BSD 
+        license. It's a substantial library, and due to the lack of support on 
+        iOS for OS X style frameworks, it can be a bit challenging to include 
+        in an iOS project. In addition, because it's a C library, working with 
+        PCRE requires more low-level code than many Cocoa Touch programmers are 
+        comfortable with.
+    <p>
+        Here's a PCRE code snippet that compiles the regular expression 
+        <code>foo(bar|fy)</code> and tests it against the string 
+        <code>"foofy"</code>.
+    <pre>#include &lt;pcre.h>
+#include &lt;stdlib.h>
+#include &lt;string.h>
+
+#define OUTPUT_VECTOR_COUNT 30    /* should be a multiple of 3 */
+
+/* ... */
+
+char const *pattern = "foo(bar|fy)";
+int compileOptions = 0;
+char const *error;
+int errorOffset;
+unsigned char const *characterTable = NULL;
+pcre *regularExpression = pcre_compile(pattern, compileOptions, 
+                                       &amp;error, &amp;errorOffset, characterTable);
+
+if ( ! regularExpression) {
+  NSLog(@"ERROR: regular expression &lt;%s> failed to compile\n", pattern);
+  NSLog(@"  Error at offset %i: %s\n", errorOffset, error);
+  exit(EXIT_FAILURE);
+}
+
+pcre_extra *extraData = NULL;
+char const *subject = "foofy";
+int subjectLength = strlen(subject);
+int subjectOffset = 0;
+int execOptions = 0;
+int outputVector[OUTPUT_VECTOR_COUNT];
+int execResultCount = pcre_exec(regularExpression, extraData, 
+                                subject, subjectLength, subjectOffset, 
+                                execOptions, outputVector, OUTPUT_VECTOR_COUNT);
+
+if (execResultCount == PCRE_ERROR_NOMATCH) {
+  NSLog(@"The subject &lt;%s> did not match the pattern &lt;%s>\n", subject, pattern);
+} else if (execResultCount &lt; 0) {
+  NSLog(@"Unexpected pcre_exec() result %i\n", execResultCount);
+} else if (execResultCount == 0) {
+  NSLog(@"Output vector only has room for %i captured substrings\n", 
+        execResultCount - 1);
+} else {
+  int resultIndex;
+  
+  NSLog(@"Found match for pattern &lt;%s> in subject &lt;%s> at offset %i\n", 
+        pattern, subject, outputVector[0]);
+  for (resultIndex = 0; resultIndex &lt; execResultCount; ++resultIndex) {
+    int substringIndex = 2 * resultIndex;
+    int substringStartingOffset = outputVector[substringIndex];
+    int substringEndingOffset = outputVector[substringIndex + 1];
+    char const* substringStart = subject + substringStartingOffset;
+    int substringLength = substringEndingOffset - substringStartingOffset;
+    NSLog(@"match %i: &lt;%.*s>\n", resultIndex, substringLength, substringStart);
+  }
+}
+
+pcre_free(regularExpression);
+
+/* ... */</pre>
+    <p>
+        As you can see, it takes a lot of boilerplate code to do even a simple 
+        regular expression search using PCRE, but it's a very powerful library 
+        used by many well knows open source and commercial projects, including 
+        Apple's Safari browser. The PCRE project also includes a set of C++ 
+        wrappers that make the library easier to use from that language. If you 
+        only plan to target OS X, there is also the very excellent 
+        <a href=http://regexkit.sourceforge.net/ >RegexKit</a> open source 
+        library that provides a nice Objective-C wrapper around PCRE. The PCRE 
+        library can be built with Unicode support, but is limited to scanning 
+        UTF-8 encoded Unicode strings, since it's a byte oriented library.
+    <p>
+        The 
+        <a href=https://pubs.opengroup.org/onlinepubs/9699919799/basedefs/V1_chap09.html><strong>POSIX 
+        Regular Expressions</strong></a> specification describes a regular 
+        expression dialect and 
+        <a href=https://developer.apple.com/library/archive/documentation/System/Conceptual/ManPages_iPhoneOS/man3/regex.3.html>C 
+        interface</a> that is supported on many variants of Unix and Linux, 
+        including OS X and iOS. Like many specifications, POSIX regular 
+        expressions are a "lowest common denominator" solution and lack some of 
+        the advanced features found in regular expression variants like Perl 
+        and PCRE. The POSIX regular expression interface is much smaller than 
+        what PCRE provides: four functions, two structs and a bunch of 
+        constants. Here's a PCRE code snippet that compiles the regular 
+        expression <code>foo(bar|fy)</code> and tests it against the string 
+        <code>"foofy"</code> using the POSIX interface.
+    <pre>#import &lt;regex.h>
+
+#define MATCH_COUNT 10
+
+/* ... */
+
+regex_t regularExpression;
+char const *pattern = "foo(fy|bar)";
+int compileFlags = REG_EXTENDED;
+
+int compileResult = regcomp(&amp;regularExpression, pattern, compileFlags);
+
+if (compileResult) {
+  size_t bufferSize = regerror(compileResult, &amp;regularExpression, NULL, 0);
+  char *buffer = malloc(bufferSize);
+  if ( ! buffer) {
+    NSLog(@"Memory allocation failed");
+    return;
+  }
+  regerror(compileResult, &amp;regularExpression, buffer, bufferSize);
+  NSLog(@"%s", buffer);
+  free(buffer);
+  return;
+}
+
+char const *string = "foofy";
+regmatch_t matches[MATCH_COUNT];
+int executeFlags = 0;
+
+int executeResult = regexec(&amp;regularExpression, string, 
+                            MATCH_COUNT, matches, executeFlags);
+
+if (executeResult == REG_NOMATCH) {
+  NSLog(@"Pattern &lt;%s> doesn't match string &lt;%s>\n", pattern, string);
+} else {  
+  NSLog(@"Pattern &lt;%s> matches string &lt;%s>\n", pattern, string);
+  NSLog(@"Found %lu submatches\n", (unsigned long)regularExpression.re_nsub);
+  for (size_t i = 0; i &lt; regularExpression.re_nsub + 1; ++i) {
+    int substringLength = matches[i].rm_eo - matches[i].rm_so;
+    char const *substringStart = string + matches[i].rm_so;
+    NSLog(@"submatch %lu: &lt;%.*s>\n", (unsigned long)i, substringLength, substringStart);
+  }
+}
+
+regfree(&amp;regularExpression);
+
+/* ... */</pre>
+    <p>
+        This is a little more concise than the PCRE version, mainly because the 
+        POSIX functions have fewer options, but is still very low level. POSIX 
+        regular expression implementations are generally regarded as slower 
+        than PCRE, and don't provide any explicit Unicode support (though you 
+        may be able to do regex matching against UTF-8 encoded strings if 
+        you're careful to keep your UTF-8 strings 
+        <a href=https://unicode.org/faq/normalization.html>normalized</a>).
+    <p>
+        The <a href=https://icu.unicode.org><strong>ICU</strong> or 
+        International Components for Unicode</a> library is included as part of 
+        iOS. (ICU is open source and carries a 
+        <a href=https://github.com/unicode-org/icu/blob/main/icu4c/LICENSE>non-restrictive 
+        license</a>.) The ICU is a general purpose library for working with 
+        Unicode text which includes Unicode-aware regular expression support. 
+        It has two versions: one for Java and another for C and C++. The C/C++ 
+        version features a low level C function interface and a set of higher 
+        level C++ classes. I'll only look at the C interface to ICU here.
+    <p>
+        Because the ICU library is a general purpose Unicode library, most 
+        operations require that C strings be converted into ICU's Unicode text 
+        type, <code>UChar *</code>, which makes the ICU example the longest yet:
+    <pre>// compile regular expression
+char const *pattern = "foo(bar|fy)";
+uint32_t compileFlags = 0;
+UParseError parseError;
+UErrorCode errorCode = U_ZERO_ERROR;
+
+URegularExpression* regularExpression = uregex_openC(pattern, compileFlags, 
+                                                     &amp;parseError, &amp;errorCode);
+if (errorCode) {
+  NSLog(@"uregex_openC() failed: %li: %s", 
+        (long)errorCode, u_errorName(errorCode));
+  NSLog(@"  parse error at line %li, offset %li" ,
+        (long)parseError.line, (long)parseError.offset);
+  return;
+}
+
+// determine size of search text as ICU Unicode string
+UChar *unicodeText = NULL;
+int32_t unicodeTextCapacity = 0;
+int32_t unicodeTextLength;
+char const *utf8Text = "foofy";
+int32_t utf8TextLength = -1; /* null terminated */
+
+errorCode = U_ZERO_ERROR;
+u_strFromUTF8(unicodeText, unicodeTextCapacity, &amp;unicodeTextLength, 
+              utf8Text, utf8TextLength, &amp;errorCode);
+
+if (errorCode != U_BUFFER_OVERFLOW_ERROR) {
+  NSLog(@"Conversion to Unicode string failed: %li: %s", 
+        (long)errorCode, u_errorName(errorCode));
+  uregex_close(regularExpression);
+  return;
+}
+
+// allocate buffer for search text ICU Unicode string
+unicodeTextCapacity = unicodeTextLength + 1;
+unicodeText = calloc(sizeof(UChar), unicodeTextLength);
+if ( ! unicodeText) {
+  NSLog(@"Memory allocation failed");
+  uregex_close(regularExpression);
+  return;
+}
+
+// convert search text to ICU Unicode string
+errorCode = U_ZERO_ERROR;
+u_strFromUTF8(unicodeText, unicodeTextCapacity, &amp;unicodeTextLength, 
+              utf8Text, utf8TextLength, &amp;errorCode);
+
+uregex_setText(regularExpression, unicodeText, unicodeTextLength, &amp;errorCode);
+if (errorCode) {
+  NSLog(@"uregex_setText() failed: %li: %s", 
+        (long)errorCode, u_errorName(errorCode));
+  free(unicodeText);
+  uregex_close(regularExpression);
+  return;
+}
+
+// search for regular expression
+int32_t startIndex = 0;
+errorCode = U_ZERO_ERROR;
+BOOL matchFound = uregex_find(regularExpression, startIndex, &amp;errorCode);
+if (errorCode) {
+  NSLog(@"uregex_find() failed: %li: %s", 
+        (long)errorCode, u_errorName(errorCode));
+  free(unicodeText);
+  uregex_close(regularExpression);
+  return;
+}
+
+if (matchFound) {
+  // get number of subgroup matches
+  NSLog(@"Pattern &lt;%s> matched string &lt;%s>", pattern, utf8Text);
+  errorCode = U_ZERO_ERROR;
+  int32_t subgroupCount = uregex_groupCount(regularExpression, &amp;errorCode);
+  if (errorCode) {
+    NSLog(@"uregex_groupCount() failed: %li: %s", 
+          (long)errorCode, u_errorName(errorCode));
+    free(unicodeText);
+    uregex_close(regularExpression);
+    return;
+  }
+  
+  // enumerate subgroup matches
+  NSLog(@"Matched %li subgroups", (long)subgroupCount);
+  for (int32_t i = 0; i &lt;= subgroupCount; ++i) {
+    // get size of the subgroup
+    UChar *subgroup = NULL;
+    int32_t subgroupCapacity = 0;
+    errorCode = U_ZERO_ERROR;
+    int32_t subgroupLength = uregex_group(regularExpression, i, 
+                                          subgroup, subgroupCapacity, 
+                                          &amp;errorCode);
+    if (errorCode != U_BUFFER_OVERFLOW_ERROR) {
+      NSLog(@"uregex_group() failed: %li: %s", 
+            (long)errorCode, u_errorName(errorCode));
+      break;
+    }
+    
+    // allocate buffer to hold the subgroup
+    subgroupCapacity = subgroupLength + 1;
+    subgroup = calloc(sizeof(UChar), subgroupCapacity);
+    if ( ! subgroup) {
+      NSLog(@"Memory allocation failed");
+      return;
+    }
+    
+    // copy subgroup into buffer
+    errorCode = U_ZERO_ERROR;
+    uregex_group(regularExpression, i, subgroup, subgroupCapacity, &amp;errorCode);
+    
+    // determine size of buffer to hold subgroup as UTF8 string
+    char *utf8Subgroup = NULL;
+    int32_t utf8SubgroupCapacity = 0;
+    int32_t utf8SubgroupLength;
+    errorCode = U_ZERO_ERROR;
+    u_strToUTF8(utf8Subgroup, utf8SubgroupCapacity, &amp;utf8SubgroupLength, 
+                subgroup, subgroupLength, &amp;errorCode);
+    if (errorCode != U_BUFFER_OVERFLOW_ERROR) {
+      NSLog(@"u_strToUTF8() failed: %li: %s", 
+            (long)errorCode, u_errorName(errorCode));
+      free(subgroup);
+      break;
+    }
+    
+    // allocate buffer to hold subgroup as UTF8 string
+    utf8SubgroupCapacity = utf8SubgroupLength + 1;
+    utf8Subgroup = calloc(sizeof(char), utf8SubgroupCapacity);
+    if ( ! utf8Subgroup) {
+      NSLog(@"Memory allocation failed");
+      free(subgroup);
+      break;
+    }
+    
+    // convert subgroup to UTF8 string
+    errorCode = U_ZERO_ERROR;
+    u_strToUTF8(utf8Subgroup, utf8SubgroupCapacity, &amp;utf8SubgroupLength, 
+                subgroup, subgroupLength, &amp;errorCode);
+    if (errorCode) {
+      NSLog(@"u_strToUTF8() failed: %li: %s", 
+            (long)errorCode, u_errorName(errorCode));
+      free(subgroup);
+      free(utf8Subgroup);
+      break;
+    }
+    
+    // print subgroup UTF8 string
+    NSLog(@"submatch %lu: &lt;%.*s>\n", 
+          (unsigned long)i, utf8SubgroupLength, utf8Subgroup);
+    free(subgroup);
+    free(utf8Subgroup);
+  }
+} else {
+  NSLog(@"Pattern &lt;%s> did not match string &lt;%s>", pattern, utf8Text);
+}
+
+free(unicodeText);
+uregex_close(regularExpression);</pre>
+    <p>
+        I wouldn't be surprised if there's a memory leak in there somewhere. 
+        I'm also no expert on this library, and I may be doing some things the 
+        hard way. If you're using C++, I'm sure a lot of this boilerplate code 
+        goes away. If you don't need or want to mix C++ into your iOS app, 
+        there are some Objective-C alternatives that are much more satisfying.
+    <h2>Regular expressions in Objective-C</h2>
+    <p>
+        In iOS 3.2, Apple added a new <code>NSStringCompareOptions</code> value 
+        for use in the various <code>-rangeOfString:options:</code> methods of 
+        <code>NSString</code>: <em><code>NSRegularExpressionSearch</code></em>. 
+        This option uses the regular expression support of the ICU library to 
+        do simple regular expression matching on an <code>NSString</code> 
+        object. Unfortunately, Apple only implemented a very minimal regular 
+        expression interface on <code>NSString</code>. You can search, but not 
+        replace, within an <code>NSString</code> and powerful regular 
+        expression features like subgroup matching are not exposed.
+    <pre>NSString *string = @"foofy";
+NSString *pattern = @"foo(bar|fy)";
+
+NSRange match = [string <mark>rangeOfString:</mark>pattern 
+                              options:<mark>NSRegularExpressionSearch</mark>];
+
+if (match.location == NSNotFound) {
+  NSLog(@"Pattern &lt;%@> doesn't match string &lt;%@>", pattern, string);
+} else {
+  NSLog(@"Pattern &lt;%@> matches string &lt;%@> starting at location %lu",
+        pattern, string, (unsigned long)match.location);
+}</pre>
+    <p>
+        In iOS 4.0, Cocoa Touch gained the 
+        <strong><code>NSRegularExpression</code></strong> class, a 
+        full-featured regular expression processor built on top of the ICU 
+        regular expression library.
+    <pre>NSError *error;
+NSString *pattern = @"foo(bar|fy)";
+
+NSRegularExpression *regularExpression = [NSRegularExpression regularExpressionWithPattern:pattern 
+                                                                                   options:0 
+                                                                                     error:&amp;error];
+if ( ! regularExpression) {
+  NSLog(@"Error in pattern &lt;%@>: %@", pattern, error);
+  return;
+}
+
+NSString *string = @"foofy";
+NSRange range = NSMakeRange(0, [string length]);
+NSArray *matches = [regularExpression matchesInString:string 
+                                              options:0 
+                                                range:range];
+if ([matches count]) {
+  NSTextCheckingResult *firstMatch = [matches objectAtIndex:0];
+  NSLog(@"Found %lu submatches", (unsigned long)[firstMatch numberOfRanges]);
+  for (NSUInteger i = 0; i &lt; [firstMatch numberOfRanges]; ++i) {
+    NSRange range = [firstMatch rangeAtIndex:i];
+    NSString *submatch = [string substringWithRange:range];
+    NSLog(@"submatch %lu: &lt;%@>", (unsigned long)i, submatch);      
+  }
+} else {
+  NSLog(@"Pattern &lt;%@> doesn't match string &lt;%@>", pattern, string);
+}</pre>
+    <p>
+        This is much easier to use than the underlying ICU C library and a good 
+        choice for iOS apps that target 4.0 and later.
+    <p>
+        The 
+        <a href=http://regexkit.sourceforge.net/RegexKitLite/ ><strong>RegexKitLite</strong></a>
+         library provides an alternate Objective-C wrapper around the low level 
+        ICU regular expression library that supports both Mac OS X and iOS, 
+        including iOS 3.0. RegexKitLite provides a full featured set of regular 
+        expression methods in a category that extends <code>NSString</code> and 
+        can do matching, searching, replacing and supports subgroups. 
+        RegexKitLite is open source and available under a BSD license.
+    <pre>NSString *string = @"foofy";
+NSString *pattern = @"foo(bar|fy)";
+
+NSArray *submatches = [string captureComponentsMatchedByRegex:pattern];
+if ([submatches count]) {
+  NSLog(@"Found %lu submatches", (unsigned long)[submatches count]);
+  for (NSUInteger i = 0; i &lt; [submatches count]; ++i) {
+    NSLog(@"submatch %lu: &lt;%@>", (unsigned long)i, [submatches objectAtIndex:i]);      
+  }
+} else {
+  NSLog(@"Pattern &lt;%@> doesn't match string &lt;%@>", pattern, string);
+}</pre>
+    <p>
+        RegexKitLite code is a little more concise than the 
+        <code>NSRegularExpression</code> class, but comparable in power, since 
+        they're both built on top of ICU.
+    <h2>Which one to use?</h2>
+    <p>
+        Unless you're writing cross-platform code in C or need to target very 
+        old versions of iOS, I recommend you avoid using the C regular 
+        expression libraries. If you must, the POSIX regex functions are the 
+        easiest to get started with, but if you're targeting non-Apple 
+        platforms, watch out for implementation differences across platforms. 
+        Both PCRE and ICU are good cross-platform choices; choose ICU if you 
+        also need robust Unicode support, PCRE if you're mainly working with 
+        eight bit encodings.
+    <p>
+        On the Objective-C side, choosing <code>NSRegularExpression</code> or 
+        RegexKitLite is largely up to personal preference. 
+        <code>NSRegularExpression</code> is a no-brainer if you're targeting 
+        iOS 4.0 and later (but currently not supported on OS X). Adding 
+        RegexKitLite to your project is as easy as adding two files to Xcode 
+        and currently works on both Apple operating systems. And the 
+        <code>-rangeOfString:options:</code> method on <code>NSString</code> is 
+        handy for simple searches.
+    <h2>&lt;eot /> (<em>end of topic</em>)</h2>
+    <p>
+        That concludes our look at 
+        <a href=/objective-c_tuesdays/strings_in_objective-c.html>strings in 
+        Objective-C</a>. <em><a href=/objective-c_tuesdays/arrays.html>Data 
+        structures</a></em> is our next topic.
+    <footer>
+        <a href=http://blog.ablepear.com/2011/07/objective-c-tuesdays-regular.html><em>Objective-C 
+        Tuesdays: regular expressions</em></a> was originally published on 
+        <time datetime=2011-07-12>2011-07-12</time>.
+    </footer>
+</section>

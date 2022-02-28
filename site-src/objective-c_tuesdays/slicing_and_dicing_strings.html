@@ -1,0 +1,263 @@
+<!doctype html>
+<html lang=en>
+<meta charset=utf-8>
+<meta content='initial-scale=0.9, width=device-width' name=viewport>
+<title>Slicing And Dicing Strings</title>
+<link href=/base.css rel=stylesheet>
+<nav class=menu>
+    <a href=/ >Don McCaughey</a> • <a href=/objective-c_tuesdays/ >Objective-C Tuesdays</a>
+</nav>
+<section>
+    <h1>Slicing And Dicing Strings</h1>
+    <p>
+        Last time, we looked at 
+        <a href=/objective-c_tuesdays/string_comparison_and_equality.html>C 
+        string and <code>NSString</code> comparison and equality</a>.  Today 
+        we'll examine functions and methods for creating substrings of C 
+        strings and <code>NSString</code>s.
+    <h2>Substrings of C strings</h2>
+    <p>
+        Creating a C string requires you to explicitly manage the memory the 
+        string lives in.  Depending on how long you need to keep the C string 
+        around, you can use either a fixed buffer or a dynamically allocated 
+        one.  As always with C strings, you need to be careful not to write 
+        past the end of the buffer.
+    <p>
+        Creating a substring that starts at the beginning of the source string 
+        is straight forward: use the <code>str<mark>n</mark>cpy()</code> 
+        function.  There's a big gotcha when using <code>strncpy()</code> to 
+        copy a substring: it doesn't automatically add a null terminator to the 
+        destination.  Here's an example of copying the first three characters 
+        of a C string into a fixed buffer:
+    <pre>// copy substring from start of source
+// using a fixed buffer
+char const *source = "foobar";
+char buffer[4];                // make sure buffer includes
+                               // space for null terminator
+
+strncpy(buffer, source, 3);    // copy first 3 chars from source
+buffer[3] = '\0';              // remember to add null terminator</pre>
+    <p>
+        Using a dynamic buffer is similar, but requires explicit memory 
+        management.
+    <pre>// copy substring from start of source
+// using a dynamic buffer
+char const *source = "foobar";
+char *buffer = malloc(4 * sizeof(char)); // make sure buffer includes
+                                         // space for null terminator
+
+if ( ! buffer) {
+  // must handle allocation failure
+}
+
+strncpy(buffer, source, 3); // copy first 3 chars from source
+buffer[3] = '\0';           // remember to add null terminator
+
+// use buffer ...
+
+// don't forget to free() buffer when done
+free(buffer);</pre>
+    <p>
+        You can make this a little more compact by using <code>calloc()</code> 
+        instead of <code>malloc()</code>.  The <code>calloc()</code> function 
+        allocates memory using <code>malloc()</code>, then clears all the bytes 
+        to zero.  As long as you make sure to include an extra byte at the end, 
+        your new substring will be null terminated:
+    <pre>// copy substring from start of source
+// using a dynamic buffer 
+// allocated with calloc()
+char const *source = "foobar";
+char *buffer = calloc(4, sizeof(char)); // make sure buffer includes
+                                        // space for null terminator
+
+if ( ! buffer) {
+  // handle allocation failure
+}
+
+strncpy(buffer, source, 3); // copy first 3 chars from source
+                            // last char in buffer is already '/0'
+
+// use buffer ...
+
+// don't forget to free() buffer when done
+free(buffer);</pre>
+    <p>
+        There's not a huge difference between <code>malloc()</code> and 
+        <code>calloc()</code>, so choose whichever one you're more used to 
+        using, or use <code>calloc()</code> if you don't have a strong 
+        preference.  The cost of clearing a range of memory to zeros is so tiny 
+        as to not be worth considering in most circumstances, and knowing that 
+        your buffer is initialized to zeros can be handy.
+    <p>
+        There's no standard C function for getting a substring that starts 
+        somewhere in the middle of the source string, because one isn't needed 
+        -- you simply move the pointer from the start of the string.  Here's an 
+        illustration:
+    <pre>// C strings are pointers
+char const *string = "foobar";
+
+NSLog(@"'%s'", string);
+// prints out 'foobar'
+
+char const *substring = string + 3;
+NSLog(@"'%s'", substring);
+// prints out 'bar'</pre>
+    <p>
+        You can add an integer value to the C string pointer to get a pointer 
+        to the middle of the source string -- just be careful not to go off the 
+        end of the string!  If you only need the substring for a short period 
+        of time, or if you know that the source string will live longer than 
+        the substring and never change, it's safe to simply create a substring 
+        this way.  However, you can introduce weird bugs if you get this wrong. 
+         When in doubt, copy the substring to a new buffer:
+    <pre>// create a substring from the middle of a string
+char const *source = "foobar";
+char const *substringSource = source + 3;
+size_t charCount = strlen(substringSource) + 1;
+char *buffer = calloc(charCount, sizeof(char));
+
+if ( ! buffer) {
+  // handle allocation failure
+}
+
+strcpy(buffer, substringSource);
+
+// use buffer ...
+
+free(buffer);</pre>
+    <p>
+        Here we calculate the starting point by simply adding <code>3</code> to 
+        the string pointer <code>source</code>.  Then we figure out the number 
+        of <code>char</code>s we need to allocate using the 
+        <code>strlen()</code> function, remembering to add <code>1</code> for 
+        the null terminator character.  After allocating memory, the 
+        <code>strcpy()</code> function copies all the characters from 
+        <code>substringSource</code> into <code>buffer</code>.  Unlike 
+        <code>str<mark>n</mark>cpy()</code>, <code>strcpy()</code> will copy 
+        the null terminator, so this code will be the same whether we use 
+        <code>calloc()</code> or <code>malloc()</code> to allocate the buffer.
+    <p>
+        If you need to grab a substring that falls between the beginning and 
+        end of a longer string, you combine these two techniques: use pointer 
+        arithmetic to get a pointer to the start of the substring, then use 
+        <code>str<mark>n</mark>cpy()</code> to copy just the characters you 
+        need.
+    <h2>Warning: beware encoding issues!</h2>
+    <p>
+        Slicing and dicing C strings is easy when you're using a single byte 
+        encoding like ASCII.  If you're using a multibyte encoding like UTF-8, 
+        you need to be aware that one logical character may require two or more 
+        bytes.  If you want to omit the first three logical characters in a 
+        string, you need to examine each byte from the start of a string to 
+        determine if it's part of a multibyte sequence, and adjust your string 
+        pointer accordingly.  If you need to work with multibyte encodings, I 
+        recommend finding an appropriate library for the encoding, such as the 
+        <a href=https://icu.unicode.org>International Components for Unicode</a>
+         for working with Unicode encodings.  Or better yet, transform your C 
+        strings into <code>NSString</code>s.
+    <h2>Substrings of <code>NSString</code>s</h2>
+    <p>
+        There are three ways to get a substring of an <code>NSString</code>.  
+        First we'll look at taking a substring from the start of an 
+        <code>NSString</code>:
+    <pre>// create a substring from the start of source
+NSString *source = @"foobar";
+
+NSString *substring = [source substringToIndex:3];
+// substring is "foo"</pre>
+    <p>
+        The substring returned by <code>-substringToIndex:</code> is 
+        autoreleased.  You should <code>-retain</code> or <code>-copy</code> it 
+        if you need to hold on to it.
+    <p>
+        Similarly, to get a substring that starts in the middle of an 
+        <code>NSString</code> and goes to the end:
+    <pre>// create a substring to the end of source
+NSString *source = @"foobar";
+
+NSString *substring = [source substringFromIndex:3];
+// substring is "bar"</pre>
+    <p>
+        Finally, the general purpose way to create a substring of an 
+        <code>NSString</code> is the <code>-substringWithRange:</code> method, 
+        which uses an <code>NSRange</code> structure, which is defined 
+        something like this:
+    <pre>// NSRange structure
+struct NSRange {
+  NSUInteger location;
+  NSUInteger length;
+}</pre>
+    <p>
+        When used with <code>-substringWithRange:</code> method, the 
+        <code>NSRange</code>'s <code>location</code> field is the zero-based 
+        index of the first character to be included in the substring, and the 
+        <code>length</code> field is the number of characters to include in the 
+        substring.  Here are some examples:
+    <pre>// -substringWithRange: examples
+NSString *source = @"foobar";
+NSRange range;
+
+range.location = 0;
+range.length = 3;
+NSString *frontHalf = [source substringWithRange:range];
+// frontHalf is "foo"
+
+range.location = 3;
+range.length = 3;
+NSString *backHalf = [source substringWithRange:range];
+// backHalf is "bar"
+
+range.location = 2;
+range.length = 2;
+NSString *middle = [source substringWithRange:range];
+// middle = "ob"</pre>
+    <p>
+        One word of caution: if the range you give falls outside the receiver 
+        (the source string), this method will raise an 
+        <code>NSRangeException</code>.
+    <p>
+        Setting the fields of <code>NSRange</code> is fairly verbose; it's 
+        generally more convenient to use the <code>NSMakeRange()</code> 
+        function to create the <code>NSRange</code> structure instead.
+    <pre>// NSMakeRange() example
+NSString *source = @"foobar";
+
+NSString *frontHalf = [source substringWithRange:NSMakeRange(0, 3)];
+// frontHalf is "foo"</pre>
+    <h2>NSString encoding mostly not a worry</h2>
+    <p>
+        Internally, <code>NSString</code> uses UTF-16 encoding.  Although 
+        UTF-16 is a variable length encoding like UTF-8, characters from the 
+        <a href=https://en.wikipedia.org/wiki/Plane_(Unicode)#Basic_Multilingual_Plane>basic 
+        multilingual plane</a> are all two bytes (one word) in length.  If 
+        you're certain that your <code>NSString</code> contains only basic 
+        multilingual plane characters, then methods like <code>-length</code> 
+        and <code>-substringWithRange:</code> will work exactly as you expect 
+        them.  However, if your <code>NSString</code> includes characters 
+        outside the basic multilingual plane, it will contain 
+        <a href=https://en.wikipedia.org/wiki/UTF-16#Code_points_from_U+010000_to_U+10FFFF>surrogate 
+        pairs</a>, which are multi-word sequences that represent a single 
+        character.  You'll find that <code>-length</code> tells you the number 
+        of <em>words</em> rather than logical <em>characters</em>, and if 
+        you're not careful, methods like <code>-substringWithRange:</code> can 
+        split a surrogate pair in half, leaving you with an invalidly encoded 
+        string.
+    <p>
+        Unless your application needs to work with characters outside the basic 
+        multilingual plane, the easiest solution is to filter out such 
+        characters when you accept data from a source outside your app.  Since 
+        the basic multilingual plane contains all the characters in common use 
+        in most modern languages, this is sufficient for many applications.  
+        The standard iOS input keyboards limit the user to characters in the 
+        basic multilingual plane, but if your app reads data from the network, 
+        such as an RSS feed you don't control, you need to watch out for this.
+    <p>
+        Next time, we'll look at 
+        <a href=/objective-c_tuesdays/searching_in_strings.html>searching in C 
+        strings and <code>NSString</code>s</a>.
+    <footer>
+        <a href=http://blog.ablepear.com/2010/09/objective-c-tuesdays-slicing-and-dicing.html><em>Objective-C 
+        Tuesdays: slicing and dicing strings</em></a> was originally published 
+        on <time datetime=2010-09-21>2010-09-21</time>.
+    </footer>
+</section>

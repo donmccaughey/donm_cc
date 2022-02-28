@@ -1,0 +1,188 @@
+.page links Objective-C Tuesdays
+
+When the [iPhone SDK](https://en.wikipedia.org/wiki/IOS_SDK#History) was 
+released in 2008, my good friend [Kevin](https://bomberry.com) and I formed 
+Able Pear Software, a small consultancy focused on mobile development.  From
+2009 through 2011, I wrote a series of posts for our 
+[company blog](http://blog.ablepear.com) called _Objective-C Tuesdays_ 
+(published on Tuesdays, naturally).
+
+We weren't the only people drawn to iPhone development, but outside of a small 
+cadre of Mac programmers, Objective-C was largely unknown.  It's also very 
+different from most mainstream programming languages, being a Smalltalk-inspired
+dynamic layer atop the venerable C language -- with very unusual syntax.  There
+was very little learning material available at the time, either for purchase or
+free on the Internet, and Apple's terse documentation left big gaps to fill.
+
+So I did my part to help.  I focused on the basics: loops, variables, strings 
+and arrays, and wrote about both the dynamic, high level
+[Foundation classes](https://developer.apple.com/documentation/foundation?language=objc)
+and the low level, static C equivalents.
+
+
+.section links Looping
+
+.link blog Looping In Objective-C
+.url /objective-c_tuesdays/looping_in_objective-c.html
+.date 2009-12-15
+
+.link blog The For Loop
+.url /objective-c_tuesdays/the_for_loop.html
+.date 2009-10-06
+
+.link blog For Loop Variations
+.url /objective-c_tuesdays/for_loop_variations.html
+.date 2009-10-13
+
+.link blog The For...In Loop
+.url /objective-c_tuesdays/the_for-in_loop.html
+.date 2009-10-20
+
+.link blog The While Loop
+.url /objective-c_tuesdays/the_while_loop.html
+.date 2009-10-27
+
+.link blog The Do...While Loop
+.url /objective-c_tuesdays/the_do-while_loop.html
+.date 2009-11-10
+
+.link blog Break Out Of A Loop
+.url /objective-c_tuesdays/break_out_of_a_loop.html
+.date 2009-11-17
+
+.link blog Continue
+.url /objective-c_tuesdays/continue.html
+.date 2009-11-24
+
+.link blog Goto
+.url /objective-c_tuesdays/goto.html
+.date 2009-12-01
+
+.link blog Common Uses For Goto
+.url /objective-c_tuesdays/common_uses_for_goto.html
+.date 2009-12-08
+
+
+.section links Variables
+
+.link blog Variables In Objective-C
+.url /objective-c_tuesdays/variables_in_objective-c.html
+.date 2010-06-15
+
+.link blog Global Variables
+.url /objective-c_tuesdays/global_variables.html
+.date 2009-12-15
+
+.link blog Extern And Global Variables
+.url /objective-c_tuesdays/extern_and_global_variables.html
+.date 2010-01-05
+
+.link blog Static Variables
+.url /objective-c_tuesdays/static_variables.html
+.date 2010-01-19
+
+.link blog Static Variables In Functions
+.url /objective-c_tuesdays/static_variables_in_functions.html
+.date 2010-03-30
+
+.link blog Local Variables And Function Parameters
+.url /objective-c_tuesdays/local_variables_and_function_parameters.html
+.date 2010-04-06
+
+.link blog Instance Variables
+.url /objective-c_tuesdays/instance_variables.html
+.date 2010-04-13
+
+.link blog Instance Variables, Getters And Setters
+.url /objective-c_tuesdays/instance_variables_getters_and_setters.html
+.date 2010-04-20
+
+.link blog @Property And @Synthesize
+.url /objective-c_tuesdays/at-property_and_at-synthesize.html
+.date 2010-04-27
+
+.link blog Synthesizing Properties
+.url /objective-c_tuesdays/synthesizing_properties.html
+.date 2010-05-04
+
+.link blog Atomic And Nonatomic Properties
+.url /objective-c_tuesdays/atomic_and_nonatomic_properties.html
+.date 2010-05-11
+
+.link blog Changing Default Property Names
+.url /objective-c_tuesdays/changing_default_property_names.html
+.date 2010-05-18
+
+.link blog Writing A Thread Safe Getter Method
+.url /objective-c_tuesdays/writing_a_thread_safe_getter_method.html
+.date 2010-06-08
+
+
+.section links Strings
+
+.link blog Strings In Objective-C
+.url /objective-c_tuesdays/strings_in_objective-c.html
+.date 2011-07-19
+
+.link blog C Strings
+.url /objective-c_tuesdays/c_strings.html
+.date 2010-06-15
+
+.link blog String Literals
+.url /objective-c_tuesdays/string_literals.html
+.date 2010-07-13
+
+.link blog Unicode String Literals
+.url /objective-c_tuesdays/unicode_string_literals.html
+.date 2010-07-20
+
+.link blog Wide Character Strings
+.url /objective-c_tuesdays/wide_character_strings.html
+.date 2010-07-27
+
+.link blog Concatenating Strings
+.url /objective-c_tuesdays/concatenating_strings.html
+.date 2010-08-03
+
+.link blog String Comparison And Equality
+.url /objective-c_tuesdays/string_comparison_and_equality.html
+.date 2010-09-14
+
+.link blog Slicing And Dicing Strings
+.url /objective-c_tuesdays/slicing_and_dicing_strings.html
+.date 2010-09-21
+
+.link blog Searching In Strings
+.url /objective-c_tuesdays/searching_in_strings.html
+.date 2010-09-28
+
+.link blog Replacing In Strings
+.url /objective-c_tuesdays/replacing_in_strings.html
+.date 2010-10-05
+
+.link blog Regular Expressions
+.url /objective-c_tuesdays/regular_expressions.html
+.date 2011-07-12
+
+
+.section links Data Structures
+
+.link blog Arrays
+.url /objective-c_tuesdays/arrays.html
+.date 2011-07-19
+
+.link blog Dynamic Arrays
+.url /objective-c_tuesdays/dynamic_arrays.html
+.date 2011-07-26
+
+.link blog More About Dynamic Arrays
+.url /objective-c_tuesdays/more_about_dynamic_arrays.html
+.date 2011-08-02
+
+.link blog Sorting Arrays
+.url /objective-c_tuesdays/sorting_arrays.html
+.date 2011-11-29
+
+.link blog More NSArray Sorting
+.url /objective-c_tuesdays/more_nsarray_sorting.html
+.date 2011-12-06

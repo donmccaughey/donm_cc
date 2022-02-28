@@ -1,0 +1,121 @@
+<!doctype html>
+<html lang=en>
+<meta charset=utf-8>
+<meta content='initial-scale=0.9, width=device-width' name=viewport>
+<title>The For Loop</title>
+<link href=/base.css rel=stylesheet>
+<nav class=menu>
+    <a href=/ >Don McCaughey</a> • <a href=/objective-c_tuesdays/ >Objective-C Tuesdays</a>
+</nav>
+<section>
+    <h1>The For Loop</h1>
+    <p>
+        Welcome to the first episode of <em>Objective-C Tuesdays</em>.  We'll 
+        be focusing on C and Objective-C basics.  Today we will look at the 
+        standard C language <code>for</code> loop.
+    <p>
+        The <code>for</code> loop is the most flexible looping statement in C, 
+        and the most common.  It groups all the important loop information 
+        together at the start of the loop, making it quick and easy to both 
+        read and write.
+    <p>
+        The <code>for</code> loop statement starts with the keyword 
+        <code>for</code>, followed by parentheses containing the loop 
+        definition.  The loop definition contains three expressions separated 
+        by semicolons: <em>initialization</em>, <em>condition</em> and 
+        <em>action</em>.  After the parentheses, a single <em>statement</em> or 
+        <em>block</em> makes up the body of the loop.
+    <pre>/* for loop with a single statement */
+for (<mark>initialization</mark>; <mark>condition</mark>; <mark>action</mark>) <mark>statement</mark>;
+
+/* for loop with a block */
+for (<mark>initialization</mark>; <mark>condition</mark>; <mark>action</mark>)
+{
+  <mark>block</mark>;
+}</pre>
+    <p>
+        Watch out for a hard to spot bug when the <code>for</code> loop is 
+        followed by an empty statement created by an extra semicolon:
+    <pre>for (<mark>initialization</mark>; <mark>condition</mark>; <mark>action</mark>); /* &lt;-- warning! empty statement! */
+{
+  /* this block is not part of the loop */
+  /* it's always executed exactly once  */
+}</pre>
+    <h2>Initialization</h2>
+    <p>
+        The <em>initialization</em> expression is where the starting value of 
+        the loop counter variable is set.  The <em>initialization</em> 
+        expression is evaluated once before the <code>for</code> loop begins 
+        executing.  Loop counters are commonly integer types, but can be any 
+        type that makes sense in your code.  In modern versions of C and 
+        Objective-C, the loop counter can be declared in the 
+        <em>initialization</em> section as well.  The loop counter is typically 
+        given the name <code>i</code> (or <code>j</code> or <code>k</code> in 
+        nested loops).  In <a href=https://en.wikipedia.org/wiki/C99>C99</a> 
+        and later, <em>initialization</em> looks like: 
+    <pre>for (<mark>int i = 0</mark>; <mark>condition</mark>; <mark>action</mark>)</pre>
+    <p>
+        In older versions of C, the loop counter must be declared somewhere 
+        before the <code>for</code> loop: 
+    <pre><mark>int i</mark>;
+/* ... */
+for (<mark>i = 0</mark>; <mark>condition</mark>; <mark>action</mark>)</pre>
+    <h2>Condition</h2>
+    <p>
+        The <em>condition</em> expression is evaluated before each iteration; 
+        the loop continues while the <em>condition</em> evaluates to 
+        <code>true</code> or non-zero and stops when the <em>condition</em> 
+        evaluates to <code>false</code> or zero.  The <em>condition</em> 
+        expression is often a "less than" (<code>&lt;</code>) or "less than or 
+        equal to" (<code>&lt;=</code>) expression: 
+    <pre>for (int i = 0; <mark>i &lt; 10</mark>; <mark>action</mark>)</pre>
+    <p>
+        or 
+    <pre>for (int i = 1; <mark>i &lt;= 10</mark>; <mark>action</mark>)</pre>
+    <p>
+        but it can be any expression that makes sense in your code.
+    <h2>Action</h2>
+    <p>
+        The <em>action</em> expression is evaluated at the end of each 
+        iteration, after the <em>condition</em> and the body of the loop are 
+        executed.  The <em>action</em> is typically used to increment or 
+        decrement the loop counter, but can be used to perform any action that 
+        makes sense for your code.  Most of the time, you simply want to 
+        increment the counter by one:
+    <pre>for (int i = 0; i &lt; 10; <mark>i++</mark>)</pre>
+    <p>
+        but other increments are easy to do:
+    <pre>for (int i = 0; i &lt; 10; <mark>i += 2</mark>)</pre>
+    <h2>Example</h2>
+    <p>
+        Putting this all together, here's some Objective-C code to count from 0 
+        to 5 and back to zero: 
+    <pre>for (int i = 0; i &lt;= 5; i++) {
+  NSLog(@"%i", i);
+}
+for (int i = 4; i >= 0; i--) {
+  NSLog(@"%i", i);
+}</pre>
+    <p>
+        The output looks like this: 
+    <pre>0
+1
+2
+3
+4
+5
+4
+3
+2
+1
+0</pre>
+    <p>
+        <a href=/objective-c_tuesdays/for_loop_variations.html>Next week</a>, 
+        we'll look at some of the crazy and complicated ways you can use the 
+        <code>for</code> loop.
+    <footer>
+        <a href=http://blog.ablepear.com/2009/10/objective-c-tuesdays-for-loop.html><em>Objective-C 
+        Tuesdays: The for loop</em></a> was originally published on 
+        <time datetime=2009-10-06>2009-10-06</time>.
+    </footer>
+</section>

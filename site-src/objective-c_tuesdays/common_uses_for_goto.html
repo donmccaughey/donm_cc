@@ -1,0 +1,288 @@
+<!doctype html>
+<html lang=en>
+<meta charset=utf-8>
+<meta content='initial-scale=0.9, width=device-width' name=viewport>
+<title>Common Uses For Goto</title>
+<link href=/base.css rel=stylesheet>
+<nav class=menu>
+    <a href=/ >Don McCaughey</a> • <a href=/objective-c_tuesdays/ >Objective-C Tuesdays</a>
+</nav>
+<section>
+    <h1>Common Uses For Goto</h1>
+    <p>
+        <a href=/objective-c_tuesdays/goto.html>Last time</a> we looked at the 
+        <code>goto</code> statement.  Today we will look at the two common uses 
+        for <code>goto</code>: flow control in nested loops and organizing 
+        error handing code.
+    <h2>Flow control</h2>
+    <p>
+        As we saw in previous weeks, the 
+        <a href=/objective-c_tuesdays/break_out_of_a_loop.html><code>break</code></a>
+         and 
+        <a href=/objective-c_tuesdays/continue.html><code>continue</code></a> 
+        statements are used to modify the flow of execution in a loop.  Both 
+        <code>break</code> and <code>continue</code> affect only the innermost 
+        enclosing loop.  Sometimes you need to break out of nested loops.  You 
+        could implement this with boolean flag values, but that approach can 
+        make your loop logic more convoluted and error prone.  Instead, a 
+        <code>goto</code> statement can be used like <code>break</code> to jump 
+        out of nested loops:
+    <pre>for (int i = 0; i &lt; 10; i++) {
+  for (int j = 0; j &lt; 10; j++) {
+    if (...) {
+      <mark>goto doneWithLoops;</mark>
+    }
+  }
+}
+<mark>doneWithLoops:</mark>
+  // do more stuff</pre>
+    <p>
+        Similarly, you can use <code>goto</code> to emulate 
+        <code>continue</code> within nested loops, though keep in mind that 
+        <code>goto</code> doesn't automatically advance to the next item in a 
+        <code>for</code> or <code>for...in</code> loop the way 
+        <code>continue</code> does:
+    <pre>for (int i = 0; i &lt; 10; i++) {
+  <mark>start_j:</mark>
+    for (int j = 0; j &lt; 10; j++) {
+      if (...) {
+        <mark>i++;</mark> // manually advance loop counter to emulate continue
+        <mark>goto start_j;</mark>
+      }
+    }
+}</pre>
+    <p>
+        Along with its use in loops, the <code>break</code> statement is also 
+        used in the <code>switch</code> statement to mark the end of a 
+        <code>case</code> block. It's not uncommon to use a <code>switch</code> 
+        statement inside a loop when implementing simple state machines, event 
+        dispatchers and parsers:
+    <pre>// simple event dispatcher
+MyEvent *event = nil;
+while (event = getNextEvent()) {
+  switch (event.type) {
+    case KEY_EVENT:
+      // handle key event
+      break;
+    case MOUSE_EVENT:
+      // handle mouse event
+      break;
+  }
+}
+shutdown();</pre>
+    <p>
+        Sometimes you want to exit the event loop from within one of the 
+        <code>case</code> blocks, like this:
+    <pre>// simple event dispatcher
+MyEvent *event = nil;
+while (event = getNextEvent()) {
+  switch (event.type) {
+    case KEY_EVENT:
+      // handle key event
+      if (event.keycode == KEY_ESC) {
+        <mark>// want to break out of the while loop</mark>
+        <mark>// but a break here applies to the case block</mark>
+      } else {
+        // ...
+      }
+      break;
+    case MOUSE_EVENT:
+      // handle mouse event
+      break;
+  }
+}
+shutdown();</pre>
+    <p>
+        You can always use a boolean flag variable and make your loop test more 
+        complex, but using <code>goto</code> here can make your code simpler 
+        and easier to follow:
+    <pre>// simple event dispatcher
+MyEvent *event = nil;
+while (event = getNextEvent()) {
+  switch (event.type) {
+    case KEY_EVENT:
+      // handle key event
+      if (event.keycode == KEY_ESC) {
+        <mark>goto event_loop_end;</mark>
+      } else {
+        // ...
+      }
+      break;
+    case MOUSE_EVENT:
+      // handle mouse event
+      break;
+  }
+}
+event_loop_end:
+  shutdown();</pre>
+    <h2>Error handling</h2>
+    <p>
+        <br>
+        Standard C doesn't have a concept of throwing and catching exceptions; 
+        it's normal for functions in C libraries to return a result code to 
+        indicate an error (or to have an out parameter that holds a result code 
+        or error object).  Writing robust programs using a C API requires 
+        checking result codes at each step and taking the appropriate action.  
+        For example, a function to copy a block of data from one file to 
+        another might look like this:
+    <pre>void copy_block(char const *in_filename, char const *out_filename, size_t block_size) {
+  FILE *in_file = fopen(in_filename, "r");
+  if (in_file) {
+    FILE *out_file = fopen(out_filename, "w");
+    if (out_file) {
+      char *buffer = malloc(block_size);
+      if (buffer) {
+        int bytes_read = fread(buffer, 1, block_size, in_file);
+        if (bytes_read > 0) {
+          int bytes_written = fwrite(buffer, 1, bytes_read, out_file);
+          if (bytes_written == bytes_read) {
+            [[NSNotificationCenter defaultCenter] postNotificationName:@"Copy block completed successfully." object:nil];
+          } else {
+            [[NSNotificationCenter defaultCenter] postNotificationName:@"Unable to write to output file." object:nil];
+          }
+        } else {
+          [[NSNotificationCenter defaultCenter] postNotificationName:@"Unable to read from input file." object:nil];
+        }
+        free(buffer);
+      } else {
+        [[NSNotificationCenter defaultCenter] postNotificationName:@"Unable to allocate buffer." object:nil];
+      }
+      fclose(out_file);
+    } else {
+      [[NSNotificationCenter defaultCenter] postNotificationName:@"Unable to open output file." object:nil];
+    }
+    fclose(in_file);
+  } else {
+    [[NSNotificationCenter defaultCenter] postNotificationName:@"Unable to open input file." object:nil];
+  }
+}</pre>
+    <p>
+        This leads to deeply nested "flock of geese" code that can be error 
+        prone and hard to read.  One technique to deal with this is to return 
+        from the function when an error is encountered.  The same code 
+        implemented that way looks like this:
+    <pre>void copy_block(char const *in_filename, char const *out_filename, size_t block_size) {
+  FILE *in_file = fopen(in_filename, "r");
+  if ( ! in_file) {
+    [[NSNotificationCenter defaultCenter] postNotificationName:@"Unable to open input file." object:nil];
+    return;
+  }
+  
+  FILE *out_file = fopen(out_filename, "w");
+  if ( ! out_file) {
+    [[NSNotificationCenter defaultCenter] postNotificationName:@"Unable to open output file." object:nil];
+    <mark>fclose(in_file);</mark> // clean up
+    return;
+  }
+  
+  char *buffer = malloc(block_size);
+  if ( ! buffer) {
+    [[NSNotificationCenter defaultCenter] postNotificationName:@"Unable to allocate buffer." object:nil];
+    <mark>fclose(out_file);</mark> // clean up
+    <mark>fclose(in_file);</mark>
+    return;
+  }
+  
+  int bytes_read = fread(buffer, 1, block_size, in_file);
+  if (bytes_read &lt;= 0) {
+    [[NSNotificationCenter defaultCenter] postNotificationName:@"Unable to read from input file." object:nil];
+    <mark>free(buffer);</mark> // clean up
+    <mark>fclose(out_file);</mark>
+    <mark>fclose(in_file);</mark>
+    return;
+  }
+  
+  int bytes_written = fwrite(buffer, 1, bytes_read, out_file);
+  if (bytes_written != bytes_read) {
+    [[NSNotificationCenter defaultCenter] postNotificationName:@"Unable to write to output file." object:nil];
+    <mark>free(buffer);</mark> // clean up
+    <mark>fclose(out_file);</mark>
+    <mark>fclose(in_file);</mark>
+    return;
+  }
+  
+  [[NSNotificationCenter defaultCenter] postNotificationName:@"Copy block completed successfully." object:nil];
+  
+  // clean up
+  <mark>free(buffer);</mark>
+  <mark>fclose(out_file);</mark>
+  <mark>fclose(in_file);</mark>
+}</pre>
+    <p>
+        One criticism of this approach is that clean up code is duplicated 
+        repeatedly and in different variations, a violation of the 
+        <a href="https://en.wikipedia.org/wiki/Don't_repeat_yourself">DRY 
+        principle</a>.  Some programmers also prefer to have a single return 
+        point in a function.  Using <code>goto</code>, you can centralize clean 
+        up code in one place in the function (and as a side effect, the 
+        function now has a single return point):
+    <pre>void copy_block(char const *in_filename, char const *out_filename, size_t block_size) {
+  FILE *in_file = fopen(in_filename, "r");
+  if ( ! in_file) {
+    [[NSNotificationCenter defaultCenter] postNotificationName:@"Unable to open input file." object:nil];
+    <mark>goto end;</mark>
+  }
+  
+  FILE *out_file = fopen(out_filename, "w");
+  if ( ! out_file) {
+    [[NSNotificationCenter defaultCenter] postNotificationName:@"Unable to open output file." object:nil];
+    <mark>goto clean_up_in_file;</mark>
+  }
+  
+  char *buffer = malloc(block_size);
+  if ( ! buffer) {
+    [[NSNotificationCenter defaultCenter] postNotificationName:@"Unable to allocate buffer." object:nil];
+    <mark>goto clean_up_files;</mark>
+  }
+  
+  int bytes_read = fread(buffer, 1, block_size, in_file);
+  if (bytes_read &lt;= 0) {
+    [[NSNotificationCenter defaultCenter] postNotificationName:@"Unable to read from input file." object:nil];
+    <mark>goto clean_up_all;</mark>
+  }
+  
+  int bytes_written = fwrite(buffer, 1, bytes_read, out_file);
+  if (bytes_written != bytes_read) {
+    [[NSNotificationCenter defaultCenter] postNotificationName:@"Unable to write to output file." object:nil];
+    <mark>goto clean_up_all;</mark>
+  }
+  
+  [[NSNotificationCenter defaultCenter] postNotificationName:@"Copy block completed successfully." object:nil];
+  
+  // clean up
+  clean_up_all:
+    free(buffer);
+   
+  clean_up_files:
+    fclose(out_file);
+  
+  clean_up_in_file:
+    fclose(in_file);
+   
+  end:
+    return;
+}</pre>
+    <p>
+        Please note that this is not a recommendation to always structure your 
+        error handling in this fashion using <code>goto</code>.  This is simply 
+        one technique among many that you may encounter "in the wild" and which 
+        you may choose to use in the appropriate situation.  When 
+        <code>goto</code> is used carefully and sparingly, it can help make 
+        difficult code cleaner and easier to follow, but unrestrained use of 
+        <code>goto</code> has the opposite effect.  Whenever you're tempted to 
+        use <code>goto</code> in your own code, you should stop and see if you 
+        can break the code down into smaller functions or methods.  Very often, 
+        refactoring a long function or method by extracting chunks of code into 
+        smaller functions or methods will do far more for you than a 
+        <code>goto</code> can.
+    <p>
+        Next time, a 
+        <a href=/objective-c_tuesdays/looping_in_objective-c.html>summary of 
+        looping</a> and a new topic: 
+        <a href=/objective-c_tuesdays/global_variables.html>variables</a>.
+    <footer>
+        <a href=http://blog.ablepear.com/2009/12/objective-c-tuesdays-common-uses-for.html><em>Objective-C 
+        Tuesdays: common uses for goto</em></a> was originally published on 
+        <time datetime=2009-12-08>2009-12-08</time>.
+    </footer>
+</section>

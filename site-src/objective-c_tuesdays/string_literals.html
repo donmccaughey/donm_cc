@@ -1,0 +1,280 @@
+<!doctype html>
+<html lang=en>
+<meta charset=utf-8>
+<meta content='initial-scale=0.9, width=device-width' name=viewport>
+<title>String Literals</title>
+<link href=/base.css rel=stylesheet>
+<nav class=menu>
+    <a href=/ >Don McCaughey</a> • <a href=/objective-c_tuesdays/ >Objective-C Tuesdays</a>
+</nav>
+<section>
+    <h1>String Literals</h1>
+    <p>
+        Last time we started our new topic, strings, by looking at 
+        <a href=/objective-c_tuesdays/c_strings.html>memory organization and 
+        character encodings of C strings</a>.  Today we'll look at C string and 
+        <code>NSString</code> literals.
+    <p>
+        Most programs do string processing, or at least print out a status 
+        message or two.  It's convenient to define some strings directly in the 
+        program's code.  Since strings are really just lists of numbers, you 
+        could certainly define your strings "by the numbers" using the raw 
+        character codes:
+    <pre>// what does this print out?
+char message[7] = { 105, 80, 104, 111, 110, 101, 0 };
+printf(message);</pre>
+    <p>
+        Geek points if you recognized that <code>message</code> is a null 
+        terminated string.  Super ultra mega geek points if you can read what 
+        it says (hint: it's ASCII).
+    <p>
+        So obviously writing the raw character codes isn't that convenient for 
+        the programmer.  Since the compiler has to translate your code into 
+        machine instructions anyway, it's a no-brainer to make it translate 
+        strings into the correctly encoded bytes.  A string literal is a 
+        representation of a string in your program that the compiler translates 
+        into the corresponding character codes and stores in the program's data 
+        section.  There are two kinds of string literals in Objective-C: plain 
+        old C string literals and <code>NSString</code> literals.  They look 
+        like this:
+    <pre>// C string literal
+char const *s1 = <mark>"Hello, world!"</mark>;
+
+// NSString literal
+NSString *s2 = <mark>@"Hello, world!"</mark>;</pre>
+    <p>
+        The double quote characters (") mark the beginning and the end of the 
+        string literal.  <code>NSString</code> literals are prefixed with 
+        <code>@</code> to distinguish them from C string literals.  It's 
+        important not to mix the two up; they're not directly compatible.
+    <h2>Line Breaks</h2>
+    <p>
+        String literals are not allowed to span multiple lines.  Actually, 
+        that's not <em>exactly</em> true, so I'll illustrate what I mean; this 
+        string is not a legal string literal:
+    <pre>// not a legal string literal
+char const *s1 = <mark>"Hello, world!
+How are you?"</mark>;</pre>
+    <p>
+        Line breaks are not allowed inside the double quotes in a string 
+        literal.  To include a line break, you use the new line (\n) <em>escape 
+        sequence</em>.  We'll talk more about escape sequences below, but using 
+        the new line escape sequence, the string literal becomes:
+    <pre>// string literal containing a new line
+char const *s1 = "Hello, world!<mark>\n</mark>How are you?";</pre>
+    <p>
+        Notice that the new line escape sequence takes the place of an actual 
+        line break in the code.  When the compiler sees "\n" in a string 
+        literal, it replaces it with ASCII character code 10, the line feed (or 
+        new line) character.
+    <p>
+        But sometimes you don't want to add line breaks to your string literal, 
+        but simply to break a long string literal across several lines to make 
+        your code more readable.  One way is to use a backslash (\) before the 
+        line break to tell the compiler to ignore the line break; this is often 
+        used to format long preprocessor macros.  These two string literals are 
+        identical:
+    <pre>char const *error1 = "Unable to complete request: please wait a few minutes and try again.";
+
+char const *error2 = "Unable to complete request: <mark>\</mark>
+please wait a few minutes and try again.";</pre>
+    <p>
+        This works for <code>NSString</code> literals also, but note that any 
+        leading space in the continuation line will be interpreted as part of 
+        the string.  Also note that the backslash (\) must be directly before 
+        the line break in the code; if you have any space or tab characters 
+        between the backslash and the line break, the compiler will complain.
+    <p>
+        A better way to do this is by simply breaking the string literal into 
+        two or more string literals that are separated only by whitespace.  The 
+        following two string literals are identical:
+    <pre>char const *error1 = "Unable to complete request: please wait a few minutes and try again.";
+
+char const *error2 = "Unable to complete request: <mark>"</mark>
+                     <mark>"</mark>please wait a few minutes and try again.";</pre>
+    <p>
+        This also works for <code>NSString</code> literals; only the first part 
+        of an <code>NSString</code> literal is prefixed with <code>@</code>:
+    <pre>NSString *error1 = @"Unable to complete request: please wait a few minutes and try again.";
+
+NSString *error2 = @"Unable to complete request: <mark>"</mark>
+                    <mark>"</mark>please wait a few minutes and try again.";</pre>
+    <p>
+        Only spaces, tabs and line breaks are allowed between sections of a 
+        string literal.  If the string is supposed to have a line break at the 
+        end of each section, you need to add new line escapes:
+    <pre>char const *error_page = 
+  "&lt;html>\n"
+  "  &lt;head>&lt;title>404 Not Found&lt;/title>&lt;/head>\n"
+  "  &lt;body>\n"
+  "    &lt;h1>404 Not Found&lt;/h1>\n"
+  "  &lt;/body>\n"
+  "&lt;/html>\n";</pre>
+    <h2>Escape Sequences</h2>
+    <p>
+        There are other escape sequences like the new line (\n) escape 
+        sequence.  The most commonly used ones are:
+    <table class=data_table>
+        <tr>
+            <th>escape sequence</th><th>name</th><th>ASCII value</th>
+        </tr>
+        <tr>
+            <td><code>\n</code></td><td>new line or line feed</td><td>10</td>
+        </tr>
+        <tr>
+            <td><code>\r</code></td><td>carriage return</td><td>13</td>
+        </tr>
+        <tr>
+            <td><code>\t</code></td><td>tab</td><td>9</td>
+        </tr>
+        <tr>
+            <td><code>\"</code></td><td>double quote</td><td>34</td>
+        </tr>
+        <tr>
+            <td><code>\\</code></td><td>backslash</td><td>92</td>
+        </tr>
+    </table>
+    <p>
+        Each of these escape sequences requires two characters in the string 
+        literal, but becomes only one character in the string when the program 
+        is compiled.
+    <h2>Octal Escape Sequences</h2>
+    <p>
+        If you wish to specify an arbitrary byte value in a string literal, you 
+        can use an <em>octal escape sequence</em>.  Octal escape sequences 
+        begin with a backslash (\) like normal escapes, but the backslash is 
+        followed by an octal (base 8) number instead of a letter or punctuation 
+        mark.
+    <pre>// octal escape sequence examples
+char const *bell = "\7";  // ASCII code 7 (bell)
+char const *bs = "\10";   // ASCII code 8 (backspace)
+char const *del = "\177"; // ASCII code 127 (delete)</pre>
+    <p>
+        The octal numbers in escape sequences are limited to three digits; you 
+        can pad short octal numbers with leading zeros:
+    <pre>char const *bell = "\007";</pre>
+    <p>
+        which is handy to format a long sequence of octal escapes.  Also note 
+        that octal numbers must be between 0 and 255.  Octal escapes greater 
+        than 255 (377 octal) will be interpreted in a surprising way:
+    <pre>// max octal value is 377 (255 decimal)
+char const *two55 = "\377";
+NSLog(@"length = %u", strlen(two55));
+NSLog(@"first char = %u", (unsigned char)two55[0]);
+// prints: 
+//   length = 1
+//   first char = 255
+
+// octal value of 378 (256 decimal) isn't a valid escape
+char const *two56 = "\378";
+NSLog(@"length = %u", strlen(two56));
+NSLog(@"first char = %u", (unsigned char)two56[0]);
+NSLog(@"second char = %u", (unsigned char)two56[1]);
+// prints:
+//   length = 2
+//   first char = 31 <em>(octal 37)</em>
+//   second char = 56 <em>(ASCII code for '8')</em></pre>
+    <p>
+        Because the compiler will try to read up to three octal digits, an 
+        octal escape with fewer than three digits can sometimes have an 
+        unexpected interpretation.  For example, embedding a form feed 
+        character (ASCII code 12, octal 14) at the start of this string 
+        produces the expected string:
+    <pre>char const *heading = "\14Preface";
+
+NSLog(@"first char = %u", (unsigned char)title[0]);
+NSLog(@"second char = %u", (unsigned char)title[1]);
+// prints:
+//   first char = 12 <em>(form feed, octal value 14)</em>
+//   second char = 80 <em>(ASCII code for 'P')</em></pre>
+    <p>
+        But if the character directly after '\14' is a valid octal digit, the 
+        compiler produces something unintended:
+    <pre>char const *heading = "\141. Introduction";
+
+NSLog(@"first char = %u", (unsigned char)title[0]);
+NSLog(@"second char = %u", (unsigned char)title[1]);
+// prints:
+//   first char = 97 <em>(octal value 141)</em>
+//   second char = 46 <em>(ASCII code for '.')</em></pre>
+    <p>
+        The heading number '1' is a valid octal digit, so the compiler assumes 
+        it's part of the octal escape.  There are several ways to prevent this. 
+         You can use an escape sequence to specify the ambiguous character, 
+        break the string into parts, or simply pad the octal number with 
+        leading zeros.
+    <pre>// dealing with ambiguous octal escapes
+
+// replace possible octal characters with escapes
+char const *heading1 = "\14\61. Introduction"; // '\61' is octal escape for '1'
+
+// pad octal escape to three digits
+char const *heading2 = "\0141. Introduction"; // unambiguous
+
+// break string into parts
+char const *heading3 = "\14" "1. Introduction"; // easier to read</pre>
+    <h2>Hexadecimal Escape Sequences</h2>
+    <p>
+        Hexadecimal numbers can also be used in escape sequences to specify an 
+        arbitrary byte value.  Hexadecimal escape sequences begin with a 
+        backslash (\) followed by 'x' and one or more hexadecimal (base 16) 
+        numbers.  Note that the 'x' must be lower case.  Like octal escapes, 
+        you can pad hexadecimal escapes with leading zeros.
+    <pre>// hexadecimal escape sequence examples
+char const *tab = "\x09";    // ASCII code 9 (horizontal tab)
+char const *newline = "\xA"; // ASCII code 10 (new line/line feed)
+char const *del = "\x7f";    // ASCII code 127 (delete)</pre>
+    <p>
+        The upper hexadecimal digits (represented by A through F) can be upper 
+        or lower case.
+    <p>
+        Like octal escapes, hexadecimal escapes have a gotcha: the compiler 
+        will interpret every valid hex digit after the "\x" as part of the 
+        hexadecimal escape.  For example, embedding a form feed character 
+        (ASCII code 12) at the start of this string works as expected:
+    <pre>char const *title = "\xcThe C Language";
+
+NSLog(@"first char = %u", (unsigned char)title[0]);
+NSLog(@"second char = %u", (unsigned char)title[1]);
+// prints:
+//   first char = 12 <em>(form feed, hex value c)</em>
+//   second char = 84 <em>(ASCII code for 'T')</em></pre>
+    <p>
+        Since 'T' isn't a valid hex digit, the compiler figures out that the 
+        first character is '\xc'.  The following string doesn't work as 
+        expected:
+    <pre>char const *title = "\xcC Language Primer";
+
+NSLog(@"first char = %u", (unsigned char)title[0]);
+NSLog(@"second char = %u", (unsigned char)title[1]);
+// prints:
+//   first char = 204 <em>(hex value cc)</em>
+//   second char = 32 <em>(ASCII code for space)</em></pre>
+    <p>
+        Since 'C' is a valid hex digit, the compiler sees the first character 
+        as '\xcC' (cc in hex, 204 in decimal) and the second character as the 
+        space after the 'C'.  To prevent this, you can replace any ambiguous 
+        character with an escape sequence, or better yet simply break the 
+        string into parts.
+    <pre>// dealing with ambiguous hexadecimal escapes
+
+// replace possible hex characters with escapes
+char const *title1 = "\xc\103 Language Primer"; // '\103' is octal escape for 'C'
+
+// break string into parts
+char const *title2 = "\xc" "C Language Primer"; // much easier to read</pre>
+    <p>
+        As in octal escapes, the hexadecimal number in a hexadecimal escape is 
+        limited to the range of 0 through 255.  If you specify a hexadecimal 
+        escape sequence larger than 255, the compiler will emit a "hex escape 
+        sequence out of range" warning.
+    <p>
+        Next time we will continue our look at string literals by examining 
+        <a href=/objective-c_tuesdays/unicode_string_literals.html>Unicode 
+        escape sequences</a>.
+    <footer>
+        <a href=http://blog.ablepear.com/2010/07/objective-c-tuesdays-string-literals.html><em>Objective-C 
+        Tuesdays: string literals</em></a> was originally published on 
+        <time datetime=2010-07-13>2010-07-13</time>.
+    </footer>
+</section>
