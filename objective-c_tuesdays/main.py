@@ -80,9 +80,9 @@ def print_style_blocks(pages: List[Page], brief=False):
 
 def print_tags(pages: List[Page], tag: str):
     for page in pages:
-        img_tags = page.document.find_all(tag)
-        if img_tags:
-            print(f'Found {len(img_tags)} <{tag}> tags in {page.title}')
+        tags = page.document.find_all(tag)
+        if tags:
+            print(f'Found {len(tags)} <{tag}> tags in {page.title}')
 
 
 def set_topics(pages: List[Page]):

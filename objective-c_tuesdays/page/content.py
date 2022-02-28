@@ -20,6 +20,7 @@ class Content:
         self.nodes = clean_a_tags(self.nodes, self.url_map)
         self.nodes = clean_div_tags(self.nodes)
         self.nodes = clean_pre_tags(self.nodes)
+        self.nodes = clean_p_tags(self.nodes)
         self.nodes = transform_i_tags(self.nodes)
         self.nodes = transform_u_tags(self.nodes)
 
@@ -49,25 +50,31 @@ def clean_div_tags(nodes: List[PageElement]) -> List[PageElement]:
 
 
 def clean_pre_tags(nodes: List[PageElement]) -> List[PageElement]:
-
-    def br_tags_to_new_lines(element: Tag):
-        for child in element.children:
-            if isinstance(child, Tag):
-                if child.name == 'br':
-                    child.replace_with('\n')
-                else:
-                    br_tags_to_new_lines(child)
-
     new_nodes = []
     for node in nodes:
         if is_tag(node, 'pre'):
             pre: Tag = node
             br_tags_to_new_lines(pre)
             remove_class(pre, 'prettyprint')
+            b_tags = pre.find_all('b')
+            for b in b_tags:
+                b.name = 'mark'
             if pre.contents and isinstance(pre.contents[0], NavigableString):
                 pre.contents[0].replace_with(str(pre.contents[0]).lstrip())
             if pre.contents and isinstance(pre.contents[-1], NavigableString):
                 pre.contents[-1].replace_with(str(pre.contents[-1]).rstrip())
+        new_nodes.append(node)
+    return new_nodes
+
+
+def clean_p_tags(nodes: List[PageElement]) -> List[PageElement]:
+    new_nodes = []
+    for node in nodes:
+        if is_tag(node, 'p'):
+            p: Tag = node
+            b_tags = p.find_all('b')
+            for b in b_tags:
+                b.name = 'strong'
         new_nodes.append(node)
     return new_nodes
 
@@ -158,6 +165,15 @@ def is_block(node: PageElement) -> bool:
 
 def is_tag(node: PageElement, name: str) -> bool:
     return isinstance(node, Tag) and node.name == name
+
+
+def br_tags_to_new_lines(element: Tag):
+    for child in element.children:
+        if isinstance(child, Tag):
+            if child.name == 'br':
+                child.replace_with('\n')
+            else:
+                br_tags_to_new_lines(child)
 
 
 def to_p(document: BeautifulSoup, nodes: List[PageElement]) -> Tag:
