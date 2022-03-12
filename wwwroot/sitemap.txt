@@ -5,6 +5,7 @@ https://donm.cc/hashtables/
 https://donm.cc/macos_packages/
 https://donm.cc/make/
 https://donm.cc/memory_match/
+https://donm.cc/objective-c_tuesdays/
 https://donm.cc/objective-c_tuesdays/arrays.html
 https://donm.cc/objective-c_tuesdays/at-property_and_at-synthesize.html
 https://donm.cc/objective-c_tuesdays/atomic_and_nonatomic_properties.html

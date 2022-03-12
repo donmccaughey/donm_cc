@@ -1,0 +1,49 @@
+#memory_match {
+    background: white;
+    color: black;
+}
+
+@media (prefers-color-scheme: dark) {
+    #memory_match {
+        background: black;
+        color: white;
+    }
+}
+
+#options {
+    background: white;
+    border: 1pt solid black;
+    color: black;
+}
+
+@media (prefers-color-scheme: dark) {
+    #options {
+        background: black;
+        border: 1pt solid white;
+        color: white;
+    }
+}
+
+#status {
+    background: rgba(255, 255, 255, 0.9); /* white */
+    border-top: 1pt solid silver;
+}
+
+@media (prefers-color-scheme: dark) {
+    #status {
+        background: rgba(0, 0, 0, 0.9); /* black */
+        border-top: 1pt solid gray;
+    }
+}
+
+#first_title, #second_title, #tries, #clock {
+    background: white;
+    color: black;
+}
+
+@media (prefers-color-scheme: dark) {
+    #first_title, #second_title, #tries, #clock {
+        background: black;
+        color: white;
+    }
+}

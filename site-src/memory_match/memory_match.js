@@ -577,9 +577,7 @@ function Container(id, game) {
     this.id = id;
     var $container = this.$();
     $container.css({
-        background: 'white',
         border: 0,
-        color: 'black',
         font: '12pt Helvetica, Arial, sans-serif',
         margin: 0,
         padding: '1em'
@@ -600,8 +598,6 @@ function Options($container, width, horizontalTileCount, verticalTileCount) {
     var $options = $('<div/>')
         .attr( {id: this.id} )
         .css({
-            background: 'white',
-            border: '1pt solid black',
             display: 'none',
             margin: '1em',
             padding: '1em',
@@ -667,10 +663,8 @@ function Status(container, width) {
     var $status = $('<div/>')
         .attr( {id: this.id} )
         .css({
-            background: 'rgba(255, 255, 255, 0.9)', // white
             bottom: '0px',
             border: 0,
-            borderTop: '1pt solid silver',
             left: '0px',
             margin: 0,
             padding: '0.5em',
@@ -680,7 +674,6 @@ function Status(container, width) {
         })
         .appendTo(container.$());
     var tileLabelCss = {
-            background: 'white',
             border: 0,
             display: 'inline-block',
             margin: 0,
@@ -697,7 +690,6 @@ function Status(container, width) {
     $('<div/>')
         .attr( {id: 'tries'} )
         .css({
-            background: 'white',
             display: 'inline-block',
             padding: '0 1em',
         })
@@ -705,7 +697,6 @@ function Status(container, width) {
     $('<div/>')
         .attr( {id: 'clock'} )
         .css({
-            background: 'white',
             display: 'inline-block',
             padding: '0 1em',
         })
@@ -791,6 +782,7 @@ Tile.prototype.flipUp = function() {
     var $face = $('<span>')
         .css({
             border: 0,
+            color: 'black',
             display: 'inline-block',
             font: 'bold 16px Verdana, Arial, sans-serif',
             lineHeight: px(32),

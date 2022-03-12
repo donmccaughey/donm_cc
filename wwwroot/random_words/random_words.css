@@ -9,16 +9,21 @@
     margin: 0;
 }
 
+@media (prefers-color-scheme: dark) {
+    #random_words {
+        background: dimgray;
+    }
+}
+
 #random_words {
     padding: 1em 2em;
 }
 
 #random_words ol {
     margin: 0;
-    padding: 0em 0em 0em 1em;
+    padding: 0 0 0 1em;
 }
 
 .generator {
     border: thin solid darkgrey;
 }
-
