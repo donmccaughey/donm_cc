@@ -5,7 +5,6 @@
 - accumulate links from static HTML files -- maybe subclass `File` to `HTMLFile`?
 - add link checking for internal links
 - add link checking for `sitemap.txt`
-- rework macOS packages page
 - add resume HTML page
   - update PDF resume
   - generate text resume

@@ -8,7 +8,7 @@ def package(
         package: str,
         source: str,
         project: str,
-        description: str, # markdown
+        description: str,  # markdown
 ):
     with Section(class_names=['package']):
         H1(f'{name} {version}')
