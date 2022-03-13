@@ -5,7 +5,8 @@ from website.packages import package
 
 def macos_packages():
     with Directory('macos_packages'):
-        with Page('macOS Packages', name='index'):
+        with Page('macOS Packages', name='index') as page:
+            page.add_stylesheet('macos_packages.css')
             with Section(class_names=['overview']):
                 H1('Signed and Notarized Universal macOS Installer Packages')
                 with P():
@@ -26,7 +27,7 @@ def macos_packages():
                 package='https://github.com/donmccaughey/jq_pkg/releases/latest/download/jq-1.6.pkg',
                 source='https://github.com/donmccaughey/jq_pkg',
                 project='https://stedolan.github.io/jq/',
-                description='A lightweight and flexible command line JSON processor'
+                description='A lightweight and flexible command line JSON processor.'
             )
             package(
                 name='nginx',
@@ -34,7 +35,7 @@ def macos_packages():
                 package='https://github.com/donmccaughey/nginx_pkg/releases/latest/download/nginx-1.20.2.pkg',
                 source='https://github.com/donmccaughey/nginx_pkg',
                 project='https://nginx.org',
-                description='A widely used and capable HTTP and proxy server'
+                description='A widely used and capable HTTP and proxy server.'
             )
             package(
                 name='pkg-config',

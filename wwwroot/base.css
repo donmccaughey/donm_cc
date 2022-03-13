@@ -427,50 +427,6 @@ time {
     text-align: center;
 }
 
-.package {
-    background: whitesmoke;
-    border: 1pt solid whitesmoke;
-    border-radius: 4px;
-    margin-bottom: 2em;
-    padding: 0 2em;
-}
-
-.package .item {
-    background: white;
-    border: 1pt solid white;
-    margin-top: 0;
-}
-
-.package .item:hover {
-    border: 1pt solid black;
-}
-
-.package .item .favicon {
-    background: white;
-    border: 1pt solid white;
-}
-
-@media (prefers-color-scheme: dark) {
-    .package {
-        background: dimgray;
-        border: 1pt solid dimgray;
-    }
-
-    .package .item {
-        background: black;
-        border: 1pt solid black;
-    }
-
-    .package .item:hover {
-        border: 1pt solid white;
-    }
-
-    .package .item .favicon {
-        background: black;
-        border: 1pt solid black;
-    }
-}
-
 .title {
     font: 14pt Helvetica, Arial, sans-serif;
 }

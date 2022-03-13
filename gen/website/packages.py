@@ -1,5 +1,5 @@
 from markdown import inline_markdown_to_markup
-from markup import Section, H1, P, Ul, Li, A, Img, Strong
+from markup import Section, H1, P, Ul, Li, A, Img, Strong, Text
 
 
 def package(
@@ -14,16 +14,14 @@ def package(
         H1(f'{name} {version}')
         with P():
             inline_markdown_to_markup(description)
-        with Ul(class_names=['collection']):
-            with Li(class_names=['item']):
+        with Ul():
+            with Li(class_names=['installer']):
                 with A(package):
-                    Img('./package-32x32.png', 'package icon', class_names=['favicon'])
-                    Strong('package')
-            with Li(class_names=['item']):
+                    Strong(f'{name} {version} installer package')
+            with Li():
                 with A(source):
-                    Img('./source-32x32.png', 'source icon', class_names=['favicon'])
-                    Strong('source')
-            with Li(class_names=['item']):
+                    inline_markdown_to_markup(f'build script for the **{name}** installer package')
+            with Li():
                 with A(project):
-                    Img('./project-32x32.png', 'project icon', class_names=['favicon'])
-                    Strong('project')
+                    Strong(name)
+                    Text(' project website')

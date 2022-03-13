@@ -1,0 +1,23 @@
+.package {
+    background: whitesmoke;
+    border: 1pt solid whitesmoke;
+    border-radius: 4px;
+    margin-bottom: 2em;
+    padding: 0 2em;
+}
+
+@media (prefers-color-scheme: dark) {
+    .package {
+        background: dimgray;
+        border: 1pt solid dimgray;
+    }
+}
+
+.package li.installer {
+    list-style-type: '\1f4e6';
+    padding-left: 1ex;
+}
+
+.package li.installer strong {
+    font-size: 16pt;
+}
