@@ -1,0 +1,28 @@
+<!doctype html>
+<html lang=en>
+<meta charset=utf-8>
+<meta name=viewport content='initial-scale=0.9, width=device-width'>
+<title>Maze</title>
+<link rel=stylesheet href=/base.css>
+<script>
+    const wasm = import('./maze.wasm');
+    wasm.then(module => {
+        const maze = module.generate_maze(20, 10);
+        const container = document.getElementById('maze');
+        container.textContent = 'Hello';
+    });
+    // document.addEventListener('DOMContentLoaded', (event) => {
+    // });
+</script>
+<style>
+    #maze {
+        background: whitesmoke;
+        padding: 1em;
+        width: auto;
+    }
+</style>
+<nav class=menu>
+    <a href=/ >Don McCaughey</a>
+</nav>
+<pre id=maze>
+</pre>

@@ -6,11 +6,13 @@ edition = "2021"
 [lib]
 name = "maze"
 path = "src/lib.rs"
+crate-type = ["cdylib", "lib"]
 
 [[bin]]
 name = "maze"
 path = "src/main.rs"
 
 [dependencies]
-getrandom = "0.2.5"
+getrandom = { version = "0.2.5", features = ["js"] }
 oorandom = "11.1.3"
+wasm-bindgen = "0.2.79"

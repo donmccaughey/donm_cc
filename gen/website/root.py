@@ -18,6 +18,7 @@ with root:
     Directory('engineering_management')
     Directory('hashtables')
     Directory('make')
+    Directory('maze')
     Directory('objective-c_tuesdays')
     Directory('resume')
     Directory('shell')

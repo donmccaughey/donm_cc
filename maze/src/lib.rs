@@ -1,9 +1,11 @@
-use std::fmt::{Display, Formatter, LowerHex, Write};
+use std::fmt::{Display, Formatter};
 use std::time::{SystemTime, UNIX_EPOCH};
 use getrandom::getrandom;
 use oorandom::Rand32;
+use wasm_bindgen::prelude::*;
 
 
+#[wasm_bindgen]
 pub fn generate_maze(width: i16, height: i16) -> String {
     let mut maze = Maze::new(width, height);
     maze.generate();
