@@ -1,0 +1,21 @@
+#maze {
+    background: whitesmoke;
+    color: black;
+    font: 11pt ui-monospace, monospace;
+    line-height: 100%;
+    margin: 2em 1em;
+    padding: 2em 1em;
+    text-align: center;
+    width: auto;
+}
+
+@media (prefers-color-scheme: dark) {
+    #maze {
+        background: dimgray;
+        color: white;
+    }
+}
+
+.generator h1 {
+    text-align: center;
+}

@@ -8,11 +8,29 @@ use crate::Fill::{Open, Solid};
 use crate::Orientation::{Horizontal, Vertical};
 
 
+/// Generate a seed.  Use the best available operating system source, via
+/// the [getrandom](https://crates.io/crates/getrandom) crate.  Fall back
+/// to the system time and finally an arbitrary seed on errors.
+#[wasm_bindgen] 
+pub fn generate_seed() -> u64 {
+    let mut seed_bytes = [0u8; 8];
+    let value: u64;
+    if let Ok(_) = getrandom(&mut seed_bytes) {
+        value = u64::from_le_bytes(seed_bytes);
+    } else if let Ok(unix_timestamp) = SystemTime::now().duration_since(UNIX_EPOCH) {
+        value = unix_timestamp.as_micros() as u64;
+    } else {
+        value = 8015536314858786381;
+    };
+    value
+}
+
+
 #[wasm_bindgen]
-pub fn generate_maze(width: i16, height: i16, output: &str) -> String {
-    let mut maze = Maze::new(width, height);
+pub fn generate_maze(width: i16, height: i16, seed: u64, format: &str) -> String {
+    let mut maze = Maze::new(width, height, seed);
     maze.generate();
-    if "unicode" == output {
+    if "unicode" == format {
         UnicodeRenderer::new(&maze).to_string()
     } else {
         AsciiRenderer::new(&maze).to_string()
@@ -20,51 +38,17 @@ pub fn generate_maze(width: i16, height: i16, output: &str) -> String {
 }
 
 
-/// A value for seeding the pseudorandom number generator.
-#[derive(Copy, Clone, Debug)]
-struct Seed {
-    value: u64,
-}
-
-
-impl Seed {
-    /// Generate a seed.  Use the best available operating system source, via
-    /// the [getrandom](https://crates.io/crates/getrandom) crate.  Fall back
-    /// to the system time and finally an arbitrary seed on errors.
-    fn new() -> Self {
-        let mut seed_bytes = [0u8; 8];
-        let value: u64;
-        if let Ok(_) = getrandom(&mut seed_bytes) {
-            value = u64::from_le_bytes(seed_bytes);
-        } else if let Ok(unix_timestamp) = SystemTime::now().duration_since(UNIX_EPOCH) {
-            value = unix_timestamp.as_micros() as u64;
-        } else {
-            value = 8015536314858786381;
-        };
-        Seed { value }
-    }
-}
-
-
-impl Display for Seed {
-    fn fmt(&self, f: &mut Formatter<'_>) -> std::fmt::Result {
-        write!(f, "{}", self.value)
-    }
-}
-
-
-/// A pseudorandom number generator.  Wraps a [Seed] and
+/// A pseudorandom number generator.  Wraps a seed value and
 /// [oorandom](https://crates.io/crates/oorandom)'s [Rand32].
 struct Randomizer {
-    seed: Seed,
+    seed: u64,
     rand32: Rand32,
 }
 
 
 impl Randomizer {
-    fn new() -> Self {
-        let seed = Seed::new();
-        let rand32 = Rand32::new(seed.value);
+    fn new(seed: u64) -> Self {
+        let rand32 = Rand32::new(seed);
         Randomizer { seed, rand32 }
     }
 
@@ -341,12 +325,12 @@ struct Maze {
 
 
 impl Maze {
-    fn new(width: i16, height: i16) -> Self {
+    fn new(width: i16, height: i16, seed: u64) -> Self {
         let grid_width = 2 * width + 1;
         let grid_height = 2 * height + 1;
         Self {
             grid: Grid::new(grid_width, grid_height),
-            randomizer: Randomizer::new(),
+            randomizer: Randomizer::new(seed),
             width,
             height,
         }

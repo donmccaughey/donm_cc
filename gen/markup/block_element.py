@@ -200,6 +200,24 @@ class P(BlockElement):
             return True
 
 
+class Pre(BlockElement):
+    def __init__(
+            self,
+            text: Optional[str] = None,
+            class_names: Optional[list[str]] = None,
+            parent: Optional[Node] = None,
+            **kwargs,
+    ):
+        super().__init__(
+            name='pre',
+            class_names=class_names,
+            parent=parent,
+            **kwargs,
+        )
+        if text:
+            Text(text, parent=self)
+
+
 class Section(BlockElement):
     def __init__(
             self,
