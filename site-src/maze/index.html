@@ -10,7 +10,7 @@
 
     async function run() {
         await wasm_bindgen('maze_bg.wasm');
-        const maze = generate_maze(20, 10);
+        const maze = generate_maze(20, 20);
         const pre = document.getElementById('maze');
         pre.textContent = maze;
     }
@@ -20,12 +20,21 @@
 <style>
     #maze {
         background: whitesmoke;
-        padding: 1em;
+        font: 11pt ui-monospace, monospace;
+        line-height: 100%;
+        margin: 2em 1em;
+        padding: 2em 1em;
+        text-align: center;
         width: auto;
     }
 </style>
 <nav class=menu>
     <a href=/ >Don McCaughey</a>
 </nav>
-<pre id=maze>
-</pre>
+<section class=overview>
+    <h1>Maze</h1>
+</section>
+<section class=generator>
+    <pre id=maze></pre>
+</section>
+

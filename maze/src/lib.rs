@@ -9,11 +9,12 @@ use wasm_bindgen::prelude::*;
 pub fn generate_maze(width: i16, height: i16) -> String {
     let mut maze = Maze::new(width, height);
     maze.generate();
-    let ascii = Ascii::new(&maze);
-    ascii.to_string()
+    let renderer = AsciiRenderer::new(&maze);
+    renderer.to_string()
 }
 
 
+/// A value for seeding the pseudorandom number generator.
 #[derive(Copy, Clone, Debug)]
 struct Seed {
     value: u64,
@@ -21,6 +22,9 @@ struct Seed {
 
 
 impl Seed {
+    /// Generate a seed.  Use the best available operating system source, via
+    /// the [getrandom](https://crates.io/crates/getrandom) crate.  Fall back
+    /// to the system time and finally an arbitrary seed on errors.
     fn new() -> Self {
         let mut seed_bytes = [0u8; 8];
         let value: u64;
@@ -43,6 +47,8 @@ impl Display for Seed {
 }
 
 
+/// A pseudorandom number generator.  Wraps a [Seed] and
+/// [oorandom](https://crates.io/crates/oorandom)'s [Rand32].
 struct Randomizer {
     seed: Seed,
     rand32: Rand32,
@@ -56,6 +62,7 @@ impl Randomizer {
         Randomizer { seed, rand32 }
     }
 
+    /// Choose one element randomly from a [Vec].
     fn choose_one<E: Copy>(&mut self, vector: Vec<E>) -> E {
         let count = vector.len() as u32;
         let i = self.rand32.rand_range(0..count) as usize;
@@ -67,6 +74,12 @@ impl Randomizer {
 #[derive(Copy, Clone, Debug)]
 enum CellStatus {
     Empty, Visited,
+}
+
+
+#[derive(Copy, Clone, Debug)]
+enum Orientation {
+    Horizontal, Vertical,
 }
 
 
@@ -103,6 +116,10 @@ impl ElementType {
 
     fn is_visited(&self) -> bool {
         matches!(self, Self::Cell { status: CellStatus::Visited })
+    }
+
+    fn is_wall(&self) -> bool {
+        matches!(self,Self::HorizontalWall | Self::VerticalWall)
     }
 
     fn new(x: i16, y: i16) -> ElementType {
@@ -212,23 +229,55 @@ impl Grid {
         self.set(element.x, element.y, element);
     }
 
-    fn orthogonal_neighbors(&self, x: i16, y: i16, distance: i16) -> Vec<Element> {
-        let mut neighbors = Vec::new();
+    fn get_left_neighbor(&self, x: i16, y: i16, distance: i16) -> Option<Element> {
         let left = x - distance;
         if left >= 0 {
-            neighbors.push(self.get(left, y));
+            Some(self.get(left, y))
+        } else {
+            None
         }
+    }
+
+    fn get_right_neighbor(&self, x: i16, y: i16, distance: i16) -> Option<Element> {
         let right = x + distance;
         if right < self.width {
-            neighbors.push(self.get(right, y));
+            Some(self.get(right, y))
+        } else {
+            None
         }
-        let above = y - distance;
-        if above >= 0 {
-            neighbors.push(self.get(x, above));
+    }
+
+    fn get_top_neighbor(&self, x: i16, y: i16, distance: i16) -> Option<Element> {
+        let top = y - distance;
+        if top >= 0 {
+            Some(self.get(x, top))
+        } else {
+            None
         }
-        let below = y + distance;
-        if below < self.height {
-            neighbors.push(self.get(x, below));
+    }
+
+    fn get_bottom_neighbor(&self, x: i16, y: i16, distance: i16) -> Option<Element> {
+        let bottom = y + distance;
+        if bottom < self.height {
+            Some(self.get(x, bottom))
+        } else {
+            None
+        }
+    }
+
+    fn orthogonal_neighbors(&self, x: i16, y: i16, distance: i16) -> Vec<Element> {
+        let mut neighbors = Vec::new();
+        if let Some(neighbor) = self.get_left_neighbor(x, y, distance) {
+            neighbors.push(neighbor);
+        }
+        if let Some(neighbor) = self.get_top_neighbor(x, y, distance) {
+            neighbors.push(neighbor);
+        }
+        if let Some(neighbor) = self.get_right_neighbor(x, y, distance) {
+            neighbors.push(neighbor);
+        }
+        if let Some(neighbor) = self.get_bottom_neighbor(x, y, distance) {
+            neighbors.push(neighbor);
         }
         neighbors
     }
@@ -343,19 +392,161 @@ impl Maze {
 }
 
 
-struct Ascii<'m> {
+const HLINE: char = '\u{2500}';
+const VLINE: char = '\u{2502}';
+
+// Four-way intersection: Left, Top, Right, Bottom
+const LTRB: char = '\u{253c}'; // ┼
+
+// Three-way intersections
+const LTR: char = '\u{2534}'; // ┴
+const TRB: char = '\u{251c}'; // ├
+const RBL: char = '\u{252c}'; // ┬
+const BLT: char = '\u{2524}'; // ┤
+
+// Two-way intersections
+const LT: char = '\u{2518}'; // ┘
+const TR: char = '\u{2514}'; // └
+const RB: char = '\u{250c}'; // ┌
+const BL: char = '\u{2510}'; // ┐
+
+
+fn is_wall(element: Option<Element>) -> bool {
+    if let Some(element) = element {
+        element.element_type.is_wall()
+    } else {
+        false
+    }
+}
+
+
+fn ascii_char_for_intersection(grid: &Grid, x: i16, y: i16) -> char {
+    let left = is_wall(grid.get_left_neighbor(x, y, 1));
+    let top = is_wall(grid.get_top_neighbor(x, y, 1));
+    let right = is_wall(grid.get_right_neighbor(x, y, 1));
+    let bottom = is_wall(grid.get_bottom_neighbor(x, y, 1));
+
+    // four-way intersection
+    if left && top && right && bottom {
+        return '+';
+    }
+
+    // three-way intersections
+    if left && top && right {
+        return '+';
+    }
+    if top && right && bottom {
+        return '+';
+    }
+    if right && bottom && left {
+        return '+';
+    }
+    if bottom && left && top {
+        return '+';
+    }
+
+    // two-way intersections
+    if left && top {
+        return '+';
+    }
+    if top && right {
+        return '+';
+    }
+    if right && bottom {
+        return '+';
+    }
+    if bottom && left {
+        return '+';
+    }
+    if left && right {
+        return '-';
+    }
+    if top && bottom {
+        return '|';
+    }
+
+    // one-way intersection
+    if left || right {
+        return '-';
+    }
+    if top || bottom {
+        return '|';
+    }
+
+    '+'
+}
+
+
+fn unicode_char_for_intersection(grid: &Grid, x: i16, y: i16) -> char {
+    let left = is_wall(grid.get_left_neighbor(x, y, 1));
+    let top = is_wall(grid.get_top_neighbor(x, y, 1));
+    let right = is_wall(grid.get_right_neighbor(x, y, 1));
+    let bottom = is_wall(grid.get_bottom_neighbor(x, y, 1));
+
+    // four-way intersection
+    if left && top && right && bottom {
+        return LTRB;
+    }
+
+    // three-way intersections
+    if left && top && right {
+        return LTR;
+    }
+    if top && right && bottom {
+        return TRB;
+    }
+    if right && bottom && left {
+        return RBL;
+    }
+    if bottom && left && top {
+        return BLT;
+    }
+
+    // two-way intersections
+    if left && top {
+        return LT;
+    }
+    if top && right {
+        return TR;
+    }
+    if right && bottom {
+        return RB;
+    }
+    if bottom && left {
+        return BL;
+    }
+    if left && right {
+        return HLINE;
+    }
+    if top && bottom {
+        return VLINE;
+    }
+
+    // one-way intersection
+    if left || right {
+        return HLINE;
+    }
+    if top || bottom {
+        return VLINE;
+    }
+
+    '*'
+}
+
+
+struct AsciiRenderer<'m> {
     maze: &'m Maze,
 }
 
 
-impl<'m> Ascii<'m> {
+impl<'m> AsciiRenderer<'m> {
     fn new(maze: &'m Maze) -> Self {
         Self { maze }
     }
 }
 
 
-impl<'m> Display for Ascii<'m> {
+impl<'m> Display for AsciiRenderer<'m> {
     fn fmt(&self, f: &mut Formatter<'_>) -> std::fmt::Result {
         for y in 0..self.maze.grid.height {
             for x in 0..self.maze.grid.width {
@@ -366,7 +557,44 @@ impl<'m> Display for Ascii<'m> {
                     ElementType::VerticalOpening => f.write_str(" ")?,
                     ElementType::HorizontalWall => f.write_str("--")?,
                     ElementType::VerticalWall => f.write_str("|")?,
-                    ElementType::Intersection => f.write_str("+")?,
+                    ElementType::Intersection => {
+                        write!(f, "{}", ascii_char_for_intersection(&self.maze.grid, x, y))?
+                    },
+                }
+            }
+            f.write_str("\n")?;
+        }
+        Ok(())
+    }
+}
+
+
+struct UnicodeRenderer<'m> {
+    maze: &'m Maze,
+}
+
+
+impl<'m> UnicodeRenderer<'m> {
+    fn new(maze: &'m Maze) -> Self {
+        Self { maze }
+    }
+}
+
+
+impl<'m> Display for UnicodeRenderer<'m> {
+    fn fmt(&self, f: &mut Formatter<'_>) -> std::fmt::Result {
+        for y in 0..self.maze.grid.height {
+            for x in 0..self.maze.grid.width {
+                let element = self.maze.grid.get(x, y);
+                match element.element_type {
+                    ElementType::Cell { .. } => f.write_str("  ")?,
+                    ElementType::HorizontalOpening => f.write_str("  ")?,
+                    ElementType::VerticalOpening => f.write_str(" ")?,
+                    ElementType::HorizontalWall => f.write_str("\u{2500}\u{2500}")?,
+                    ElementType::VerticalWall => f.write_str("\u{2502}")?,
+                    ElementType::Intersection => {
+                        write!(f, "{}", unicode_char_for_intersection(&self.maze.grid, x, y))?
+                    },
                 }
             }
             f.write_str("\n")?;
