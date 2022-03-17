@@ -3,14 +3,20 @@ use std::time::{SystemTime, UNIX_EPOCH};
 use getrandom::getrandom;
 use oorandom::Rand32;
 use wasm_bindgen::prelude::*;
+use crate::ElementType::{Boundary, Cell, Intersection};
+use crate::Fill::{Open, Solid};
+use crate::Orientation::{Horizontal, Vertical};
 
 
 #[wasm_bindgen]
-pub fn generate_maze(width: i16, height: i16) -> String {
+pub fn generate_maze(width: i16, height: i16, output: &str) -> String {
     let mut maze = Maze::new(width, height);
     maze.generate();
-    let renderer = AsciiRenderer::new(&maze);
-    renderer.to_string()
+    if "unicode" == output {
+        UnicodeRenderer::new(&maze).to_string()
+    } else {
+        AsciiRenderer::new(&maze).to_string()
+    }
 }
 
 
@@ -78,36 +84,31 @@ enum CellStatus {
 
 
 #[derive(Copy, Clone, Debug)]
+enum Fill {
+    Open, Solid,
+}
+
+
+#[derive(Copy, Clone, Debug)]
 enum Orientation {
     Horizontal, Vertical,
 }
 
 
-/// An `Element` represents a wall or open space in the maze map.  Walls can be
-/// horizontal, vertical or the intersection of horizontal and vertical walls.
-///
-///      01234
-///    0 +-+-+
-///    1 | | |
-///    2 +-+-+
-///
 #[derive(Copy, Clone, Debug)]
 enum ElementType {
     Cell { status: CellStatus },
-    HorizontalOpening,
-    VerticalOpening,
-    HorizontalWall,
-    VerticalWall,
+    Boundary {
+        fill: Fill,
+        orientation: Orientation,
+    },
     Intersection,
 }
 
 
 impl ElementType {
     fn is_boundary(&self) -> bool {
-        matches!(self,
-            Self::HorizontalWall | Self::VerticalWall
-            | Self::HorizontalOpening | Self::VerticalOpening
-        )
+        matches!(self, Self::Boundary { fill: _, orientation: _ })
     }
 
     fn is_cell(&self) -> bool {
@@ -119,7 +120,7 @@ impl ElementType {
     }
 
     fn is_wall(&self) -> bool {
-        matches!(self,Self::HorizontalWall | Self::VerticalWall)
+        matches!(self, Self::Boundary { fill: Solid, orientation: _ })
     }
 
     fn new(x: i16, y: i16) -> ElementType {
@@ -127,11 +128,11 @@ impl ElementType {
             if x % 2 == 0 {
                 Self::Intersection
             } else {
-                Self::HorizontalWall
+                Self::Boundary { fill: Solid, orientation: Horizontal }
             }
         } else {
             if x % 2 == 0 {
-                Self::VerticalWall
+                Self::Boundary { fill: Solid, orientation: Vertical }
             } else {
                 Self::Cell { status: CellStatus::Empty }
             }
@@ -140,6 +141,15 @@ impl ElementType {
 }
 
 
+/// An `Element` represents a square on the maze map, or a boundary between
+/// squares.  Boundaries can be horizontal, vertical or the intersection of
+/// horizontal and vertical boundaries.
+///
+///      0 1 2 3 4
+///    0 + - + - +
+///    1 |   |   |
+///    2 + - + - +
+///
 #[derive(Copy, Clone, Debug)]
 struct Element {
     x: i16,
@@ -170,16 +180,14 @@ impl Element {
 
     fn remove_wall(&mut self) {
         assert!(self.element_type.is_boundary());
-        self.element_type = match self.element_type {
-            ElementType::HorizontalWall => ElementType::HorizontalOpening,
-            ElementType::VerticalWall => ElementType::VerticalOpening,
-            _ => self.element_type,
-        };
+        if let Boundary { fill: _, orientation } = self.element_type {
+            self.element_type = Boundary { fill: Open, orientation };
+        }
     }
 
     fn visit(&mut self) {
         assert!(self.element_type.is_cell());
-        self.element_type = ElementType::Cell { status: CellStatus::Visited }
+        self.element_type = Cell { status: CellStatus::Visited }
     }
 }
 
@@ -552,12 +560,12 @@ impl<'m> Display for AsciiRenderer<'m> {
             for x in 0..self.maze.grid.width {
                 let element = self.maze.grid.get(x, y);
                 match element.element_type {
-                    ElementType::Cell { .. } => f.write_str("  ")?,
-                    ElementType::HorizontalOpening => f.write_str("  ")?,
-                    ElementType::VerticalOpening => f.write_str(" ")?,
-                    ElementType::HorizontalWall => f.write_str("--")?,
-                    ElementType::VerticalWall => f.write_str("|")?,
-                    ElementType::Intersection => {
+                    Cell { .. } => f.write_str("  ")?,
+                    Boundary { fill: Open, orientation: Horizontal } => f.write_str("  ")?,
+                    Boundary { fill: Open, orientation: Vertical } => f.write_str(" ")?,
+                    Boundary { fill: Solid, orientation: Horizontal } => f.write_str("--")?,
+                    Boundary { fill: Solid, orientation: Vertical } => f.write_str("|")?,
+                    Intersection => {
                         write!(f, "{}", ascii_char_for_intersection(&self.maze.grid, x, y))?
                     },
                 }
@@ -587,12 +595,12 @@ impl<'m> Display for UnicodeRenderer<'m> {
             for x in 0..self.maze.grid.width {
                 let element = self.maze.grid.get(x, y);
                 match element.element_type {
-                    ElementType::Cell { .. } => f.write_str("  ")?,
-                    ElementType::HorizontalOpening => f.write_str("  ")?,
-                    ElementType::VerticalOpening => f.write_str(" ")?,
-                    ElementType::HorizontalWall => f.write_str("\u{2500}\u{2500}")?,
-                    ElementType::VerticalWall => f.write_str("\u{2502}")?,
-                    ElementType::Intersection => {
+                    Cell { .. } => f.write_str("  ")?,
+                    Boundary { fill: Open, orientation: Horizontal } => f.write_str("  ")?,
+                    Boundary { fill: Open, orientation: Vertical } => f.write_str(" ")?,
+                    Boundary { fill: Solid, orientation: Horizontal } => f.write_str("\u{2500}\u{2500}")?,
+                    Boundary { fill: Solid, orientation: Vertical } => f.write_str("\u{2502}")?,
+                    Intersection => {
                         write!(f, "{}", unicode_char_for_intersection(&self.maze.grid, x, y))?
                     },
                 }

@@ -10,7 +10,7 @@
 
     async function run() {
         await wasm_bindgen('maze_bg.wasm');
-        const maze = generate_maze(20, 20);
+        const maze = generate_maze(20, 20, 'unicode');
         const pre = document.getElementById('maze');
         pre.textContent = maze;
     }
