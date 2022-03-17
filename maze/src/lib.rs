@@ -85,7 +85,7 @@ enum CellStatus {
 
 #[derive(Copy, Clone, Debug)]
 enum Fill {
-    Open, Solid,
+    Open, Solid, Start, Finish
 }
 
 
@@ -120,7 +120,7 @@ impl ElementType {
     }
 
     fn is_wall(&self) -> bool {
-        matches!(self, Self::Boundary { fill: Solid, orientation: _ })
+        !matches!(self, Self::Boundary { fill: Open, orientation: _ })
     }
 
     fn new(x: i16, y: i16) -> ElementType {
@@ -218,7 +218,31 @@ impl Grid {
             }
         }
 
-        Self { width, height, elements }
+        let mut grid = Self { width, height, elements };
+
+        // set start point
+        grid.set(1, 0, Element {
+            x: 1,
+            y: 0,
+            element_type: Boundary {
+                fill: Fill::Start,
+                orientation: Horizontal,
+            }
+        });
+
+        // set finish point
+        let xf = width - 2;
+        let yf = height - 1;
+        grid.set(xf, yf, Element {
+            x: xf,
+            y: yf,
+            element_type: Boundary {
+                fill: Fill::Finish,
+                orientation: Horizontal,
+            }
+        });
+
+        grid
     }
 
     fn get(&self, x: i16, y: i16) -> Element {
@@ -561,10 +585,10 @@ impl<'m> Display for AsciiRenderer<'m> {
                 let element = self.maze.grid.get(x, y);
                 match element.element_type {
                     Cell { .. } => f.write_str("  ")?,
-                    Boundary { fill: Open, orientation: Horizontal } => f.write_str("  ")?,
-                    Boundary { fill: Open, orientation: Vertical } => f.write_str(" ")?,
                     Boundary { fill: Solid, orientation: Horizontal } => f.write_str("--")?,
                     Boundary { fill: Solid, orientation: Vertical } => f.write_str("|")?,
+                    Boundary { fill: _, orientation: Horizontal } => f.write_str("  ")?,
+                    Boundary { fill: _, orientation: Vertical } => f.write_str(" ")?,
                     Intersection => {
                         write!(f, "{}", ascii_char_for_intersection(&self.maze.grid, x, y))?
                     },
@@ -596,10 +620,10 @@ impl<'m> Display for UnicodeRenderer<'m> {
                 let element = self.maze.grid.get(x, y);
                 match element.element_type {
                     Cell { .. } => f.write_str("  ")?,
-                    Boundary { fill: Open, orientation: Horizontal } => f.write_str("  ")?,
-                    Boundary { fill: Open, orientation: Vertical } => f.write_str(" ")?,
                     Boundary { fill: Solid, orientation: Horizontal } => f.write_str("\u{2500}\u{2500}")?,
                     Boundary { fill: Solid, orientation: Vertical } => f.write_str("\u{2502}")?,
+                    Boundary { fill: _, orientation: Horizontal } => f.write_str("  ")?,
+                    Boundary { fill: _, orientation: Vertical } => f.write_str(" ")?,
                     Intersection => {
                         write!(f, "{}", unicode_char_for_intersection(&self.maze.grid, x, y))?
                     },
