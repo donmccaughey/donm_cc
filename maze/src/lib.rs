@@ -38,25 +38,16 @@ pub fn generate_maze(width: i16, height: i16, seed: u64, format: &str) -> String
 }
 
 
-/// A pseudorandom number generator.  Wraps a seed value and
-/// [oorandom](https://crates.io/crates/oorandom)'s [Rand32].
-struct Randomizer {
-    seed: u64,
-    rand32: Rand32,
+trait Choose {
+    fn choose_one(&self, rand32: &mut Rand32) -> Location;
 }
 
 
-impl Randomizer {
-    fn new(seed: u64) -> Self {
-        let rand32 = Rand32::new(seed);
-        Randomizer { seed, rand32 }
-    }
-
-    /// Choose one element randomly from a [Vec].
-    fn choose_one<E: Copy>(&mut self, vector: Vec<E>) -> E {
-        let count = vector.len() as u32;
-        let i = self.rand32.rand_range(0..count) as usize;
-        vector[i]
+impl Choose for Vec<Location> {
+    fn choose_one(&self, rand32: &mut Rand32) -> Location {
+        let count = self.len() as u32;
+        let i = rand32.rand_range(0..count) as usize;
+        self[i]
     }
 }
 
@@ -286,9 +277,7 @@ impl Grid {
 
 struct Maze {
     grid: Grid,
-    randomizer: Randomizer,
-    width: i16,
-    height: i16,
+    seed: u64,
 }
 
 
@@ -298,13 +287,13 @@ impl Maze {
         let grid_height = 2 * height + 1;
         Self {
             grid: Grid::new(grid_width, grid_height),
-            randomizer: Randomizer::new(seed),
-            width,
-            height,
+            seed,
         }
     }
 
     fn generate(&mut self) {
+        let mut rand32 = Rand32::new(self.seed);
+
         let mut starting_square = self.get_square(0, 0);
         starting_square.visit();
         self.grid.set(starting_square);
@@ -314,7 +303,7 @@ impl Maze {
             let unvisited_neighbors = self.unvisited_neighbors_of(&current_square);
             if !unvisited_neighbors.is_empty() {
                 stack.push(current_square);
-                let mut chosen_square = self.randomizer.choose_one(unvisited_neighbors);
+                let mut chosen_square = unvisited_neighbors.choose_one(&mut rand32);
                 self.remove_wall_between(&current_square, &chosen_square);
                 chosen_square.visit();
                 self.grid.set(chosen_square);
