@@ -376,7 +376,7 @@ impl Maze {
             .collect()
     }
 
-    fn get_wall_between(&mut self, square1: &Element, square2: &Element) -> Element {
+    fn get_boundary_between(&mut self, square1: &Element, square2: &Element) -> Element {
         assert!(square1.is_square());
         assert!(square2.is_square());
 
@@ -401,7 +401,7 @@ impl Maze {
     }
 
     fn remove_wall_between(&mut self, square1: &Element, square2: &Element) {
-        let mut element = self.get_wall_between(square1, square2);
+        let mut element = self.get_boundary_between(square1, square2);
         element.remove_wall();
         self.grid.update(element);
     }
