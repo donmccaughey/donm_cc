@@ -92,11 +92,11 @@ enum Element {
 
 impl Element {
     fn is_boundary(&self) -> bool {
-        matches!(self, Self::Boundary { fill: _, orientation: _ })
+        matches!(self, Self::Boundary { .. })
     }
 
     fn is_square(&self) -> bool {
-        matches!(self, Self::Square { status: _ })
+        matches!(self, Self::Square { .. })
     }
 
     fn is_visited(&self) -> bool {
@@ -104,7 +104,7 @@ impl Element {
     }
 
     fn is_wall(&self) -> bool {
-        !matches!(self, Self::Boundary { fill: Open, orientation: _ })
+        !matches!(self, Self::Boundary { fill: Open, .. })
     }
 
     fn new(x: i16, y: i16) -> Element {
@@ -528,8 +528,8 @@ impl<'m> Display for AsciiRenderer<'m> {
                     Square { .. } => f.write_str("  ")?,
                     Boundary { fill: Solid, orientation: Horizontal } => f.write_str("--")?,
                     Boundary { fill: Solid, orientation: Vertical } => f.write_str("|")?,
-                    Boundary { fill: _, orientation: Horizontal } => f.write_str("  ")?,
-                    Boundary { fill: _, orientation: Vertical } => f.write_str(" ")?,
+                    Boundary { orientation: Horizontal, .. } => f.write_str("  ")?,
+                    Boundary { orientation: Vertical, .. } => f.write_str(" ")?,
                     Intersection => {
                         write!(f, "{}", ascii_char_for_intersection(&self.maze.grid, x, y))?
                     },
@@ -563,8 +563,8 @@ impl<'m> Display for UnicodeRenderer<'m> {
                     Square { .. } => f.write_str("  ")?,
                     Boundary { fill: Solid, orientation: Horizontal } => f.write_str("\u{2500}\u{2500}")?,
                     Boundary { fill: Solid, orientation: Vertical } => f.write_str("\u{2502}")?,
-                    Boundary { fill: _, orientation: Horizontal } => f.write_str("  ")?,
-                    Boundary { fill: _, orientation: Vertical } => f.write_str(" ")?,
+                    Boundary { orientation: Horizontal, .. } => f.write_str("  ")?,
+                    Boundary { orientation: Vertical, .. } => f.write_str(" ")?,
                     Intersection => {
                         write!(f, "{}", unicode_char_for_intersection(&self.maze.grid, x, y))?
                     },
