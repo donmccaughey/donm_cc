@@ -161,14 +161,14 @@ impl Location {
     }
 
     fn remove_wall(&mut self) {
-        assert!(self.element.is_boundary());
+        assert!(self.is_boundary());
         if let Boundary { fill: _, orientation } = self.element {
             self.element = Boundary { fill: Open, orientation };
         }
     }
 
     fn visit(&mut self) {
-        assert!(self.element.is_square());
+        assert!(self.is_square());
         self.element = Square { status: SquareStatus::Visited }
     }
 }
@@ -182,14 +182,6 @@ struct Grid {
 
 
 impl Grid {
-    fn is_boundary(x: i16, y: i16) -> bool {
-        Element::new(x, y).is_boundary()
-    }
-
-    fn is_square(x: i16, y: i16) -> bool {
-        Element::new(x, y).is_square()
-    }
-
     fn new(width: i16, height: i16) -> Grid {
         let element_count = width as usize * height as usize;
         let mut elements = Vec::with_capacity(element_count);
@@ -288,22 +280,6 @@ impl Grid {
             neighbors.push(neighbor);
         }
         neighbors
-    }
-
-    fn remove_wall(&mut self, x: i16, y: i16) {
-        assert!(Grid::is_boundary(x, y));
-        let mut location = self.get(x, y);
-        assert!(location.is_boundary());
-        location.remove_wall();
-        self.set(location);
-    }
-
-    fn visit(&mut self, x: i16, y: i16) {
-        assert!(Grid::is_square(x, y));
-        let mut location = self.get(x, y);
-        assert!(location.is_square());
-        location.visit();
-        self.set(location);
     }
 }
 
