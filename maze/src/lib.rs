@@ -38,20 +38,6 @@ pub fn generate_maze(width: i16, height: i16, seed: u64, format: &str) -> String
 }
 
 
-trait Choose {
-    fn choose_one(&self, rand32: &mut Rand32) -> Location;
-}
-
-
-impl Choose for Vec<Location> {
-    fn choose_one(&self, rand32: &mut Rand32) -> Location {
-        let count = self.len() as u32;
-        let i = rand32.rand_range(0..count) as usize;
-        self[i]
-    }
-}
-
-
 #[derive(Copy, Clone, Debug)]
 enum SquareStatus {
     Empty, Visited,
@@ -579,5 +565,19 @@ impl<'m> Display for UnicodeRenderer<'m> {
             f.write_str("\n")?;
         }
         Ok(())
+    }
+}
+
+
+trait Choose {
+    fn choose_one(&self, rand32: &mut Rand32) -> Location;
+}
+
+
+impl Choose for Vec<Location> {
+    fn choose_one(&self, rand32: &mut Rand32) -> Location {
+        let count = self.len() as u32;
+        let i = rand32.rand_range(0..count) as usize;
+        self[i]
     }
 }
