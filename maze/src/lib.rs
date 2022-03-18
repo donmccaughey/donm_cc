@@ -210,13 +210,21 @@ impl Grid {
         grid
     }
 
+    fn index(&self, x: i16, y: i16) -> usize {
+        y as usize * self.width as usize + x as usize
+    }
+
+    fn index_of(&self, location: &Location) -> usize {
+        self.index(location.x, location.y)
+    }
+
     fn get(&self, x: i16, y: i16) -> Location {
-        let i = y as usize * self.width as usize + x as usize;
+        let i = self.index(x, y);
         Location::new(self.elements[i], x, y)
     }
 
     fn set(&mut self, location: Location) {
-        let i = location.y as usize * self.width as usize + location.x as usize;
+        let i = self.index_of(&location);
         self.elements[i] = location.element;
     }
 
@@ -446,7 +454,7 @@ fn ascii_char_for_intersection(grid: &Grid, x: i16, y: i16) -> char {
         return '|';
     }
 
-    '+'
+    ' '
 }
 
 
@@ -503,7 +511,7 @@ fn unicode_char_for_intersection(grid: &Grid, x: i16, y: i16) -> char {
         return VLINE;
     }
 
-    '*'
+    ' '
 }
 
 
