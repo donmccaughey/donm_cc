@@ -3,7 +3,7 @@ use std::time::{SystemTime, UNIX_EPOCH};
 use getrandom::getrandom;
 use oorandom::Rand32;
 use wasm_bindgen::prelude::*;
-use crate::ElementType::{Boundary, Square, Intersection};
+use crate::Element::{Boundary, Square, Intersection};
 use crate::Fill::{Open, Solid};
 use crate::Orientation::{Horizontal, Vertical};
 
@@ -79,8 +79,17 @@ enum Orientation {
 }
 
 
+/// An `Element` represents a square on the maze map, or a boundary between
+/// squares.  Boundaries can be horizontal, vertical or the intersection of
+/// horizontal and vertical boundaries.
+///
+///      0 1 2 3 4
+///    0 + - + - +
+///    1 |   |   |
+///    2 + - + - +
+///
 #[derive(Copy, Clone, Debug)]
-enum ElementType {
+enum Element {
     Square { status: SquareStatus },
     Boundary {
         fill: Fill,
@@ -90,7 +99,7 @@ enum ElementType {
 }
 
 
-impl ElementType {
+impl Element {
     fn is_boundary(&self) -> bool {
         matches!(self, Self::Boundary { fill: _, orientation: _ })
     }
@@ -107,7 +116,7 @@ impl ElementType {
         !matches!(self, Self::Boundary { fill: Open, orientation: _ })
     }
 
-    fn new(x: i16, y: i16) -> ElementType {
+    fn new(x: i16, y: i16) -> Element {
         if y % 2 == 0 {
             if x % 2 == 0 {
                 Self::Intersection
@@ -125,53 +134,42 @@ impl ElementType {
 }
 
 
-/// An `Element` represents a square on the maze map, or a boundary between
-/// squares.  Boundaries can be horizontal, vertical or the intersection of
-/// horizontal and vertical boundaries.
-///
-///      0 1 2 3 4
-///    0 + - + - +
-///    1 |   |   |
-///    2 + - + - +
-///
+/// A `Location` holds an `Element` and its `(x, y)` coordinates.
 #[derive(Copy, Clone, Debug)]
-struct Element {
+struct Location {
+    element: Element,
     x: i16,
     y: i16,
-    element_type: ElementType,
 }
 
 
-impl Element {
+impl Location {
     fn is_boundary(&self) -> bool {
-        self.element_type.is_boundary()
+        self.element.is_boundary()
     }
 
     fn is_square(&self) -> bool {
-        self.element_type.is_square()
+        self.element.is_square()
     }
 
     fn is_visited(&self) -> bool {
-        self.element_type.is_visited()
+        self.element.is_visited()
     }
 
-    fn new(x: i16, y: i16) -> Self {
-        Self {
-            x, y,
-            element_type: ElementType::new(x, y)
-        }
+    fn new(element: Element, x: i16, y: i16) -> Self {
+        Self { element, x, y }
     }
 
     fn remove_wall(&mut self) {
-        assert!(self.element_type.is_boundary());
-        if let Boundary { fill: _, orientation } = self.element_type {
-            self.element_type = Boundary { fill: Open, orientation };
+        assert!(self.element.is_boundary());
+        if let Boundary { fill: _, orientation } = self.element {
+            self.element = Boundary { fill: Open, orientation };
         }
     }
 
     fn visit(&mut self) {
-        assert!(self.element_type.is_square());
-        self.element_type = Square { status: SquareStatus::Visited }
+        assert!(self.element.is_square());
+        self.element = Square { status: SquareStatus::Visited }
     }
 }
 
@@ -185,11 +183,11 @@ struct Grid {
 
 impl Grid {
     fn is_boundary(x: i16, y: i16) -> bool {
-        ElementType::new(x, y).is_boundary()
+        Element::new(x, y).is_boundary()
     }
 
     fn is_square(x: i16, y: i16) -> bool {
-        ElementType::new(x, y).is_square()
+        Element::new(x, y).is_square()
     }
 
     fn new(width: i16, height: i16) -> Grid {
@@ -205,10 +203,10 @@ impl Grid {
         let mut grid = Self { width, height, elements };
 
         // set start point
-        grid.set(1, 0, Element {
+        grid.set(Location {
             x: 1,
             y: 0,
-            element_type: Boundary {
+            element: Boundary {
                 fill: Fill::Start,
                 orientation: Horizontal,
             }
@@ -217,10 +215,10 @@ impl Grid {
         // set finish point
         let xf = width - 2;
         let yf = height - 1;
-        grid.set(xf, yf, Element {
+        grid.set(Location {
             x: xf,
             y: yf,
-            element_type: Boundary {
+            element: Boundary {
                 fill: Fill::Finish,
                 orientation: Horizontal,
             }
@@ -229,23 +227,17 @@ impl Grid {
         grid
     }
 
-    fn get(&self, x: i16, y: i16) -> Element {
+    fn get(&self, x: i16, y: i16) -> Location {
         let i = y as usize * self.width as usize + x as usize;
-        self.elements[i]
+        Location::new(self.elements[i], x, y)
     }
 
-    fn set(&mut self, x: i16, y: i16, element: Element) {
-        assert_eq!(x, element.x);
-        assert_eq!(y, element.y);
-        let i = y as usize * self.width as usize + x as usize;
-        self.elements[i] = element;
+    fn set(&mut self, location: Location) {
+        let i = location.y as usize * self.width as usize + location.x as usize;
+        self.elements[i] = location.element;
     }
 
-    fn update(&mut self, element: Element) {
-        self.set(element.x, element.y, element);
-    }
-
-    fn get_left_neighbor(&self, x: i16, y: i16, distance: i16) -> Option<Element> {
+    fn get_left_neighbor(&self, x: i16, y: i16, distance: i16) -> Option<Location> {
         let left = x - distance;
         if left >= 0 {
             Some(self.get(left, y))
@@ -254,7 +246,7 @@ impl Grid {
         }
     }
 
-    fn get_right_neighbor(&self, x: i16, y: i16, distance: i16) -> Option<Element> {
+    fn get_right_neighbor(&self, x: i16, y: i16, distance: i16) -> Option<Location> {
         let right = x + distance;
         if right < self.width {
             Some(self.get(right, y))
@@ -263,7 +255,7 @@ impl Grid {
         }
     }
 
-    fn get_top_neighbor(&self, x: i16, y: i16, distance: i16) -> Option<Element> {
+    fn get_top_neighbor(&self, x: i16, y: i16, distance: i16) -> Option<Location> {
         let top = y - distance;
         if top >= 0 {
             Some(self.get(x, top))
@@ -272,7 +264,7 @@ impl Grid {
         }
     }
 
-    fn get_bottom_neighbor(&self, x: i16, y: i16, distance: i16) -> Option<Element> {
+    fn get_bottom_neighbor(&self, x: i16, y: i16, distance: i16) -> Option<Location> {
         let bottom = y + distance;
         if bottom < self.height {
             Some(self.get(x, bottom))
@@ -281,7 +273,7 @@ impl Grid {
         }
     }
 
-    fn orthogonal_neighbors(&self, x: i16, y: i16, distance: i16) -> Vec<Element> {
+    fn orthogonal_neighbors(&self, x: i16, y: i16, distance: i16) -> Vec<Location> {
         let mut neighbors = Vec::new();
         if let Some(neighbor) = self.get_left_neighbor(x, y, distance) {
             neighbors.push(neighbor);
@@ -300,18 +292,18 @@ impl Grid {
 
     fn remove_wall(&mut self, x: i16, y: i16) {
         assert!(Grid::is_boundary(x, y));
-        let mut element = self.get(x, y);
-        assert!(element.is_boundary());
-        element.remove_wall();
-        self.update(element);
+        let mut location = self.get(x, y);
+        assert!(location.is_boundary());
+        location.remove_wall();
+        self.set(location);
     }
 
     fn visit(&mut self, x: i16, y: i16) {
         assert!(Grid::is_square(x, y));
-        let mut element = self.get(x, y);
-        assert!(element.is_square());
-        element.visit();
-        self.update(element);
+        let mut location = self.get(x, y);
+        assert!(location.is_square());
+        location.visit();
+        self.set(location);
     }
 }
 
@@ -339,7 +331,7 @@ impl Maze {
     fn generate(&mut self) {
         let mut starting_square = self.get_square(0, 0);
         starting_square.visit();
-        self.grid.update(starting_square);
+        self.grid.set(starting_square);
 
         let mut stack = vec![starting_square];
         while let Some(current_square) = stack.pop() {
@@ -349,25 +341,25 @@ impl Maze {
                 let mut chosen_square = self.randomizer.choose_one(unvisited_neighbors);
                 self.remove_wall_between(&current_square, &chosen_square);
                 chosen_square.visit();
-                self.grid.update(chosen_square);
+                self.grid.set(chosen_square);
                 stack.push(chosen_square);
             }
         }
     }
 
-    fn get_square(&self, x: i16, y: i16) -> Element {
+    fn get_square(&self, x: i16, y: i16) -> Location {
         let grid_x = 2 * x + 1;
         let grid_y = 2 * y + 1;
         self.grid.get(grid_x, grid_y)
     }
 
-    fn neighbors_of(&self, square: &Element) -> Vec<Element> {
+    fn neighbors_of(&self, square: &Location) -> Vec<Location> {
         assert!(square.is_square());
         let neighbors = self.grid.orthogonal_neighbors(square.x, square.y, 2);
         neighbors
     }
 
-    fn unvisited_neighbors_of(&self, square: &Element) -> Vec<Element> {
+    fn unvisited_neighbors_of(&self, square: &Location) -> Vec<Location> {
         let neighbors = self.neighbors_of(square);
         neighbors.into_iter()
             .filter(|square| {
@@ -376,7 +368,7 @@ impl Maze {
             .collect()
     }
 
-    fn get_boundary_between(&mut self, square1: &Element, square2: &Element) -> Element {
+    fn get_boundary_between(&mut self, square1: &Location, square2: &Location) -> Location {
         assert!(square1.is_square());
         assert!(square2.is_square());
 
@@ -400,10 +392,10 @@ impl Maze {
         panic!("Squares are not adjacent!");
     }
 
-    fn remove_wall_between(&mut self, square1: &Element, square2: &Element) {
-        let mut element = self.get_boundary_between(square1, square2);
-        element.remove_wall();
-        self.grid.update(element);
+    fn remove_wall_between(&mut self, square1: &Location, square2: &Location) {
+        let mut location = self.get_boundary_between(square1, square2);
+        location.remove_wall();
+        self.grid.set(location);
     }
 }
 
@@ -427,9 +419,9 @@ const RB: char = '\u{250c}'; // ┌
 const BL: char = '\u{2510}'; // ┐
 
 
-fn is_wall(element: Option<Element>) -> bool {
-    if let Some(element) = element {
-        element.element_type.is_wall()
+fn is_wall(location: Option<Location>) -> bool {
+    if let Some(location) = location {
+        location.element.is_wall()
     } else {
         false
     }
@@ -566,8 +558,8 @@ impl<'m> Display for AsciiRenderer<'m> {
     fn fmt(&self, f: &mut Formatter<'_>) -> std::fmt::Result {
         for y in 0..self.maze.grid.height {
             for x in 0..self.maze.grid.width {
-                let element = self.maze.grid.get(x, y);
-                match element.element_type {
+                let location = self.maze.grid.get(x, y);
+                match location.element {
                     Square { .. } => f.write_str("  ")?,
                     Boundary { fill: Solid, orientation: Horizontal } => f.write_str("--")?,
                     Boundary { fill: Solid, orientation: Vertical } => f.write_str("|")?,
@@ -601,8 +593,8 @@ impl<'m> Display for UnicodeRenderer<'m> {
     fn fmt(&self, f: &mut Formatter<'_>) -> std::fmt::Result {
         for y in 0..self.maze.grid.height {
             for x in 0..self.maze.grid.width {
-                let element = self.maze.grid.get(x, y);
-                match element.element_type {
+                let location = self.maze.grid.get(x, y);
+                match location.element {
                     Square { .. } => f.write_str("  ")?,
                     Boundary { fill: Solid, orientation: Horizontal } => f.write_str("\u{2500}\u{2500}")?,
                     Boundary { fill: Solid, orientation: Vertical } => f.write_str("\u{2502}")?,
