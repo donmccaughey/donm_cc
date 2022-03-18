@@ -196,11 +196,9 @@ impl Grid {
         });
 
         // set finish point
-        let xf = width - 2;
-        let yf = height - 1;
         grid.set(Location {
-            x: xf,
-            y: yf,
+            x: width - 2,
+            y: height - 1,
             element: Boundary {
                 fill: Fill::Finish,
                 orientation: Horizontal,
@@ -228,54 +226,54 @@ impl Grid {
         self.elements[i] = location.element;
     }
 
-    fn get_left_neighbor(&self, x: i16, y: i16, distance: i16) -> Option<Location> {
-        let left = x - distance;
+    fn left_neighbor_of(&self, location: &Location, distance: i16) -> Option<Location> {
+        let left = location.x - distance;
         if left >= 0 {
-            Some(self.get(left, y))
+            Some(self.get(left, location.y))
         } else {
             None
         }
     }
 
-    fn get_right_neighbor(&self, x: i16, y: i16, distance: i16) -> Option<Location> {
-        let right = x + distance;
+    fn right_neighbor_of(&self, location: &Location, distance: i16) -> Option<Location> {
+        let right = location.x + distance;
         if right < self.width {
-            Some(self.get(right, y))
+            Some(self.get(right, location.y))
         } else {
             None
         }
     }
 
-    fn get_top_neighbor(&self, x: i16, y: i16, distance: i16) -> Option<Location> {
-        let top = y - distance;
+    fn top_neighbor_of(&self, location: &Location, distance: i16) -> Option<Location> {
+        let top = location.y - distance;
         if top >= 0 {
-            Some(self.get(x, top))
+            Some(self.get(location.x, top))
         } else {
             None
         }
     }
 
-    fn get_bottom_neighbor(&self, x: i16, y: i16, distance: i16) -> Option<Location> {
-        let bottom = y + distance;
+    fn bottom_neighbor_of(&self, location: &Location, distance: i16) -> Option<Location> {
+        let bottom = location.y + distance;
         if bottom < self.height {
-            Some(self.get(x, bottom))
+            Some(self.get(location.x, bottom))
         } else {
             None
         }
     }
 
-    fn orthogonal_neighbors(&self, x: i16, y: i16, distance: i16) -> Vec<Location> {
+    fn orthogonal_neighbors_of(&self, location: &Location, distance: i16) -> Vec<Location> {
         let mut neighbors = Vec::new();
-        if let Some(neighbor) = self.get_left_neighbor(x, y, distance) {
+        if let Some(neighbor) = self.left_neighbor_of(location, distance) {
             neighbors.push(neighbor);
         }
-        if let Some(neighbor) = self.get_top_neighbor(x, y, distance) {
+        if let Some(neighbor) = self.top_neighbor_of(location, distance) {
             neighbors.push(neighbor);
         }
-        if let Some(neighbor) = self.get_right_neighbor(x, y, distance) {
+        if let Some(neighbor) = self.right_neighbor_of(location, distance) {
             neighbors.push(neighbor);
         }
-        if let Some(neighbor) = self.get_bottom_neighbor(x, y, distance) {
+        if let Some(neighbor) = self.bottom_neighbor_of(location, distance) {
             neighbors.push(neighbor);
         }
         neighbors
@@ -328,7 +326,7 @@ impl Maze {
 
     fn neighbors_of(&self, square: &Location) -> Vec<Location> {
         assert!(square.is_square());
-        let neighbors = self.grid.orthogonal_neighbors(square.x, square.y, 2);
+        let neighbors = self.grid.orthogonal_neighbors_of(square, 2);
         neighbors
     }
 
@@ -382,11 +380,11 @@ fn is_wall(location: Option<Location>) -> bool {
 }
 
 
-fn ascii_char_for_intersection(grid: &Grid, x: i16, y: i16) -> char {
-    let left = is_wall(grid.get_left_neighbor(x, y, 1));
-    let top = is_wall(grid.get_top_neighbor(x, y, 1));
-    let right = is_wall(grid.get_right_neighbor(x, y, 1));
-    let bottom = is_wall(grid.get_bottom_neighbor(x, y, 1));
+fn ascii_char_for_intersection(grid: &Grid, location: &Location) -> char {
+    let left = is_wall(grid.left_neighbor_of(location, 1));
+    let top = is_wall(grid.top_neighbor_of(location, 1));
+    let right = is_wall(grid.right_neighbor_of(location, 1));
+    let bottom = is_wall(grid.bottom_neighbor_of(location, 1));
 
     // four-way intersection
     if left && top && right && bottom {
@@ -463,7 +461,7 @@ impl<'m> Display for AsciiRenderer<'m> {
                     Boundary { orientation: Horizontal, .. } => f.write_str("  ")?,
                     Boundary { orientation: Vertical, .. } => f.write_str(" ")?,
                     Intersection => {
-                        write!(f, "{}", ascii_char_for_intersection(&self.maze.grid, x, y))?
+                        write!(f, "{}", ascii_char_for_intersection(&self.maze.grid, &location))?
                     },
                 }
             }
@@ -493,11 +491,11 @@ const RB: char = '\u{250c}'; // ┌
 const BL: char = '\u{2510}'; // ┐
 
 
-fn unicode_char_for_intersection(grid: &Grid, x: i16, y: i16) -> char {
-    let left = is_wall(grid.get_left_neighbor(x, y, 1));
-    let top = is_wall(grid.get_top_neighbor(x, y, 1));
-    let right = is_wall(grid.get_right_neighbor(x, y, 1));
-    let bottom = is_wall(grid.get_bottom_neighbor(x, y, 1));
+fn unicode_char_for_intersection(grid: &Grid, location: &Location) -> char {
+    let left = is_wall(grid.left_neighbor_of(location, 1));
+    let top = is_wall(grid.top_neighbor_of(location, 1));
+    let right = is_wall(grid.right_neighbor_of(location, 1));
+    let bottom = is_wall(grid.bottom_neighbor_of(location, 1));
 
     // four-way intersection
     if left && top && right && bottom {
@@ -574,7 +572,7 @@ impl<'m> Display for UnicodeRenderer<'m> {
                     Boundary { orientation: Horizontal, .. } => f.write_str("  ")?,
                     Boundary { orientation: Vertical, .. } => f.write_str(" ")?,
                     Intersection => {
-                        write!(f, "{}", unicode_char_for_intersection(&self.maze.grid, x, y))?
+                        write!(f, "{}", unicode_char_for_intersection(&self.maze.grid, &location))?
                     },
                 }
             }
