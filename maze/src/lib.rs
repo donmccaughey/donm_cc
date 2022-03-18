@@ -3,7 +3,7 @@ use std::time::{SystemTime, UNIX_EPOCH};
 use getrandom::getrandom;
 use oorandom::Rand32;
 use wasm_bindgen::prelude::*;
-use crate::ElementType::{Boundary, Cell, Intersection};
+use crate::ElementType::{Boundary, Square, Intersection};
 use crate::Fill::{Open, Solid};
 use crate::Orientation::{Horizontal, Vertical};
 
@@ -11,7 +11,7 @@ use crate::Orientation::{Horizontal, Vertical};
 /// Generate a seed.  Use the best available operating system source, via
 /// the [getrandom](https://crates.io/crates/getrandom) crate.  Fall back
 /// to the system time and finally an arbitrary seed on errors.
-#[wasm_bindgen] 
+#[wasm_bindgen]
 pub fn generate_seed() -> u64 {
     let mut seed_bytes = [0u8; 8];
     let value: u64;
@@ -62,7 +62,7 @@ impl Randomizer {
 
 
 #[derive(Copy, Clone, Debug)]
-enum CellStatus {
+enum SquareStatus {
     Empty, Visited,
 }
 
@@ -81,7 +81,7 @@ enum Orientation {
 
 #[derive(Copy, Clone, Debug)]
 enum ElementType {
-    Cell { status: CellStatus },
+    Square { status: SquareStatus },
     Boundary {
         fill: Fill,
         orientation: Orientation,
@@ -95,12 +95,12 @@ impl ElementType {
         matches!(self, Self::Boundary { fill: _, orientation: _ })
     }
 
-    fn is_cell(&self) -> bool {
-        matches!(self, Self::Cell { status: _ })
+    fn is_square(&self) -> bool {
+        matches!(self, Self::Square { status: _ })
     }
 
     fn is_visited(&self) -> bool {
-        matches!(self, Self::Cell { status: CellStatus::Visited })
+        matches!(self, Self::Square { status: SquareStatus::Visited })
     }
 
     fn is_wall(&self) -> bool {
@@ -118,7 +118,7 @@ impl ElementType {
             if x % 2 == 0 {
                 Self::Boundary { fill: Solid, orientation: Vertical }
             } else {
-                Self::Cell { status: CellStatus::Empty }
+                Self::Square { status: SquareStatus::Empty }
             }
         }
     }
@@ -147,8 +147,8 @@ impl Element {
         self.element_type.is_boundary()
     }
 
-    fn is_cell(&self) -> bool {
-        self.element_type.is_cell()
+    fn is_square(&self) -> bool {
+        self.element_type.is_square()
     }
 
     fn is_visited(&self) -> bool {
@@ -170,8 +170,8 @@ impl Element {
     }
 
     fn visit(&mut self) {
-        assert!(self.element_type.is_cell());
-        self.element_type = Cell { status: CellStatus::Visited }
+        assert!(self.element_type.is_square());
+        self.element_type = Square { status: SquareStatus::Visited }
     }
 }
 
@@ -188,8 +188,8 @@ impl Grid {
         ElementType::new(x, y).is_boundary()
     }
 
-    fn is_cell(x: i16, y: i16) -> bool {
-        ElementType::new(x, y).is_cell()
+    fn is_square(x: i16, y: i16) -> bool {
+        ElementType::new(x, y).is_square()
     }
 
     fn new(width: i16, height: i16) -> Grid {
@@ -307,9 +307,9 @@ impl Grid {
     }
 
     fn visit(&mut self, x: i16, y: i16) {
-        assert!(Grid::is_cell(x, y));
+        assert!(Grid::is_square(x, y));
         let mut element = self.get(x, y);
-        assert!(element.is_cell());
+        assert!(element.is_square());
         element.visit();
         self.update(element);
     }
@@ -337,71 +337,71 @@ impl Maze {
     }
 
     fn generate(&mut self) {
-        let mut starting_cell = self.get_cell(0, 0);
-        starting_cell.visit();
-        self.grid.update(starting_cell);
+        let mut starting_square = self.get_square(0, 0);
+        starting_square.visit();
+        self.grid.update(starting_square);
 
-        let mut stack = vec![starting_cell];
-        while let Some(current_cell) = stack.pop() {
-            let unvisited_neighbors = self.unvisited_neighbors_of(&current_cell);
+        let mut stack = vec![starting_square];
+        while let Some(current_square) = stack.pop() {
+            let unvisited_neighbors = self.unvisited_neighbors_of(&current_square);
             if !unvisited_neighbors.is_empty() {
-                stack.push(current_cell);
-                let mut chosen_cell = self.randomizer.choose_one(unvisited_neighbors);
-                self.remove_wall_between(&current_cell, &chosen_cell);
-                chosen_cell.visit();
-                self.grid.update(chosen_cell);
-                stack.push(chosen_cell);
+                stack.push(current_square);
+                let mut chosen_square = self.randomizer.choose_one(unvisited_neighbors);
+                self.remove_wall_between(&current_square, &chosen_square);
+                chosen_square.visit();
+                self.grid.update(chosen_square);
+                stack.push(chosen_square);
             }
         }
     }
 
-    fn get_cell(&self, x: i16, y: i16) -> Element {
+    fn get_square(&self, x: i16, y: i16) -> Element {
         let grid_x = 2 * x + 1;
         let grid_y = 2 * y + 1;
         self.grid.get(grid_x, grid_y)
     }
 
-    fn neighbors_of(&self, cell: &Element) -> Vec<Element> {
-        assert!(cell.is_cell());
-        let neighbors = self.grid.orthogonal_neighbors(cell.x, cell.y, 2);
+    fn neighbors_of(&self, square: &Element) -> Vec<Element> {
+        assert!(square.is_square());
+        let neighbors = self.grid.orthogonal_neighbors(square.x, square.y, 2);
         neighbors
     }
 
-    fn unvisited_neighbors_of(&self, cell: &Element) -> Vec<Element> {
-        let neighbors = self.neighbors_of(cell);
+    fn unvisited_neighbors_of(&self, square: &Element) -> Vec<Element> {
+        let neighbors = self.neighbors_of(square);
         neighbors.into_iter()
-            .filter(|cell| {
-                !cell.is_visited()
+            .filter(|square| {
+                !square.is_visited()
             })
             .collect()
     }
 
-    fn get_wall_between(&mut self, cell1: &Element, cell2: &Element) -> Element {
-        assert!(cell1.is_cell());
-        assert!(cell2.is_cell());
+    fn get_wall_between(&mut self, square1: &Element, square2: &Element) -> Element {
+        assert!(square1.is_square());
+        assert!(square2.is_square());
 
-        // cell1 left of cell2
-        if cell1.x + 2 == cell2.x && cell1.y == cell2.y {
-            return self.grid.get(cell1.x + 1, cell1.y)
+        // square1 left of square2
+        if square1.x + 2 == square2.x && square1.y == square2.y {
+            return self.grid.get(square1.x + 1, square1.y)
         }
-        // cell1 right of cell2
-        if cell1.x - 2 == cell2.x && cell1.y == cell2.y {
-            return  self.grid.get(cell1.x - 1, cell1.y)
+        // square1 right of square2
+        if square1.x - 2 == square2.x && square1.y == square2.y {
+            return  self.grid.get(square1.x - 1, square1.y)
         }
-        // cell1 above of cell2
-        if cell1.x == cell2.x && cell1.y + 2 == cell2.y {
-            return  self.grid.get(cell1.x, cell1.y + 1)
+        // square1 above of square2
+        if square1.x == square2.x && square1.y + 2 == square2.y {
+            return  self.grid.get(square1.x, square1.y + 1)
         }
-        // cell1 below of cell2
-        if cell1.x == cell2.x && cell1.y - 2 == cell2.y {
-            return  self.grid.get(cell1.x, cell1.y - 1)
+        // square1 below of square2
+        if square1.x == square2.x && square1.y - 2 == square2.y {
+            return  self.grid.get(square1.x, square1.y - 1)
         }
 
-        panic!("Cells are not adjacent!");
+        panic!("Squares are not adjacent!");
     }
 
-    fn remove_wall_between(&mut self, cell1: &Element, cell2: &Element) {
-        let mut element = self.get_wall_between(cell1, cell2);
+    fn remove_wall_between(&mut self, square1: &Element, square2: &Element) {
+        let mut element = self.get_wall_between(square1, square2);
         element.remove_wall();
         self.grid.update(element);
     }
@@ -568,7 +568,7 @@ impl<'m> Display for AsciiRenderer<'m> {
             for x in 0..self.maze.grid.width {
                 let element = self.maze.grid.get(x, y);
                 match element.element_type {
-                    Cell { .. } => f.write_str("  ")?,
+                    Square { .. } => f.write_str("  ")?,
                     Boundary { fill: Solid, orientation: Horizontal } => f.write_str("--")?,
                     Boundary { fill: Solid, orientation: Vertical } => f.write_str("|")?,
                     Boundary { fill: _, orientation: Horizontal } => f.write_str("  ")?,
@@ -603,7 +603,7 @@ impl<'m> Display for UnicodeRenderer<'m> {
             for x in 0..self.maze.grid.width {
                 let element = self.maze.grid.get(x, y);
                 match element.element_type {
-                    Cell { .. } => f.write_str("  ")?,
+                    Square { .. } => f.write_str("  ")?,
                     Boundary { fill: Solid, orientation: Horizontal } => f.write_str("\u{2500}\u{2500}")?,
                     Boundary { fill: Solid, orientation: Vertical } => f.write_str("\u{2502}")?,
                     Boundary { fill: _, orientation: Horizontal } => f.write_str("  ")?,
