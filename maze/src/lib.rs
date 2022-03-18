@@ -373,25 +373,6 @@ impl Maze {
 }
 
 
-const HLINE: char = '\u{2500}';
-const VLINE: char = '\u{2502}';
-
-// Four-way intersection: Left, Top, Right, Bottom
-const LTRB: char = '\u{253c}'; // ┼
-
-// Three-way intersections
-const LTR: char = '\u{2534}'; // ┴
-const TRB: char = '\u{251c}'; // ├
-const RBL: char = '\u{252c}'; // ┬
-const BLT: char = '\u{2524}'; // ┤
-
-// Two-way intersections
-const LT: char = '\u{2518}'; // ┘
-const TR: char = '\u{2514}'; // └
-const RB: char = '\u{250c}'; // ┌
-const BL: char = '\u{2510}'; // ┐
-
-
 fn is_wall(location: Option<Location>) -> bool {
     if let Some(location) = location {
         location.element.is_wall()
@@ -458,6 +439,60 @@ fn ascii_char_for_intersection(grid: &Grid, x: i16, y: i16) -> char {
 }
 
 
+struct AsciiRenderer<'m> {
+    maze: &'m Maze,
+}
+
+
+impl<'m> AsciiRenderer<'m> {
+    fn new(maze: &'m Maze) -> Self {
+        Self { maze }
+    }
+}
+
+
+impl<'m> Display for AsciiRenderer<'m> {
+    fn fmt(&self, f: &mut Formatter<'_>) -> std::fmt::Result {
+        for y in 0..self.maze.grid.height {
+            for x in 0..self.maze.grid.width {
+                let location = self.maze.grid.get(x, y);
+                match location.element {
+                    Square { .. } => f.write_str("  ")?,
+                    Boundary { fill: Solid, orientation: Horizontal } => f.write_str("--")?,
+                    Boundary { fill: Solid, orientation: Vertical } => f.write_str("|")?,
+                    Boundary { orientation: Horizontal, .. } => f.write_str("  ")?,
+                    Boundary { orientation: Vertical, .. } => f.write_str(" ")?,
+                    Intersection => {
+                        write!(f, "{}", ascii_char_for_intersection(&self.maze.grid, x, y))?
+                    },
+                }
+            }
+            f.write_str("\n")?;
+        }
+        Ok(())
+    }
+}
+
+
+const HLINE: char = '\u{2500}';
+const VLINE: char = '\u{2502}';
+
+// Four-way intersection: Left, Top, Right, Bottom
+const LTRB: char = '\u{253c}'; // ┼
+
+// Three-way intersections
+const LTR: char = '\u{2534}'; // ┴
+const TRB: char = '\u{251c}'; // ├
+const RBL: char = '\u{252c}'; // ┬
+const BLT: char = '\u{2524}'; // ┤
+
+// Two-way intersections
+const LT: char = '\u{2518}'; // ┘
+const TR: char = '\u{2514}'; // └
+const RB: char = '\u{250c}'; // ┌
+const BL: char = '\u{2510}'; // ┐
+
+
 fn unicode_char_for_intersection(grid: &Grid, x: i16, y: i16) -> char {
     let left = is_wall(grid.get_left_neighbor(x, y, 1));
     let top = is_wall(grid.get_top_neighbor(x, y, 1));
@@ -512,41 +547,6 @@ fn unicode_char_for_intersection(grid: &Grid, x: i16, y: i16) -> char {
     }
 
     ' '
-}
-
-
-struct AsciiRenderer<'m> {
-    maze: &'m Maze,
-}
-
-
-impl<'m> AsciiRenderer<'m> {
-    fn new(maze: &'m Maze) -> Self {
-        Self { maze }
-    }
-}
-
-
-impl<'m> Display for AsciiRenderer<'m> {
-    fn fmt(&self, f: &mut Formatter<'_>) -> std::fmt::Result {
-        for y in 0..self.maze.grid.height {
-            for x in 0..self.maze.grid.width {
-                let location = self.maze.grid.get(x, y);
-                match location.element {
-                    Square { .. } => f.write_str("  ")?,
-                    Boundary { fill: Solid, orientation: Horizontal } => f.write_str("--")?,
-                    Boundary { fill: Solid, orientation: Vertical } => f.write_str("|")?,
-                    Boundary { orientation: Horizontal, .. } => f.write_str("  ")?,
-                    Boundary { orientation: Vertical, .. } => f.write_str(" ")?,
-                    Intersection => {
-                        write!(f, "{}", ascii_char_for_intersection(&self.maze.grid, x, y))?
-                    },
-                }
-            }
-            f.write_str("\n")?;
-        }
-        Ok(())
-    }
 }
 
 
