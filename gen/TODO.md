@@ -12,8 +12,6 @@
 - accumulate links from static HTML files -- maybe subclass `File` to `HTMLFile`?
 - add link checking for internal links
 - add link checking for `sitemap.txt`
-- extend `upload.sh` script to remove deleted pages from S3
-  - look into using `rclone` https://rclone.org
 - add `.tagline` page file directive to specify home page link subtext
 - insert `base.css` into generated pages
 - trace and remove unused css from pages

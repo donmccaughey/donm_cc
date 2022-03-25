@@ -1,4 +1,5 @@
 aws s3 sync wwwroot s3://donm.cc \
     --acl public-read \
-    --exclude '.DS_Store'
+    --exclude '.DS_Store' \
+    --delete
 
