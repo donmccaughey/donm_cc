@@ -81,6 +81,7 @@ class Label(CompactElement):
 class Li(CompactElement):
     def __init__(
             self,
+            text: Optional[str] = None,
             id: Optional[str] = None,
             class_names: Optional[list[str]] = None,
             parent: Optional[Node] = None,
@@ -93,6 +94,8 @@ class Li(CompactElement):
             parent=parent,
             **kwargs,
         )
+        if text:
+            Text(text, parent=self)
 
     def omit_end_tag(self) -> bool:
         if self.next_sibling:

@@ -1,17 +1,20 @@
 # TODO
 
+- ensure that wrapping works correctly when encountering `<br>` tags:
+                    <strong>Square</strong>, 2012 - <em>iPad integration with
+                    point−of−sale (POS) hardware</em><br>
+                     Built an iOS library
+                    linking the Square POS app with the Square Stand.  Worked
+                    with the app team and embedded software team to create APIs
+- handle block elements inside compact elements and make <address> compact
 - fix sitemap to account for relative paths in internal links
 - convert absolute paths to relative paths in internal links
 - accumulate links from static HTML files -- maybe subclass `File` to `HTMLFile`?
 - add link checking for internal links
 - add link checking for `sitemap.txt`
-- add resume HTML page
-  - update PDF resume
-  - generate text resume
 - extend `upload.sh` script to remove deleted pages from S3
   - look into using `rclone` https://rclone.org
 - add `.tagline` page file directive to specify home page link subtext
-- insert small images into generated pages as data URLs
 - insert `base.css` into generated pages
 - trace and remove unused css from pages
 - investigate stripping unneeded metadata from images

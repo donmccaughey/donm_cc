@@ -71,8 +71,13 @@ def parse_links(links: list[(Resource, str)]) -> list[(Resource, str, ParseResul
     return parsed_links
 
 
+def is_internal_link(link: (Resource, str, ParseResult)) -> bool:
+    parse_result = link[2]
+    return not parse_result.scheme and not parse_result.netloc
+
+
 def only_internal_links(links: list[(Resource, str, ParseResult)]) -> list[(Resource, str, ParseResult)]:
-    return [link for link in links if not link[2].netloc]
+    return [link for link in links if is_internal_link(link)]
 
 
 def only_external_links(links: list[(Resource, str, ParseResult)]) -> list[(Resource, str, ParseResult)]:

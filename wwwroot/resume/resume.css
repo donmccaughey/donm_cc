@@ -1,0 +1,49 @@
+.details {
+    font-size: 11pt;
+    margin: 0 0 0 1em;
+    padding: 0 0 0 1ex;
+}
+
+.details li {
+    list-style-type: circle;
+    margin: 2pt 0;
+    padding: 0;
+}
+
+.education {
+    page-break-inside: avoid;
+}
+
+.overview {
+    position: relative;
+}
+
+.overview address ul li {
+    display: inline;
+    padding: 0 1ex;
+    text-align: center;
+}
+
+.overview aside {
+    font-size: 10pt;
+    position: absolute;
+    right: -2em;
+    text-align: center;
+    top: 0;
+}
+
+.overview aside ul li {
+    list-style-type: none;
+}
+
+.project {
+    page-break-inside: avoid;
+}
+
+.project::first-line {
+    line-height: 200%;
+}
+
+.personal-projects {
+    page-break-inside: avoid;
+}

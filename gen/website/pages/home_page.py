@@ -20,7 +20,7 @@ def home_page():
             item('GitHub', 'https://github.com/donmccaughey', 'donmccaughey')
             item('Twitter', 'https://twitter.com/donmccaughey', '@donmccaughey')
             item('LinkedIn', 'https://www.linkedin.com/in/donmccaughey', 'donmccaughey')
-            item('Résumé', '/resume/Resume_of_Don_McCaughey.pdf', "Stuff I've done")
+            item('Résumé', '/resume/', "Stuff I've done")
             item('Memory Match', '/memory_match/', 'A tile matching game')
             item('Random Words', '/random_words/', 'A handy word picker')
             item('macOS Packages', '/macos_packages/', 'Software installers')

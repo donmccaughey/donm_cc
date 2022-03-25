@@ -46,6 +46,8 @@ https://donm.cc/objective-c_tuesdays/variables_in_objective-c.html
 https://donm.cc/objective-c_tuesdays/wide_character_strings.html
 https://donm.cc/objective-c_tuesdays/writing_a_thread_safe_getter_method.html
 https://donm.cc/random_words/
+https://donm.cc/resume/
+https://donm.cc/resume/Resume_of_Don_McCaughey.md
 https://donm.cc/resume/Resume_of_Don_McCaughey.pdf
 https://donm.cc/science_fiction/
 https://donm.cc/science_fiction/alastair_reynolds.html

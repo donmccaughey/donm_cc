@@ -56,6 +56,7 @@ body, html {
 
 body {
     padding-top: 24pt; /* space for fixed menu */
+    padding-bottom: 1em;
 }
 
 footer {
@@ -136,9 +137,9 @@ pre {
 
 section {
     border: 0;
-    margin: 0.5em auto;
+    margin: 1.5em auto 0 auto;
     max-width: 40em;
-    padding: 0.5em 1em;
+    padding: 0 1em;
 }
 
 time {
@@ -417,10 +418,6 @@ time {
     .menu a {
         color: black;
     }
-}
-
-.overview {
-    margin: 1em auto;
 }
 
 .overview h1 {

@@ -5,6 +5,7 @@ from website.pages.macos_packages import macos_packages
 from website.pages.maze import maze
 from website.pages.memory_match import memory_match
 from website.pages.random_words import random_words
+from website.pages.resume import resume
 from website.pages.science_fiction import science_fiction
 
 
@@ -20,7 +21,6 @@ with root:
     Directory('hashtables')
     Directory('make')
     Directory('objective-c_tuesdays')
-    Directory('resume')
     Directory('shell')
 
     aughey()
@@ -28,4 +28,5 @@ with root:
     maze()
     memory_match()
     random_words()
+    resume()
     science_fiction()

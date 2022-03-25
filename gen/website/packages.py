@@ -1,5 +1,5 @@
 from markdown import inline_markdown_to_markup
-from markup import Section, H1, P, Ul, Li, A, Img, Strong, Text
+from markup import Section, H1, P, Ul, Li, A, Img, Strong, Text, Em
 
 
 def package(
@@ -17,11 +17,11 @@ def package(
         with Ul():
             with Li(class_names=['installer']):
                 with A(package):
-                    Strong(f'{name} {version} installer package')
+                    Text(f'{name} {version} installer package')
             with Li():
                 with A(source):
-                    inline_markdown_to_markup(f'build script for the **{name}** installer package')
+                    inline_markdown_to_markup(f'build script for the _{name}_ installer package')
             with Li():
                 with A(project):
-                    Strong(name)
+                    Em(name)
                     Text(' project website')
