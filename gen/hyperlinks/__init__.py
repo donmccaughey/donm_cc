@@ -13,6 +13,7 @@ if TYPE_CHECKING:
     from resources.resource import Resource
 
 
+BAD_HOSTS = ['www.linkedin.com']
 USER_AGENT = 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/15.2 Safari/605.1.15'
 
 
@@ -36,7 +37,10 @@ def check_external_links(external_links: list[(Resource, str, ParseResult)]) -> 
             sys.stdout.write('.')
             sys.stdout.flush()
         else:
-            sys.stdout.write('x')
+            if url.netloc in BAD_HOSTS:
+                sys.stdout.write('*')
+            else:
+                sys.stdout.write('x')
             sys.stdout.flush()
             broken_links.append((resource, href, response.status_code))
         count += 1
