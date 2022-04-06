@@ -43,6 +43,11 @@ that holds Unix systems together.
 .url http://redsymbol.net/articles/unofficial-bash-strict-mode/
 .author Aaron Maxwell
 
+.link blog Writing Safe Shell Scripts
+.url https://sipb.mit.edu/doc/safe-shell/
+.author MIT Student Information Processing Board
+.date 2020-02-01
+
 .link blog How to write idempotent Bash scripts
 .url https://arslan.io/2019/07/03/how-to-write-idempotent-bash-scripts/
 .author Fatih Arslan
