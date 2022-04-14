@@ -1,5 +1,5 @@
 from markdown import inline_markdown_to_markup
-from markup import Section, H1, Pre, P
+from markup import Section, H1, Pre, P, Text, A
 from resources import Directory, Page
 
 
@@ -20,6 +20,10 @@ def maze():
             with Section(class_names=['generator']):
                 H1('Maze', id='maze_title')
                 Pre(id='maze')
+                with P(class_names=['next_maze']):
+                    Text('(Try a ')
+                    A(href='.', text='different maze', id='next_maze')
+                    Text('.)')
             with Section(class_names=['implementation']):
                 H1('Implementation')
                 with P():
