@@ -91,14 +91,6 @@ class Page(Resource):
         path = os.path.join(output_path, self.path)
         path = os.path.normpath(path)
         print('writing page', path)
-        self.write_page(path, is_dry_run, overwrite)
-
-    def write_page(
-            self,
-            path: str,
-            is_dry_run: bool,
-            overwrite: bool,
-    ):
         if not is_dry_run:
             mode = 'w' if overwrite else 'x'
             with open(path, mode, encoding='utf8') as f:
