@@ -1,7 +1,19 @@
-import argparse
-
+from argparse import ArgumentParser, Namespace
 from hyperlinks import check_external_links, http_external_links
 from website import root
+
+
+def get_options() -> Namespace:
+    arg_parser = ArgumentParser('Generate the site')
+    arg_parser.add_argument('--dry-run', action='store_true', default=False,
+                            help="don't write or copy files")
+    arg_parser.add_argument('--overwrite', action='store_true', default=False,
+                            help='overwrite existing files')
+    arg_parser.add_argument('--omit-styles', action='store_true', default=False,
+                            help='generate without stylesheet links')
+    arg_parser.add_argument('--check-links', action='store_true', default=False,
+                            help='check that hyperlinks are valid')
+    return arg_parser.parse_args()
 
 
 def check_links(root):
@@ -19,24 +31,19 @@ def check_links(root):
 
 
 def main():
-    arg_parser = argparse.ArgumentParser('Generate the site')
-    arg_parser.add_argument('--dry-run', action='store_true', default=False, help="don't write or copy files")
-    arg_parser.add_argument('--overwrite', action='store_true', default=False, help='overwrite existing files')
-    arg_parser.add_argument('--omit-styles', action='store_true', default=False, help='generate without stylesheet links')
-    arg_parser.add_argument('--check-links', action='store_true', default=False, help='check that hyperlinks are valid')
-    args = arg_parser.parse_args()
+    options = get_options()
 
     root.find_files('../site-src')
     root.build_documents()
 
-    if args.check_links:
+    if options.check_links:
         check_links(root)
     else:
         root.generate(
             '../wwwroot',
-            is_dry_run=args.dry_run,
-            overwrite=args.overwrite,
-            omit_styles=args.omit_styles,
+            is_dry_run=options.dry_run,
+            overwrite=options.overwrite,
+            omit_styles=options.omit_styles,
         )
 
 

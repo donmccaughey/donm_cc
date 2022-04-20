@@ -271,6 +271,23 @@ class Section(BlockElement):
         )
 
 
+class Style(BlockElement):
+    def __init__(
+            self,
+            text: Optional[str] = None,
+            parent: Optional[Node] = None,
+            **kwargs,
+    ):
+        super().__init__(
+            name='style',
+            class_names=None,
+            parent=parent,
+            **kwargs,
+        )
+        if text:
+            Text(text, parent=self)
+
+
 class Ul(BlockElement):
     def __init__(
             self,
