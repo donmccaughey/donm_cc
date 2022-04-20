@@ -75,6 +75,3 @@ class Resource:
             overwrite=False,
     ):
         raise NotImplementedError
-
-    def visit(self, action: Callable[[Resource], None]):
-        action(self)

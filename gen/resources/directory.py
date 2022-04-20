@@ -119,11 +119,5 @@ class Directory(Resource):
             child.generate(output_path, is_dry_run, overwrite)
 
     def accumulate_links(self, links: list[(Resource, str)]):
-        def find_links(resource: Resource):
+        for resource in self:
             links.extend(resource.find_links())
-        self.visit(find_links)
-
-    def visit(self, action: Callable[[Resource], None]):
-        action(self)
-        for child in self.children:
-            child.visit(action)
