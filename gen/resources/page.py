@@ -87,24 +87,19 @@ class Page(Resource):
             output_path: str,
             is_dry_run=True,
             overwrite=False,
-            omit_styles=False,
     ):
         path = os.path.join(output_path, self.path)
         path = os.path.normpath(path)
         print('writing page', path)
-        self.write_page(path, is_dry_run, overwrite, omit_styles)
+        self.write_page(path, is_dry_run, overwrite)
 
     def write_page(
             self,
             path: str,
             is_dry_run: bool,
             overwrite: bool,
-            omit_styles: bool,
     ):
         if not is_dry_run:
-            if omit_styles:
-                self.document.detach_descendants(lambda node: isinstance(node, Stylesheet))
-
             mode = 'w' if overwrite else 'x'
             with open(path, mode, encoding='utf8') as f:
                 f.write(self.document.markup(80))

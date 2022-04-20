@@ -1,5 +1,5 @@
 from __future__ import annotations
-from typing import Optional, TYPE_CHECKING
+from typing import Optional, TYPE_CHECKING, Callable
 from . import with_parent
 
 if TYPE_CHECKING:
@@ -67,9 +67,11 @@ class Resource:
             output_path: str,
             is_dry_run=True,
             overwrite=False,
-            omit_styles=False,
     ):
         raise NotImplementedError
 
     def accumulate_links(self, links: list[(Resource, str)]):
         raise NotImplementedError
+
+    def visit(self, action: Callable[[Resource], None]):
+        action(self)

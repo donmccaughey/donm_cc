@@ -6,7 +6,6 @@ from file_formats.page_file import Link, BookLink
 from file_formats.page_file.parser import parse
 from markdown import inline_markdown_to_markup
 from markup import Section, H1, P, Ul
-from website.links import book, link as general_link
 from .directory import Directory
 from .page import Page
 
@@ -53,6 +52,8 @@ class PageFile(Page):
                             self.link(link)
 
     def link(self, link: BookLink | Link):
+        from website.links import book, link as general_link
+
         match link:
             case BookLink():
                 book(

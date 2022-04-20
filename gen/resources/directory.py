@@ -1,6 +1,6 @@
 from __future__ import annotations
 import os
-from typing import Optional
+from typing import Optional, Callable
 
 import resources
 import shutil
@@ -99,7 +99,6 @@ class Directory(Resource):
             output_path: str,
             is_dry_run=True,
             overwrite=False,
-            omit_styles=False,
     ):
         path = os.path.join(output_path, self.path)
         path = os.path.normpath(path)
@@ -112,8 +111,13 @@ class Directory(Resource):
             if not is_dry_run:
                 os.makedirs(path, exist_ok=overwrite)
         for child in self.children:
-            child.generate(output_path, is_dry_run, overwrite, omit_styles)
+            child.generate(output_path, is_dry_run, overwrite)
 
     def accumulate_links(self, links: list[(Resource, str)]):
         for child in self.children:
             child.accumulate_links(links)
+
+    def visit(self, action: Callable[[Resource], None]):
+        action(self)
+        for child in self.children:
+            child.visit(action)

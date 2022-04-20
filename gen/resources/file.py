@@ -28,7 +28,6 @@ class File(Resource):
             output_path: str,
             is_dry_run=True,
             overwrite=False,
-            omit_styles=False,
     ):
         path = os.path.join(output_path, self.path)
         path = os.path.normpath(path)

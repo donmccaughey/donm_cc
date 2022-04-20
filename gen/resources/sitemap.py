@@ -32,7 +32,6 @@ class Sitemap(Resource):
             output_path: str,
             is_dry_run=True,
             overwrite=False,
-            omit_styles=False,
     ):
         links = []
         self.parent.accumulate_links(links)
