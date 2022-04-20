@@ -49,6 +49,12 @@ def omit_styles(root: Directory):
     root.visit(remove_stylesheets)
 
 
+def merge_stylesheets(root: Directory):
+    for resource in root:
+        # TODO: implement merging
+        print(f'>>>>> {resource.url}')
+
+
 def main():
     options = get_options()
 
@@ -61,6 +67,8 @@ def main():
 
     if options.omit_styles:
         omit_styles(root)
+
+    merge_stylesheets(root)
 
     root.generate(
         '../wwwroot',

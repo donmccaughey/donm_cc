@@ -33,6 +33,11 @@ class Directory(Resource):
     def __exit__(self, exc_type, exc_val, exc_tb):
         with_parent.pop()
 
+    def __iter__(self):
+        yield self
+        for child in self.children:
+            yield from child
+
     def dir_parts(self) -> list[str]:
         return (
                 (self.parent.dir_parts() if self.parent else [])

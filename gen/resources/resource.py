@@ -19,6 +19,9 @@ class Resource:
         if self.parent:
             self.parent.children.append(self)
 
+    def __iter__(self):
+        yield self
+
     def __lt__(self, other: Resource) -> bool:
         return self.path_parts() < other.path_parts()
 
