@@ -75,6 +75,12 @@ class Page(Resource):
         with self.head_content:
             Stylesheet(src)
 
+    def remove_stylesheets(self):
+        assert self.document
+        self.document.detach_descendants(
+            lambda node: isinstance(node, Stylesheet)
+        )
+
     def build_documents(self):
         self.document = Document()
         with self.document:

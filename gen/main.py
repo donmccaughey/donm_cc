@@ -36,17 +36,10 @@ def check_links(root: Directory) -> int:
 
 
 def omit_styles(root: Directory):
-
-    def is_stylesheet(node: Node) -> bool:
-        return isinstance(node, Stylesheet)
-
-    def remove_stylesheets(resource: Resource):
+    for resource in root:
         if isinstance(resource, Page):
             page: Page = resource
-            assert page.document
-            page.document.detach_descendants(is_stylesheet)
-
-    root.visit(remove_stylesheets)
+            page.remove_stylesheets()
 
 
 def merge_stylesheets(root: Directory):
