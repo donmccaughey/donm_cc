@@ -1,5 +1,5 @@
 from __future__ import annotations
-from typing import Optional, TYPE_CHECKING, Callable, Tuple
+from typing import Optional, TYPE_CHECKING
 from . import with_parent
 
 if TYPE_CHECKING:
@@ -32,9 +32,6 @@ class Resource:
             directories.insert(0, parent)
             parent = parent.parent
         return directories
-
-    def find_links(self) -> list[Tuple[Resource, str]]:
-        return []
 
     @property
     def dirname(self) -> str:

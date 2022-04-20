@@ -1,6 +1,6 @@
 from __future__ import annotations
 import os
-from typing import Optional, Callable
+from typing import Optional
 
 import resources
 import shutil
@@ -66,6 +66,16 @@ class Directory(Resource):
                 all.append(child)
         return all
 
+    def find_all_links(self) -> list[(Resource, str)]:
+        from .page import Page
+
+        links = []
+        for resource in self:
+            if isinstance(resource, Page):
+                page: Page = resource
+                links += page.find_links()
+        return links
+
     def find_files(self, source_dir: str):
         path = os.path.join(os.getcwd(), source_dir)
         path = os.path.join(path, self.dirname)
@@ -117,7 +127,3 @@ class Directory(Resource):
                 os.makedirs(path, exist_ok=overwrite)
         for child in self.children:
             child.generate(output_path, is_dry_run, overwrite)
-
-    def accumulate_links(self, links: list[(Resource, str)]):
-        for resource in self:
-            links.extend(resource.find_links())

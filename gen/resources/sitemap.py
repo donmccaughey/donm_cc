@@ -33,8 +33,7 @@ class Sitemap(Resource):
             is_dry_run=True,
             overwrite=False,
     ):
-        links = []
-        self.parent.accumulate_links(links)
+        links = self.parent.find_all_links()
         parsed_links = parse_links(links)
         internal_links = only_internal_links(parsed_links)
         page_links = only_page_links(internal_links)

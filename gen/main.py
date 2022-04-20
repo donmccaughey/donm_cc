@@ -21,8 +21,7 @@ def get_options() -> Namespace:
 
 
 def check_links(root: Directory) -> int:
-    links = []
-    root.accumulate_links(links)
+    links = root.find_all_links()
     print(f'Found {len(links)} links')
     external_links = http_external_links(links)
     print(f'Checking {len(external_links)} external links')
