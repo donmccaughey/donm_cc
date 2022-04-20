@@ -37,6 +37,19 @@ class Page(Resource):
     def __exit__(self, exc_type, exc_val, exc_tb):
         with_node.pop()
 
+    def find_links(self) -> list[Tuple[Resource, str]]:
+        nodes = []
+        self.document.accumulate_nodes(nodes)
+        links = []
+        for node in nodes:
+            if isinstance(node, A):
+                a: A = node
+                href = a.attributes['href']
+                if href:
+                    # TODO: create absolute path for link
+                    links.append((self, href))
+        return links
+
     def find_nav_links(self) -> list[Tuple[str, str]]:
         directories = self.find_directories()
         if not directories:
@@ -95,14 +108,3 @@ class Page(Resource):
             mode = 'w' if overwrite else 'x'
             with open(path, mode, encoding='utf8') as f:
                 f.write(self.document.markup(80))
-
-    def accumulate_links(self, links: list[(Resource, str)]):
-        nodes = []
-        self.document.accumulate_nodes(nodes)
-        for node in nodes:
-            if isinstance(node, A):
-                a: A = node
-                href = a.attributes['href']
-                if href:
-                    # TODO: create absolute path for link
-                    links.append((self, href))

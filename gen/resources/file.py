@@ -44,6 +44,3 @@ class File(Resource):
         self.source = os.path.relpath(path)
         if not os.path.exists(self.source):
             raise FileNotFoundError
-
-    def accumulate_links(self, links: list[(Resource, str)]):
-        pass

@@ -48,6 +48,3 @@ class Sitemap(Resource):
             with open(path, mode, encoding='utf8') as f:
                 for url in sorted(urls):
                     f.write(f'{url}\n')
-
-    def accumulate_links(self, links: list[(Resource, str)]):
-        pass
