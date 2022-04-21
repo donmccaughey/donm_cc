@@ -29,6 +29,11 @@ class Node:
     def __exit__(self, exc_type, exc_val, exc_tb):
         with_node.pop()
 
+    def __iter__(self):
+        yield self
+        for child in self.children:
+            yield from child
+
     @property
     def has_children(self) -> bool:
         return len(self.children) > 0
@@ -72,6 +77,18 @@ class Node:
             else:
                 detached += child.detach_descendants(matching)
         return detached
+
+    def insert_after(self, node: Node):
+        node.parent = self.parent
+        node.previous_sibling = self
+        node.next_sibling = self.next_sibling
+
+        if self.next_sibling:
+            self.next_sibling.previous_sibling = node
+        self.next_sibling = node
+
+        i = self.parent.children.index(self)
+        self.parent.children.insert(i + 1, node)
 
     def markup(self, width: int) -> str:
         raise NotImplementedError

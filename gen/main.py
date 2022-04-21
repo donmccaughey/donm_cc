@@ -17,7 +17,10 @@ def get_options() -> Namespace:
                             help='generate without stylesheet links')
     arg_parser.add_argument('--check-links', action='store_true', default=False,
                             help='check that hyperlinks are valid')
-    return arg_parser.parse_args()
+    options = arg_parser.parse_args()
+    options.source_dir = '../site-src'
+    options.output_dir = '../wwwroot'
+    return options
 
 
 def check_links(root: Directory) -> int:
@@ -41,16 +44,17 @@ def omit_styles(root: Directory):
             page.remove_stylesheets()
 
 
-def merge_stylesheets(root: Directory):
+def merge_stylesheets(root: Directory, source_dir: str):
     for resource in root:
-        # TODO: implement merging
-        print(f'>>>>> {resource.url}')
+        if isinstance(resource, Page):
+            page: Page = resource
+            page.merge_stylesheets(source_dir)
 
 
 def main():
     options = get_options()
 
-    root.find_files('../site-src')
+    root.find_files(options.source_dir)
     root.build_documents()
 
     if options.check_links:
@@ -59,11 +63,11 @@ def main():
 
     if options.omit_styles:
         omit_styles(root)
-
-    merge_stylesheets(root)
+    else:
+        merge_stylesheets(root, options.source_dir)
 
     root.generate(
-        '../wwwroot',
+        options.output_dir,
         is_dry_run=options.dry_run,
         overwrite=options.overwrite,
     )

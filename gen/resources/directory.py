@@ -111,11 +111,11 @@ class Directory(Resource):
 
     def generate(
             self,
-            output_path: str,
+            output_dir: str,
             is_dry_run=True,
             overwrite=False,
     ):
-        path = os.path.join(output_path, self.path)
+        path = os.path.join(output_dir, self.path)
         path = os.path.normpath(path)
         if os.path.exists(path) and overwrite:
             print(f'removing existing directory {path}')
@@ -126,4 +126,4 @@ class Directory(Resource):
             if not is_dry_run:
                 os.makedirs(path, exist_ok=overwrite)
         for child in self.children:
-            child.generate(output_path, is_dry_run, overwrite)
+            child.generate(output_dir, is_dry_run, overwrite)

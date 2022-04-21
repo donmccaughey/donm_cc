@@ -67,7 +67,7 @@ class Resource:
 
     def generate(
             self,
-            output_path: str,
+            output_dir: str,
             is_dry_run=True,
             overwrite=False,
     ):

@@ -25,11 +25,11 @@ class File(Resource):
 
     def generate(
             self,
-            output_path: str,
+            output_dir: str,
             is_dry_run=True,
             overwrite=False,
     ):
-        path = os.path.join(output_path, self.path)
+        path = os.path.join(output_dir, self.path)
         path = os.path.normpath(path)
         print('copying file', path, 'from source', self.source)
         if not is_dry_run:

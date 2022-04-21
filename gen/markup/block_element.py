@@ -285,7 +285,7 @@ class Style(BlockElement):
             **kwargs,
         )
         if text:
-            Text(text, parent=self)
+            Text(text, preformatted=True, parent=self)
 
 
 class Ul(BlockElement):

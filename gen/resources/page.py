@@ -2,6 +2,7 @@ from __future__ import annotations
 import os
 from typing import Optional, Tuple
 from markup import *
+from markup.block_element import Style
 from markup.node import with_node
 from .directory import Directory
 from .resource import Resource
@@ -75,6 +76,26 @@ class Page(Resource):
         with self.head_content:
             Stylesheet(src)
 
+    def merge_stylesheets(self, source_dir: str):
+        assert self.document
+        stylesheets = []
+        for node in self.document:
+            if isinstance(node, Stylesheet):
+                stylesheets.append(node)
+        for stylesheet in stylesheets:
+            href = stylesheet.attributes['href']
+            if os.path.isabs(href):
+                path = os.path.join(source_dir, href[1:])
+            else:
+                path = os.path.join(source_dir, self.dirname, href)
+
+            with open(path, 'r') as f:
+                css = f.read()
+
+            style = Style(css)
+            stylesheet.insert_after(style)
+            stylesheet.detach()
+
     def remove_stylesheets(self):
         assert self.document
         self.document.detach_descendants(
@@ -103,11 +124,11 @@ class Page(Resource):
 
     def generate(
             self,
-            output_path: str,
+            output_dir: str,
             is_dry_run=True,
             overwrite=False,
     ):
-        path = os.path.join(output_path, self.path)
+        path = os.path.join(output_dir, self.path)
         path = os.path.normpath(path)
         print('writing page', path)
         if not is_dry_run:

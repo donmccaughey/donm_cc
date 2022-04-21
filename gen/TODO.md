@@ -13,7 +13,6 @@
 - add link checking for internal links
 - add link checking for `sitemap.txt`
 - add `.tagline` page file directive to specify home page link subtext
-- insert `base.css` into generated pages
 - trace and remove unused css from pages
 - investigate stripping unneeded metadata from images
 - investigate improving accessibility

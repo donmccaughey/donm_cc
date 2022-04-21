@@ -29,7 +29,7 @@ class Sitemap(Resource):
 
     def generate(
             self,
-            output_path: str,
+            output_dir: str,
             is_dry_run=True,
             overwrite=False,
     ):
@@ -39,7 +39,7 @@ class Sitemap(Resource):
         page_links = only_page_links(internal_links)
         urls = set(to_absolute_urls(self.root_url, page_links))
 
-        path = os.path.join(output_path, self.path)
+        path = os.path.join(output_dir, self.path)
         path = os.path.normpath(path)
         print('writing sitemap', path)
         if not is_dry_run:
