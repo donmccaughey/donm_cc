@@ -10,14 +10,9 @@
     a:visited {
         color: indigo;
     }
-    @media (prefers-color-scheme: dark) {
-        a {
-            color: powderblue;
-        }
-
-        a:visited {
-            color: violet;
-        }
+    body {
+        padding-top: 24pt; 
+        padding-bottom: 1em;
     }
     body, html {
         background: white;
@@ -26,16 +21,6 @@
         font: 12pt Helvetica, Arial, sans-serif;
         margin: 0;
         padding: 0;
-    }
-    @media (prefers-color-scheme: dark) {
-        body, html {
-            background: black;
-            color: white;
-        }
-    }
-    body {
-        padding-top: 24pt; 
-        padding-bottom: 1em;
     }
     footer {
         background: white;
@@ -49,17 +34,6 @@
     footer a {
         color: gray;
     }
-    @media (prefers-color-scheme: dark) {
-        footer {
-            background: black;
-            border-top: 1pt solid whitesmoke;
-            color: whitesmoke;
-        }
-
-        footer a {
-            color: silver;
-        }
-    }
     h1 {
         border: 0;
         font-size: 18pt;
@@ -67,15 +41,15 @@
         margin: 0.5em 0;
         padding: 0;
     }
-    h2:before {
-        content: "§" " ";
-    }
     h2 {
         border: 0;
         font-size: 14pt;
         font-weight: 500;
         margin: 0.5em 0;
         padding: 0;
+    }
+    h2:before {
+        content: "§" " ";
     }
     h3 {
         border: 0;
@@ -97,12 +71,6 @@
         overflow: auto;
         padding: 1em;
     }
-    @media (prefers-color-scheme: dark) {
-        pre {
-            background: dimgray;
-            color: white;
-        }
-    }
     section {
         border: 0;
         margin: 1.5em auto 0 auto;
@@ -116,22 +84,11 @@
         color: gray;
         font: italic 12pt Helvetica, Arial, sans-serif;
     }
-    @media (prefers-color-scheme: dark) {
-        .authors {
-            color: silver;
-        }
-    }
     .banner {
         border: 0;
         margin: 0;
         padding: 0;
         position: relative;
-        width: 100%;
-    }
-    .banner img {
-        border: 0;
-        margin: 0;
-        padding: 0;
         width: 100%;
     }
     .banner .caption {
@@ -146,6 +103,12 @@
         right: 1em;
         position: absolute;
     }
+    .banner img {
+        border: 0;
+        margin: 0;
+        padding: 0;
+        width: 100%;
+    }
     .collection {
         border: 0;
         margin: 0;
@@ -156,11 +119,6 @@
         color: dimgray;
         font-size: 16pt;
     }
-    @media (prefers-color-scheme: dark) {
-        .collection h1 {
-            color: whitesmoke;
-        }
-    }
     .data_table {
         border-collapse: collapse;
     }
@@ -169,10 +127,18 @@
         padding: 0.25em;
         text-align: center;
     }
-    @media (prefers-color-scheme: dark) {
-        .data_table th, .data_table td {
-            border: thin solid white;
-        }
+    .details {
+        font-size: 11pt;
+        margin: 0 0 0 1em;
+        padding: 0 0 0 1ex;
+    }
+    .details li {
+        list-style-type: circle;
+        margin: 2pt 0;
+        padding: 0;
+    }
+    .education {
+        page-break-inside: avoid;
     }
     .item {
         background: whitesmoke;
@@ -183,9 +149,6 @@
         margin: 1em;
         padding: 0;
         text-align: center;
-    }
-    .item:hover {
-        border: 1pt solid black;
     }
     .item a {
         border: 0;
@@ -198,59 +161,15 @@
     .item a:visited {
         color: dimgray;
     }
+    .item em {
+        display: block;
+    }
     .item strong {
         font-size: 14pt;
         font-weight: normal;
     }
-    .item em {
-        display: block;
-    }
-    @media (prefers-color-scheme: dark) {
-        .item {
-            background: dimgray;
-            border: 1pt solid gray;
-            color: white;
-        }
-
-        .item:hover {
-            border: 1pt solid white;
-        }
-
-        .item a {
-            color: white;
-        }
-
-        .item a:visited {
-            color: whitesmoke;
-        }
-    }
-    .links li:before {
-        content: "🔗";
-        font-size: 8pt;
-        position: absolute;
-        left: -2em;
-        top: 6pt;
-    }
-    .links li.blog:before {
-        content: "🗞";
-    }
-    .links li.book:before {
-        content: "📖";
-    }
-    .links li.docs:before {
-        content: "📑";
-    }
-    .links li.email:before {
-        content: "📧";
-    }
-    .links li.podcast:before {
-        content: "🎤";
-    }
-    .links li.repo:before {
-        content: "💼";
-    }
-    .links li.site:before {
-        content: "🌐";
+    .item:hover {
+        border: 1pt solid black;
     }
     .links li {
         color: black;
@@ -273,30 +192,44 @@
     .links li a:visited {
         color: dimgray;
     }
+    .links li.blog:before {
+        content: "🗞";
+    }
+    .links li.book:before {
+        content: "📖";
+    }
+    .links li.docs:before {
+        content: "📑";
+    }
+    .links li.email:before {
+        content: "📧";
+    }
+    .links li.podcast:before {
+        content: "🎤";
+    }
+    .links li.repo:before {
+        content: "💼";
+    }
+    .links li.site:before {
+        content: "🌐";
+    }
+    .links li:before {
+        content: "🔗";
+        font-size: 8pt;
+        position: absolute;
+        left: -2em;
+        top: 6pt;
+    }
     .links time {
         color: gray;
         font: italic 12pt Helvetica, Arial, sans-serif;
         white-space: nowrap;
     }
-    @media (prefers-color-scheme: dark) {
-        .links li {
-            color: white;
-        }
-
-        .links li a {
-            color: white;
-        }
-
-        .links li a:visited {
-            color: whitesmoke;
-        }
-
-        .links time {
-            color: silver;
-        }
-    }
     .memory_map {
         border-collapse: collapse;
+    }
+    .memory_map td.blank {
+        border: none;
     }
     .memory_map th, .memory_map td {
         border: thin solid black;
@@ -304,14 +237,6 @@
         padding: 0.25em;
         text-align: center;
         width: 2em;
-    }
-    .memory_map td.blank {
-        border: none;
-    }
-    @media (prefers-color-scheme: dark) {
-        .memory_map th, .memory_map td {
-            border: thin solid white;
-        }
     }
     .menu {
         background: rgba(192, 192, 192, 0.9); 
@@ -335,36 +260,6 @@
         padding: 0;
         text-decoration: none;
     }
-    @media (prefers-color-scheme: dark) {
-        .menu {
-            background: rgba(128, 128, 128, 0.9); 
-            border-bottom: 2pt solid gray;
-            color: black;
-        }
-
-        .menu a {
-            color: black;
-        }
-    }
-    .overview h1 {
-        text-align: center;
-    }
-    .title {
-        font: 14pt Helvetica, Arial, sans-serif;
-    }
-    .details {
-        font-size: 11pt;
-        margin: 0 0 0 1em;
-        padding: 0 0 0 1ex;
-    }
-    .details li {
-        list-style-type: circle;
-        margin: 2pt 0;
-        padding: 0;
-    }
-    .education {
-        page-break-inside: avoid;
-    }
     .overview {
         position: relative;
     }
@@ -383,14 +278,119 @@
     .overview aside ul li {
         list-style-type: none;
     }
+    .overview h1 {
+        text-align: center;
+    }
+    .personal-projects {
+        page-break-inside: avoid;
+    }
     .project {
         page-break-inside: avoid;
     }
     .project::first-line {
         line-height: 200%;
     }
-    .personal-projects {
-        page-break-inside: avoid;
+    .title {
+        font: 14pt Helvetica, Arial, sans-serif;
+    }
+    @media (prefers-color-scheme: dark) {
+        a {
+            color: powderblue;
+        }
+
+        a:visited {
+            color: violet;
+        }
+    }
+    @media (prefers-color-scheme: dark) {
+        body, html {
+            background: black;
+            color: white;
+        }
+    }
+    @media (prefers-color-scheme: dark) {
+        footer {
+            background: black;
+            border-top: 1pt solid whitesmoke;
+            color: whitesmoke;
+        }
+
+        footer a {
+            color: silver;
+        }
+    }
+    @media (prefers-color-scheme: dark) {
+        pre {
+            background: dimgray;
+            color: white;
+        }
+    }
+    @media (prefers-color-scheme: dark) {
+        .authors {
+            color: silver;
+        }
+    }
+    @media (prefers-color-scheme: dark) {
+        .collection h1 {
+            color: whitesmoke;
+        }
+    }
+    @media (prefers-color-scheme: dark) {
+        .data_table th, .data_table td {
+            border: thin solid white;
+        }
+    }
+    @media (prefers-color-scheme: dark) {
+        .item {
+            background: dimgray;
+            border: 1pt solid gray;
+            color: white;
+        }
+
+        .item:hover {
+            border: 1pt solid white;
+        }
+
+        .item a {
+            color: white;
+        }
+
+        .item a:visited {
+            color: whitesmoke;
+        }
+    }
+    @media (prefers-color-scheme: dark) {
+        .links li {
+            color: white;
+        }
+
+        .links li a {
+            color: white;
+        }
+
+        .links li a:visited {
+            color: whitesmoke;
+        }
+
+        .links time {
+            color: silver;
+        }
+    }
+    @media (prefers-color-scheme: dark) {
+        .memory_map th, .memory_map td {
+            border: thin solid white;
+        }
+    }
+    @media (prefers-color-scheme: dark) {
+        .menu {
+            background: rgba(128, 128, 128, 0.9); 
+            border-bottom: 2pt solid gray;
+            color: black;
+        }
+
+        .menu a {
+            color: black;
+        }
     }
 </style>
 <nav class=menu>
