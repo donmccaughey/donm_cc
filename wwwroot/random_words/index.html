@@ -4,36 +4,12 @@
 <meta name=viewport content='initial-scale=0.9, width=device-width'>
 <title>Random Words</title>
 <style>
-    /* 
-     * Colors:
-     *      #ffffff white
-     *      #f5f5f5 whitesmoke
-     *      #c0c0c0 silver
-     *      #a9a9a9 darkgray
-     *      #808080 gray
-     *      #696969 dimgray
-     *      #000000 black
-     *
-     * Link colors:
-     *      #0000cd mediumblue
-     *      #808080 gray
-     *
-     *      #b0e0e6 powderblue
-     *      #c0c0c0 silver
-     *
-     * Safari default link colors:
-     *      #0000ee unvisited blue
-     *      #551a8b visited purple
-     */
-
     a {
         color: mediumblue;
     }
-
     a:visited {
         color: indigo;
     }
-
     @media (prefers-color-scheme: dark) {
         a {
             color: powderblue;
@@ -43,7 +19,6 @@
             color: violet;
         }
     }
-
     body, html {
         background: white;
         border: 0;
@@ -52,19 +27,16 @@
         margin: 0;
         padding: 0;
     }
-
     @media (prefers-color-scheme: dark) {
         body, html {
             background: black;
             color: white;
         }
     }
-
     body {
-        padding-top: 24pt; /* space for fixed menu */
+        padding-top: 24pt; 
         padding-bottom: 1em;
     }
-
     footer {
         background: white;
         border-top: 1pt solid dimgray;
@@ -74,11 +46,9 @@
         padding: 1em 0;
         text-align: center;
     }
-
     footer a {
         color: gray;
     }
-
     @media (prefers-color-scheme: dark) {
         footer {
             background: black;
@@ -90,7 +60,6 @@
             color: silver;
         }
     }
-
     h1 {
         border: 0;
         font-size: 18pt;
@@ -98,11 +67,9 @@
         margin: 0.5em 0;
         padding: 0;
     }
-
     h2:before {
-        content: '\00a7' ' ';
+        content: "§" " ";
     }
-
     h2 {
         border: 0;
         font-size: 14pt;
@@ -110,7 +77,6 @@
         margin: 0.5em 0;
         padding: 0;
     }
-
     h3 {
         border: 0;
         font-size: 12pt;
@@ -118,11 +84,9 @@
         margin: 0.5em 0;
         padding: 0;
     }
-
     li {
         margin-bottom: 0.5em;
     }
-
     pre {
         background: whitesmoke;
         border: 0;
@@ -133,36 +97,30 @@
         overflow: auto;
         padding: 1em;
     }
-
     @media (prefers-color-scheme: dark) {
         pre {
             background: dimgray;
             color: white;
         }
     }
-
     section {
         border: 0;
         margin: 1.5em auto 0 auto;
         max-width: 40em;
         padding: 0 1em;
     }
-
     time {
         white-space: nowrap;
     }
-
     .authors {
         color: gray;
         font: italic 12pt Helvetica, Arial, sans-serif;
     }
-
     @media (prefers-color-scheme: dark) {
         .authors {
             color: silver;
         }
     }
-
     .banner {
         border: 0;
         margin: 0;
@@ -170,62 +128,52 @@
         position: relative;
         width: 100%;
     }
-
     .banner img {
         border: 0;
         margin: 0;
         padding: 0;
         width: 100%;
     }
-
     .banner .caption {
         color: whitesmoke;
         right: 1em;
         position: absolute;
         top: 0.67em;
     }
-
     .banner .lower-caption {
         bottom: 0.67em;
         color: whitesmoke;
         right: 1em;
         position: absolute;
     }
-
     .collection {
         border: 0;
         margin: 0;
         padding: 0;
         text-align: center;
     }
-
     .collection h1 {
         color: dimgray;
         font-size: 16pt;
     }
-
     @media (prefers-color-scheme: dark) {
         .collection h1 {
             color: whitesmoke;
         }
     }
-
     .data_table {
         border-collapse: collapse;
     }
-
     .data_table th, .data_table td {
         border: thin solid black;
         padding: 0.25em;
         text-align: center;
     }
-
     @media (prefers-color-scheme: dark) {
         .data_table th, .data_table td {
             border: thin solid white;
         }
     }
-
     .item {
         background: whitesmoke;
         border: 1pt solid silver;
@@ -236,11 +184,9 @@
         padding: 0;
         text-align: center;
     }
-
     .item:hover {
         border: 1pt solid black;
     }
-
     .item a {
         border: 0;
         color: black;
@@ -249,20 +195,16 @@
         padding: 0.5em 1em;
         text-decoration: none;
     }
-
     .item a:visited {
         color: dimgray;
     }
-
     .item strong {
         font-size: 14pt;
         font-weight: normal;
     }
-
     .item em {
         display: block;
     }
-
     @media (prefers-color-scheme: dark) {
         .item {
             background: dimgray;
@@ -282,43 +224,34 @@
             color: whitesmoke;
         }
     }
-
     .links li:before {
-        content: '\1f517';
+        content: "🔗";
         font-size: 8pt;
         position: absolute;
         left: -2em;
         top: 6pt;
     }
-
     .links li.blog:before {
-        content: '\1f5de';
+        content: "🗞";
     }
-
     .links li.book:before {
-        content: '\1f4d6';
+        content: "📖";
     }
-
     .links li.docs:before {
-        content: '\1f4d1';
+        content: "📑";
     }
-
     .links li.email:before {
-        content: '\1f4e7';
+        content: "📧";
     }
-
     .links li.podcast:before {
-        content: '\1f3a4';
+        content: "🎤";
     }
-
     .links li.repo:before {
-        content: '\1f4bc';
+        content: "💼";
     }
-
     .links li.site:before {
-        content: '\1f310';
+        content: "🌐";
     }
-
     .links li {
         color: black;
         font-size: 12pt;
@@ -330,26 +263,21 @@
         position: relative;
         width: 70ex;
     }
-
     .links li a {
         color: black;
         text-decoration: none;
     }
-
     .links li a:hover {
         text-decoration: underline;
     }
-
     .links li a:visited {
         color: dimgray;
     }
-
     .links time {
         color: gray;
         font: italic 12pt Helvetica, Arial, sans-serif;
         white-space: nowrap;
     }
-
     @media (prefers-color-scheme: dark) {
         .links li {
             color: white;
@@ -367,11 +295,9 @@
             color: silver;
         }
     }
-
     .memory_map {
         border-collapse: collapse;
     }
-
     .memory_map th, .memory_map td {
         border: thin solid black;
         font-family: "Courier New", Courier, monospace;
@@ -379,23 +305,20 @@
         text-align: center;
         width: 2em;
     }
-
     .memory_map td.blank {
         border: none;
     }
-
     @media (prefers-color-scheme: dark) {
         .memory_map th, .memory_map td {
             border: thin solid white;
         }
     }
-
     .menu {
-        background: rgba(192, 192, 192, 0.9); /* silver */
+        background: rgba(192, 192, 192, 0.9); 
         border: 0;
         border-bottom: 2pt solid silver;
         color: white;
-        height: 24pt; /* matches body padding-top */
+        height: 24pt; 
         margin: 0;
         padding: 0;
         position: fixed;
@@ -403,7 +326,6 @@
         width: 100%;
         z-index: 10;
     }
-
     .menu a {
         border: 0;
         color: white;
@@ -413,10 +335,9 @@
         padding: 0;
         text-decoration: none;
     }
-
     @media (prefers-color-scheme: dark) {
         .menu {
-            background: rgba(128, 128, 128, 0.9); /* gray */
+            background: rgba(128, 128, 128, 0.9); 
             border-bottom: 2pt solid gray;
             color: black;
         }
@@ -425,11 +346,9 @@
             color: black;
         }
     }
-
     .overview h1 {
         text-align: center;
     }
-
     .title {
         font: 14pt Helvetica, Arial, sans-serif;
     }
@@ -438,29 +357,24 @@
     #count {
         width: 4em;
     }
-
     #random_words {
         background: whitesmoke;
         display: inline-block;
         font-size: 14pt;
         margin: 0;
     }
-
     @media (prefers-color-scheme: dark) {
         #random_words {
             background: dimgray;
         }
     }
-
     #random_words {
         padding: 1em 2em;
     }
-
     #random_words ol {
         margin: 0;
         padding: 0 0 0 1em;
     }
-
     .generator {
         border: thin solid darkgrey;
     }

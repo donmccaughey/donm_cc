@@ -1,6 +1,9 @@
 from __future__ import annotations
+
 import os
 from typing import Optional, Tuple
+
+from css import CSS
 from markup import *
 from markup.block_element import Style
 from markup.node import with_node
@@ -89,10 +92,9 @@ class Page(Resource):
             else:
                 path = os.path.join(source_dir, self.dirname, href)
 
-            with open(path, 'r') as f:
-                css = f.read()
+            css = CSS(path)
 
-            style = Style(css)
+            style = Style(str(css))
             stylesheet.insert_after(style)
             stylesheet.detach()
 
