@@ -1,9 +1,10 @@
 from __future__ import annotations
 
 import os
+from functools import reduce
 from typing import Optional, Tuple
 
-from css import CSS
+from css import parse_css_file
 from markup import *
 from markup.block_element import Style
 from markup.node import with_node
@@ -85,18 +86,32 @@ class Page(Resource):
         for node in self.document:
             if isinstance(node, Stylesheet):
                 stylesheets.append(node)
+
+        css_files = []
+        parent = None
+        sibling = None
         for stylesheet in stylesheets:
+            if not parent:
+                parent = stylesheet.parent
+            if not sibling:
+                sibling = stylesheet.previous_sibling
+
             href = stylesheet.attributes['href']
             if os.path.isabs(href):
                 path = os.path.join(source_dir, href[1:])
             else:
                 path = os.path.join(source_dir, self.dirname, href)
 
-            css = CSS(path)
-
-            style = Style(str(css))
-            stylesheet.insert_after(style)
+            css_files.append(parse_css_file(path))
             stylesheet.detach()
+
+        if css_files:
+            css = reduce(lambda a, b: a + b, css_files)
+            style = Style(str(css))
+            if sibling:
+                sibling.insert_after(style)
+            else:
+                style.attach(parent)
 
     def remove_stylesheets(self):
         assert self.document
