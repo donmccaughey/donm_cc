@@ -1,3 +1,3 @@
-markdown-it-py == 2.0.1
+markdown-it-py == 2.1.0
 precisely == 0.1.9
 requests == 2.27.1
