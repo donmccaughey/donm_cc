@@ -1,7 +1,10 @@
-from typing import Optional, List, Tuple
+from collections import defaultdict
+from functools import reduce
+from typing import Optional, Tuple, List
 
 from tinycss2 import parse_stylesheet
-from tinycss2.ast import IdentToken, LiteralToken, AtRule, ParenthesesBlock, WhitespaceToken, HashToken, QualifiedRule
+from tinycss2.ast import IdentToken, LiteralToken, AtRule, ParenthesesBlock, \
+    WhitespaceToken, HashToken, QualifiedRule, Node
 
 
 UNRECOGNIZED_RULE = 0
@@ -32,23 +35,23 @@ class CSS:
             self.rules = list(rules)
         else:
             self.rules = []
-        self.rules.sort(key=lambda r: r.sort_key())
-        # TODO: merge identical media queries
+        self.rules = merge_media_queries(self.rules)
         # TODO: detect duplicate rules
+        self.rules.sort(key=lambda r: r.sort_key())
 
-    def __repr__(self):
+    def __add__(self, other) -> 'CSS':
+        rules = self.rules + other.rules
+        return CSS(rules=rules)
+
+    def __repr__(self) -> str:
         if self.path:
             return f'CSS file {self.path} ({len(self.rules)} rules)'
         else:
             return f'CSS file ({len(self.rules)} rules)'
 
-    def __str__(self):
+    def __str__(self) -> str:
         serialized_rules = [rule.serialize() for rule in self.rules]
         return '\n'.join(serialized_rules)
-
-    def __add__(self, other):
-        rules = self.rules + other.rules
-        return CSS(rules=rules)
 
     @staticmethod
     def is_media_query(node) -> bool:
@@ -60,35 +63,33 @@ class CSS:
 
 
 class Rule:
-    def __init__(self, node):
-        self.node = node
-        self.selector = Selector(self.node.prelude)
+    def __init__(self, qualified_rule: QualifiedRule):
+        self.qualified_rule = qualified_rule
+        self.selector = Selector(self.qualified_rule.prelude)
+
+    def __repr__(self) -> str:
+        return f'Rule "{self.selector}"'
 
     def __str__(self) -> str:
         return self.serialize()
 
     def is_class_rule(self) -> bool:
         return (
-            isinstance(self.node, QualifiedRule)
-            and isinstance(self.node.prelude[0], LiteralToken)
-            and self.node.prelude[0].value == '.'
+            isinstance(self.qualified_rule.prelude[0], LiteralToken)
+            and self.qualified_rule.prelude[0].value == '.'
         )
 
     def is_element_rule(self) -> bool:
         return (
-            isinstance(self.node, QualifiedRule)
-            and isinstance(self.node.prelude[0], IdentToken)
-            and self.node.prelude[0].value[0].isalpha()
+            isinstance(self.qualified_rule.prelude[0], IdentToken)
+            and self.qualified_rule.prelude[0].value[0].isalpha()
         )
 
     def is_id_rule(self) -> bool:
-        return (
-            isinstance(self.node, QualifiedRule)
-            and isinstance(self.node.prelude[0], HashToken)
-        )
+        return isinstance(self.qualified_rule.prelude[0], HashToken)
 
     def serialize(self) -> str:
-        return self.node.serialize()
+        return self.qualified_rule.serialize()
 
     def sort_key(self) -> Tuple[int, str]:
         if self.is_element_rule():
@@ -113,24 +114,49 @@ class Selector:
 
 
 class MediaQuery:
-    def __init__(self, node):
-        self.node = node
-        self.name = Expression(node.prelude)
+    def __init__(self, at_rule: AtRule):
+        self.at_rule = at_rule
+        self.expression = Expression(at_rule.prelude)
+
+    def __add__(self, other) -> 'MediaQuery':
+        content = list(self.at_rule.content)
+        content.extend(other.at_rule.content)
+        at_rule = AtRule(
+            self.at_rule.source_line,
+            self.at_rule.source_column,
+            self.at_rule.at_keyword,
+            self.at_rule.lower_at_keyword,
+            list(self.at_rule.prelude),
+            content
+        )
+        return MediaQuery(at_rule)
+
+    def __eq__(self, other) -> bool:
+        return self.expression == other.expression
+
+    def __repr__(self) -> str:
+        return f'MediaQuery "{self.expression}"'
 
     def __str__(self) -> str:
         return self.serialize()
 
     def serialize(self) -> str:
-        return self.node.serialize()
+        return self.at_rule.serialize()
 
     def sort_key(self) -> Tuple[int, str]:
-        return MEDIA_QUERY, str(self.name)
+        return MEDIA_QUERY, str(self.expression)
 
 
 class Expression:
-    def __init__(self, components):
+    def __init__(self, components: List[Node]):
         self.components = components
         self.name = components_name(components)
+
+    def __eq__(self, other) -> bool:
+        return self.name == other.name
+
+    def __hash__(self) -> int:
+        return hash(self.name)
 
     def __repr__(self) -> str:
         return f'Expression "{self.name}"'
@@ -140,9 +166,12 @@ class Expression:
 
 
 class UnrecognizedRule:
-    def __init__(self, node):
+    def __init__(self, node: Node):
         self.node = node
         self.name = repr(node)
+
+    def __repr__(self) -> str:
+        return f'UnrecognizedRule: "{self.name}"'
 
     def __str__(self) -> str:
         return self.serialize()
@@ -154,7 +183,7 @@ class UnrecognizedRule:
         return UNRECOGNIZED_RULE, self.name
 
 
-def components_name(components) -> str:
+def components_name(components: List[Node]) -> str:
     components = list(components)
     while isinstance(components[0], WhitespaceToken):
         del components[0]
@@ -178,3 +207,24 @@ def components_name(components) -> str:
             case _:
                 print(f'Unrecognized component {component}')
     return name
+
+
+def merge_media_queries(rules: List) -> List:
+    media_queries = []
+    everything_else = []
+    for rule in rules:
+        if isinstance(rule, MediaQuery):
+            media_queries.append(rule)
+        else:
+            everything_else.append(rule)
+
+    grouped_queries = defaultdict(list)
+    for media_query in media_queries:
+        grouped_queries[media_query.expression].append(media_query)
+
+    media_queries = []
+    for group in grouped_queries.values():
+        media_query = reduce(lambda a, b: a + b, group)
+        media_queries.append(media_query)
+
+    return everything_else + media_queries
