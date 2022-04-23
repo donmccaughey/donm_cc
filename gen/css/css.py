@@ -33,7 +33,8 @@ class CSS:
         else:
             self.rules = []
         self.rules.sort(key=lambda r: r.sort_key())
-
+        # TODO: merge identical media queries
+        # TODO: detect duplicate rules
 
     def __repr__(self):
         if self.path:
@@ -61,7 +62,7 @@ class CSS:
 class Rule:
     def __init__(self, node):
         self.node = node
-        self.name = components_name(self.node.prelude)
+        self.selector = Selector(self.node.prelude)
 
     def __str__(self) -> str:
         return self.serialize()
@@ -91,18 +92,30 @@ class Rule:
 
     def sort_key(self) -> Tuple[int, str]:
         if self.is_element_rule():
-            return ELEMENT_RULE, self.name
+            return ELEMENT_RULE, str(self.selector)
         if self.is_id_rule():
-            return ID_RULE, self.name
+            return ID_RULE, str(self.selector)
         if self.is_class_rule():
-            return CLASS_RULE, self.name
-        return 0, self.name
+            return CLASS_RULE, str(self.selector)
+        return 0, str(self.selector)
+
+
+class Selector:
+    def __init__(self, components):
+        self.components = components
+        self.name = components_name(components)
+
+    def __repr__(self) -> str:
+        return f'Selector "{self.name}"'
+
+    def __str__(self) -> str:
+        return self.name
 
 
 class MediaQuery:
     def __init__(self, node):
         self.node = node
-        self.name = components_name(node.prelude)
+        self.name = Expression(node.prelude)
 
     def __str__(self) -> str:
         return self.serialize()
@@ -111,7 +124,19 @@ class MediaQuery:
         return self.node.serialize()
 
     def sort_key(self) -> Tuple[int, str]:
-        return MEDIA_QUERY, self.name
+        return MEDIA_QUERY, str(self.name)
+
+
+class Expression:
+    def __init__(self, components):
+        self.components = components
+        self.name = components_name(components)
+
+    def __repr__(self) -> str:
+        return f'Expression "{self.name}"'
+
+    def __str__(self) -> str:
+        return self.name
 
 
 class UnrecognizedRule:
@@ -130,6 +155,7 @@ class UnrecognizedRule:
 
 
 def components_name(components) -> str:
+    components = list(components)
     while isinstance(components[0], WhitespaceToken):
         del components[0]
     while isinstance(components[-1], WhitespaceToken):
