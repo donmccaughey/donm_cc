@@ -1,3 +1,4 @@
+import re
 from collections import defaultdict
 from functools import reduce
 from typing import Optional, Tuple, List
@@ -140,6 +141,22 @@ class MediaQuery:
     def __str__(self) -> str:
         return self.serialize()
 
+    def remove_blank_lines(self):
+        def is_last(i: int):
+            return i == len(self.at_rule.content) - 1
+
+        content = []
+        for i in range(len(self.at_rule.content)):
+            node = self.at_rule.content[i]
+            if isinstance(node, WhitespaceToken):
+                if node.value == '\n':
+                    if not is_last(i):
+                        continue
+                else:
+                    node.value = re.sub('\n+', '\n', node.value)
+            content.append(node)
+        self.at_rule.content = content
+
     def serialize(self) -> str:
         return self.at_rule.serialize()
 
@@ -225,6 +242,7 @@ def merge_media_queries(rules: List) -> List:
     media_queries = []
     for group in grouped_queries.values():
         media_query = reduce(lambda a, b: a + b, group)
+        media_query.remove_blank_lines()
         media_queries.append(media_query)
 
     return everything_else + media_queries
