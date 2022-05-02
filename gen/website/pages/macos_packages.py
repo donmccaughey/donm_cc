@@ -47,8 +47,8 @@ def macos_packages():
             )
             package(
                 name='tree',
-                version='2.0.1',
-                package='https://github.com/donmccaughey/tree_pkg/releases/latest/download/tree-2.0.1.pkg',
+                version='2.0.2',
+                package='https://github.com/donmccaughey/tree_pkg/releases/download/v2.0.2-r1/tree-2.0.2.pkg',
                 source='https://github.com/donmccaughey/tree_pkg',
                 project='http://mama.indstate.edu/users/ice/tree/',
                 description='A recursive directory listing command.'
