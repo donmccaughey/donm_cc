@@ -93,5 +93,16 @@ class Node:
     def markup(self, width: int) -> str:
         raise NotImplementedError
 
+    def select(self, selector: str) -> list[Node]:
+        from markup.element import Element
+
+        nodes = []
+        for node in self:
+            if isinstance(node, Element):
+                element: Element = node
+                if element.matches(selector):
+                    nodes.append(element)
+        return nodes
+
     def tokens(self) -> list[str]:
         raise NotImplementedError

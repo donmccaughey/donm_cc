@@ -1,5 +1,7 @@
 import unittest
 
+from markup import Text
+from markup.element import Element
 from markup.node import Node, with_node
 
 
@@ -132,6 +134,43 @@ class NodeTestCase(unittest.TestCase):
         self.assertIsNone(grandchild1.parent)
         self.assertIsNone(grandchild2.parent)
 
+    def test_select_by_element(self):
+        nodes = self.parent.select('parent')
+        self.assertEqual(1, len(nodes))
+        self.assertEqual('parent', nodes[0].name)
+
+        nodes = self.parent.select('child')
+        self.assertEqual(3, len(nodes))
+        self.assertEqual('child', nodes[0].name)
+        self.assertEqual('child', nodes[1].name)
+        self.assertEqual('child', nodes[2].name)
+
+        nodes = self.parent.select('grandchild')
+        self.assertEqual(2, len(nodes))
+        self.assertEqual('grandchild', nodes[0].name)
+        self.assertEqual('grandchild', nodes[1].name)
+
+        nodes = self.parent.select('othergrandchild')
+        self.assertEqual(1, len(nodes))
+        self.assertEqual('othergrandchild', nodes[0].name)
+
+    def test_select_by_id(self):
+        nodes = self.parent.select('#first')
+        self.assertEqual(1, len(nodes))
+        self.assertEqual('child', nodes[0].name)
+
+    def setUp(self) -> None:
+        super().setUp()
+        self.parent = Element('parent')
+        with self.parent:
+            with Element('child', id='first'):
+                with Element('grandchild'):
+                    Text('parent')
+                with Element('grandchild'):
+                    Text('child1')
+            Element('child', id='second')
+            with Element('child', id='third'):
+                Element('othergrandchild')
 
 if __name__ == '__main__':
     unittest.main()

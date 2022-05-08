@@ -53,3 +53,20 @@ class Element(Node):
         markup += self.end_tag()
         markup += '\n'
         return markup
+
+    def matches(self, selector: str) -> bool:
+        assert ' ' not in selector
+
+        if ':' in selector:
+            selector = selector.split(':')[0]
+
+        if selector.startswith('#'):
+            assert len(selector) > 1
+            return self.attributes.get('id') == selector[1:]
+        elif selector.startswith('.'):
+            assert len(selector) > 1
+            class_names = self.attributes.get('class', '').split()
+            return selector[1:] in class_names
+        else:
+            assert len(selector)
+            return self.name == selector
