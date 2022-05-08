@@ -21,6 +21,9 @@ class Element(Node):
         if class_names:
             self.attributes['class'] = ' '.join(class_names)
 
+    def __repr__(self) -> str:
+        return f'Element {self.start_tag()}'
+
     def attribute_str(self) -> str:
         if self.attributes:
             parts = [
@@ -54,19 +57,19 @@ class Element(Node):
         markup += '\n'
         return markup
 
-    def matches(self, selector: str) -> bool:
-        assert ' ' not in selector
+    def matches(self, single_selector: str) -> bool:
+        assert ' ' not in single_selector
 
-        if ':' in selector:
-            selector = selector.split(':')[0]
+        if ':' in single_selector:
+            single_selector = single_selector.split(':')[0]
 
-        if selector.startswith('#'):
-            assert len(selector) > 1
-            return self.attributes.get('id') == selector[1:]
-        elif selector.startswith('.'):
-            assert len(selector) > 1
+        if single_selector.startswith('#'):
+            assert len(single_selector) > 1
+            return self.attributes.get('id') == single_selector[1:]
+        elif single_selector.startswith('.'):
+            assert len(single_selector) > 1
             class_names = self.attributes.get('class', '').split()
-            return selector[1:] in class_names
+            return single_selector[1:] in class_names
         else:
-            assert len(selector)
-            return self.name == selector
+            assert len(single_selector)
+            return self.name == single_selector

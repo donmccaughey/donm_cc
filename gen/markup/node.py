@@ -96,12 +96,19 @@ class Node:
     def select(self, selector: str) -> list[Node]:
         from markup.element import Element
 
-        nodes = []
-        for node in self:
-            if isinstance(node, Element):
-                element: Element = node
-                if element.matches(selector):
-                    nodes.append(element)
+        def find_matches(single_selector: str, nodes: list[Node]) -> list[Node]:
+            matches = []
+            for node in nodes:
+                for node in iter(node):
+                    if isinstance(node, Element):
+                        element: Element = node
+                        if element.matches(single_selector):
+                            matches.append(element)
+            return matches
+
+        nodes = [self]
+        for single_selector in selector.split():
+            nodes = find_matches(single_selector, nodes)
         return nodes
 
     def tokens(self) -> list[str]:

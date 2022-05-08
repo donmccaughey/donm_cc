@@ -159,18 +159,59 @@ class NodeTestCase(unittest.TestCase):
         self.assertEqual(1, len(nodes))
         self.assertEqual('child', nodes[0].name)
 
+    def test_select_by_class(self):
+        nodes = self.parent.select('.one')
+        self.assertEqual(2, len(nodes))
+        self.assertEqual('parent', nodes[0].name)
+        self.assertEqual('othergrandchild', nodes[1].name)
+
+        nodes = self.parent.select('.two')
+        self.assertEqual(2, len(nodes))
+        self.assertEqual('parent', nodes[0].name)
+        self.assertEqual('grandchild', nodes[1].name)
+
+        nodes = self.parent.select('.three')
+        self.assertEqual(2, len(nodes))
+        self.assertEqual('grandchild', nodes[0].name)
+        self.assertEqual('child', nodes[1].name)
+
+    def test_select_by_element_element(self):
+        nodes = self.parent.select('parent child')
+        self.assertEqual(3, len(nodes))
+
+    def test_select_by_id_element(self):
+        nodes = self.parent.select('#first grandchild')
+        self.assertEqual(2, len(nodes))
+
+    def test_select_by_class_element(self):
+        nodes = self.parent.select('.one grandchild')
+        self.assertEqual(2, len(nodes))
+
+    def test_select_by_element_class(self):
+        nodes = self.parent.select('child .one')
+        self.assertEqual(1, len(nodes))
+
+    def test_select_by_element_class_class(self):
+        nodes = self.parent.select('child .four .six')
+        self.assertEqual(1, len(nodes))
+
     def setUp(self) -> None:
         super().setUp()
-        self.parent = Element('parent')
+        self.parent = Element('parent', class_names=['one', 'two'])
         with self.parent:
             with Element('child', id='first'):
-                with Element('grandchild'):
+                with Element('grandchild', class_names=['two', 'three']):
                     Text('parent')
                 with Element('grandchild'):
-                    Text('child1')
-            Element('child', id='second')
+                    Text('child')
+            with Element('child', id='second', class_names=['three']):
+                with Element('anothergrandchild', class_names=['four five']):
+                    Element('greatgrandchild')
+                    Element('greatgrandchild', class_names=['six'])
+                Element('anothergrandchild')
             with Element('child', id='third'):
-                Element('othergrandchild')
+                Element('othergrandchild', class_names=['one'])
+
 
 if __name__ == '__main__':
     unittest.main()
