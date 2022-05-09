@@ -24,6 +24,18 @@ class ElementTestCase(unittest.TestCase):
         self.assertTrue(element.matches('a:visited'))
         self.assertFalse(element.matches('p'))
 
+    def test_matches_element_plus_class_selector(self):
+        element = Element('a', id='foo', class_names=['bar', 'baz'])
+        self.assertTrue(element.matches('a'))
+        self.assertTrue(element.matches('a:visited'))
+        self.assertTrue(element.matches('a.bar'))
+        self.assertTrue(element.matches('a.baz'))
+        self.assertTrue(element.matches('a.bar.baz'))
+        self.assertTrue(element.matches('a.baz:before'))
+        self.assertFalse(element.matches('p'))
+        self.assertFalse(element.matches('a.foo'))
+        self.assertFalse(element.matches('a.bar.foo'))
+
     def test_matches_id_selector(self):
         element = Element('p', id='foo', class_names=['bar', 'baz'])
         self.assertTrue(element.matches('#foo'))

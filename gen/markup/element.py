@@ -72,4 +72,12 @@ class Element(Node):
             return single_selector[1:] in class_names
         else:
             assert len(single_selector)
-            return self.name == single_selector
+            element, *selector_classes = single_selector.split('.')
+            if not self.name == element:
+                return False
+            if selector_classes:
+                classes = self.attributes.get('class', '').split()
+                for selector_class in selector_classes:
+                    if not selector_class in classes:
+                        return False
+            return True
