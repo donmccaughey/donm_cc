@@ -195,6 +195,9 @@ class NodeTestCase(unittest.TestCase):
         nodes = self.parent.select('child .four .six')
         self.assertEqual(1, len(nodes))
 
+    def test_select_fails_for_grouping_selector(self):
+        self.assertRaises(AssertionError, self.parent.select, 'grandchild, othergrandchild')
+
     def setUp(self) -> None:
         super().setUp()
         self.parent = Element('parent', class_names=['one', 'two'])

@@ -94,6 +94,8 @@ class Node:
         raise NotImplementedError
 
     def select(self, selector: str) -> list[Node]:
+        assert ',' not in selector
+
         from markup.element import Element
 
         def find_matches(single_selector: str, nodes: list[Node]) -> list[Node]:
