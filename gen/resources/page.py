@@ -4,7 +4,8 @@ import os
 from functools import reduce
 from typing import Optional, Tuple
 
-from css import parse_css_file
+from css import CSS
+from css.css import Rule
 from markup import *
 from markup.block_element import Style
 from markup.node import with_node
@@ -76,33 +77,33 @@ class Page(Resource):
         with self.head_content:
             Script(src=src)
 
-    def add_stylesheet(self, src: str):
+    def add_stylesheet(self, src: str, for_js: bool = False):
         with self.head_content:
-            Stylesheet(src)
+            Stylesheet(href=src, for_js=for_js)
 
     def merge_stylesheets(self, source_dir: str):
         assert self.document
-        stylesheets = []
-        for node in self.document:
-            if isinstance(node, Stylesheet):
-                stylesheets.append(node)
+
+        stylesheets = [
+            node for node in self.document if isinstance(node, Stylesheet)
+        ]
+        if not stylesheets:
+            return
+
+        parent = stylesheets[0].parent
+        sibling = stylesheets[0].previous_sibling
 
         css_files = []
-        parent = None
-        sibling = None
         for stylesheet in stylesheets:
-            if not parent:
-                parent = stylesheet.parent
-            if not sibling:
-                sibling = stylesheet.previous_sibling
-
             href = stylesheet.attributes['href']
-            if os.path.isabs(href):
-                path = os.path.join(source_dir, href[1:])
-            else:
-                path = os.path.join(source_dir, self.dirname, href)
-
-            css_files.append(parse_css_file(path))
+            path = (
+                os.path.join(source_dir, href[1:]) if os.path.isabs(href)
+                else os.path.join(source_dir, self.dirname, href)
+            )
+            css = CSS(path)
+            if not stylesheet.for_js:
+                self.prune_unused_css_rules(css)
+            css_files.append(css)
             stylesheet.detach()
 
         if css_files:
@@ -112,6 +113,16 @@ class Page(Resource):
                 sibling.insert_after(style)
             else:
                 style.attach(parent)
+
+    def prune_unused_css_rules(self, css: CSS):
+        assert self.document
+
+        for i in reversed(range(len(css.rules))):
+            rule = css.rules[i]
+            if isinstance(rule, Rule):
+                elements = self.document.select(str(rule.selector))
+                if not elements:
+                    del css.rules[i]
 
     def remove_stylesheets(self):
         assert self.document

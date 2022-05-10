@@ -88,7 +88,8 @@ class MetaViewport(Meta):
 
 
 class Stylesheet(Link):
-    def __init__(self, href: str, parent: Optional[Node] = None, **kwargs):
+    def __init__(self, href: str, for_js: bool = False, parent: Optional[Node] = None, **kwargs):
         super().__init__(parent=parent, **kwargs)
         self.attributes['rel'] = 'stylesheet'
         self.attributes['href'] = href
+        self.for_js = for_js
