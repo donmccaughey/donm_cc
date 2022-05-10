@@ -1,3 +1,27 @@
+#clock {
+    background: white;
+    color: black;
+}
+
+@media (prefers-color-scheme: dark) {
+    #clock {
+        background: black;
+        color: white;
+    }
+}
+
+#first_title {
+    background: white;
+    color: black;
+}
+
+@media (prefers-color-scheme: dark) {
+    #first_title {
+        background: black;
+        color: white;
+    }
+}
+
 #memory_match {
     background: white;
     color: black;
@@ -24,6 +48,18 @@
     }
 }
 
+#second_title {
+    background: white;
+    color: black;
+}
+
+@media (prefers-color-scheme: dark) {
+    #second_title {
+        background: black;
+        color: white;
+    }
+}
+
 #status {
     background: rgba(255, 255, 255, 0.9); /* white */
     border-top: 1pt solid silver;
@@ -36,13 +72,13 @@
     }
 }
 
-#first_title, #second_title, #tries, #clock {
+#tries {
     background: white;
     color: black;
 }
 
 @media (prefers-color-scheme: dark) {
-    #first_title, #second_title, #tries, #clock {
+    #tries {
         background: black;
         color: white;
     }

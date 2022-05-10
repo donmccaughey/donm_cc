@@ -126,7 +126,12 @@
     .data_table {
         border-collapse: collapse;
     }
-    .data_table th, .data_table td {
+    .data_table td {
+        border: thin solid black;
+        padding: 0.25em;
+        text-align: center;
+    }
+    .data_table th {
         border: thin solid black;
         padding: 0.25em;
         text-align: center;
@@ -219,10 +224,17 @@
     .memory_map {
         border-collapse: collapse;
     }
+    .memory_map td {
+        border: thin solid black;
+        font-family: "Courier New", Courier, monospace;
+        padding: 0.25em;
+        text-align: center;
+        width: 2em;
+    }
     .memory_map td.blank {
         border: none;
     }
-    .memory_map th, .memory_map td {
+    .memory_map th {
         border: thin solid black;
         font-family: "Courier New", Courier, monospace;
         padding: 0.25em;
@@ -257,7 +269,11 @@
     .title {
         font: 14pt Helvetica, Arial, sans-serif;
     }
-    #first_title, #second_title, #tries, #clock {
+    #clock {
+        background: white;
+        color: black;
+    }
+    #first_title {
         background: white;
         color: black;
     }
@@ -270,9 +286,17 @@
         border: 1pt solid black;
         color: black;
     }
+    #second_title {
+        background: white;
+        color: black;
+    }
     #status {
         background: rgba(255, 255, 255, 0.9); 
         border-top: 1pt solid silver;
+    }
+    #tries {
+        background: white;
+        color: black;
     }
     @media (prefers-color-scheme: dark) {
         a {
@@ -307,7 +331,10 @@
         .collection h1 {
             color: whitesmoke;
         }
-        .data_table th, .data_table td {
+        .data_table td {
+            border: thin solid white;
+        }
+        .data_table th {
             border: thin solid white;
         }
         .item {
@@ -336,7 +363,10 @@
         .links time {
             color: silver;
         }
-        .memory_map th, .memory_map td {
+        .memory_map td {
+            border: thin solid white;
+        }
+        .memory_map th {
             border: thin solid white;
         }
         .menu {
@@ -347,6 +377,14 @@
         .menu a {
             color: black;
         }
+        #clock {
+            background: black;
+            color: white;
+        }
+        #first_title {
+            background: black;
+            color: white;
+        }
         #memory_match {
             background: black;
             color: white;
@@ -356,11 +394,15 @@
             border: 1pt solid white;
             color: white;
         }
+        #second_title {
+            background: black;
+            color: white;
+        }
         #status {
             background: rgba(0, 0, 0, 0.9); 
             border-top: 1pt solid gray;
         }
-        #first_title, #second_title, #tries, #clock {
+        #tries {
             background: black;
             color: white;
         }
