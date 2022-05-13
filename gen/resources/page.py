@@ -5,7 +5,6 @@ from functools import reduce
 from typing import Optional, Tuple
 
 from css import CSS
-from css.css import Rule
 from markup import *
 from markup.block_element import Style
 from markup.node import with_node
@@ -102,27 +101,20 @@ class Page(Resource):
             )
             css = CSS(path)
             if not stylesheet.for_js:
-                self.prune_unused_css_rules(css)
+                for selector in css.selectors():
+                    if not self.document.select(selector):
+                        css.remove_rules_for_selector(selector)
             css_files.append(css)
             stylesheet.detach()
 
         if css_files:
             css = reduce(lambda a, b: a + b, css_files)
+            css.reformat()
             style = Style(str(css))
             if sibling:
                 sibling.insert_after(style)
             else:
                 style.attach(parent)
-
-    def prune_unused_css_rules(self, css: CSS):
-        assert self.document
-
-        for i in reversed(range(len(css.rules))):
-            rule = css.rules[i]
-            if isinstance(rule, Rule):
-                elements = self.document.select(str(rule.selector))
-                if not elements:
-                    del css.rules[i]
 
     def remove_stylesheets(self):
         assert self.document

@@ -3,7 +3,7 @@ from collections import defaultdict
 from functools import reduce
 from typing import Optional, Tuple, List
 
-from tinycss2 import parse_stylesheet
+from tinycss2 import parse_stylesheet, parse_rule_list
 from tinycss2.ast import IdentToken, LiteralToken, AtRule, ParenthesesBlock, \
     WhitespaceToken, HashToken, QualifiedRule, Node
 
@@ -62,6 +62,30 @@ class CSS:
     def is_rule(node) -> bool:
         return isinstance(node, QualifiedRule)
 
+    def reformat(self):
+        for rule in self.rules:
+            if isinstance(rule, MediaQuery):
+                rule.reformat()
+
+    def remove_rules_for_selector(self, selector: str):
+        for i in reversed(range(len(self.rules))):
+            rule = self.rules[i]
+            if isinstance(rule, Rule):
+                if str(rule.selector) == selector:
+                    del self.rules[i]
+            elif isinstance(rule, MediaQuery):
+                rule.remove_rules_for_selector(selector)
+
+    def selectors(self) -> set[str]:
+        s = set()
+        for rule in self.rules:
+            if isinstance(rule, Rule):
+                s.add(str(rule.selector))
+            elif isinstance(rule, MediaQuery):
+                media_query: MediaQuery = rule
+                s.union(media_query.selectors())
+        return s
+
 
 class Rule:
     def __init__(self, qualified_rule: QualifiedRule):
@@ -115,9 +139,14 @@ class Selector:
 
 
 class MediaQuery:
-    def __init__(self, at_rule: AtRule):
+    def __init__(self, at_rule: AtRule, parsed: bool = False):
         self.at_rule = at_rule
-        self.expression = Expression(at_rule.prelude)
+        self.expression = Expression(self.at_rule.prelude)
+        if not parsed:
+            self.at_rule.content = parse_rule_list(
+                self.at_rule.content, skip_comments=True, skip_whitespace=True
+            )
+        self.parsed = True
 
     def __add__(self, other) -> 'MediaQuery':
         content = list(self.at_rule.content)
@@ -130,7 +159,7 @@ class MediaQuery:
             list(self.at_rule.prelude),
             content
         )
-        return MediaQuery(at_rule)
+        return MediaQuery(at_rule, parsed=self.parsed and other.parsed)
 
     def __eq__(self, other) -> bool:
         return self.expression == other.expression
@@ -141,21 +170,29 @@ class MediaQuery:
     def __str__(self) -> str:
         return self.serialize()
 
-    def remove_blank_lines(self):
-        def is_last(i: int):
-            return i == len(self.at_rule.content) - 1
+    def reformat(self):
+        formatted_content = []
+        for node in self.at_rule.content:
+            formatted_content.append(WhitespaceToken(0, 0, '\n    '))
+            formatted_content.append(node)
+        formatted_content.append(WhitespaceToken(0, 0, '\n'))
+        self.at_rule.content = formatted_content
 
-        content = []
-        for i in range(len(self.at_rule.content)):
+    def remove_rules_for_selector(self, selector: str):
+        for i in reversed(range(len(self.at_rule.content))):
             node = self.at_rule.content[i]
-            if isinstance(node, WhitespaceToken):
-                if node.value == '\n':
-                    if not is_last(i):
-                        continue
-                else:
-                    node.value = re.sub('\n+', '\n', node.value)
-            content.append(node)
-        self.at_rule.content = content
+            if isinstance(node, QualifiedRule):
+                rule = Rule(node)
+                if str(rule.selector) == selector:
+                    del self.at_rule.content[i]
+
+    def selectors(self) -> set[str]:
+        s = set()
+        for node in self.at_rule.content:
+            if isinstance(node, QualifiedRule):
+                rule = Rule(node)
+                s.add(str(rule.selector))
+        return s
 
     def serialize(self) -> str:
         return self.at_rule.serialize()
@@ -242,7 +279,6 @@ def merge_media_queries(rules: List) -> List:
     media_queries = []
     for group in grouped_queries.values():
         media_query = reduce(lambda a, b: a + b, group)
-        media_query.remove_blank_lines()
         media_queries.append(media_query)
 
     return everything_else + media_queries
