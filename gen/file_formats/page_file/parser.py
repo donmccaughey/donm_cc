@@ -281,7 +281,7 @@ class Parser:
         link = result.value
         self.page_file.sections[-1].links.append(link)
 
-        result = self.book_locator()
+        result = self.book_locator(link)
         if not result:
             return result
 
@@ -310,11 +310,13 @@ class Parser:
         self.next_token()
         return result
 
-    def book_locator(self) -> ProductionResult:
+    def book_locator(self, link: BookLink) -> ProductionResult:
         result = self.asin_directive()
         if result.matched:
+            link.asin = result.value
             result = self.url_directive()
             if result.matched:
+                link.url = result.value
                 return result
             return ProductionResult(True)
 
@@ -322,8 +324,10 @@ class Parser:
         if result.error:
             return result
         if result.matched:
+            link.url = result.value
             result = self.asin_directive()
             if result.matched:
+                link.asin = result.value
                 return result
             return ProductionResult(True)
 
@@ -333,21 +337,24 @@ class Parser:
         if not self.is_directive('url'):
             return ProductionResult(MissingDirectiveError(self.token, 'url'))
         self.next_token()
+
         if not self.is_data():
             return ProductionResult(MissingDataError(self.token, 'URL address'))
-        self.page_file.sections[-1].links[-1].url = self.token.text
+        result = ProductionResult(True, value=self.token.text)
         self.next_token()
-        return ProductionResult(True)
+        return result
 
     def asin_directive(self) -> ProductionResult:
         if not self.is_directive('asin'):
             return ProductionResult(MissingDirectiveError(self.token, 'asin'))
         self.next_token()
+
         if not self.is_data():
             return ProductionResult(MissingDataError(self.token, 'ASIN'))
         self.page_file.sections[-1].links[-1].asin = self.token.text
+        result = ProductionResult(True, value=self.token.text)
         self.next_token()
-        return ProductionResult(True)
+        return result
 
     def link_attributes(self, link: Link | BookLink) -> ProductionResult:
         result = self.link_attribute(link)
@@ -392,6 +399,7 @@ class Parser:
         result = self.url_directive()
         if not result:
             return result
+        link.url = result.value
 
         result = self.link_attributes(link)
         if result.error:
