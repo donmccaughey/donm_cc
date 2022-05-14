@@ -25,3 +25,8 @@
 - generate alternate representations of links pages (CSV, JSON)
 - set up CI in GitHub Actions
 - generate gemini site
+
+- parser production return values
+  * checked_directive()
+  * date_directive()
+  * author_directive()

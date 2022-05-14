@@ -1,4 +1,4 @@
-from typing import Optional
+from typing import Optional, Any
 
 from file_formats.page_file import PageFile, LinksSection, Link, BookLink
 from .lexer import Token, TokenType, lexer
@@ -52,16 +52,14 @@ class UnexpectedTokenError(ParserError):
 
 
 class ProductionResult:
-    matched: bool
-    error: Optional[ParserError]
-
-    def __init__(self, result: bool | ParserError):
+    def __init__(self, result: bool | ParserError, value: Optional[Any] = None):
         if isinstance(result, ParserError):
             self.matched = False
             self.error = result
         else:
             self.matched = bool(result)
             self.error = None
+        self.value = value
 
     def __bool__(self):
         return False if self.error else self.matched
@@ -364,14 +362,26 @@ class Parser:
 
     def book_link_attribute(self) -> ProductionResult:
         result = self.author_directive()
-        if result.matched or result.error:
+        if result.error:
             return result
+        if result.matched:
+            self.page_file.sections[-1].links[-1].authors.append(result.value)
+            return result
+
         result = self.date_directive()
-        if result.matched or result.error:
+        if result.error:
             return result
+        if result.matched:
+            self.page_file.sections[-1].links[-1].date = result.value
+            return result
+
         result = self.checked_directive()
-        if result.matched or result.error:
+        if result.error:
             return result
+        if result.matched:
+            self.page_file.sections[-1].links[-1].checked = True
+            return result
+
         return ProductionResult(False)
 
     def general_link(self) -> ProductionResult:
@@ -416,14 +426,26 @@ class Parser:
 
     def general_link_attribute(self) -> ProductionResult:
         result = self.author_directive()
-        if result.matched or result.error:
+        if result.error:
             return result
+        if result.matched:
+            self.page_file.sections[-1].links[-1].authors.append(result.value)
+            return result
+
         result = self.date_directive()
-        if result.matched or result.error:
+        if result.error:
             return result
+        if result.matched:
+            self.page_file.sections[-1].links[-1].date = result.value
+            return result
+
         result = self.checked_directive()
-        if result.matched or result.error:
+        if result.error:
             return result
+        if result.matched:
+            self.page_file.sections[-1].links[-1].checked = True
+            return result
+
         return ProductionResult(False)
 
     def author_directive(self) -> ProductionResult:
@@ -432,9 +454,9 @@ class Parser:
         self.next_token()
         if not self.is_data():
             return ProductionResult(MissingDataError(self.token, 'author value'))
-        self.page_file.sections[-1].links[-1].authors.append(self.token.text)
+        result = ProductionResult(True, value=self.token.text)
         self.next_token()
-        return ProductionResult(True)
+        return result
 
     def date_directive(self) -> ProductionResult:
         if not self.is_directive('date'):
@@ -442,14 +464,13 @@ class Parser:
         self.next_token()
         if not self.is_data():
             return ProductionResult(MissingDataError(self.token, 'date value'))
-        self.page_file.sections[-1].links[-1].date = self.token.text
+        result = ProductionResult(True, value=self.token.text)
         self.next_token()
-        return ProductionResult(True)
+        return result
 
     def checked_directive(self) -> ProductionResult:
         if not self.is_directive('checked'):
             return ProductionResult(False)
-        self.page_file.sections[-1].links[-1].checked = True
         self.next_token()
         return ProductionResult(True)
 
