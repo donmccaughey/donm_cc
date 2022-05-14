@@ -278,13 +278,17 @@ class Parser:
         result = self.book_link_directive()
         if not result:
             return result
+        link = result.value
+        self.page_file.sections[-1].links.append(link)
+
         result = self.book_locator()
         if not result:
             return result
-        link = self.page_file.sections[-1].links[-1]
+
         result = self.link_attributes(link)
         if result.error:
             return result
+
         return ProductionResult(True)
 
     def book_link_directive(self) -> ProductionResult:
@@ -302,9 +306,9 @@ class Parser:
             date=None,
             checked=False,
         )
-        self.page_file.sections[-1].links.append(link)
+        result = ProductionResult(True, value=link)
         self.next_token()
-        return ProductionResult(True)
+        return result
 
     def book_locator(self) -> ProductionResult:
         result = self.asin_directive()
@@ -382,13 +386,17 @@ class Parser:
         result = self.general_link_directive()
         if not result:
             return result
+        link = result.value
+        self.page_file.sections[-1].links.append(link)
+
         result = self.url_directive()
         if not result:
             return result
-        link = self.page_file.sections[-1].links[-1]
+
         result = self.link_attributes(link)
         if result.error:
             return result
+
         return ProductionResult(True)
 
     def general_link_directive(self) -> ProductionResult:
@@ -406,9 +414,9 @@ class Parser:
             date=None,
             checked=False,
         )
-        self.page_file.sections[-1].links.append(link)
+        result = ProductionResult(True, value=link)
         self.next_token()
-        return ProductionResult(True)
+        return result
 
     def author_directive(self) -> ProductionResult:
         if not self.is_directive('author'):
