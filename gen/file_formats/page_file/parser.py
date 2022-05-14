@@ -284,7 +284,8 @@ class Parser:
         result = self.book_locator()
         if not result:
             return result
-        result = self.book_link_attributes()
+        link = self.page_file.sections[-1].links[-1]
+        result = self.book_link_attributes(link)
         if result.error:
             return result
         return ProductionResult(True)
@@ -347,12 +348,11 @@ class Parser:
         self.next_token()
         return ProductionResult(True)
 
-    def book_link_attributes(self) -> ProductionResult:
-        link = self.page_file.sections[-1].links[-1]
+    def book_link_attributes(self, link: BookLink) -> ProductionResult:
         result = self.link_attribute(link)
         if not result:
             return result
-        result = self.book_link_attributes()
+        result = self.book_link_attributes(link)
         if result.error:
             return result
         return ProductionResult(True)
@@ -388,7 +388,8 @@ class Parser:
         result = self.url_directive()
         if not result:
             return result
-        result = self.general_link_attributes()
+        link = self.page_file.sections[-1].links[-1]
+        result = self.general_link_attributes(link)
         if result.error:
             return result
         return ProductionResult(True)
@@ -412,12 +413,11 @@ class Parser:
         self.next_token()
         return ProductionResult(True)
 
-    def general_link_attributes(self) -> ProductionResult:
-        link = self.page_file.sections[-1].links[-1]
+    def general_link_attributes(self, link: Link) -> ProductionResult:
         result = self.link_attribute(link)
         if not result:
             return result
-        result = self.general_link_attributes()
+        result = self.general_link_attributes(link)
         if result.error:
             return result
         return ProductionResult(True)
