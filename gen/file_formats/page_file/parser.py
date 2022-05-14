@@ -117,12 +117,12 @@ class Parser:
 
         asin_directive = '.asin' DATA
 
-        book_link_attributes = book_link_attribute
-                             | book_link_attribute book_link_attributes
+        book_link_attributes = link_attribute
+                             | link_attribute book_link_attributes
 
-        book_link_attribute = author_directive
-                            | date_directive
-                            | checked_directive
+        link_attribute = author_directive
+                       | date_directive
+                       | checked_directive
 
         author_directive = '.author' DATA
 
@@ -137,12 +137,8 @@ class Parser:
 
         general_link_modifier = 'blog' | 'docs' | 'email' | 'podcast' | 'repo' | 'site'
 
-        general_link_attributes = general_link_attribute
-                                | general_link_attribute general_link_attributes
-
-        general_link_attribute = author_directive
-                               | date_directive
-                               | checked_directive
+        general_link_attributes = link_attribute
+                                | link_attribute general_link_attributes
     """
 
     def __init__(self, source: str):
@@ -353,7 +349,7 @@ class Parser:
 
     def book_link_attributes(self) -> ProductionResult:
         link = self.page_file.sections[-1].links[-1]
-        result = self.book_link_attribute(link)
+        result = self.link_attribute(link)
         if not result:
             return result
         result = self.book_link_attributes()
@@ -361,7 +357,7 @@ class Parser:
             return result
         return ProductionResult(True)
 
-    def book_link_attribute(self, link: BookLink) -> ProductionResult:
+    def link_attribute(self, link: BookLink | Link) -> ProductionResult:
         result = self.author_directive()
         if result.error:
             return result
@@ -418,37 +414,13 @@ class Parser:
 
     def general_link_attributes(self) -> ProductionResult:
         link = self.page_file.sections[-1].links[-1]
-        result = self.general_link_attribute(link)
+        result = self.link_attribute(link)
         if not result:
             return result
         result = self.general_link_attributes()
         if result.error:
             return result
         return ProductionResult(True)
-
-    def general_link_attribute(self, link: Link) -> ProductionResult:
-        result = self.author_directive()
-        if result.error:
-            return result
-        if result.matched:
-            link.authors.append(result.value)
-            return result
-
-        result = self.date_directive()
-        if result.error:
-            return result
-        if result.matched:
-            link.date = result.value
-            return result
-
-        result = self.checked_directive()
-        if result.error:
-            return result
-        if result.matched:
-            link.checked = True
-            return result
-
-        return ProductionResult(False)
 
     def author_directive(self) -> ProductionResult:
         if not self.is_directive('author'):
