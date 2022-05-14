@@ -104,7 +104,7 @@ class Parser:
              | '.link' general_link
 
         book_link = book_link_directive book_locator
-                  | book_link_directive book_locator book_link_attributes
+                  | book_link_directive book_locator link_attributes
 
         book_link_directive = 'book' DATA
 
@@ -117,8 +117,8 @@ class Parser:
 
         asin_directive = '.asin' DATA
 
-        book_link_attributes = link_attribute
-                             | link_attribute book_link_attributes
+        link_attributes = link_attribute
+                        | link_attribute link_attributes
 
         link_attribute = author_directive
                        | date_directive
@@ -131,14 +131,11 @@ class Parser:
         checked_directive = '.checked'
 
         general_link = general_link_directive url_directive
-                     | general_link_directive url_directive general_link_attributes
+                     | general_link_directive url_directive link_attributes
 
         general_link_directive = general_link_modifier DATA
 
         general_link_modifier = 'blog' | 'docs' | 'email' | 'podcast' | 'repo' | 'site'
-
-        general_link_attributes = link_attribute
-                                | link_attribute general_link_attributes
     """
 
     def __init__(self, source: str):
@@ -285,7 +282,7 @@ class Parser:
         if not result:
             return result
         link = self.page_file.sections[-1].links[-1]
-        result = self.book_link_attributes(link)
+        result = self.link_attributes(link)
         if result.error:
             return result
         return ProductionResult(True)
@@ -348,11 +345,11 @@ class Parser:
         self.next_token()
         return ProductionResult(True)
 
-    def book_link_attributes(self, link: BookLink) -> ProductionResult:
+    def link_attributes(self, link: Link | BookLink) -> ProductionResult:
         result = self.link_attribute(link)
         if not result:
             return result
-        result = self.book_link_attributes(link)
+        result = self.link_attributes(link)
         if result.error:
             return result
         return ProductionResult(True)
@@ -389,7 +386,7 @@ class Parser:
         if not result:
             return result
         link = self.page_file.sections[-1].links[-1]
-        result = self.general_link_attributes(link)
+        result = self.link_attributes(link)
         if result.error:
             return result
         return ProductionResult(True)
@@ -411,15 +408,6 @@ class Parser:
         )
         self.page_file.sections[-1].links.append(link)
         self.next_token()
-        return ProductionResult(True)
-
-    def general_link_attributes(self, link: Link) -> ProductionResult:
-        result = self.link_attribute(link)
-        if not result:
-            return result
-        result = self.general_link_attributes(link)
-        if result.error:
-            return result
         return ProductionResult(True)
 
     def author_directive(self) -> ProductionResult:
