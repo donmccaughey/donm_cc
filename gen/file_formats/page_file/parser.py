@@ -352,7 +352,8 @@ class Parser:
         return ProductionResult(True)
 
     def book_link_attributes(self) -> ProductionResult:
-        result = self.book_link_attribute()
+        link = self.page_file.sections[-1].links[-1]
+        result = self.book_link_attribute(link)
         if not result:
             return result
         result = self.book_link_attributes()
@@ -360,26 +361,26 @@ class Parser:
             return result
         return ProductionResult(True)
 
-    def book_link_attribute(self) -> ProductionResult:
+    def book_link_attribute(self, link: BookLink) -> ProductionResult:
         result = self.author_directive()
         if result.error:
             return result
         if result.matched:
-            self.page_file.sections[-1].links[-1].authors.append(result.value)
+            link.authors.append(result.value)
             return result
 
         result = self.date_directive()
         if result.error:
             return result
         if result.matched:
-            self.page_file.sections[-1].links[-1].date = result.value
+            link.date = result.value
             return result
 
         result = self.checked_directive()
         if result.error:
             return result
         if result.matched:
-            self.page_file.sections[-1].links[-1].checked = True
+            link.checked = True
             return result
 
         return ProductionResult(False)
@@ -416,7 +417,8 @@ class Parser:
         return ProductionResult(True)
 
     def general_link_attributes(self) -> ProductionResult:
-        result = self.general_link_attribute()
+        link = self.page_file.sections[-1].links[-1]
+        result = self.general_link_attribute(link)
         if not result:
             return result
         result = self.general_link_attributes()
@@ -424,26 +426,26 @@ class Parser:
             return result
         return ProductionResult(True)
 
-    def general_link_attribute(self) -> ProductionResult:
+    def general_link_attribute(self, link: Link) -> ProductionResult:
         result = self.author_directive()
         if result.error:
             return result
         if result.matched:
-            self.page_file.sections[-1].links[-1].authors.append(result.value)
+            link.authors.append(result.value)
             return result
 
         result = self.date_directive()
         if result.error:
             return result
         if result.matched:
-            self.page_file.sections[-1].links[-1].date = result.value
+            link.date = result.value
             return result
 
         result = self.checked_directive()
         if result.error:
             return result
         if result.matched:
-            self.page_file.sections[-1].links[-1].checked = True
+            link.checked = True
             return result
 
         return ProductionResult(False)
