@@ -269,17 +269,25 @@ class Parser:
         if not self.is_directive('link'):
             return ProductionResult(False)
         self.next_token()
+
         result = self.book_link()
-        if result.matched or result.error:
+        if result.error:
             return result
-        return self.general_link()
+        if not result.matched:
+            result = self.general_link()
+        if result.error:
+            return result
+
+        if result.matched:
+            link = result.value
+            self.page_file.sections[-1].links.append(link)
+        return result
 
     def book_link(self) -> ProductionResult:
         result = self.book_link_directive()
         if not result:
             return result
         link = result.value
-        self.page_file.sections[-1].links.append(link)
 
         result = self.book_locator(link)
         if not result:
@@ -289,7 +297,7 @@ class Parser:
         if result.error:
             return result
 
-        return ProductionResult(True)
+        return ProductionResult(True, value=link)
 
     def book_link_directive(self) -> ProductionResult:
         if not self.is_modifier('book'):
@@ -393,7 +401,6 @@ class Parser:
         if not result:
             return result
         link = result.value
-        self.page_file.sections[-1].links.append(link)
 
         result = self.url_directive()
         if not result:
@@ -404,7 +411,7 @@ class Parser:
         if result.error:
             return result
 
-        return ProductionResult(True)
+        return ProductionResult(True, value=link)
 
     def general_link_directive(self) -> ProductionResult:
         if not self.is_general_link_modifier():
