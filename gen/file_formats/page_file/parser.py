@@ -260,6 +260,9 @@ class Parser:
         result = self.link()
         if not result:
             return result
+        link = result.value
+        self.page_file.sections[-1].links.append(link)
+
         result = self.links()
         if result.error:
             return result
@@ -272,11 +275,7 @@ class Parser:
 
         for x_link in [self.book_link, self.general_link]:
             result = x_link()
-            if result.error:
-                return result
-            if result.matched:
-                link = result.value
-                self.page_file.sections[-1].links.append(link)
+            if result.matched or result.error:
                 return result
         return ProductionResult(False)
 
