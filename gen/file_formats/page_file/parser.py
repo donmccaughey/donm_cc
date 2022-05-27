@@ -270,18 +270,15 @@ class Parser:
             return ProductionResult(False)
         self.next_token()
 
-        result = self.book_link()
-        if result.error:
-            return result
-        if not result.matched:
-            result = self.general_link()
-        if result.error:
-            return result
-
-        if result.matched:
-            link = result.value
-            self.page_file.sections[-1].links.append(link)
-        return result
+        for x_link in [self.book_link, self.general_link]:
+            result = x_link()
+            if result.error:
+                return result
+            if result.matched:
+                link = result.value
+                self.page_file.sections[-1].links.append(link)
+                return result
+        return ProductionResult(False)
 
     def book_link(self) -> ProductionResult:
         result = self.book_link_directive()
