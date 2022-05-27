@@ -351,7 +351,6 @@ class Parser:
 
         if not self.is_data():
             return ProductionResult(MissingDataError(self.token, 'ASIN'))
-        self.page_file.sections[-1].links[-1].asin = self.token.text
         result = ProductionResult(True, value=self.token.text)
         self.next_token()
         return result
