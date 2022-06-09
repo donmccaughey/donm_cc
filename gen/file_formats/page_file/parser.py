@@ -191,9 +191,11 @@ class Parser:
         if not self.is_directive('page'):
             return ProductionResult(MissingDirectiveError(self.token, 'page'))
         self.next_token()
+
         if not self.is_modifier('links'):
             return ProductionResult(MissingModifierError(self.token, 'links'))
         self.next_token()
+
         if not self.is_data():
             return ProductionResult(MissingDataError(self.token, 'page title'))
         self.page_file = PageFile(
@@ -203,16 +205,19 @@ class Parser:
             sections=[]
         )
         self.next_token()
+
         return ProductionResult(True)
 
     def subtitle_directive(self) -> ProductionResult:
         if not self.is_directive('subtitle'):
             return ProductionResult(False)
         self.next_token()
+
         if not self.is_data():
             return ProductionResult(MissingDataError(self.token, 'page subtitle'))
         self.page_file.subtitle = self.token.text.strip()
         self.next_token()
+
         return ProductionResult(True)
 
     def paragraphs(self) -> ProductionResult[List[str]]:
@@ -262,13 +267,16 @@ class Parser:
         if not self.is_directive('section'):
             return ProductionResult(False)
         self.next_token()
+
         if not self.is_modifier('links'):
             return ProductionResult(MissingModifierError(self.token, 'links'))
         self.next_token()
+
         if not self.is_data():
             return ProductionResult(MissingDataError(self.token, 'section title'))
         title = self.token.text
         self.next_token()
+
         return ProductionResult(True, value=title)
 
     def links(self) -> ProductionResult[List[BookLink | Link]]:
@@ -361,9 +369,10 @@ class Parser:
 
         if not self.is_data():
             return ProductionResult(MissingDataError(self.token, 'URL address'))
-        result = ProductionResult(True, value=self.token.text)
+        url = self.token.text
         self.next_token()
-        return result
+
+        return ProductionResult(True, value=url)
 
     def asin_directive(self) -> ProductionResult[str]:
         if not self.is_directive('asin'):
@@ -372,9 +381,10 @@ class Parser:
 
         if not self.is_data():
             return ProductionResult(MissingDataError(self.token, 'ASIN'))
-        result = ProductionResult(True, value=self.token.text)
+        asin = self.token.text
         self.next_token()
-        return result
+
+        return ProductionResult(True, value=asin)
 
     def link_attributes(self, link: Link | BookLink) -> ProductionResult[Any]:
         result = self.link_attribute(link)
@@ -453,19 +463,22 @@ class Parser:
         self.next_token()
         if not self.is_data():
             return ProductionResult(MissingDataError(self.token, 'author value'))
-        result = ProductionResult(True, value=self.token.text)
+        author = self.token.text
         self.next_token()
-        return result
+
+        return ProductionResult(True, value=author)
 
     def date_directive(self) -> ProductionResult[str]:
         if not self.is_directive('date'):
             return ProductionResult(False)
         self.next_token()
+
         if not self.is_data():
             return ProductionResult(MissingDataError(self.token, 'date value'))
-        result = ProductionResult(True, value=self.token.text)
+        date = self.token.text
         self.next_token()
-        return result
+
+        return ProductionResult(True, value=date)
 
     def checked_directive(self) -> ProductionResult:
         if not self.is_directive('checked'):
