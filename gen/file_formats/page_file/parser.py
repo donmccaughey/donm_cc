@@ -164,6 +164,8 @@ class Parser:
         result = self.sections()
         if result.error:
             return result
+        if result.matched:
+            self.page_file.sections = result.value
         return ProductionResult(True)
 
     def overview(self) -> ProductionResult:
@@ -223,14 +225,17 @@ class Parser:
             return result
         return ProductionResult(True)
 
-    def sections(self) -> ProductionResult:
+    def sections(self) -> ProductionResult[List[LinksSection]]:
         result = self.section()
         if not result:
             return result
+        section = result.value
+
         result = self.sections()
         if result.error:
             return result
-        return ProductionResult(True)
+        sections = result.value if result.matched else []
+        return ProductionResult(True, value=[section] + sections)
 
     def section(self) -> ProductionResult[LinksSection]:
         result = self.section_directive()
@@ -238,7 +243,6 @@ class Parser:
             return result
         title = result.value
         section = LinksSection(title=title, notes=[], links=[])
-        self.page_file.sections.append(section)
         self.notes = section.notes
 
         result = self.paragraphs()
