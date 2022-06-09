@@ -1,4 +1,4 @@
-from typing import Optional, Any
+from typing import Optional, TypeVar, Generic, Any
 
 from file_formats.page_file import PageFile, LinksSection, Link, BookLink
 from .lexer import Token, TokenType, lexer
@@ -51,8 +51,11 @@ class UnexpectedTokenError(ParserError):
         super().__init__(token, 'Unexpected token')
 
 
-class ProductionResult:
-    def __init__(self, result: bool | ParserError, value: Optional[Any] = None):
+V = TypeVar('V')
+
+
+class ProductionResult(Generic[V]):
+    def __init__(self, result: bool | ParserError, value: Optional[V] = None):
         if isinstance(result, ParserError):
             self.matched = False
             self.error = result
@@ -268,7 +271,7 @@ class Parser:
             return result
         return ProductionResult(True)
 
-    def link(self) -> ProductionResult:
+    def link(self) -> ProductionResult[BookLink | Link]:
         if not self.is_directive('link'):
             return ProductionResult(False)
         self.next_token()
@@ -279,7 +282,7 @@ class Parser:
                 return result
         return ProductionResult(False)
 
-    def book_link(self) -> ProductionResult:
+    def book_link(self) -> ProductionResult[BookLink]:
         result = self.book_link_directive()
         if not result:
             return result
@@ -295,7 +298,7 @@ class Parser:
 
         return ProductionResult(True, value=link)
 
-    def book_link_directive(self) -> ProductionResult:
+    def book_link_directive(self) -> ProductionResult[BookLink]:
         if not self.is_modifier('book'):
             return ProductionResult(False)
         self.next_token()
@@ -314,7 +317,7 @@ class Parser:
         self.next_token()
         return result
 
-    def book_locator(self, link: BookLink) -> ProductionResult:
+    def book_locator(self, link: BookLink) -> ProductionResult[Any]:
         result = self.asin_directive()
         if result.matched:
             link.asin = result.value
@@ -337,7 +340,7 @@ class Parser:
 
         return ProductionResult(False)
 
-    def url_directive(self) -> ProductionResult:
+    def url_directive(self) -> ProductionResult[str]:
         if not self.is_directive('url'):
             return ProductionResult(MissingDirectiveError(self.token, 'url'))
         self.next_token()
@@ -348,7 +351,7 @@ class Parser:
         self.next_token()
         return result
 
-    def asin_directive(self) -> ProductionResult:
+    def asin_directive(self) -> ProductionResult[str]:
         if not self.is_directive('asin'):
             return ProductionResult(MissingDirectiveError(self.token, 'asin'))
         self.next_token()
@@ -359,7 +362,7 @@ class Parser:
         self.next_token()
         return result
 
-    def link_attributes(self, link: Link | BookLink) -> ProductionResult:
+    def link_attributes(self, link: Link | BookLink) -> ProductionResult[Any]:
         result = self.link_attribute(link)
         if not result:
             return result
@@ -368,7 +371,7 @@ class Parser:
             return result
         return ProductionResult(True)
 
-    def link_attribute(self, link: BookLink | Link) -> ProductionResult:
+    def link_attribute(self, link: BookLink | Link) -> ProductionResult[Any]:
         result = self.author_directive()
         if result.error:
             return result
@@ -392,7 +395,7 @@ class Parser:
 
         return ProductionResult(False)
 
-    def general_link(self) -> ProductionResult:
+    def general_link(self) -> ProductionResult[Link]:
         result = self.general_link_directive()
         if not result:
             return result
@@ -409,7 +412,7 @@ class Parser:
 
         return ProductionResult(True, value=link)
 
-    def general_link_directive(self) -> ProductionResult:
+    def general_link_directive(self) -> ProductionResult[Link]:
         if not self.is_general_link_modifier():
             return ProductionResult(MissingLinkModifierError(self.token))
         modifier = self.token.text
@@ -428,7 +431,7 @@ class Parser:
         self.next_token()
         return result
 
-    def author_directive(self) -> ProductionResult:
+    def author_directive(self) -> ProductionResult[str]:
         if not self.is_directive('author'):
             return ProductionResult(False)
         self.next_token()
@@ -438,7 +441,7 @@ class Parser:
         self.next_token()
         return result
 
-    def date_directive(self) -> ProductionResult:
+    def date_directive(self) -> ProductionResult[str]:
         if not self.is_directive('date'):
             return ProductionResult(False)
         self.next_token()
