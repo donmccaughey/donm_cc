@@ -232,10 +232,15 @@ class Parser:
             return result
         return ProductionResult(True)
 
-    def section(self) -> ProductionResult:
+    def section(self) -> ProductionResult[LinksSection]:
         result = self.section_directive()
         if not result:
             return result
+        title = result.value
+        section = LinksSection(title=title, notes=[], links=[])
+        self.page_file.sections.append(section)
+        self.notes = section.notes
+
         result = self.paragraphs()
         if result.error:
             return result
@@ -243,10 +248,10 @@ class Parser:
         if result.error:
             return result
         if result.matched:
-            self.page_file.sections[-1].links = result.value
-        return ProductionResult(True)
+            section.links = result.value
+        return ProductionResult(True, value=section)
 
-    def section_directive(self) -> ProductionResult:
+    def section_directive(self) -> ProductionResult[str]:
         if not self.is_directive('section'):
             return ProductionResult(False)
         self.next_token()
@@ -255,11 +260,9 @@ class Parser:
         self.next_token()
         if not self.is_data():
             return ProductionResult(MissingDataError(self.token, 'section title'))
-        section = LinksSection(title=self.token.text, notes=[], links=[])
-        self.page_file.sections.append(section)
-        self.notes = section.notes
+        title = self.token.text
         self.next_token()
-        return ProductionResult(True)
+        return ProductionResult(True, value=title)
 
     def links(self) -> ProductionResult[List[BookLink | Link]]:
         result = self.link()
