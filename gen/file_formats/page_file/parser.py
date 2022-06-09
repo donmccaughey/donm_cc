@@ -244,19 +244,18 @@ class Parser:
         if not result:
             return result
         title = result.value
-        section = LinksSection(title=title, notes=[], links=[])
 
         result = self.paragraphs()
         if result.error:
             return result
-        if result.matched:
-            section.notes = result.value
+        notes = result.value if result.matched else []
 
         result = self.links()
         if result.error:
             return result
-        if result.matched:
-            section.links = result.value
+        links = result.value if result.matched else []
+
+        section = LinksSection(title=title, notes=notes, links=links)
         return ProductionResult(True, value=section)
 
     def section_directive(self) -> ProductionResult[str]:
