@@ -145,7 +145,6 @@ class Parser:
         self.lexer = lexer(source)
         self.token: Optional[Token] = None
         self.page_file: Optional[PageFile] = None
-        self.notes: Optional[list[str]] = None
 
     def parse(self) -> PageFile | ParserError:
         self.next_token()
@@ -175,6 +174,8 @@ class Parser:
         result = self.paragraphs()
         if result.error:
             return result
+        if result.matched:
+            self.page_file.notes = result.value
         return ProductionResult(True)
 
     def page_attributes(self) -> ProductionResult:
@@ -201,7 +202,6 @@ class Parser:
             notes=[],
             sections=[]
         )
-        self.notes = self.page_file.notes
         self.next_token()
         return ProductionResult(True)
 
@@ -215,15 +215,17 @@ class Parser:
         self.next_token()
         return ProductionResult(True)
 
-    def paragraphs(self) -> ProductionResult:
+    def paragraphs(self) -> ProductionResult[List[str]]:
         if not self.is_paragraph():
             return ProductionResult(False)
-        self.notes.append(self.token.text)
+        paragraph = self.token.text
         self.next_token()
+
         result = self.paragraphs()
         if result.error:
             return result
-        return ProductionResult(True)
+        paragraphs = result.value if result.matched else []
+        return ProductionResult(True, value=[paragraph] + paragraphs)
 
     def sections(self) -> ProductionResult[List[LinksSection]]:
         result = self.section()
@@ -243,11 +245,13 @@ class Parser:
             return result
         title = result.value
         section = LinksSection(title=title, notes=[], links=[])
-        self.notes = section.notes
 
         result = self.paragraphs()
         if result.error:
             return result
+        if result.matched:
+            section.notes = result.value
+
         result = self.links()
         if result.error:
             return result
