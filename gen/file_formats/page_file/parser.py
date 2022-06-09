@@ -1,4 +1,4 @@
-from typing import Optional, TypeVar, Generic, Any
+from typing import Optional, TypeVar, Generic, Any, List
 
 from file_formats.page_file import PageFile, LinksSection, Link, BookLink
 from .lexer import Token, TokenType, lexer
@@ -242,6 +242,8 @@ class Parser:
         result = self.links()
         if result.error:
             return result
+        if result.matched:
+            self.page_file.sections[-1].links = result.value
         return ProductionResult(True)
 
     def section_directive(self) -> ProductionResult:
@@ -259,17 +261,17 @@ class Parser:
         self.next_token()
         return ProductionResult(True)
 
-    def links(self) -> ProductionResult:
+    def links(self) -> ProductionResult[List[BookLink | Link]]:
         result = self.link()
         if not result:
             return result
         link = result.value
-        self.page_file.sections[-1].links.append(link)
 
         result = self.links()
         if result.error:
             return result
-        return ProductionResult(True)
+        links = result.value if result.matched else []
+        return ProductionResult(True, value=[link] + links)
 
     def link(self) -> ProductionResult[BookLink | Link]:
         if not self.is_directive('link'):
@@ -395,7 +397,7 @@ class Parser:
 
         return ProductionResult(False)
 
-    def general_link(self) -> ProductionResult[Link]:
+    def general_link(self) -> ProductionResult[Link | str]:
         result = self.general_link_directive()
         if not result:
             return result
