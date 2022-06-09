@@ -185,6 +185,8 @@ class Parser:
         result = self.subtitle_directive()
         if result.error:
             return result
+        if result.matched:
+            self.page_file.subtitle = result.value
         return ProductionResult(True)
 
     def page_directive(self) -> ProductionResult:
@@ -208,17 +210,17 @@ class Parser:
 
         return ProductionResult(True)
 
-    def subtitle_directive(self) -> ProductionResult:
+    def subtitle_directive(self) -> ProductionResult[str]:
         if not self.is_directive('subtitle'):
             return ProductionResult(False)
         self.next_token()
 
         if not self.is_data():
             return ProductionResult(MissingDataError(self.token, 'page subtitle'))
-        self.page_file.subtitle = self.token.text.strip()
+        subtitle = self.token.text.strip()
         self.next_token()
 
-        return ProductionResult(True)
+        return ProductionResult(True, value=subtitle)
 
     def paragraphs(self) -> ProductionResult[List[str]]:
         if not self.is_paragraph():
