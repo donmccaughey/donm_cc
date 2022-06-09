@@ -1,4 +1,4 @@
-from typing import Optional, TypeVar, Generic, Any, List
+from typing import Optional, TypeVar, Generic, Any, List, Tuple
 
 from file_formats.page_file import PageFile, LinksSection, Link, BookLink
 from .lexer import Token, TokenType, lexer
@@ -409,11 +409,19 @@ class Parser:
 
         return ProductionResult(False)
 
-    def general_link(self) -> ProductionResult[Link | str]:
+    def general_link(self) -> ProductionResult[Link]:
         result = self.general_link_directive()
         if not result:
             return result
-        link = result.value
+        modifier, title = result.value
+        link = Link(
+            modifier=modifier,
+            title=title,
+            url=None,
+            authors=[],
+            date=None,
+            checked=False,
+        )
 
         result = self.url_directive()
         if not result:
@@ -426,24 +434,18 @@ class Parser:
 
         return ProductionResult(True, value=link)
 
-    def general_link_directive(self) -> ProductionResult[Link]:
+    def general_link_directive(self) -> ProductionResult[Tuple[str, str]]:
         if not self.is_general_link_modifier():
             return ProductionResult(MissingLinkModifierError(self.token))
         modifier = self.token.text
         self.next_token()
+
         if not self.is_data():
             return ProductionResult(MissingDataError(self.token, 'link title'))
-        link = Link(
-            modifier=modifier,
-            title=self.token.text,
-            url=None,
-            authors=[],
-            date=None,
-            checked=False,
-        )
-        result = ProductionResult(True, value=link)
+        title = self.token.text
         self.next_token()
-        return result
+
+        return ProductionResult(True, value=(modifier, title))
 
     def author_directive(self) -> ProductionResult[str]:
         if not self.is_directive('author'):
