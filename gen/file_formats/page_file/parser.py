@@ -307,20 +307,21 @@ class Parser:
         if not result:
             return result
         title = result.value
+
+        result = self.book_locator()
+        if not result:
+            return result
+        asin, url = result.value
+
         link = BookLink(
             modifier='book',
             title=title,
-            url=None,
-            asin=None,
+            url=url,
+            asin=asin,
             authors=[],
             date=None,
             checked=False,
         )
-
-        result = self.book_locator(link)
-        if not result:
-            return result
-
         result = self.link_attributes(link)
         if result.error:
             return result
@@ -339,26 +340,26 @@ class Parser:
 
         return ProductionResult(True, value=title)
 
-    def book_locator(self, link: BookLink) -> ProductionResult[Any]:
+    def book_locator(self) -> ProductionResult[Tuple[Optional[str], Optional[str]]]:
+        asin, url = None, None
+
         result = self.asin_directive()
         if result.matched:
-            link.asin = result.value
+            asin = result.value
             result = self.url_directive()
             if result.matched:
-                link.url = result.value
-                return result
-            return ProductionResult(True)
+                url = result.value
+            return ProductionResult(True, value=(asin, url))
 
         result = self.url_directive()
         if result.error:
             return result
         if result.matched:
-            link.url = result.value
+            url = result.value
             result = self.asin_directive()
             if result.matched:
-                link.asin = result.value
-                return result
-            return ProductionResult(True)
+                asin = result.value
+            return ProductionResult(True, value=(asin, url))
 
         return ProductionResult(False)
 
