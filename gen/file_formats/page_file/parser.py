@@ -298,7 +298,16 @@ class Parser:
         result = self.book_link_directive()
         if not result:
             return result
-        link = result.value
+        title = result.value
+        link = BookLink(
+            modifier='book',
+            title=title,
+            url=None,
+            asin=None,
+            authors=[],
+            date=None,
+            checked=False,
+        )
 
         result = self.book_locator(link)
         if not result:
@@ -310,24 +319,17 @@ class Parser:
 
         return ProductionResult(True, value=link)
 
-    def book_link_directive(self) -> ProductionResult[BookLink]:
+    def book_link_directive(self) -> ProductionResult[str]:
         if not self.is_modifier('book'):
             return ProductionResult(False)
         self.next_token()
+
         if not self.is_data():
             return ProductionResult(MissingDataError(self.token, 'link title'))
-        link = BookLink(
-            modifier='book',
-            title=self.token.text,
-            url=None,
-            asin=None,
-            authors=[],
-            date=None,
-            checked=False,
-        )
-        result = ProductionResult(True, value=link)
+        title = self.token.text
         self.next_token()
-        return result
+
+        return ProductionResult(True, value=title)
 
     def book_locator(self, link: BookLink) -> ProductionResult[Any]:
         result = self.asin_directive()
