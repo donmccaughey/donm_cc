@@ -171,32 +171,37 @@ class Parser:
         result = self.page_attributes()
         if not result:
             return result
+        title, subtitle = result.value
+
+        notes = []
         result = self.paragraphs()
         if result.error:
             return result
         if result.matched:
-            self.page_file.notes = result.value
+            notes = result.value
+
+        self.page_file = PageFile(
+            title=title,
+            subtitle=subtitle,
+            notes=notes,
+            sections=[]
+        )
         return ProductionResult(True)
 
-    def page_attributes(self) -> ProductionResult:
+    def page_attributes(self) -> ProductionResult[Tuple[str, Optional[str]]]:
         result = self.page_directive()
         if not result:
             return result
         title = result.value
-        self.page_file = PageFile(
-            title=title,
-            subtitle=None,
-            notes=[],
-            sections=[]
-        )
 
+        subtitle = None
         result = self.subtitle_directive()
         if result.error:
             return result
         if result.matched:
-            self.page_file.subtitle = result.value
+            subtitle = result.value
 
-        return ProductionResult(True)
+        return ProductionResult(True, value=(title, subtitle))
 
     def page_directive(self) -> ProductionResult[str]:
         if not self.is_directive('page'):
