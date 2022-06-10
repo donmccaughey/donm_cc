@@ -144,30 +144,36 @@ class Parser:
     def __init__(self, source: str):
         self.lexer = lexer(source)
         self.token: Optional[Token] = None
-        self.page_file: Optional[PageFile] = None
 
     def parse(self) -> PageFile | ParserError:
         self.next_token()
         result = self.page()
         if result.error:
             return result.error
-        elif self.token:
+        if self.token:
             return UnexpectedTokenError(self.token)
-        else:
-            return self.page_file
+        return result.value
 
-    def page(self) -> ProductionResult:
+    def page(self) -> ProductionResult[PageFile]:
         result = self.overview()
         if not result:
             return result
+        title, subtitle, notes = result.value
+
         result = self.sections()
         if result.error:
             return result
-        if result.matched:
-            self.page_file.sections = result.value
-        return ProductionResult(True)
+        sections = result.value if result.matched else []
 
-    def overview(self) -> ProductionResult:
+        page = PageFile(
+            title=title,
+            subtitle=subtitle,
+            notes=notes,
+            sections=sections
+        )
+        return ProductionResult(True, value=page)
+
+    def overview(self) -> ProductionResult[Tuple[str, Optional[str], List[str]]]:
         result = self.page_attributes()
         if not result:
             return result
@@ -180,13 +186,7 @@ class Parser:
         if result.matched:
             notes = result.value
 
-        self.page_file = PageFile(
-            title=title,
-            subtitle=subtitle,
-            notes=notes,
-            sections=[]
-        )
-        return ProductionResult(True)
+        return ProductionResult(True, value=(title, subtitle, notes))
 
     def page_attributes(self) -> ProductionResult[Tuple[str, Optional[str]]]:
         result = self.page_directive()
