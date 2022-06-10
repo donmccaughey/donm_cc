@@ -182,14 +182,23 @@ class Parser:
         result = self.page_directive()
         if not result:
             return result
+        title = result.value
+        self.page_file = PageFile(
+            title=title,
+            subtitle=None,
+            notes=[],
+            sections=[]
+        )
+
         result = self.subtitle_directive()
         if result.error:
             return result
         if result.matched:
             self.page_file.subtitle = result.value
+
         return ProductionResult(True)
 
-    def page_directive(self) -> ProductionResult:
+    def page_directive(self) -> ProductionResult[str]:
         if not self.is_directive('page'):
             return ProductionResult(MissingDirectiveError(self.token, 'page'))
         self.next_token()
@@ -200,15 +209,10 @@ class Parser:
 
         if not self.is_data():
             return ProductionResult(MissingDataError(self.token, 'page title'))
-        self.page_file = PageFile(
-            title=(self.token.text.strip()),
-            subtitle=None,
-            notes=[],
-            sections=[]
-        )
+        title = self.token.text.strip()
         self.next_token()
 
-        return ProductionResult(True)
+        return ProductionResult(True, value=title)
 
     def subtitle_directive(self) -> ProductionResult[str]:
         if not self.is_directive('subtitle'):
