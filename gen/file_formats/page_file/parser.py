@@ -324,19 +324,34 @@ class Parser:
             return result
         asin, url = result.value
 
+        result = self.link_attributes()
+        if result.error:
+            return result
+        authors = []
+        date = None
+        checked = False
+        if result.matched:
+            for name, value in result.value:
+                if 'author' == name:
+                    authors.append(value)
+                elif 'date' == name:
+                    # TODO: return error on duplicate date attribute
+                    date = value
+                elif 'checked' == name:
+                    # TODO: return error on duplicate checked attribute
+                    checked = True
+                else:
+                    raise RuntimeError(f'Unexpected link attribute type "{name}"')
+
         link = BookLink(
             modifier='book',
             title=title,
             url=url,
             asin=asin,
-            authors=[],
-            date=None,
-            checked=False,
+            authors=authors,
+            date=date,
+            checked=checked,
         )
-        result = self.link_attributes(link)
-        if result.error:
-            return result
-
         return ProductionResult(True, value=link)
 
     def book_link_directive(self) -> ProductionResult[str]:
@@ -398,36 +413,38 @@ class Parser:
 
         return ProductionResult(True, value=asin)
 
-    def link_attributes(self, link: Link | BookLink) -> ProductionResult[Any]:
-        result = self.link_attribute(link)
+    def link_attributes(self) -> ProductionResult[List[Tuple[str, str]]]:
+        result = self.link_attribute()
         if not result:
             return result
-        result = self.link_attributes(link)
+        attribute = result.value
+
+        result = self.link_attributes()
         if result.error:
             return result
-        return ProductionResult(True)
+        attributes = result.value if result.matched else []
+        return ProductionResult(True, value=[attribute] + attributes)
 
-    def link_attribute(self, link: BookLink | Link) -> ProductionResult[Any]:
+    def link_attribute(self) -> ProductionResult[Tuple[str, str]]:
         result = self.author_directive()
         if result.error:
             return result
         if result.matched:
-            link.authors.append(result.value)
-            return result
+            author = result.value
+            return ProductionResult(True, value=('author', author))
 
         result = self.date_directive()
         if result.error:
             return result
         if result.matched:
-            link.date = result.value
-            return result
+            date = result.value
+            return ProductionResult(True, value=('date', date))
 
         result = self.checked_directive()
         if result.error:
             return result
         if result.matched:
-            link.checked = True
-            return result
+            return ProductionResult(True, value=('checked', ''))
 
         return ProductionResult(False)
 
@@ -436,24 +453,39 @@ class Parser:
         if not result:
             return result
         modifier, title = result.value
-        link = Link(
-            modifier=modifier,
-            title=title,
-            url=None,
-            authors=[],
-            date=None,
-            checked=False,
-        )
 
         result = self.url_directive()
         if not result:
             return result
-        link.url = result.value
+        url = result.value if result.matched else None
 
-        result = self.link_attributes(link)
+        result = self.link_attributes()
         if result.error:
             return result
+        authors = []
+        date = None
+        checked = False
+        if result.matched:
+            for name, value in result.value:
+                if 'author' == name:
+                    authors.append(value)
+                elif 'date' == name:
+                    # TODO: return error on duplicate date attribute
+                    date = value
+                elif 'checked' == name:
+                    # TODO: return error on duplicate checked attribute
+                    checked = True
+                else:
+                    raise RuntimeError(f'Unexpected link attribute type "{name}"')
 
+        link = Link(
+            modifier=modifier,
+            title=title,
+            url=url,
+            authors=authors,
+            date=date,
+            checked=checked,
+        )
         return ProductionResult(True, value=link)
 
     def general_link_directive(self) -> ProductionResult[Tuple[str, str]]:
