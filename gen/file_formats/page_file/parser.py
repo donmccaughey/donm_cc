@@ -205,11 +205,13 @@ class Parser:
         title = result.value
 
         subtitle = None
-        result = self.subtitle_directive()
-        if result.error:
-            return result
-        if result.matched:
-            subtitle = result.value
+        match self.subtitle_directive():
+            case Matched(value):
+                subtitle = value
+            case NotMatched():
+                pass
+            case ParserError() as e:
+                return ProductionResult(e)
 
         return ProductionResult(True, value=(title, subtitle))
 
@@ -229,17 +231,17 @@ class Parser:
 
         return ProductionResult(True, value=title)
 
-    def subtitle_directive(self) -> ProductionResult[str]:
+    def subtitle_directive(self) -> Matched[str] | NotMatched | ParserError:
         if not self.is_directive('subtitle'):
-            return ProductionResult(False)
+            return NotMatched()
         self.next_token()
 
         if not self.is_data():
-            return ProductionResult(MissingDataError(self.token, 'page subtitle'))
+            return MissingDataError(self.token, 'page subtitle')
         subtitle = self.token.text.strip()
         self.next_token()
 
-        return ProductionResult(True, value=subtitle)
+        return Matched(subtitle)
 
     def paragraphs(self) -> ProductionResult[List[str]]:
         if not self.is_paragraph():
