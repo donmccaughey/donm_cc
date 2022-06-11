@@ -325,10 +325,13 @@ class Parser:
         return ProductionResult(False)
 
     def book_link(self) -> ProductionResult[BookLink]:
-        result = self.book_link_directive()
-        if not result:
-            return result
-        title = result.value
+        match self.book_link_directive():
+            case Matched(value):
+                title = value
+            case NotMatched():
+                return ProductionResult(False)
+            case ParserError() as e:
+                return ProductionResult(e)
 
         match self.book_locator():
             case Matched(value):
@@ -361,17 +364,17 @@ class Parser:
         )
         return ProductionResult(True, value=link)
 
-    def book_link_directive(self) -> ProductionResult[str]:
+    def book_link_directive(self) -> Matched[str] | NotMatched | ParserError:
         if not self.is_modifier('book'):
-            return ProductionResult(False)
+            return NotMatched()
         self.next_token()
 
         if not self.is_data():
-            return ProductionResult(MissingDataError(self.token, 'link title'))
+            return MissingDataError(self.token, 'link title')
         title = self.token.text
         self.next_token()
 
-        return ProductionResult(True, value=title)
+        return Matched(title)
 
     def book_locator(self) -> Matched[Tuple[Optional[str], Optional[str]]] | NotMatched | ParserError:
         match self.asin_directive():
