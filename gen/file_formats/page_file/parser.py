@@ -335,24 +335,26 @@ class Parser:
             return result
         asin, url = result.value
 
-        result = self.link_attributes()
-        if result.error:
-            return result
         authors = []
         date = None
         checked = False
-        if result.matched:
-            for name, value in result.value:
-                if 'author' == name:
-                    authors.append(value)
-                elif 'date' == name:
-                    # TODO: return error on duplicate date attribute
-                    date = value
-                elif 'checked' == name:
-                    # TODO: return error on duplicate checked attribute
-                    checked = True
-                else:
-                    raise RuntimeError(f'Unexpected link attribute type "{name}"')
+        match self.link_attributes():
+            case Matched(attributes):
+                for name, value in attributes:
+                    if 'author' == name:
+                        authors.append(value)
+                    elif 'date' == name:
+                        # TODO: return error on duplicate date attribute
+                        date = value
+                    elif 'checked' == name:
+                        # TODO: return error on duplicate checked attribute
+                        checked = True
+                    else:
+                        raise RuntimeError(f'Unexpected link attribute type "{name}"')
+            case NotMatched():
+                pass
+            case ParserError() as e:
+                return ProductionResult(e)
 
         link = BookLink(
             modifier='book',
@@ -428,20 +430,24 @@ class Parser:
 
         return Matched(asin)
 
-    def link_attributes(self) -> ProductionResult[List[Tuple[str, str]]]:
+    def link_attributes(self) -> Matched[List[Tuple[str, str]]] | NotMatched | ParserError:
         match self.link_attribute():
             case Matched(value):
-                attribute = value
+                attributes = [value]
             case NotMatched():
-                return ProductionResult(False)
+                return NotMatched()
             case ParserError() as e:
-                return ProductionResult(e)
+                return e
 
-        result = self.link_attributes()
-        if result.error:
-            return result
-        attributes = result.value if result.matched else []
-        return ProductionResult(True, value=[attribute] + attributes)
+        match self.link_attributes():
+            case Matched(value):
+                attributes += value
+            case NotMatched():
+                pass
+            case ParserError() as e:
+                return e
+
+        return Matched(attributes)
 
     def link_attribute(self) -> Matched[Tuple[str, str]] | NotMatched | ParserError:
         match self.author_directive():
@@ -481,24 +487,26 @@ class Parser:
             case ParserError() as e:
                 return ProductionResult(e)
 
-        result = self.link_attributes()
-        if result.error:
-            return result
         authors = []
         date = None
         checked = False
-        if result.matched:
-            for name, value in result.value:
-                if 'author' == name:
-                    authors.append(value)
-                elif 'date' == name:
-                    # TODO: return error on duplicate date attribute
-                    date = value
-                elif 'checked' == name:
-                    # TODO: return error on duplicate checked attribute
-                    checked = True
-                else:
-                    raise RuntimeError(f'Unexpected link attribute type "{name}"')
+        match self.link_attributes():
+            case Matched(attributes):
+                for name, value in attributes:
+                    if 'author' == name:
+                        authors.append(value)
+                    elif 'date' == name:
+                        # TODO: return error on duplicate date attribute
+                        date = value
+                    elif 'checked' == name:
+                        # TODO: return error on duplicate checked attribute
+                        checked = True
+                    else:
+                        raise RuntimeError(f'Unexpected link attribute type "{name}"')
+            case NotMatched():
+                pass
+            case ParserError() as e:
+                return ProductionResult(e)
 
         link = Link(
             modifier=modifier,
