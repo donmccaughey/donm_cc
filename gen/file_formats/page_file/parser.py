@@ -379,49 +379,55 @@ class Parser:
     def book_locator(self) -> ProductionResult[Tuple[Optional[str], Optional[str]]]:
         asin, url = None, None
 
-        result = self.asin_directive()
-        if result.matched:
-            asin = result.value
-            result = self.url_directive()
-            if result.matched:
-                url = result.value
-            return ProductionResult(True, value=(asin, url))
+        match self.asin_directive():
+            case Matched(value):
+                asin = value
+                match self.url_directive():
+                    case Matched(value):
+                        url = value
+                    case ParserError():
+                        pass
+                return ProductionResult(True, value=(asin, url))
+            case ParserError():
+                pass
 
-        result = self.url_directive()
-        if result.error:
-            return result
-        if result.matched:
-            url = result.value
-            result = self.asin_directive()
-            if result.matched:
-                asin = result.value
-            return ProductionResult(True, value=(asin, url))
+        match self.url_directive():
+            case Matched(value):
+                url = value
+                match self.asin_directive():
+                    case Matched(value):
+                        asin = value
+                    case ParserError():
+                        pass
+                return ProductionResult(True, value=(asin, url))
+            case ParserError() as e:
+                return ProductionResult(e)
 
         return ProductionResult(False)
 
-    def url_directive(self) -> ProductionResult[str]:
+    def url_directive(self) -> Matched[str] | ParserError:
         if not self.is_directive('url'):
-            return ProductionResult(MissingDirectiveError(self.token, 'url'))
+            return MissingDirectiveError(self.token, 'url')
         self.next_token()
 
         if not self.is_data():
-            return ProductionResult(MissingDataError(self.token, 'URL address'))
+            return MissingDataError(self.token, 'URL address')
         url = self.token.text
         self.next_token()
 
-        return ProductionResult(True, value=url)
+        return Matched(url)
 
-    def asin_directive(self) -> ProductionResult[str]:
+    def asin_directive(self) -> Matched[str] | ParserError:
         if not self.is_directive('asin'):
-            return ProductionResult(MissingDirectiveError(self.token, 'asin'))
+            return MissingDirectiveError(self.token, 'asin')
         self.next_token()
 
         if not self.is_data():
-            return ProductionResult(MissingDataError(self.token, 'ASIN'))
+            return MissingDataError(self.token, 'ASIN')
         asin = self.token.text
         self.next_token()
 
-        return ProductionResult(True, value=asin)
+        return Matched(asin)
 
     def link_attributes(self) -> ProductionResult[List[Tuple[str, str]]]:
         attribute = None
@@ -470,10 +476,12 @@ class Parser:
             return result
         modifier, title = result.value
 
-        result = self.url_directive()
-        if not result:
-            return result
-        url = result.value if result.matched else None
+        url = None
+        match self.url_directive():
+            case Matched(value):
+                url = value
+            case ParserError() as e:
+                return ProductionResult(e)
 
         result = self.link_attributes()
         if result.error:

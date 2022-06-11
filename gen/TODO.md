@@ -1,5 +1,7 @@
 # TODO
 
+- should `url_directive()` and `asin_directive()` return `NotMatched`?  See `test_link_missing_url_data()` and `test_book_link_with_asin()`
+- should `book_locator()` return `NotMatched`?
 - ensure that wrapping works correctly when encountering `<br>` tags:
                     <strong>Square</strong>, 2012 - <em>iPad integration with
                     point−of−sale (POS) hardware</em><br>
@@ -25,8 +27,3 @@
 - generate alternate representations of links pages (CSV, JSON)
 - set up CI in GitHub Actions
 - generate gemini site
-
-- parser production return values
-  * checked_directive()
-  * date_directive()
-  * author_directive()
