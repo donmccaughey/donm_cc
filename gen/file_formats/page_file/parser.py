@@ -436,12 +436,13 @@ class Parser:
         return ProductionResult(True, value=[attribute] + attributes)
 
     def link_attribute(self) -> ProductionResult[Tuple[str, str]]:
-        result = self.author_directive()
-        if result.error:
-            return result
-        if result.matched:
-            author = result.value
-            return ProductionResult(True, value=('author', author))
+        match self.author_directive():
+            case Matched(value=author):
+                return ProductionResult(True, value=('author', author))
+            case NotMatched():
+                pass
+            case ParserError() as e:
+                return ProductionResult(e)
 
         match self.date_directive():
             case Matched(value=date):
@@ -512,16 +513,17 @@ class Parser:
 
         return ProductionResult(True, value=(modifier, title))
 
-    def author_directive(self) -> ProductionResult[str]:
+    def author_directive(self) -> Matched[str] | NotMatched | ParserError:
         if not self.is_directive('author'):
-            return ProductionResult(False)
+            return NotMatched()
         self.next_token()
+
         if not self.is_data():
-            return ProductionResult(MissingDataError(self.token, 'author value'))
+            return MissingDataError(self.token, 'author value')
         author = self.token.text
         self.next_token()
 
-        return ProductionResult(True, value=author)
+        return Matched(author)
 
     def date_directive(self) -> Matched[str] | NotMatched | ParserError:
         if not self.is_directive('date'):
