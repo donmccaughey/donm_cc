@@ -330,10 +330,13 @@ class Parser:
             return result
         title = result.value
 
-        result = self.book_locator()
-        if not result:
-            return result
-        asin, url = result.value
+        match self.book_locator():
+            case Matched(value):
+                asin, url = value
+            case NotMatched():
+                return ProductionResult(False)
+            case ParserError() as e:
+                return ProductionResult(e)
 
         match self.link_attributes():
             case Matched(attributes):
@@ -370,7 +373,7 @@ class Parser:
 
         return ProductionResult(True, value=title)
 
-    def book_locator(self) -> ProductionResult[Tuple[Optional[str], Optional[str]]]:
+    def book_locator(self) -> Matched[Tuple[Optional[str], Optional[str]]] | NotMatched | ParserError:
         match self.asin_directive():
             case Matched(value):
                 asin = value
@@ -379,7 +382,7 @@ class Parser:
                         url = value
                     case ParserError():
                         url = None
-                return ProductionResult(True, value=(asin, url))
+                return Matched((asin, url))
             case ParserError():
                 pass
 
@@ -391,11 +394,11 @@ class Parser:
                         asin = value
                     case ParserError():
                         asin = None
-                return ProductionResult(True, value=(asin, url))
+                return Matched((asin, url))
             case ParserError() as e:
-                return ProductionResult(e)
+                return e
 
-        return ProductionResult(False)
+        return NotMatched()
 
     def url_directive(self) -> Matched[str] | ParserError:
         if not self.is_directive('url'):
