@@ -1,4 +1,5 @@
-from typing import Optional, TypeVar, Generic, Any, List, Tuple
+from dataclasses import dataclass
+from typing import Optional, TypeVar, Generic, List, Tuple
 
 from file_formats.page_file import PageFile, LinksSection, Link, BookLink
 from .lexer import Token, TokenType, lexer
@@ -51,7 +52,16 @@ class UnexpectedTokenError(ParserError):
         super().__init__(token, 'Unexpected token')
 
 
+class NotMatched:
+    pass
+
+
 V = TypeVar('V')
+
+
+@dataclass
+class Matched(Generic[V]):
+    value: V
 
 
 class ProductionResult(Generic[V]):
@@ -433,12 +443,13 @@ class Parser:
             author = result.value
             return ProductionResult(True, value=('author', author))
 
-        result = self.date_directive()
-        if result.error:
-            return result
-        if result.matched:
-            date = result.value
-            return ProductionResult(True, value=('date', date))
+        match self.date_directive():
+            case Matched(value=date):
+                return ProductionResult(True, value=('date', date))
+            case NotMatched():
+                pass
+            case ParserError() as e:
+                return ProductionResult(e)
 
         result = self.checked_directive()
         if result.error:
@@ -512,17 +523,17 @@ class Parser:
 
         return ProductionResult(True, value=author)
 
-    def date_directive(self) -> ProductionResult[str]:
+    def date_directive(self) -> Matched[str] | NotMatched | ParserError:
         if not self.is_directive('date'):
-            return ProductionResult(False)
+            return NotMatched()
         self.next_token()
 
         if not self.is_data():
-            return ProductionResult(MissingDataError(self.token, 'date value'))
+            return MissingDataError(self.token, 'date value')
         date = self.token.text
         self.next_token()
 
-        return ProductionResult(True, value=date)
+        return Matched(date)
 
     def checked_directive(self) -> ProductionResult:
         if not self.is_directive('checked'):
