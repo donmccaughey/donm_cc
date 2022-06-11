@@ -451,11 +451,11 @@ class Parser:
             case ParserError() as e:
                 return ProductionResult(e)
 
-        result = self.checked_directive()
-        if result.error:
-            return result
-        if result.matched:
-            return ProductionResult(True, value=('checked', ''))
+        match self.checked_directive():
+            case Matched():
+                return ProductionResult(True, value=('checked', ''))
+            case NotMatched():
+                pass
 
         return ProductionResult(False)
 
@@ -535,11 +535,11 @@ class Parser:
 
         return Matched(date)
 
-    def checked_directive(self) -> ProductionResult:
+    def checked_directive(self) -> Matched[bool] | NotMatched:
         if not self.is_directive('checked'):
-            return ProductionResult(False)
+            return NotMatched()
         self.next_token()
-        return ProductionResult(True)
+        return Matched(True)
 
     def next_token(self):
         try:
