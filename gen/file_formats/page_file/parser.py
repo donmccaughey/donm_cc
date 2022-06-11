@@ -424,10 +424,14 @@ class Parser:
         return ProductionResult(True, value=asin)
 
     def link_attributes(self) -> ProductionResult[List[Tuple[str, str]]]:
-        result = self.link_attribute()
-        if not result:
-            return result
-        attribute = result.value
+        attribute = None
+        match self.link_attribute():
+            case Matched(value=(name, value)):
+                attribute = name, value
+            case NotMatched():
+                return ProductionResult(False)
+            case ParserError() as e:
+                return ProductionResult(e)
 
         result = self.link_attributes()
         if result.error:
@@ -435,30 +439,30 @@ class Parser:
         attributes = result.value if result.matched else []
         return ProductionResult(True, value=[attribute] + attributes)
 
-    def link_attribute(self) -> ProductionResult[Tuple[str, str]]:
+    def link_attribute(self) -> Matched[Tuple[str, str]] | NotMatched | ParserError:
         match self.author_directive():
             case Matched(value=author):
-                return ProductionResult(True, value=('author', author))
+                return Matched(('author', author))
             case NotMatched():
                 pass
             case ParserError() as e:
-                return ProductionResult(e)
+                return e
 
         match self.date_directive():
             case Matched(value=date):
-                return ProductionResult(True, value=('date', date))
+                return Matched(('date', date))
             case NotMatched():
                 pass
             case ParserError() as e:
-                return ProductionResult(e)
+                return e
 
         match self.checked_directive():
             case Matched():
-                return ProductionResult(True, value=('checked', ''))
+                return Matched(('checked', ''))
             case NotMatched():
                 pass
 
-        return ProductionResult(False)
+        return NotMatched()
 
     def general_link(self) -> ProductionResult[Link]:
         result = self.general_link_directive()
