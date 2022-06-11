@@ -204,12 +204,11 @@ class Parser:
             return result
         title = result.value
 
-        subtitle = None
         match self.subtitle_directive():
             case Matched(value):
                 subtitle = value
             case NotMatched():
-                pass
+                subtitle = None
             case ParserError() as e:
                 return ProductionResult(e)
 
@@ -379,8 +378,6 @@ class Parser:
         return ProductionResult(True, value=title)
 
     def book_locator(self) -> ProductionResult[Tuple[Optional[str], Optional[str]]]:
-        asin, url = None, None
-
         match self.asin_directive():
             case Matched(value):
                 asin = value
@@ -388,7 +385,7 @@ class Parser:
                     case Matched(value):
                         url = value
                     case ParserError():
-                        pass
+                        url = None
                 return ProductionResult(True, value=(asin, url))
             case ParserError():
                 pass
@@ -400,7 +397,7 @@ class Parser:
                     case Matched(value):
                         asin = value
                     case ParserError():
-                        pass
+                        asin = None
                 return ProductionResult(True, value=(asin, url))
             case ParserError() as e:
                 return ProductionResult(e)
@@ -432,10 +429,9 @@ class Parser:
         return Matched(asin)
 
     def link_attributes(self) -> ProductionResult[List[Tuple[str, str]]]:
-        attribute = None
         match self.link_attribute():
-            case Matched(value=(name, value)):
-                attribute = name, value
+            case Matched(value):
+                attribute = value
             case NotMatched():
                 return ProductionResult(False)
             case ParserError() as e:
@@ -473,12 +469,12 @@ class Parser:
         return NotMatched()
 
     def general_link(self) -> ProductionResult[Link]:
-        result = self.general_link_directive()
-        if not result:
-            return result
-        modifier, title = result.value
+        match self.general_link_directive():
+            case Matched(value):
+                modifier, title = value
+            case ParserError() as e:
+                return ProductionResult(e)
 
-        url = None
         match self.url_directive():
             case Matched(value):
                 url = value
@@ -514,18 +510,18 @@ class Parser:
         )
         return ProductionResult(True, value=link)
 
-    def general_link_directive(self) -> ProductionResult[Tuple[str, str]]:
+    def general_link_directive(self) -> Matched[Tuple[str, str]] | ParserError:
         if not self.is_general_link_modifier():
-            return ProductionResult(MissingLinkModifierError(self.token))
+            return MissingLinkModifierError(self.token)
         modifier = self.token.text
         self.next_token()
 
         if not self.is_data():
-            return ProductionResult(MissingDataError(self.token, 'link title'))
+            return MissingDataError(self.token, 'link title')
         title = self.token.text
         self.next_token()
 
-        return ProductionResult(True, value=(modifier, title))
+        return Matched((modifier, title))
 
     def author_directive(self) -> Matched[str] | NotMatched | ParserError:
         if not self.is_directive('author'):
