@@ -277,10 +277,13 @@ class Parser:
             return result
         notes = result.value if result.matched else []
 
-        result = self.links()
-        if result.error:
-            return result
-        links = result.value if result.matched else []
+        match self.links():
+            case Matched(value):
+                links = value
+            case NotMatched():
+                links = []
+            case ParserError() as e:
+                return ProductionResult(e)
 
         section = LinksSection(title=title, notes=notes, links=links)
         return ProductionResult(True, value=section)
@@ -301,57 +304,66 @@ class Parser:
 
         return ProductionResult(True, value=title)
 
-    def links(self) -> ProductionResult[List[BookLink | Link]]:
-        result = self.link()
-        if not result:
-            return result
-        link = result.value
+    def links(self) -> Matched[List[BookLink | Link]] | NotMatched | ParserError:
+        match self.link():
+            case Matched(value):
+                link = value
+            case NotMatched():
+                return NotMatched()
+            case ParserError() as e:
+                return e
 
-        result = self.links()
-        if result.error:
-            return result
-        links = result.value if result.matched else []
-        return ProductionResult(True, value=[link] + links)
+        match self.links():
+            case Matched(links):
+                return Matched([link] + links)
+            case NotMatched():
+                return Matched([link])
+            case ParserError() as e:
+                return e
 
-    def link(self) -> ProductionResult[BookLink | Link]:
+    def link(self) -> Matched[BookLink | Link] | NotMatched | ParserError:
         if not self.is_directive('link'):
-            return ProductionResult(False)
+            return NotMatched()
         self.next_token()
 
         for x_link in [self.book_link, self.general_link]:
-            result = x_link()
-            if result.matched or result.error:
-                return result
-        return ProductionResult(False)
+            match x_link():
+                case Matched() as m:
+                    return m
+                case NotMatched():
+                    pass
+                case ParserError() as e:
+                    return e
+        return NotMatched()
 
-    def book_link(self) -> ProductionResult[BookLink]:
+    def book_link(self) -> Matched[BookLink] | NotMatched | ParserError:
         match self.book_link_directive():
             case Matched(value):
                 title = value
             case NotMatched():
-                return ProductionResult(False)
+                return NotMatched()
             case ParserError() as e:
-                return ProductionResult(e)
+                return e
 
         match self.book_locator():
             case Matched(value):
                 asin, url = value
             case NotMatched():
-                return ProductionResult(False)
+                return NotMatched()
             case ParserError() as e:
-                return ProductionResult(e)
+                return e
 
         match self.link_attributes():
             case Matched(attributes):
                 match self.validate_link_attributes(attributes):
                     case ParserError() as e:
-                        return ProductionResult(e)
+                        return e
                     case value:
                         authors, date, checked = value
             case NotMatched():
                 authors, date, checked = [], None, False
             case ParserError() as e:
-                return ProductionResult(e)
+                return e
 
         link = BookLink(
             modifier='book',
@@ -362,7 +374,7 @@ class Parser:
             date=date,
             checked=checked,
         )
-        return ProductionResult(True, value=link)
+        return Matched(link)
 
     def book_link_directive(self) -> Matched[str] | NotMatched | ParserError:
         if not self.is_modifier('book'):
@@ -471,30 +483,30 @@ class Parser:
 
         return NotMatched()
 
-    def general_link(self) -> ProductionResult[Link]:
+    def general_link(self) -> Matched[Link] | ParserError:
         match self.general_link_directive():
             case Matched(value):
                 modifier, title = value
             case ParserError() as e:
-                return ProductionResult(e)
+                return e
 
         match self.url_directive():
             case Matched(value):
                 url = value
             case ParserError() as e:
-                return ProductionResult(e)
+                return e
 
         match self.link_attributes():
             case Matched(attributes):
                 match self.validate_link_attributes(attributes):
                     case ParserError() as e:
-                        return ProductionResult(e)
+                        return e
                     case value:
                         authors, date, checked = value
             case NotMatched():
                 authors, date, checked = [], None, False
             case ParserError() as e:
-                return ProductionResult(e)
+                return e
 
         link = Link(
             modifier=modifier,
@@ -504,7 +516,7 @@ class Parser:
             date=date,
             checked=checked,
         )
-        return ProductionResult(True, value=link)
+        return Matched(link)
 
     def general_link_directive(self) -> Matched[Tuple[str, str]] | ParserError:
         if not self.is_general_link_modifier():
