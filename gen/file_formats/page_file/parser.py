@@ -170,10 +170,13 @@ class Parser:
             return result
         title, subtitle, notes = result.value
 
-        result = self.sections()
-        if result.error:
-            return result
-        sections = result.value if result.matched else []
+        match self.sections():
+            case Matched(value):
+                sections = value
+            case NotMatched():
+                sections = []
+            case ParserError() as e:
+                return ProductionResult(e)
 
         page = PageFile(
             title=title,
@@ -259,26 +262,31 @@ class Parser:
             case ParserError() as e:
                 return e
 
-    def sections(self) -> ProductionResult[List[LinksSection]]:
-        result = self.section()
-        if not result:
-            return result
-        section = result.value
+    def sections(self) -> Matched[List[LinksSection]] | NotMatched | ParserError:
+        match self.section():
+            case Matched(value):
+                section = value
+            case NotMatched():
+                return NotMatched()
+            case ParserError() as e:
+                return e
 
-        result = self.sections()
-        if result.error:
-            return result
-        sections = result.value if result.matched else []
-        return ProductionResult(True, value=[section] + sections)
+        match self.sections():
+            case Matched(sections):
+                return Matched([section] + sections)
+            case NotMatched():
+                return Matched([section])
+            case ParserError() as e:
+                return e
 
-    def section(self) -> ProductionResult[LinksSection]:
+    def section(self) -> Matched[LinksSection] | NotMatched | ParserError:
         match self.section_directive():
             case Matched(value):
                 title = value
             case NotMatched():
-                return ProductionResult(False)
+                return NotMatched()
             case ParserError() as e:
-                return ProductionResult(e)
+                return e
 
         match self.paragraphs():
             case Matched(value):
@@ -286,7 +294,7 @@ class Parser:
             case NotMatched():
                 notes = []
             case ParserError() as e:
-                return ProductionResult(e)
+                return e
 
         match self.links():
             case Matched(value):
@@ -294,10 +302,10 @@ class Parser:
             case NotMatched():
                 links = []
             case ParserError() as e:
-                return ProductionResult(e)
+                return e
 
         section = LinksSection(title=title, notes=notes, links=links)
-        return ProductionResult(True, value=section)
+        return Matched(section)
 
     def section_directive(self) -> Matched[str] | NotMatched | ParserError:
         if not self.is_directive('section'):
