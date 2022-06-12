@@ -199,10 +199,11 @@ class Parser:
         return ProductionResult(True, value=(title, subtitle, notes))
 
     def page_attributes(self) -> ProductionResult[Tuple[str, Optional[str]]]:
-        result = self.page_directive()
-        if not result:
-            return result
-        title = result.value
+        match self.page_directive():
+            case Matched(value):
+                title = value
+            case ParserError() as e:
+                return ProductionResult(e)
 
         match self.subtitle_directive():
             case Matched(value):
@@ -214,21 +215,21 @@ class Parser:
 
         return ProductionResult(True, value=(title, subtitle))
 
-    def page_directive(self) -> ProductionResult[str]:
+    def page_directive(self) -> Matched[str] | ParserError:
         if not self.is_directive('page'):
-            return ProductionResult(MissingDirectiveError(self.token, 'page'))
+            return MissingDirectiveError(self.token, 'page')
         self.next_token()
 
         if not self.is_modifier('links'):
-            return ProductionResult(MissingModifierError(self.token, 'links'))
+            return MissingModifierError(self.token, 'links')
         self.next_token()
 
         if not self.is_data():
-            return ProductionResult(MissingDataError(self.token, 'page title'))
+            return MissingDataError(self.token, 'page title')
         title = self.token.text.strip()
         self.next_token()
 
-        return ProductionResult(True, value=title)
+        return Matched(title)
 
     def subtitle_directive(self) -> Matched[str] | NotMatched | ParserError:
         if not self.is_directive('subtitle'):
@@ -267,10 +268,13 @@ class Parser:
         return ProductionResult(True, value=[section] + sections)
 
     def section(self) -> ProductionResult[LinksSection]:
-        result = self.section_directive()
-        if not result:
-            return result
-        title = result.value
+        match self.section_directive():
+            case Matched(value):
+                title = value
+            case NotMatched():
+                return ProductionResult(False)
+            case ParserError() as e:
+                return ProductionResult(e)
 
         result = self.paragraphs()
         if result.error:
@@ -288,21 +292,21 @@ class Parser:
         section = LinksSection(title=title, notes=notes, links=links)
         return ProductionResult(True, value=section)
 
-    def section_directive(self) -> ProductionResult[str]:
+    def section_directive(self) -> Matched[str] | NotMatched | ParserError:
         if not self.is_directive('section'):
-            return ProductionResult(False)
+            return NotMatched()
         self.next_token()
 
         if not self.is_modifier('links'):
-            return ProductionResult(MissingModifierError(self.token, 'links'))
+            return MissingModifierError(self.token, 'links')
         self.next_token()
 
         if not self.is_data():
-            return ProductionResult(MissingDataError(self.token, 'section title'))
+            return MissingDataError(self.token, 'section title')
         title = self.token.text
         self.next_token()
 
-        return ProductionResult(True, value=title)
+        return Matched(title)
 
     def links(self) -> Matched[List[BookLink | Link]] | NotMatched | ParserError:
         match self.link():
