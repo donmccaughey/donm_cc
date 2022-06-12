@@ -184,26 +184,28 @@ class Parser:
         return ProductionResult(True, value=page)
 
     def overview(self) -> ProductionResult[Tuple[str, Optional[str], List[str]]]:
-        result = self.page_attributes()
-        if not result:
-            return result
-        title, subtitle = result.value
+        match self.page_attributes():
+            case Matched(value):
+                title, subtitle = value
+            case ParserError() as e:
+                return ProductionResult(e)
 
-        notes = []
-        result = self.paragraphs()
-        if result.error:
-            return result
-        if result.matched:
-            notes = result.value
+        match self.paragraphs():
+            case Matched(value):
+                notes = value
+            case NotMatched():
+                notes = []
+            case ParserError() as e:
+                return ProductionResult(e)
 
         return ProductionResult(True, value=(title, subtitle, notes))
 
-    def page_attributes(self) -> ProductionResult[Tuple[str, Optional[str]]]:
+    def page_attributes(self) -> Matched[Tuple[str, Optional[str]]] | ParserError:
         match self.page_directive():
             case Matched(value):
                 title = value
             case ParserError() as e:
-                return ProductionResult(e)
+                return e
 
         match self.subtitle_directive():
             case Matched(value):
@@ -211,9 +213,9 @@ class Parser:
             case NotMatched():
                 subtitle = None
             case ParserError() as e:
-                return ProductionResult(e)
+                return e
 
-        return ProductionResult(True, value=(title, subtitle))
+        return Matched((title, subtitle))
 
     def page_directive(self) -> Matched[str] | ParserError:
         if not self.is_directive('page'):
@@ -243,17 +245,19 @@ class Parser:
 
         return Matched(subtitle)
 
-    def paragraphs(self) -> ProductionResult[List[str]]:
+    def paragraphs(self) -> Matched[List[str]] | NotMatched | ParserError:
         if not self.is_paragraph():
-            return ProductionResult(False)
+            return NotMatched()
         paragraph = self.token.text
         self.next_token()
 
-        result = self.paragraphs()
-        if result.error:
-            return result
-        paragraphs = result.value if result.matched else []
-        return ProductionResult(True, value=[paragraph] + paragraphs)
+        match self.paragraphs():
+            case Matched(paragraphs):
+                return Matched([paragraph] + paragraphs)
+            case NotMatched():
+                return Matched([paragraph])
+            case ParserError() as e:
+                return e
 
     def sections(self) -> ProductionResult[List[LinksSection]]:
         result = self.section()
@@ -276,10 +280,13 @@ class Parser:
             case ParserError() as e:
                 return ProductionResult(e)
 
-        result = self.paragraphs()
-        if result.error:
-            return result
-        notes = result.value if result.matched else []
+        match self.paragraphs():
+            case Matched(value):
+                notes = value
+            case NotMatched():
+                notes = []
+            case ParserError() as e:
+                return ProductionResult(e)
 
         match self.links():
             case Matched(value):
