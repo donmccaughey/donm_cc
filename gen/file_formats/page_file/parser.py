@@ -64,20 +64,6 @@ class Matched(Generic[V]):
     value: V
 
 
-class ProductionResult(Generic[V]):
-    def __init__(self, result: bool | ParserError, value: Optional[V] = None):
-        if isinstance(result, ParserError):
-            self.matched = False
-            self.error = result
-        else:
-            self.matched = bool(result)
-            self.error = None
-        self.value = value
-
-    def __bool__(self):
-        return False if self.error else self.matched
-
-
 class Parser:
     """
     Parse a page file.
@@ -157,18 +143,21 @@ class Parser:
 
     def parse(self) -> PageFile | ParserError:
         self.next_token()
-        result = self.page()
-        if result.error:
-            return result.error
-        if self.token:
-            return UnexpectedTokenError(self.token)
-        return result.value
 
-    def page(self) -> ProductionResult[PageFile]:
-        result = self.overview()
-        if not result:
-            return result
-        title, subtitle, notes = result.value
+        match self.page():
+            case Matched(page):
+                if self.token:
+                    return UnexpectedTokenError(self.token)
+                return page
+            case ParserError() as e:
+                return e
+
+    def page(self) -> Matched[PageFile] | ParserError:
+        match self.overview():
+            case Matched(value):
+                title, subtitle, notes = value
+            case ParserError() as e:
+                return e
 
         match self.sections():
             case Matched(value):
@@ -176,7 +165,7 @@ class Parser:
             case NotMatched():
                 sections = []
             case ParserError() as e:
-                return ProductionResult(e)
+                return e
 
         page = PageFile(
             title=title,
@@ -184,14 +173,14 @@ class Parser:
             notes=notes,
             sections=sections
         )
-        return ProductionResult(True, value=page)
+        return Matched(page)
 
-    def overview(self) -> ProductionResult[Tuple[str, Optional[str], List[str]]]:
+    def overview(self) -> Matched[Tuple[str, Optional[str], List[str]]] | ParserError:
         match self.page_attributes():
             case Matched(value):
                 title, subtitle = value
             case ParserError() as e:
-                return ProductionResult(e)
+                return e
 
         match self.paragraphs():
             case Matched(value):
@@ -199,9 +188,9 @@ class Parser:
             case NotMatched():
                 notes = []
             case ParserError() as e:
-                return ProductionResult(e)
+                return e
 
-        return ProductionResult(True, value=(title, subtitle, notes))
+        return Matched((title, subtitle, notes))
 
     def page_attributes(self) -> Matched[Tuple[str, Optional[str]]] | ParserError:
         match self.page_directive():
