@@ -488,7 +488,7 @@ class Parser:
 
         return NotMatched()
 
-    def general_link(self) -> Matched[Link] | ParserError:
+    def general_link(self) -> Matched[Link] | NotMatched | ParserError:
         match self.general_link_directive():
             case Matched((modifier, title)):
                 pass
