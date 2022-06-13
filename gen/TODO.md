@@ -1,6 +1,5 @@
 # TODO
 
-- remove redundant local variable assignments in `case Matched(value):` clauses
 - should `url_directive()` and `asin_directive()` return `NotMatched`?  See `test_link_missing_url_data()` and `test_book_link_with_asin()`
 - should `book_locator()` return `NotMatched`?
 - ensure that wrapping works correctly when encountering `<br>` tags:

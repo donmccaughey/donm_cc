@@ -154,14 +154,14 @@ class Parser:
 
     def page(self) -> Matched[PageFile] | ParserError:
         match self.overview():
-            case Matched(value):
-                title, subtitle, notes = value
+            case Matched((title, subtitle, notes)):
+                pass
             case ParserError() as e:
                 return e
 
         match self.sections():
-            case Matched(value):
-                sections = value
+            case Matched(sections):
+                pass
             case NotMatched():
                 sections = []
             case ParserError() as e:
@@ -177,14 +177,14 @@ class Parser:
 
     def overview(self) -> Matched[Tuple[str, Optional[str], List[str]]] | ParserError:
         match self.page_attributes():
-            case Matched(value):
-                title, subtitle = value
+            case Matched((title, subtitle)):
+                pass
             case ParserError() as e:
                 return e
 
         match self.paragraphs():
-            case Matched(value):
-                notes = value
+            case Matched(notes):
+                pass
             case NotMatched():
                 notes = []
             case ParserError() as e:
@@ -194,14 +194,14 @@ class Parser:
 
     def page_attributes(self) -> Matched[Tuple[str, Optional[str]]] | ParserError:
         match self.page_directive():
-            case Matched(value):
-                title = value
+            case Matched(title):
+                pass
             case ParserError() as e:
                 return e
 
         match self.subtitle_directive():
-            case Matched(value):
-                subtitle = value
+            case Matched(subtitle):
+                pass
             case NotMatched():
                 subtitle = None
             case ParserError() as e:
@@ -253,8 +253,8 @@ class Parser:
 
     def sections(self) -> Matched[List[LinksSection]] | NotMatched | ParserError:
         match self.section():
-            case Matched(value):
-                section = value
+            case Matched(section):
+                pass
             case NotMatched():
                 return NotMatched()
             case ParserError() as e:
@@ -270,24 +270,24 @@ class Parser:
 
     def section(self) -> Matched[LinksSection] | NotMatched | ParserError:
         match self.section_directive():
-            case Matched(value):
-                title = value
+            case Matched(title):
+                pass
             case NotMatched():
                 return NotMatched()
             case ParserError() as e:
                 return e
 
         match self.paragraphs():
-            case Matched(value):
-                notes = value
+            case Matched(notes):
+                pass
             case NotMatched():
                 notes = []
             case ParserError() as e:
                 return e
 
         match self.links():
-            case Matched(value):
-                links = value
+            case Matched(links):
+                pass
             case NotMatched():
                 links = []
             case ParserError() as e:
@@ -314,8 +314,8 @@ class Parser:
 
     def links(self) -> Matched[List[BookLink | Link]] | NotMatched | ParserError:
         match self.link():
-            case Matched(value):
-                link = value
+            case Matched(link):
+                pass
             case NotMatched():
                 return NotMatched()
             case ParserError() as e:
@@ -346,16 +346,16 @@ class Parser:
 
     def book_link(self) -> Matched[BookLink] | NotMatched | ParserError:
         match self.book_link_directive():
-            case Matched(value):
-                title = value
+            case Matched(title):
+                pass
             case NotMatched():
                 return NotMatched()
             case ParserError() as e:
                 return e
 
         match self.book_locator():
-            case Matched(value):
-                asin, url = value
+            case Matched((asin, url)):
+                pass
             case NotMatched():
                 return NotMatched()
             case ParserError() as e:
@@ -364,10 +364,10 @@ class Parser:
         match self.link_attributes():
             case Matched(attributes):
                 match self.validate_link_attributes(attributes):
+                    case authors, date, checked:
+                        pass
                     case ParserError() as e:
                         return e
-                    case value:
-                        authors, date, checked = value
             case NotMatched():
                 authors, date, checked = [], None, False
             case ParserError() as e:
@@ -398,11 +398,10 @@ class Parser:
 
     def book_locator(self) -> Matched[Tuple[Optional[str], Optional[str]]] | NotMatched | ParserError:
         match self.asin_directive():
-            case Matched(value):
-                asin = value
+            case Matched(asin):
                 match self.url_directive():
-                    case Matched(value):
-                        url = value
+                    case Matched(url):
+                        pass
                     case ParserError():
                         url = None
                 return Matched((asin, url))
@@ -410,11 +409,10 @@ class Parser:
                 pass
 
         match self.url_directive():
-            case Matched(value):
-                url = value
+            case Matched(url):
                 match self.asin_directive():
-                    case Matched(value):
-                        asin = value
+                    case Matched(asin):
+                        pass
                     case ParserError():
                         asin = None
                 return Matched((asin, url))
@@ -449,26 +447,24 @@ class Parser:
 
     def link_attributes(self) -> Matched[List[Tuple[str, str]]] | NotMatched | ParserError:
         match self.link_attribute():
-            case Matched(value):
-                attributes = [value]
+            case Matched(attribute):
+                pass
             case NotMatched():
                 return NotMatched()
             case ParserError() as e:
                 return e
 
         match self.link_attributes():
-            case Matched(value):
-                attributes += value
+            case Matched(attributes):
+                return Matched([attribute] + attributes)
             case NotMatched():
-                pass
+                return Matched([attribute])
             case ParserError() as e:
                 return e
 
-        return Matched(attributes)
-
     def link_attribute(self) -> Matched[Tuple[str, str]] | NotMatched | ParserError:
         match self.author_directive():
-            case Matched(value=author):
+            case Matched(author):
                 return Matched(('author', author))
             case NotMatched():
                 pass
@@ -476,7 +472,7 @@ class Parser:
                 return e
 
         match self.date_directive():
-            case Matched(value=date):
+            case Matched(date):
                 return Matched(('date', date))
             case NotMatched():
                 pass
@@ -493,24 +489,24 @@ class Parser:
 
     def general_link(self) -> Matched[Link] | ParserError:
         match self.general_link_directive():
-            case Matched(value):
-                modifier, title = value
+            case Matched((modifier, title)):
+                pass
             case ParserError() as e:
                 return e
 
         match self.url_directive():
-            case Matched(value):
-                url = value
+            case Matched(url):
+                pass
             case ParserError() as e:
                 return e
 
         match self.link_attributes():
             case Matched(attributes):
                 match self.validate_link_attributes(attributes):
+                    case authors, date, checked:
+                        pass
                     case ParserError() as e:
                         return e
-                    case value:
-                        authors, date, checked = value
             case NotMatched():
                 authors, date, checked = [], None, False
             case ParserError() as e:
