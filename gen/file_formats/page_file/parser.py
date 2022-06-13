@@ -342,7 +342,8 @@ class Parser:
                     pass
                 case ParserError() as e:
                     return e
-        return NotMatched()
+
+        return MissingLinkModifierError(self.token)
 
     def book_link(self) -> Matched[BookLink] | NotMatched | ParserError:
         match self.book_link_directive():
@@ -491,6 +492,8 @@ class Parser:
         match self.general_link_directive():
             case Matched((modifier, title)):
                 pass
+            case NotMatched():
+                return NotMatched()
             case ParserError() as e:
                 return e
 
@@ -522,9 +525,9 @@ class Parser:
         )
         return Matched(link)
 
-    def general_link_directive(self) -> Matched[Tuple[str, str]] | ParserError:
+    def general_link_directive(self) -> Matched[Tuple[str, str]] | NotMatched | ParserError:
         if not self.is_general_link_modifier():
-            return MissingLinkModifierError(self.token)
+            return NotMatched()
         modifier = self.token.text
         self.next_token()
 
