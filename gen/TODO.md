@@ -1,5 +1,7 @@
 # TODO
 
+- rename `test_link_x()` methods to `test_book_link_x()` and ensure coverage for general link cases
+- remove `modifier` attribute from `BookLink` class
 - should `url_directive()` and `asin_directive()` return `NotMatched`?  See `test_link_missing_url_data()` and `test_book_link_with_asin()`
 - should `book_locator()` return `NotMatched`?
 - ensure that wrapping works correctly when encountering `<br>` tags:

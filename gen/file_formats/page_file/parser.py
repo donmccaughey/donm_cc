@@ -30,6 +30,15 @@ class MissingDirectiveError(ParserError):
         super().__init__(token, f'Expected `.{directive}` directive')
 
 
+class MissingDirectivesError(ParserError):
+    def __init__(self, token: Token, directives: List[str]):
+        self.directives = directives
+        directives_list = ', '.join([
+            f'.{directive}' for directive in directives
+        ])
+        super().__init__(token, f'Expected one of these directives: {directives_list}')
+
+
 class MissingLinkModifierError(ParserError):
     def __init__(self, token: Token):
         super().__init__(token, f'Expected `.link` modifier: {LINK_MODIFIERS}')
@@ -358,7 +367,7 @@ class Parser:
             case Matched((asin, url)):
                 pass
             case NotMatched():
-                return NotMatched()
+                return MissingDirectivesError(self.token, ['url', 'asin'])
             case ParserError() as e:
                 return e
 
@@ -402,29 +411,33 @@ class Parser:
             case Matched(asin):
                 match self.url_directive():
                     case Matched(url):
-                        pass
-                    case ParserError():
-                        url = None
-                return Matched((asin, url))
-            case ParserError():
+                        return Matched((asin, url))
+                    case NotMatched():
+                        return Matched((asin, None))
+                    case ParserError() as e:
+                        return e
+            case NotMatched():
                 pass
+            case ParserError() as e:
+                return e
 
         match self.url_directive():
             case Matched(url):
                 match self.asin_directive():
                     case Matched(asin):
-                        pass
-                    case ParserError():
-                        asin = None
-                return Matched((asin, url))
+                        return Matched((asin, url))
+                    case NotMatched():
+                        return Matched((None, url))
+                    case ParserError() as e:
+                        return e
+            case NotMatched():
+                return NotMatched()
             case ParserError() as e:
                 return e
 
-        return NotMatched()
-
-    def url_directive(self) -> Matched[str] | ParserError:
+    def url_directive(self) -> Matched[str] | NotMatched | ParserError:
         if not self.is_directive('url'):
-            return MissingDirectiveError(self.token, 'url')
+            return NotMatched()
         self.next_token()
 
         if not self.is_data():
@@ -434,9 +447,9 @@ class Parser:
 
         return Matched(url)
 
-    def asin_directive(self) -> Matched[str] | ParserError:
+    def asin_directive(self) -> Matched[str] | NotMatched | ParserError:
         if not self.is_directive('asin'):
-            return MissingDirectiveError(self.token, 'asin')
+            return NotMatched()
         self.next_token()
 
         if not self.is_data():
@@ -500,6 +513,8 @@ class Parser:
         match self.url_directive():
             case Matched(url):
                 pass
+            case NotMatched():
+                return MissingDirectiveError(self.token, 'url')
             case ParserError() as e:
                 return e
 

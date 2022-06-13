@@ -4,7 +4,7 @@ from textwrap import dedent
 from file_formats.page_file import PageFile
 from file_formats.page_file.parser import Parser, ParserError, \
     MissingDirectiveError, MissingModifierError, MissingDataError, \
-    UnexpectedTokenError, MissingLinkModifierError
+    UnexpectedTokenError, MissingLinkModifierError, MissingDirectivesError
 
 
 class ParserTestCase(unittest.TestCase):
@@ -256,6 +256,18 @@ class ParserTestCase(unittest.TestCase):
         .link book Example Book
         ''')
         result = Parser(source).parse()
+        self.assertIsInstance(result, MissingDirectivesError)
+        self.assertEqual(['url', 'asin'], result.directives)
+
+    def test_general_link_missing_url(self):
+        source = dedent('''
+        .page links My Links
+
+        .section links New Links
+        
+        .link blog Example Blog
+        ''')
+        result = Parser(source).parse()
         self.assertIsInstance(result, MissingDirectiveError)
         self.assertEqual('url', result.directive)
 
@@ -269,8 +281,8 @@ class ParserTestCase(unittest.TestCase):
         .link
         ''')
         result = Parser(source).parse()
-        self.assertIsInstance(result, MissingDirectiveError)
-        self.assertEqual('url', result.directive)
+        self.assertIsInstance(result, MissingDirectivesError)
+        self.assertEqual(['url', 'asin'], result.directives)
 
     def test_link_missing_url_data(self):
         source = dedent('''
