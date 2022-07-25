@@ -56,13 +56,23 @@ def resume():
                 })
                 P('''
                     I'm a software engineer with strong technical, leadership 
-                    and organizational skills.  After several years adding 
-                    people management to my skill set, I'm looking to have 
-                    impact through technical leadership, system design and 
-                    hands-on coding.
+                    and organizational skills.  I build high performing, 
+                    collaborative, cross-functional teams that focus on
+                    sustained, regular delivery of value to customers.
                 ''')
             with Section(class_names=['experience']):
                 H1('Selected Experience')
+                with Section(class_names=['organization']):
+                    H2('Cruise')
+                    organization_details('San Francisco, CA', '2022', 'present',
+                                         ['Staff Software Engineer'])
+                    with P():
+                        Text('''
+                            I'm working cross-functionally with the Fleet Health
+                            and Fleet Efficiency teams to help move our
+                            engineering culture and standards towards a focus on
+                            quality and stability.
+                        ''')
                 with Section(class_names=['organization']):
                     H2('Truework')
                     organization_details('San Francisco, CA', '2019', '2021',
@@ -75,7 +85,7 @@ def resume():
                         with Ul():
                             Li('''
                                 Established a fast and lightweight weekly 
-                                planning and delivery cycle to increase 
+                                planning and delivery cycle that increased 
                                 engineering velocity.
                             ''')
                             Li('''
@@ -83,12 +93,10 @@ def resume():
                                 all experience levels.
                             ''')
                             Li('''
-                                Guided the team through delivery of key features
-                                that moved the business forward, including our 
-                                external API and SDKs, SSO for customers, 
-                                improved internal tools for our 80+ person back 
-                                office team and integrations with major payroll 
-                                providers (ADP, Gusto, Zenefits).
+                                Guided the delivery of key features, including  
+                                public API and SDKs, customer SSO, improved 
+                                internal tools for 80+ person back office team
+                                and integrations with major payroll providers.
                             ''')
                 with Section(class_names=['organization']):
                     H2('Copper CRM')
@@ -104,22 +112,14 @@ def resume():
                         ''')
                         with Ul():
                             Li('''
-                                Revived a moribund iOS codebase and established 
-                                a regular biweekly release cadence.
-                            ''')
-                            Li('''
-                                Shipped a steady stream of new features while 
-                                improving code quality, adding automated tests, 
-                                fixing bugs and reducing crashes.
+                                Revived a moribund iOS codebase, established 
+                                a regular release cadence, improved quality and
+                                shipped a steady stream of new features.
                             ''')
                             Li('''
                                 Grew the mobile team from two to six engineers 
                                 and fostered a collaborative, cross-functional 
                                 team culture.
-                            ''')
-                            Li('''
-                                Streamlined daily git use for forty engineers 
-                                by implementing git workflow improvements.
                             ''')
                             Li('''
                                 Advised and coached the QA team on test 
@@ -128,10 +128,6 @@ def resume():
                             Li('''
                                 Doubled the rate of web app releases through a 
                                 release improvement process.
-                            ''')
-                            Li('''
-                                Designed the architecture of complex mobile 
-                                features and advised the team on implementation.
                             ''')
 
                 with Section(class_names=['organization']):
@@ -153,21 +149,7 @@ def resume():
                                     app with the Square Stand. Worked with the 
                                     app team and embedded software team to 
                                     create APIs and communication protocols. 
-                                    Built test applications used by the hardware 
-                                    and software teams.
-                                '''
-                            )
-                            project(
-                                customer='Facebook, Skype, Pivotal Labs',
-                                date='2011',
-                                summary='Skype app for unreleased phone',
-                                description='''
-                                    Created a Skype client for a mobile OS built 
-                                    on an Android core.  Worked with Skype 
-                                    engineers to integrate the Skype client 
-                                    library.  Worked with Facebook engineers to 
-                                    integrate with the device's HTML and 
-                                    JavaScript user interface.
+                                    Built engineering test applications.
                                 '''
                             )
                             project(

@@ -18,7 +18,6 @@ def home_page():
         with Ul(class_names=['collection']):
             item('Sourcehut', 'https://git.sr.ht/~donmcc', 'donmcc')
             item('GitHub', 'https://github.com/donmccaughey', 'donmccaughey')
-            item('Résumé', '/resume/', "Stuff I've done")
             item('Memory Match', '/memory_match/', 'A tile matching game')
             item('Random Words', '/random_words/', 'A handy word picker')
             item('macOS Packages', '/macos_packages/', 'Software installers')
@@ -29,3 +28,4 @@ def home_page():
             item('Shell', '/shell/', 'Unix glue')
             item('Science Fiction', '/science_fiction/', 'Reading for fun')
             item('Business Novels', '/business_novels/', 'Fictionalized learning')
+            item('Résumé', '/resume/', "Stuff I've done")
