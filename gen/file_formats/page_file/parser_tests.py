@@ -429,6 +429,31 @@ class ParserTestCase(unittest.TestCase):
         self.assertIsNone(link.date)
         self.assertFalse(link.checked)
 
+    def test_paper_link(self):
+        source = dedent('''
+        .page links My Links
+
+        .section links New Links
+        
+        .link paper Example Paper
+        .url https://example.paper
+        ''')
+        result = Parser(source).parse()
+        self.assertIsInstance(result, PageFile)
+        self.assertEqual(1, len(result.sections))
+
+        section = result.sections[0]
+        self.assertEqual('New Links', section.title)
+        self.assertEqual([], section.notes)
+        self.assertEqual(1, len(section.links))
+
+        link = section.links[0]
+        self.assertEqual('paper', link.modifier)
+        self.assertEqual('Example Paper', link.title)
+        self.assertEqual('https://example.paper', link.url)
+        self.assertIsNone(link.date)
+        self.assertFalse(link.checked)
+
     def test_link_with_author_missing_value(self):
         source = dedent('''
         .page links My Links

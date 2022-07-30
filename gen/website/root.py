@@ -15,6 +15,7 @@ with root:
 
     home_page()
 
+    Directory('c')
     Directory('banners')
     Directory('business_novels')
     Directory('engineering_management')

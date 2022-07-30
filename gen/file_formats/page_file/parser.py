@@ -5,7 +5,7 @@ from file_formats.page_file import PageFile, LinksSection, Link, BookLink
 from .lexer import Token, TokenType, lexer
 
 
-LINK_MODIFIERS = ('blog', 'docs', 'email', 'podcast', 'repo', 'site')
+LINK_MODIFIERS = ('blog', 'docs', 'email', 'paper', 'podcast', 'repo', 'site')
 
 
 def parse(source: str) -> PageFile:
@@ -143,7 +143,7 @@ class Parser:
 
         general_link_directive = general_link_modifier DATA
 
-        general_link_modifier = 'blog' | 'docs' | 'email' | 'podcast' | 'repo' | 'site'
+        general_link_modifier = 'blog' | 'docs' | 'email' | 'paper' | 'podcast' | 'repo' | 'site'
     """
 
     def __init__(self, source: str):

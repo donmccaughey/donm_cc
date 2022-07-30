@@ -1,0 +1,247 @@
+<!doctype html>
+<html lang=en>
+<meta charset=utf-8>
+<meta name=viewport content='initial-scale=0.9, width=device-width'>
+<title>C</title>
+<style>
+    a {
+        color: mediumblue;
+    }
+    a:visited {
+        color: indigo;
+    }
+    body {
+        background: white;
+        border: 0;
+        color: black;
+        font: 12pt Helvetica, Arial, sans-serif;
+        margin: 0;
+        padding: 24pt 0 1em 0; 
+    }
+    h1 {
+        border: 0;
+        font-size: 18pt;
+        font-weight: 500;
+        margin: 0.5em 0;
+        padding: 0;
+    }
+    html {
+        background: white;
+        border: 0;
+        color: black;
+        font: 12pt Helvetica, Arial, sans-serif;
+        margin: 0;
+        padding: 0;
+    }
+    li {
+        margin-bottom: 0.5em;
+    }
+    section {
+        border: 0;
+        margin: 1.5em auto 0 auto;
+        max-width: 40em;
+        padding: 0 1em;
+    }
+    time {
+        white-space: nowrap;
+    }
+    .authors {
+        color: gray;
+        font: italic 12pt Helvetica, Arial, sans-serif;
+    }
+    .links li {
+        color: black;
+        font-size: 12pt;
+        left: -2em;
+        line-height: 1.4;
+        list-style-type: none;
+        margin: 0 2em;
+        padding: 0.25em;
+        position: relative;
+        width: 70ex;
+    }
+    .links li a {
+        color: black;
+        text-decoration: none;
+    }
+    .links li a:hover {
+        text-decoration: underline;
+    }
+    .links li a:visited {
+        color: dimgray;
+    }
+    .links li.blog:before {
+        content: "🗞";
+    }
+    .links li.book:before {
+        content: "📖";
+    }
+    .links li.paper:before {
+        content: "📄";
+    }
+    .links li:before {
+        content: "🔗";
+        font-size: 8pt;
+        position: absolute;
+        left: -2em;
+        top: 6pt;
+    }
+    .links time {
+        color: gray;
+        font: italic 12pt Helvetica, Arial, sans-serif;
+        white-space: nowrap;
+    }
+    .menu {
+        background: rgba(192, 192, 192, 0.9); 
+        border: 0;
+        border-bottom: 2pt solid silver;
+        color: white;
+        height: 24pt; 
+        margin: 0;
+        padding: 0;
+        position: fixed;
+        top: 0;
+        width: 100%;
+        z-index: 10;
+    }
+    .menu a {
+        border: 0;
+        color: white;
+        display: inline-block;
+        font: bold 16pt Helvetica, Arial, sans-serif;
+        margin: 4pt 8pt;
+        padding: 0;
+        text-decoration: none;
+    }
+    .overview h1 {
+        text-align: center;
+    }
+    .title {
+        font: 14pt Helvetica, Arial, sans-serif;
+    }
+    @media (prefers-color-scheme: dark) {
+        a {
+            color: powderblue;
+        }
+        a:visited {
+            color: violet;
+        }
+        body {
+            background: black;
+            color: white;
+        }
+        html {
+            background: black;
+            color: white;
+        }
+        .authors {
+            color: silver;
+        }
+        .links li {
+            color: white;
+        }
+        .links li a {
+            color: white;
+        }
+        .links li a:visited {
+            color: whitesmoke;
+        }
+        .links time {
+            color: silver;
+        }
+        .menu {
+            background: rgba(128, 128, 128, 0.9); 
+            border-bottom: 2pt solid gray;
+            color: black;
+        }
+        .menu a {
+            color: black;
+        }
+    }
+</style>
+<nav class=menu>
+    <a href=/ >Don McCaughey</a>
+</nav>
+<section class=overview>
+    <h1>C: Software's Lingua Franca</h1>
+    <p>
+        C was my third computer language, after
+        <a href=https://en.wikipedia.org/wiki/BASIC#Unstructured_BASIC>line-numbered
+        BASIC</a> and
+        <a href=https://en.wikipedia.org/wiki/Pascal_(programming_language)>Pascal</a>.
+        I was vaguely aware of
+        <a href=https://en.wikipedia.org/wiki/Pointer_(computer_programming)>pointers</a>
+        from pouring over the
+        <a href=https://en.wikipedia.org/wiki/Turbo_Pascal>Turbo Pascal</a>
+        manual, but Pascal makes most things possible without them, and tends to
+        guide you away from the messy reality underneath.
+    <p>
+        C is different.  Strings and arrays seamlessly convert to pointers.
+        Working with dynamically sized strings and arrays requires you to
+        <code>malloc()</code> and <code>free()</code> and understand how the
+        heap works.  Reading data with <code>scanf()</code> requires
+        indirection.  This was the MS-DOS era, and I crashed my machine a lot.
+    <p>
+        Unlike the teaching languages BASIC and Pascal, C is a professional's
+        tool.  Like a professional's tool, it's sharp and tricky and takes time
+        to master.  And like a professional's tool, once mastered, you can do
+        things with it that are difficult or impossible for an amateur to do.
+    <p>
+        I spent subsequent years with C++, a big and complex language which I
+        have mostly abandoned, and with Objective-C, a beautiful balance of
+        speed and sophistication which Apply has sadly mostly abandoned.  But
+        I've always come back to C.
+</section>
+<section class=links>
+    <h1>Books</h1>
+    <ul>
+        <li class=book>
+            <a class=title href=https://www.amazon.com/dp/B009ZUZ9FW>The C
+            Programming Language</a>, <span class=authors>Brian W Kernighan and
+            Dennis M Ritchie</span>, <time datetime=1988>1988</time>
+        <li class=book>
+            <a class=title href=https://www.amazon.com/dp/B00E0LASCU>Expert C
+            Programming: Deep C Secrets</a>, <span class=authors>Peter van der
+            Linden</span>, <time datetime=1994>1994</time>
+    </ul>
+</section>
+<section class=links>
+    <h1>Papers</h1>
+    <ul>
+        <li class=paper>
+            <a class=title href=https://www.humprog.org/~stephen/research/papers/kell17some-preprint.pdf>Some
+            Were Meant for C</a>, <span class=authors>Stephen Kell</span>,
+            <time datetime=2017-09>2017-09</time>
+        <li class=paper>
+            <a class=title href=https://www.usenix.org/legacy/publications/library/proceedings/sa92/spencer.pdf>#ifdef
+            Considered Harmful, or Portability Experience With C News</a>,
+            <span class=authors>Henry Spencer</span>,
+            <time datetime=1992-06-08>1992-06-08</time>
+    </ul>
+</section>
+<section class=links>
+    <h1>Techniques</h1>
+    <ul>
+        <li class=blog>
+            <a class=title href=https://bearssl.org/oop.html>OOP in C</a>,
+            <span class=authors>Thomas Pornin</span>,
+            <time datetime=2018>2018</time>
+        <li class=blog>
+            <a class=title href=http://zubplot.blogspot.com/2015/01/gcc-is-wonderful-better-arraysize-macro.html>GCC
+            <em>is</em> wonderful: a better ARRAY_SIZE macro</a>,
+            <time datetime=2015-01-04>2015-01-04</time>
+        <li class=blog>
+            <a class=title href=https://quuxplusone.github.io/blog/2021/02/01/x-macros/ >What
+            are X-macros?</a>, <span class=authors>Arthur O’Dwyer</span>,
+            <time datetime=2021-02-01>2021-02-01</time>
+    </ul>
+</section>
+<section class=links>
+    <h1>Tools</h1>
+    <ul>
+        <li class=blog>
+            <a class=title href=https://lwn.net/Articles/276782/ >Linkers</a>,
+            <span class=authors>Ian Lance Taylor</span>,
+            <time datetime=2007>2007</time>
+    </ul>
+</section>

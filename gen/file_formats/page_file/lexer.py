@@ -40,7 +40,7 @@ class Token:
 
 
 MODIFIERS = {
-    'blog', 'book', 'docs', 'email', 'links', 'podcast', 'repo', 'site'
+    'blog', 'book', 'docs', 'email', 'links', 'paper', 'podcast', 'repo', 'site'
 }
 
 

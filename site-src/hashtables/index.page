@@ -16,6 +16,12 @@ articles.
 .link repo uthash: C macros for hash tables and more
 .url https://github.com/troydhanson/uthash
 
+.link repo C HashMap
+.url https://github.com/Mashpoe/c-hashmap
+
+.link repo Hashmap
+.url https://github.com/Encrylize/hashmap
+
 
 .section links Hashing Functions
 
@@ -23,6 +29,9 @@ articles.
 .url http://www.isthe.com/chongo/tech/comp/fnv/index.html
 .author Landon Curt Noll
 .date 2017-04-29
+
+.link site xxHash
+.url http://www.xxhash.com/
 
 
 .section links Hashing
@@ -52,3 +61,8 @@ articles.
 .url https://www.csd.uoc.gr/~hy460/pdf/Dynamic%20Hash%20Tables.pdf
 .author Per-Åke Larson
 .date 1988-04
+
+.link blog The Swiss Army Knife of Hashmaps
+.url https://blog.waffles.space/2018/12/07/deep-dive-into-hashbrown/
+.author Ravi Shankar
+.date 2018-12-07

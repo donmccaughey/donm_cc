@@ -1,9 +1,7 @@
 import sys
 from argparse import ArgumentParser, Namespace
 from hyperlinks import check_external_links, http_external_links
-from markup import Stylesheet, Node
 from resources import Directory, Page
-from resources.resource import Resource
 from website import root
 
 

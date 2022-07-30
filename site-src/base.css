@@ -322,6 +322,10 @@ time {
     content: '\1f4e7';
 }
 
+.links li.paper:before {
+    content: '\1f4c4';
+}
+
 .links li.podcast:before {
     content: '\1f3a4';
 }

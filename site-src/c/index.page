@@ -1,0 +1,76 @@
+.page links C
+.subtitle Software's Lingua Franca
+
+C was my third computer language, after [line-numbered BASIC](https://en.wikipedia.org/wiki/BASIC#Unstructured_BASIC)
+and [Pascal](https://en.wikipedia.org/wiki/Pascal_(programming_language)).  I
+was vaguely aware of [pointers](https://en.wikipedia.org/wiki/Pointer_(computer_programming))
+from pouring over the [Turbo Pascal](https://en.wikipedia.org/wiki/Turbo_Pascal)
+manual, but Pascal makes most things possible without them, and tends to guide
+you away from the messy reality underneath.
+
+C is different.  Strings and arrays seamlessly convert to pointers.  Working
+with dynamically sized strings and arrays requires you to `malloc()` and
+`free()` and understand how the heap works.  Reading data with `scanf()`
+requires indirection.  This was the MS-DOS era, and I crashed my machine a lot.
+
+Unlike the teaching languages BASIC and Pascal, C is a professional's tool. Like
+a professional's tool, it's sharp and tricky and takes time to master.  And like
+a professional's tool, once mastered, you can do things with it that are
+difficult or impossible for an amateur to do.
+
+I spent subsequent years with C++, a big and complex language which I have
+mostly abandoned, and with Objective-C, a beautiful balance of speed and
+sophistication which Apply has sadly mostly abandoned.  But I've always come
+back to C.
+
+
+.section links Books
+
+.link book The C Programming Language
+.asin B009ZUZ9FW
+.author Brian W Kernighan
+.author Dennis M Ritchie
+.date 1988
+
+.link book Expert C Programming: Deep C Secrets
+.asin B00E0LASCU
+.author Peter van der Linden
+.date 1994
+
+
+.section links Papers
+
+.link paper Some Were Meant for C
+.url https://www.humprog.org/~stephen/research/papers/kell17some-preprint.pdf
+.author Stephen Kell
+.date 2017-09
+
+.link paper #ifdef Considered Harmful, or Portability Experience With C News
+.url https://www.usenix.org/legacy/publications/library/proceedings/sa92/spencer.pdf
+.author Henry Spencer
+.date 1992-06-08
+
+
+.section links Techniques
+
+.link blog OOP in C
+.url https://bearssl.org/oop.html
+.author Thomas Pornin
+.date 2018
+
+.link blog GCC *is* wonderful: a better ARRAY_SIZE macro
+.url http://zubplot.blogspot.com/2015/01/gcc-is-wonderful-better-arraysize-macro.html
+.date 2015-01-04
+
+.link blog What are X-macros?
+.url https://quuxplusone.github.io/blog/2021/02/01/x-macros/
+.author Arthur O’Dwyer
+.date 2021-02-01
+
+
+.section links Tools
+
+.link blog Linkers
+.url https://lwn.net/Articles/276782/
+.author Ian Lance Taylor
+.date 2007
