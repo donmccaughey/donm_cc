@@ -61,3 +61,7 @@ that holds Unix systems together.
 .url https://www.vidarholen.net/contents/blog/?p=1035
 .author Vidar Holen
 .date 2021-04-12
+
+.link blog Something you didn't know about functions in bash
+.url https://catonmat.net/bash-functions
+.author Peter Krumins

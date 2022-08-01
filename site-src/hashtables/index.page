@@ -66,3 +66,8 @@ articles.
 .url https://blog.waffles.space/2018/12/07/deep-dive-into-hashbrown/
 .author Ravi Shankar
 .date 2018-12-07
+
+.link blog Writing a Damn Fast Hash Table With Tiny Memory Footprints
+.url https://www.idryman.org/blog/2017/05/03/writing-a-damn-fast-hash-table-with-tiny-memory-footprints/
+.author Felix Ren-Chyan Chern
+.date 2017-05-03

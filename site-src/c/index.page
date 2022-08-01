@@ -67,6 +67,26 @@ back to C.
 .author Arthur O’Dwyer
 .date 2021-02-01
 
+.link blog to errno or to error
+.url https://flak.tedunangst.com/post/to-errno-or-to-error
+.author Ted Unangst
+.date 2017-01-24
+
+.link blog Everything you wanted to know about your C compiler, but didn't know who to ask
+.url https://homepages.cwi.nl/~steven/enquire/enquire.html
+.author Steven Pemberton
+
+.link blog How to allocate memory
+.url https://geocar.sdf1.org/alloc.html
+.author Geo Carncross
+
+
+.section links Reference
+
+.link docs POSIX
+.url https://pubs.opengroup.org/onlinepubs/9699919799/
+.date 2018
+
 
 .section links Tools
 
@@ -74,3 +94,16 @@ back to C.
 .url https://lwn.net/Articles/276782/
 .author Ian Lance Taylor
 .date 2007
+
+.link blog Beginner's Guide to Linkers
+.url https://www.lurklurk.org/linkers/linkers.html
+.author David Drysdale
+.date 2005
+
+
+.section links Projects
+
+.link blog Tutorial - Write a Shell in C
+.url https://brennan.io/2015/01/16/write-a-shell-in-c/
+.author Stephen Brennan
+.date 2015-01-16

@@ -19,6 +19,7 @@ where the vertices are files and the edges are build scripts, then you can use
 Make effectively.  Even after many years, I still sometimes forget this in both
 obvious and subtle ways while using Make.
 
+
 .section links Books
 
 .link book Managing Projects with GNU Make
@@ -34,6 +35,7 @@ obvious and subtle ways while using Make.
 .link book The GNU Make Manual
 .url https://www.gnu.org/software/make/manual/html_node/index.html
 .date 2016
+
 
 .section links Articles
 
@@ -60,3 +62,11 @@ obvious and subtle ways while using Make.
 .url https://nullprogram.com/blog/2017/08/20/
 .author Chris Wellons
 .date 2017-08-20
+
+
+.section links Code
+
+.link repo Public domain POSIX make
+.url https://frippery.org/make/
+.author Ron Yorston
+.date 2022-07-30
