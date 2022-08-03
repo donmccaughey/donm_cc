@@ -87,6 +87,10 @@ back to C.
 .url https://pubs.opengroup.org/onlinepubs/9699919799/
 .date 2018
 
+.link blog C Styles: A collection of interesting C style guides found here and there.
+.url https://julienblanchard.com/c-styles
+.author Julien Blanchard
+
 
 .section links Tools
 
