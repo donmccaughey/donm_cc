@@ -32,7 +32,7 @@ def macos_packages():
             package(
                 name='nginx',
                 version='1.20.2',
-                package='https://github.com/donmccaughey/nginx_pkg/releases/download/v1.20.2-r2/nginx-1.20.2-r2.pkg',
+                package='https://github.com/donmccaughey/nginx_pkg/releases/download/v1.22.0-r1/nginx-1.22.0.pkg',
                 source='https://github.com/donmccaughey/nginx_pkg',
                 project='https://nginx.org',
                 description='A widely used and capable HTTP and proxy server.'
@@ -64,7 +64,7 @@ def macos_packages():
             package(
                 name='XZ Utils',
                 version='5.2.5',
-                package='https://github.com/donmccaughey/xz_pkg/releases/latest/download/xz-5.2.5-r2.pkg',
+                package='https://github.com/donmccaughey/xz_pkg/releases/download/v5.2.5-r2/xz-5.2.5-r2.pkg',
                 source='https://github.com/donmccaughey/xz_pkg',
                 project='https://tukaani.org/xz/',
                 description='A general purpose data compression tool and library, and includes the `xz` command line tool.'
