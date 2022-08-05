@@ -32,8 +32,12 @@ def check_external_links(external_links: list[(Resource, str, ParseResult)]) -> 
     sys.stdout.write(f' 0% ')
     for link in external_links:
         resource, href, url = link
-        response = requests.get(href, headers={'User-Agent': USER_AGENT})
-        if 200 == response.status_code:
+        try:
+            response = requests.get(href, headers={'User-Agent': USER_AGENT})
+            status_code = response.status_code
+        except OSError:
+            status_code = 0
+        if 200 == status_code:
             sys.stdout.write('.')
             sys.stdout.flush()
         else:
@@ -42,7 +46,7 @@ def check_external_links(external_links: list[(Resource, str, ParseResult)]) -> 
             else:
                 sys.stdout.write('x')
             sys.stdout.flush()
-            broken_links.append((resource, href, response.status_code))
+            broken_links.append((resource, href, status_code))
         count += 1
         if 0 == count % line_width:
             percent = int(count / len(external_links) * 100)
