@@ -22,6 +22,14 @@ def macos_packages():
                     but excluded from macOS and Xcode due to GPL licenses.            
                 """)
             package(
+                name='FLAC',
+                version='1.3.4',
+                package='https://github.com/donmccaughey/flac_pkg/releases/download/v1.3.4-r1/flac-1.3.4.pkg',
+                source='https://github.com/donmccaughey/flac_pkg',
+                project='https://xiph.org/flac/',
+                description='A fast and widely supported lossless audio codec.'
+            )
+            package(
                 name='jq',
                 version='1.6',
                 package='https://github.com/donmccaughey/jq_pkg/releases/download/v1.6-r2/jq-1.6-r2.pkg',
