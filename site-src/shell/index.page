@@ -39,6 +39,11 @@ that holds Unix systems together.
 
 .section links Tips and Tricks
 
+.link blog Moving to zsh
+.url https://scriptingosx.com/2019/06/moving-to-zsh/
+.author Armin Briegel
+.date 2019-06-05
+
 .link blog Use the Unofficial Bash Strict Mode (Unless You Looove Debugging)
 .url http://redsymbol.net/articles/unofficial-bash-strict-mode/
 .author Aaron Maxwell
