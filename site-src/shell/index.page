@@ -37,6 +37,14 @@ that holds Unix systems together.
 .date 2020-02-14
 
 
+.section links Tools
+
+.link repo ShellCheck - A shell script static analysis tool
+.url https://github.com/koalaman/shellcheck
+.author Vidar 'koala_man' Holen
+.author contributors
+
+
 .section links Tips and Tricks
 
 .link blog Moving to zsh
