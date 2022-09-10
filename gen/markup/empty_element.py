@@ -63,6 +63,13 @@ class Link(EmptyElement):
         super().__init__(name='link', parent=parent, **kwargs)
 
 
+class IconLink(Link):
+    def __init__(self, href: str, parent: Optional[Node] = None, **kwargs):
+        super().__init__(parent=parent, **kwargs)
+        self.attributes['rel'] = 'icon'
+        self.attributes['href'] = href
+
+
 class Meta(EmptyElement):
     def __init__(self, parent: Optional[Node] = None, **kwargs):
         super().__init__(name='meta', parent=parent, **kwargs)

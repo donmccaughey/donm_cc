@@ -128,6 +128,7 @@ class Page(Resource):
             DocType()
             with HTML(lang='en'):
                 with Head() as head:
+                    IconLink('data:,')
                     MetaCharset('utf-8')
                     MetaViewport(initial_scale='0.9', width='device-width')
                     Title(self.title)
