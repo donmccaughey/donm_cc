@@ -39,6 +39,7 @@ class Page:
         self.document.html['lang'] = 'en'
 
         # head
+        self.__tag(self.document.head, 'link', rel='icon', href='data:,')
         self.__tag(self.document.head, 'meta', charset='utf-8')
         self.__tag(self.document.head, 'meta', attrs={
             'name': 'viewport',

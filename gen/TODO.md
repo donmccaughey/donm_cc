@@ -1,5 +1,6 @@
 # TODO
 
+- remove emoji list bullets
 - where is Node.tokens() used?
 - strip and crush images
 - strip and compress resume pdf
