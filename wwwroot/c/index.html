@@ -53,42 +53,16 @@
     .links li {
         color: black;
         font-size: 12pt;
-        left: -2em;
         line-height: 1.4;
-        list-style-type: none;
         margin: 0 2em;
         padding: 0.25em;
-        position: relative;
         width: 70ex;
     }
     .links li a {
         color: black;
-        text-decoration: none;
-    }
-    .links li a:hover {
-        text-decoration: underline;
     }
     .links li a:visited {
         color: dimgray;
-    }
-    .links li.blog:before {
-        content: "🗞";
-    }
-    .links li.book:before {
-        content: "📖";
-    }
-    .links li.docs:before {
-        content: "📑";
-    }
-    .links li.paper:before {
-        content: "📄";
-    }
-    .links li:before {
-        content: "🔗";
-        font-size: 8pt;
-        position: absolute;
-        left: -2em;
-        top: 6pt;
     }
     .links time {
         color: gray;
@@ -199,11 +173,11 @@
 <section class=links>
     <h1>Books</h1>
     <ul>
-        <li class=book>
+        <li>
             <a class=title href=https://www.amazon.com/dp/B009ZUZ9FW>The C
             Programming Language</a>, <span class=authors>Brian W Kernighan and
             Dennis M Ritchie</span>, <time datetime=1988>1988</time>
-        <li class=book>
+        <li>
             <a class=title href=https://www.amazon.com/dp/B00E0LASCU>Expert C
             Programming: Deep C Secrets</a>, <span class=authors>Peter van der
             Linden</span>, <time datetime=1994>1994</time>
@@ -212,11 +186,11 @@
 <section class=links>
     <h1>Papers</h1>
     <ul>
-        <li class=paper>
+        <li>
             <a class=title href=https://www.humprog.org/~stephen/research/papers/kell17some-preprint.pdf>Some
             Were Meant for C</a>, <span class=authors>Stephen Kell</span>,
             <time datetime=2017-09>2017-09</time>
-        <li class=paper>
+        <li>
             <a class=title href=https://www.usenix.org/legacy/publications/library/proceedings/sa92/spencer.pdf>#ifdef
             Considered Harmful, or Portability Experience With C News</a>,
             <span class=authors>Henry Spencer</span>,
@@ -226,27 +200,27 @@
 <section class=links>
     <h1>Techniques</h1>
     <ul>
-        <li class=blog>
+        <li>
             <a class=title href=https://bearssl.org/oop.html>OOP in C</a>,
             <span class=authors>Thomas Pornin</span>,
             <time datetime=2018>2018</time>
-        <li class=blog>
+        <li>
             <a class=title href=http://zubplot.blogspot.com/2015/01/gcc-is-wonderful-better-arraysize-macro.html>GCC
             <em>is</em> wonderful: a better ARRAY_SIZE macro</a>,
             <time datetime=2015-01-04>2015-01-04</time>
-        <li class=blog>
+        <li>
             <a class=title href=https://quuxplusone.github.io/blog/2021/02/01/x-macros/ >What
             are X-macros?</a>, <span class=authors>Arthur O’Dwyer</span>,
             <time datetime=2021-02-01>2021-02-01</time>
-        <li class=blog>
+        <li>
             <a class=title href=https://flak.tedunangst.com/post/to-errno-or-to-error>to
             errno or to error</a>, <span class=authors>Ted Unangst</span>,
             <time datetime=2017-01-24>2017-01-24</time>
-        <li class=blog>
+        <li>
             <a class=title href=https://homepages.cwi.nl/~steven/enquire/enquire.html>Everything
             you wanted to know about your C compiler, but didn't know who to
             ask</a>, <span class=authors>Steven Pemberton</span>
-        <li class=blog>
+        <li>
             <a class=title href=https://geocar.sdf1.org/alloc.html>How to
             allocate memory</a>, <span class=authors>Geo Carncross</span>
     </ul>
@@ -254,10 +228,10 @@
 <section class=links>
     <h1>Reference</h1>
     <ul>
-        <li class=docs>
+        <li>
             <a class=title href=https://pubs.opengroup.org/onlinepubs/9699919799/ >POSIX</a>,
             <time datetime=2018>2018</time>
-        <li class=blog>
+        <li>
             <a class=title href=https://julienblanchard.com/c-styles>C Styles: A
             collection of interesting C style guides found here and there.</a>,
             <span class=authors>Julien Blanchard</span>
@@ -266,11 +240,11 @@
 <section class=links>
     <h1>Tools</h1>
     <ul>
-        <li class=blog>
+        <li>
             <a class=title href=https://lwn.net/Articles/276782/ >Linkers</a>,
             <span class=authors>Ian Lance Taylor</span>,
             <time datetime=2007>2007</time>
-        <li class=blog>
+        <li>
             <a class=title href=https://www.lurklurk.org/linkers/linkers.html>Beginner's
             Guide to Linkers</a>, <span class=authors>David Drysdale</span>,
             <time datetime=2005>2005</time>
@@ -279,7 +253,7 @@
 <section class=links>
     <h1>Projects</h1>
     <ul>
-        <li class=blog>
+        <li>
             <a class=title href=https://brennan.io/2015/01/16/write-a-shell-in-c/ >Tutorial
             - Write a Shell in C</a>, <span class=authors>Stephen
             Brennan</span>, <time datetime=2015-01-16>2015-01-16</time>

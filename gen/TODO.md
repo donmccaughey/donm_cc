@@ -1,6 +1,6 @@
 # TODO
 
-- remove emoji list bullets
+- remove color from all links
 - where is Node.tokens() used?
 - strip and crush images
 - strip and compress resume pdf

@@ -53,39 +53,16 @@
     .links li {
         color: black;
         font-size: 12pt;
-        left: -2em;
         line-height: 1.4;
-        list-style-type: none;
         margin: 0 2em;
         padding: 0.25em;
-        position: relative;
         width: 70ex;
     }
     .links li a {
         color: black;
-        text-decoration: none;
-    }
-    .links li a:hover {
-        text-decoration: underline;
     }
     .links li a:visited {
         color: dimgray;
-    }
-    .links li.blog:before {
-        content: "🗞";
-    }
-    .links li.book:before {
-        content: "📖";
-    }
-    .links li.repo:before {
-        content: "💼";
-    }
-    .links li:before {
-        content: "🔗";
-        font-size: 8pt;
-        position: absolute;
-        left: -2em;
-        top: 6pt;
     }
     .links time {
         color: gray;
@@ -189,15 +166,15 @@
 <section class=links>
     <h1>Books</h1>
     <ul>
-        <li class=book>
+        <li>
             <a class=title href=https://www.amazon.com/dp/B0026OR2RW>Managing
             Projects with GNU Make</a>, <span class=authors>Robert
             Mecklenburg</span>, <time datetime=2004>2004</time>
-        <li class=book>
+        <li>
             <a class=title href=https://nostarch.com/gnumake>The GNU Make
             Book</a>, <span class=authors>John Graham-Cumming</span>,
             <time datetime=2015>2015</time>
-        <li class=book>
+        <li>
             <a class=title href=https://www.gnu.org/software/make/manual/html_node/index.html>The
             GNU Make Manual</a>, <time datetime=2016>2016</time>
     </ul>
@@ -205,22 +182,22 @@
 <section class=links>
     <h1>Articles</h1>
     <ul>
-        <li class=blog>
+        <li>
             <a class=title href=http://gromnitsky.users.sourceforge.net/articles/notes-for-new-make-users/ >Notes
             for new Make users</a>, <span class=authors>Alexander
             Gromnitsky</span>, <time datetime=2019-03-09>2019-03-09</time>
-        <li class=blog>
+        <li>
             <a class=title href=http://make.mad-scientist.net>make.mad-scientist.net</a>,
             <span class=authors>Paul D Smith</span>,
             <time datetime=2017-07-30>2017-07-30</time>
-        <li class=blog>
+        <li>
             <a class=title href=http://eigenstate.org/notes/makefiles>Notes on
             Writing Makefiles</a>, <span class=authors>Ori Bernstein</span>
-        <li class=blog>
+        <li>
             <a class=title href=http://marmelab.com/blog/2016/02/29/auto-documented-makefile.html>Self-Documented
             Makefile</a>, <span class=authors>François Zaninotto</span>,
             <time datetime=2016-02-29>2016-02-29</time>
-        <li class=blog>
+        <li>
             <a class=title href=https://nullprogram.com/blog/2017/08/20/ >A
             Tutorial on Portable Makefiles</a>, <span class=authors>Chris
             Wellons</span>, <time datetime=2017-08-20>2017-08-20</time>
@@ -229,7 +206,7 @@
 <section class=links>
     <h1>Code</h1>
     <ul>
-        <li class=repo>
+        <li>
             <a class=title href=https://frippery.org/make/ >Public domain POSIX
             make</a>, <span class=authors>Ron Yorston</span>,
             <time datetime=2022-07-30>2022-07-30</time>

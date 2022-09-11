@@ -298,65 +298,17 @@ time {
     }
 }
 
-.links li:before {
-    content: '\1f517';
-    font-size: 8pt;
-    position: absolute;
-    left: -2em;
-    top: 6pt;
-}
-
-.links li.blog:before {
-    content: '\1f5de';
-}
-
-.links li.book:before {
-    content: '\1f4d6';
-}
-
-.links li.docs:before {
-    content: '\1f4d1';
-}
-
-.links li.email:before {
-    content: '\1f4e7';
-}
-
-.links li.paper:before {
-    content: '\1f4c4';
-}
-
-.links li.podcast:before {
-    content: '\1f3a4';
-}
-
-.links li.repo:before {
-    content: '\1f4bc';
-}
-
-.links li.site:before {
-    content: '\1f310';
-}
-
 .links li {
     color: black;
     font-size: 12pt;
-    left: -2em;
     line-height: 1.4;
-    list-style-type: none;
     margin: 0 2em;
     padding: 0.25em;
-    position: relative;
     width: 70ex;
 }
 
 .links li a {
     color: black;
-    text-decoration: none;
-}
-
-.links li a:hover {
-    text-decoration: underline;
 }
 
 .links li a:visited {

@@ -21,7 +21,7 @@ def link(
         date: Optional[str] = None,
         checked: bool = False
 ):
-    with Li(class_names=[modifier]):
+    with Li():
         with A(href=href, class_names=['title']):
             inline_markdown_to_markup(title)
         if authors:

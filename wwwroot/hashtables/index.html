@@ -53,39 +53,16 @@
     .links li {
         color: black;
         font-size: 12pt;
-        left: -2em;
         line-height: 1.4;
-        list-style-type: none;
         margin: 0 2em;
         padding: 0.25em;
-        position: relative;
         width: 70ex;
     }
     .links li a {
         color: black;
-        text-decoration: none;
-    }
-    .links li a:hover {
-        text-decoration: underline;
     }
     .links li a:visited {
         color: dimgray;
-    }
-    .links li.blog:before {
-        content: "🗞";
-    }
-    .links li.repo:before {
-        content: "💼";
-    }
-    .links li.site:before {
-        content: "🌐";
-    }
-    .links li:before {
-        content: "🔗";
-        font-size: 8pt;
-        position: absolute;
-        left: -2em;
-        top: 6pt;
     }
     .links time {
         color: gray;
@@ -181,56 +158,55 @@
 <section class=links>
     <h1>Hashtable Implementations</h1>
     <ul>
-        <li class=repo>
+        <li>
             <a class=title href=https://github.com/troydhanson/uthash>uthash: C
             macros for hash tables and more</a>
-        <li class=repo>
+        <li>
             <a class=title href=https://github.com/Mashpoe/c-hashmap>C
             HashMap</a>
-        <li class=repo>
+        <li>
             <a class=title href=https://github.com/Encrylize/hashmap>Hashmap</a>
     </ul>
 </section>
 <section class=links>
     <h1>Hashing Functions</h1>
     <ul>
-        <li class=site>
+        <li>
             <a class=title href=http://www.isthe.com/chongo/tech/comp/fnv/index.html>FNV
             Hash</a>, <span class=authors>Landon Curt Noll</span>,
             <time datetime=2017-04-29>2017-04-29</time>
-        <li class=site>
-            <a class=title href=http://www.xxhash.com/ >xxHash</a>
+        <li><a class=title href=http://www.xxhash.com/ >xxHash</a>
     </ul>
 </section>
 <section class=links>
     <h1>Hashing</h1>
     <ul>
-        <li class=blog>
+        <li>
             <a class=title href=https://attractivechaos.wordpress.com/2018/10/01/advanced-techniques-to-implement-fast-hash-tables/ >Advanced
             techniques to implement fast hash tables</a>,
             <time datetime=2018-10-01>2018-10-01</time>
-        <li class=blog>
+        <li>
             <a class=title href=https://skystrife.github.io/blog/2016/01/29/a-probing-hash-table-framework/ >A
             Probing Hash Table Framework</a>, <span class=authors>Chase
             Geigle</span>, <time datetime=2016-01-29>2016-01-29</time>
-        <li class=blog>
+        <li>
             <a class=title href=https://www.reddit.com/r/C_Programming/comments/3533bw/best_hash_table_for_c/ >Best
             hash table for C</a>, <span class=authors>Reddit</span>,
             <time datetime=2015-05-06>2015-05-06</time>
-        <li class=blog>
+        <li>
             <a class=title href=https://isocpp.org/files/papers/n3980.html>Types
             Don't Know #</a>, <span class=authors>Howard E Hinnant, Vinnie Falco
             and John Bytheway</span>,
             <time datetime=2014-05-24>2014-05-24</time>
-        <li class=blog>
+        <li>
             <a class=title href=https://www.csd.uoc.gr/~hy460/pdf/Dynamic%20Hash%20Tables.pdf>Dynamic
             Hash Tables</a>, <span class=authors>Per-Åke Larson</span>,
             <time datetime=1988-04>1988-04</time>
-        <li class=blog>
+        <li>
             <a class=title href=https://blog.waffles.space/2018/12/07/deep-dive-into-hashbrown/ >The
             Swiss Army Knife of Hashmaps</a>, <span class=authors>Ravi
             Shankar</span>, <time datetime=2018-12-07>2018-12-07</time>
-        <li class=blog>
+        <li>
             <a class=title href=https://www.idryman.org/blog/2017/05/03/writing-a-damn-fast-hash-table-with-tiny-memory-footprints/ >Writing
             a Damn Fast Hash Table With Tiny Memory Footprints</a>,
             <span class=authors>Felix Ren-Chyan Chern</span>,
