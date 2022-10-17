@@ -20,7 +20,7 @@ difficult or impossible for an amateur to do.
 
 I spent subsequent years with C++, a big and complex language which I have
 mostly abandoned, and with Objective-C, a beautiful balance of speed and
-sophistication which Apply has sadly mostly abandoned.  But I've always come
+sophistication which Apple has sadly mostly abandoned.  But I've always come
 back to C.
 
 
@@ -87,7 +87,7 @@ back to C.
 .url https://pubs.opengroup.org/onlinepubs/9699919799/
 .date 2018
 
-.link blog C Styles: A collection of interesting C style guides found here and there.
+.link blog C Styles: A collection of interesting C style guides found here and there
 .url https://julienblanchard.com/c-styles
 .author Julien Blanchard
 
