@@ -9,32 +9,32 @@
  *      #000000 black
  *
  * Link colors:
- *      #0000cd mediumblue
- *      #808080 gray
+ *      (light scheme)
+ *      #000000 black
  *
- *      #b0e0e6 powderblue
- *      #c0c0c0 silver
+ *      (dark scheme)
+ *      #ffffff white
  *
- * Safari default link colors:
+ *      (Safari defaults)
  *      #0000ee unvisited blue
  *      #551a8b visited purple
  */
 
 a {
-    color: mediumblue;
+    color: black;
 }
 
 a:visited {
-    color: indigo;
+    color: black;
 }
 
 @media (prefers-color-scheme: dark) {
     a {
-        color: powderblue;
+        color: white;
     }
 
     a:visited {
-        color: violet;
+        color: white;
     }
 }
 
