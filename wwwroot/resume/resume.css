@@ -14,26 +14,31 @@
     page-break-inside: avoid;
 }
 
-.overview {
-    position: relative;
+.overview address {
+    text-align: center;
 }
 
+.overview address ul {
+    padding: 0;
+}
 .overview address ul li {
     display: inline;
     padding: 0 1ex;
-    text-align: center;
+    white-space: nowrap;
 }
 
 .overview aside {
     font-size: 10pt;
-    position: absolute;
-    right: -2em;
     text-align: center;
-    top: 0;
+}
+
+.overview aside ul {
+    padding: 0;
 }
 
 .overview aside ul li {
-    list-style-type: none;
+    display: inline;
+    padding: 0 1ex;
 }
 
 .project {
