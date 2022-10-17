@@ -78,6 +78,9 @@ class Element(Node):
             if selector_classes:
                 classes = self.attributes.get('class', '').split()
                 for selector_class in selector_classes:
-                    if not selector_class in classes:
+                    if selector_class not in classes:
                         return False
             return True
+
+    def tokens(self) -> list[str]:
+        raise NotImplementedError
