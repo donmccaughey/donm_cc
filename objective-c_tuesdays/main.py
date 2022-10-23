@@ -4,7 +4,7 @@ import os.path
 from typing import List
 
 from atom import Feed
-from page import FormattedPage, Page, Index
+from page import FormattedPage, Page, PageFile, Index
 
 
 def main():
@@ -30,6 +30,8 @@ def main():
         page.print_statistics(brief=args.brief)
         with open(page.path, 'w') as f:
             f.write(str(FormattedPage(page)))
+        with open(page.page_path, 'w') as f:
+            f.write(str(PageFile(page)))
 
     print_tags(pages, 'b')
 

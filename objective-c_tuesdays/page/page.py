@@ -1,4 +1,5 @@
 import os
+from pathlib import Path
 from typing import Dict, Optional, List, Set, Tuple
 
 from bs4 import BeautifulSoup
@@ -24,6 +25,7 @@ class Page:
         self.filename = get_filename(self.entry)
         self.new_url = f'/objective-c_tuesdays/{self.filename}'
         self.path = os.path.join(self.output_dir, self.filename)
+        self.page_path = Path(self.path).with_suffix('.page')
         self.title = get_title(self.entry)
         self.published = self.entry.published.strftime('%Y-%m-%d')
         self.topic = topic
