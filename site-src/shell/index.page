@@ -56,6 +56,11 @@ that holds Unix systems together.
 .url http://redsymbol.net/articles/unofficial-bash-strict-mode/
 .author Aaron Maxwell
 
+.link site Unix shell script tactics - best practices style guide
+.url https://github.com/SixArm/unix-shell-script-tactics
+.author Joel Parker Henderson
+.date 2022
+
 .link blog Writing Safe Shell Scripts
 .url https://sipb.mit.edu/doc/safe-shell/
 .author MIT Student Information Processing Board
