@@ -1,7 +1,10 @@
 import sys
 from argparse import ArgumentParser, Namespace
+
+from books import open_library_search_url, search_open_library, OpenLibraryResults
+from file_formats.page_file import BookLink
 from hyperlinks import check_external_links, http_external_links
-from resources import Directory, Page
+from resources import Directory, Page, PageFile
 from website import root
 
 
@@ -15,6 +18,8 @@ def get_options() -> Namespace:
                             help='generate without stylesheet links')
     arg_parser.add_argument('--check-links', action='store_true', default=False,
                             help='check that hyperlinks are valid')
+    arg_parser.add_argument('--find-books', action='store_true', default=False,
+                            help='search for books in Open Library')
     options = arg_parser.parse_args()
     options.source_dir = '../site-src'
     options.output_dir = '../wwwroot'
@@ -33,6 +38,34 @@ def check_links(root: Directory) -> int:
         print(f'  In {resource.path}: {href} returned {status_code}')
     print(f'Checked {len(external_links)} external links in {results.elapsed_seconds} seconds')
     return len(results.broken_links)
+
+
+def find_books(root: Directory):
+    page_files = [resource for resource in root.all if isinstance(resource, PageFile)]
+    # TODO filter page files by type (links or essay)
+    links = []
+    for page_file in page_files:
+        for section in page_file.page_file.sections:
+            for link in section.links:
+                if isinstance(link, BookLink):
+                    links.append(link)
+    print(f'Found {len(links)} book links')
+    for link in links:
+        url = open_library_search_url(link)
+        print(f'"{link.title}" - {url}')
+        open_library_results = search_open_library(url)
+        match open_library_results:
+            case OpenLibraryResults():
+                count = len(open_library_results.docs)
+                print(f'    Found {count} matches')
+                if count <= 3:
+                    for doc in open_library_results.docs:
+                        print(f'    - [{doc.type}] "{doc.title}" https://openlibrary.org{doc.key}')
+            case int():
+                print(f'    FAILURE: {open_library_results}')
+            case Exception():
+                print(f'    ERROR: {open_library_results}')
+
 
 
 def omit_styles(root: Directory):
@@ -58,6 +91,10 @@ def main():
     if options.check_links:
         broken_count = check_links(root)
         sys.exit(broken_count)
+
+    if options.find_books:
+        find_books(root)
+        sys.exit(0)
 
     if options.omit_styles:
         omit_styles(root)

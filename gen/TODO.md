@@ -1,5 +1,12 @@
 # TODO
 
+- add top-level author field to links page files to support author-centric pages 
+- add title annotation field to book links ("novella", "collection", etc)
+- add openlibrary.org works ID field to book links
+- generate openlibrary.org works links by default
+- support [OpenLibrary links](https://openlibrary.org/dev/docs/api/books) on book links
+- support ISBN metadata on book links
+- expose ASIN, ISBN, etc in book link HTML as data attributes
 - where is Node.tokens() used?
 - add command line flag to dump out list of book links
 - strip and crush images
@@ -27,9 +34,6 @@
   - look into adding roles https://developer.mozilla.org/en-US/docs/Web/Accessibility/ARIA/Roles
 - clean up `random_words.js`
 - investigate removing jQuery-isms from `memory_match.js`
-- support [OpenLibrary links](https://openlibrary.org/dev/docs/api/books) on book links
-- support ISBN metadata on book links
-- expose ASIN, ISBN, etc in book link HTML as data attributes
 - generate alternate representations of links pages (CSV, JSON)
 - set up CI in GitHub Actions
 - generate gemini site
