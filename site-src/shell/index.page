@@ -83,3 +83,7 @@ that holds Unix systems together.
 .link blog Something you didn't know about functions in bash
 .url https://catonmat.net/bash-functions
 .author Peter Krumins
+
+.link repo The Art of Command Line
+.url https://github.com/jlevy/the-art-of-command-line
+.author Joshua Levy
