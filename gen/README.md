@@ -18,3 +18,21 @@ Install [`pyenv`](https://github.com/pyenv/pyenv) to manage Python versions.
 10. In PyCharm's *Preferences* dialog, select 
      *Project: Gen | Python Interpreter* in the tree of options and choose  
      `gen-venv` as the Python version.
+
+## Strip image metadata notes
+
+Install [`ImageMagick`](https://imagemagick.org).
+
+1. `[magick] identify -verbose PATH` to print out metadata
+2. `[magick] mogrify -strip PATH` to remove unnecessary metadata
+
+Notes on the [`-strip`](https://imagemagick.org/script/command-line-options.php#strip)
+command line option.
+
+Alternately, [ExifTool](https://exiftool.org) can do the same thing using
+`exiftool -all= <path>`.
+
+Useful discussion on removing metadata: [How can I read and remove meta (exif) 
+data from my photos using the command line?][1].
+
+[1]: https://askubuntu.com/questions/260810/how-can-i-read-and-remove-meta-exif-data-from-my-photos-using-the-command-line/968598

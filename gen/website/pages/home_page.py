@@ -7,12 +7,12 @@ def home_page():
     with Page('Don McCaughey', name='index'):
         with Div(class_names=['banner']):
             Img(
-                src='/banners/Don_and_Molly_Round_Hill_Lake_Tahoe_summer_2019.jpg',
+                src='/banners/Don_and_Molly_San_Francisco_autumn_2021.jpg',
                 alt='Don and Molly atop Round Hill'
             )
             Br()
             Span(
-                text='Round Hill, Lake Tahoe, summer 2019',
+                text='San Francisco, autumn 2021',
                 class_names=['lower-caption']
             )
         with Ul(class_names=['collection']):
