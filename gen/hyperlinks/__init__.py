@@ -23,20 +23,38 @@ class LinkCheckResults:
     elapsed_seconds: int
 
 
+def check_link(session: requests.Session, href: str) -> int:
+    try:
+        response = session.head(href, headers={'User-Agent': USER_AGENT}, timeout=5)
+        status_code = response.status_code
+    except OSError:
+        status_code = 0
+    if 200 == status_code:
+        return 200
+
+    try:
+        response = session.get(href, headers={'User-Agent': USER_AGENT}, stream=True, timeout=5)
+        for _ in response.iter_content(chunk_size=None):
+            pass
+        status_code = response.status_code
+    except OSError:
+        status_code = 0
+    return status_code
+
+
 def check_external_links(external_links: list[(Resource, str, ParseResult)]) -> LinkCheckResults:
+    links = sorted(external_links, key=lambda link: link[1])
+
+    session = requests.Session()
     start_time = time.monotonic()
 
     broken_links = []
     count = 0
     line_width = 75
     sys.stdout.write(f' 0% ')
-    for link in external_links:
+    for link in links:
         resource, href, url = link
-        try:
-            response = requests.get(href, headers={'User-Agent': USER_AGENT})
-            status_code = response.status_code
-        except OSError:
-            status_code = 0
+        status_code = check_link(session, href)
         if 200 == status_code:
             sys.stdout.write('.')
             sys.stdout.flush()
@@ -49,7 +67,7 @@ def check_external_links(external_links: list[(Resource, str, ParseResult)]) -> 
             broken_links.append((resource, href, status_code))
         count += 1
         if 0 == count % line_width:
-            percent = int(count / len(external_links) * 100)
+            percent = int(count / len(links) * 100)
             sys.stdout.write('\n')
             sys.stdout.write(f'{percent:2}% ')
             sys.stdout.flush()
