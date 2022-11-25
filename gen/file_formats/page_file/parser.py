@@ -31,6 +31,12 @@ class InvalidModifierError(ParserError):
         super().__init__(token, f'Expected one of these modifiers: {modifiers}')
 
 
+class DuplicateDirectiveError(ParserError):
+    def __init__(self, token: Token, directive: str):
+        self.directive = directive
+        super().__init__(token, f'Found duplicate `.{directive}` directive')
+
+
 class MissingDirectiveError(ParserError):
     def __init__(self, token: Token, directive: str):
         self.directive = directive
@@ -115,19 +121,21 @@ class Parser:
         link = '.link' book_link
              | '.link' general_link
 
-        book_link = book_link_directive book_locator
-                  | book_link_directive book_locator link_attributes
+        book_link = book_link_directive book_locators
+                  | book_link_directive book_locators link_attributes
 
         book_link_directive = 'book' DATA
 
-        book_locator = asin_directive
-                     | url_directive
-                     | asin_directive url_directive
-                     | url_directive asin_directive
+        book_locators = book_locator
+                      | book_locator book_locators
 
-        url_directive = '.url' DATA
+        book_locator = asin_directive | olw_directive | url_directive
 
         asin_directive = '.asin' DATA
+
+        olw_directive = '.olw' DATA
+
+        url_directive = '.url' DATA
 
         link_attributes = link_attribute
                         | link_attribute link_attributes
@@ -369,11 +377,27 @@ class Parser:
             case ParserError() as e:
                 return e
 
-        match self.book_locator():
-            case Matched((asin, url)):
-                pass
+        asin = None
+        olw = None
+        url = None
+        match self.book_locators():
+            case Matched(locators):
+                for type, location in locators:
+                    match type:
+                        case 'asin':
+                            if asin:
+                                return DuplicateDirectiveError(self.token, 'asin')
+                            asin = location
+                        case 'olw':
+                            if olw:
+                                return DuplicateDirectiveError(self.token, 'olw')
+                            olw = location
+                        case 'url':
+                            if url:
+                                return DuplicateDirectiveError(self.token, 'url')
+                            url = location
             case NotMatched():
-                return MissingDirectivesError(self.token, ['url', 'asin'])
+                return MissingDirectivesError(self.token, ['asin', 'olw', 'url'])
             case ParserError() as e:
                 return e
 
@@ -392,8 +416,9 @@ class Parser:
         link = BookLink(
             modifier='book',
             title=title,
-            url=url,
             asin=asin,
+            olw=olw,
+            url=url,
             authors=authors,
             date=date,
             checked=checked,
@@ -412,16 +437,35 @@ class Parser:
 
         return Matched(title)
 
-    def book_locator(self) -> Matched[Tuple[Optional[str], Optional[str]]] | NotMatched | ParserError:
+    def book_locators(self) -> Matched[List[Tuple[str, str]]] | NotMatched | ParserError:
+        match self.book_locator():
+            case Matched(locator):
+                pass
+            case NotMatched():
+                return NotMatched()
+            case ParserError() as e:
+                return e
+
+        match self.book_locators():
+            case Matched(locators):
+                return Matched([locator] + locators)
+            case NotMatched():
+                return Matched([locator])
+            case ParserError() as e:
+                return e
+
+    def book_locator(self) -> Matched[Tuple[str, str]] | NotMatched | ParserError:
         match self.asin_directive():
             case Matched(asin):
-                match self.url_directive():
-                    case Matched(url):
-                        return Matched((asin, url))
-                    case NotMatched():
-                        return Matched((asin, None))
-                    case ParserError() as e:
-                        return e
+                return Matched(('asin', asin))
+            case NotMatched():
+                pass
+            case ParserError() as e:
+                return e
+
+        match self.olw_directive():
+            case Matched(olw):
+                return Matched(('olw', olw))
             case NotMatched():
                 pass
             case ParserError() as e:
@@ -429,29 +473,11 @@ class Parser:
 
         match self.url_directive():
             case Matched(url):
-                match self.asin_directive():
-                    case Matched(asin):
-                        return Matched((asin, url))
-                    case NotMatched():
-                        return Matched((None, url))
-                    case ParserError() as e:
-                        return e
+                return Matched(('url', url))
             case NotMatched():
                 return NotMatched()
             case ParserError() as e:
                 return e
-
-    def url_directive(self) -> Matched[str] | NotMatched | ParserError:
-        if not self.is_directive('url'):
-            return NotMatched()
-        self.next_token()
-
-        if not self.is_data():
-            return MissingDataError(self.token, 'URL address')
-        url = self.token.text
-        self.next_token()
-
-        return Matched(url)
 
     def asin_directive(self) -> Matched[str] | NotMatched | ParserError:
         if not self.is_directive('asin'):
@@ -464,6 +490,30 @@ class Parser:
         self.next_token()
 
         return Matched(asin)
+
+    def olw_directive(self) -> Matched[str] | NotMatched | ParserError:
+        if not self.is_directive('olw'):
+            return NotMatched()
+        self.next_token()
+
+        if not self.is_data():
+            return MissingDataError(self.token, 'Open Library ID')
+        asin = self.token.text
+        self.next_token()
+
+        return Matched(asin)
+
+    def url_directive(self) -> Matched[str] | NotMatched | ParserError:
+        if not self.is_directive('url'):
+            return NotMatched()
+        self.next_token()
+
+        if not self.is_data():
+            return MissingDataError(self.token, 'URL address')
+        url = self.token.text
+        self.next_token()
+
+        return Matched(url)
 
     def link_attributes(self) -> Matched[List[Tuple[str, str]]] | NotMatched | ParserError:
         match self.link_attribute():

@@ -6,8 +6,9 @@ from typing import Optional, List
 class BookLink:
     modifier: str
     title: str  # markdown
-    url: Optional[str]
     asin: Optional[str]
+    olw: Optional[str]
+    url: Optional[str]
     authors: List[str]
     date: Optional[str]
     checked: bool

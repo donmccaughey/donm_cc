@@ -4,7 +4,7 @@ from textwrap import dedent
 from file_formats.page_file import PageFile
 from file_formats.page_file.parser import Parser, \
     MissingDirectiveError, MissingModifierError, MissingDataError, \
-    UnexpectedTokenError, MissingDirectivesError, InvalidModifierError, PAGE_MODIFIERS
+    UnexpectedTokenError, MissingDirectivesError, InvalidModifierError, PAGE_MODIFIERS, DuplicateDirectiveError
 
 
 class ParserTestCase(unittest.TestCase):
@@ -268,7 +268,7 @@ class ParserTestCase(unittest.TestCase):
         ''')
         result = Parser(source).parse()
         self.assertIsInstance(result, MissingDirectivesError)
-        self.assertEqual(['url', 'asin'], result.directives)
+        self.assertEqual(['asin', 'olw', 'url'], result.directives)
 
     def test_general_link_missing_url(self):
         source = dedent('''
@@ -293,7 +293,7 @@ class ParserTestCase(unittest.TestCase):
         ''')
         result = Parser(source).parse()
         self.assertIsInstance(result, MissingDirectivesError)
-        self.assertEqual(['url', 'asin'], result.directives)
+        self.assertEqual(['asin', 'olw', 'url'], result.directives)
 
     def test_link_missing_url_data(self):
         source = dedent('''
@@ -361,6 +361,32 @@ class ParserTestCase(unittest.TestCase):
         self.assertIsNone(link.date)
         self.assertFalse(link.checked)
 
+    def test_book_link_with_olw(self):
+        source = dedent('''
+        .page links My Links
+
+        .section links New Links
+        
+        .link book Example Book
+        .olw OL12343567W
+        ''')
+        result = Parser(source).parse()
+        self.assertIsInstance(result, PageFile)
+        self.assertEqual(1, len(result.sections))
+
+        section = result.sections[0]
+        self.assertEqual('New Links', section.title)
+        self.assertEqual([], section.notes)
+        self.assertEqual(1, len(section.links))
+
+        link = section.links[0]
+        self.assertEqual('book', link.modifier)
+        self.assertEqual('Example Book', link.title)
+        self.assertIsNone(link.url)
+        self.assertEqual('OL12343567W', link.olw)
+        self.assertIsNone(link.date)
+        self.assertFalse(link.checked)
+
     def test_book_link_with_url_and_asin(self):
         source = dedent('''
         .page links My Links
@@ -414,6 +440,49 @@ class ParserTestCase(unittest.TestCase):
         self.assertEqual('B123456789', link.asin)
         self.assertIsNone(link.date)
         self.assertFalse(link.checked)
+
+    def test_book_link_with_asin_olw_and_url(self):
+        source = dedent('''
+        .page links My Links
+
+        .section links New Links
+        
+        .link book Example Book
+        .olw OL1234567W
+        .asin B123456789
+        .url https://example.book
+        ''')
+        result = Parser(source).parse()
+        self.assertIsInstance(result, PageFile)
+        self.assertEqual(1, len(result.sections))
+
+        section = result.sections[0]
+        self.assertEqual('New Links', section.title)
+        self.assertEqual([], section.notes)
+        self.assertEqual(1, len(section.links))
+
+        link = section.links[0]
+        self.assertEqual('book', link.modifier)
+        self.assertEqual('Example Book', link.title)
+        self.assertEqual('OL1234567W', link.olw)
+        self.assertEqual('https://example.book', link.url)
+        self.assertEqual('B123456789', link.asin)
+        self.assertIsNone(link.date)
+        self.assertFalse(link.checked)
+
+    def test_book_link_with_duplicate_olw(self):
+        source = dedent('''
+        .page links My Links
+
+        .section links New Links
+        
+        .link book Example Book
+        .olw OL1234567W
+        .olw OL2345678W
+        ''')
+        result = Parser(source).parse()
+        self.assertIsInstance(result, DuplicateDirectiveError)
+        self.assertEqual('olw', result.directive)
 
     def test_repo_link(self):
         source = dedent('''
