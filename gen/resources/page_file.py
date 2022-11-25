@@ -58,8 +58,9 @@ class PageFile(Page):
             case BookLink():
                 book(
                     title=link.title,
-                    href=link.url,
                     asin=link.asin,
+                    olw=link.olw,
+                    url=link.url,
                     authors=link.authors,
                     date=link.date,
                     checked=link.checked,

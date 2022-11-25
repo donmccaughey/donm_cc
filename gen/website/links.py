@@ -36,14 +36,19 @@ def link(
 
 def book(
         title: str,
-        href: Optional[str] = None,
         asin: Optional[str] = None,
+        olw: Optional[str] = None,
+        url: Optional[str] = None,
         authors: Sequence[str] = (),
         date: Optional[str] = None,
         checked: bool = False
 ):
-    assert(href or asin)
-    if not href:
+    assert(asin or olw or url)
+    if url:
+        href = url
+    elif olw:
+        href = f'https://openlibrary.org/works/{olw}'
+    else:
         href = f'https://www.amazon.com/dp/{asin}'
     link(
         modifier='book',
