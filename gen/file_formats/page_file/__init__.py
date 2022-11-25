@@ -32,6 +32,7 @@ class LinksSection:
 
 @dataclass
 class PageFile:
+    modifier: str
     title: str
     subtitle: Optional[str]
     notes: List[str]  # markdown

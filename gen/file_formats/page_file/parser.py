@@ -5,7 +5,8 @@ from file_formats.page_file import PageFile, LinksSection, Link, BookLink
 from .lexer import Token, TokenType, lexer
 
 
-LINK_MODIFIERS = ('blog', 'docs', 'email', 'paper', 'podcast', 'repo', 'site')
+LINK_MODIFIERS = ['blog', 'docs', 'email', 'paper', 'podcast', 'repo', 'site']
+PAGE_MODIFIERS = ['author', 'essay', 'links']
 
 
 def parse(source: str) -> PageFile:
@@ -24,6 +25,12 @@ class ParserError(RuntimeError):
         self.token = token
 
 
+class InvalidModifierError(ParserError):
+    def __init__(self, token: Token, modifiers: List[str]):
+        self.modifiers = modifiers
+        super().__init__(token, f'Expected one of these modifiers: {modifiers}')
+
+
 class MissingDirectiveError(ParserError):
     def __init__(self, token: Token, directive: str):
         self.directive = directive
@@ -37,11 +44,6 @@ class MissingDirectivesError(ParserError):
             f'.{directive}' for directive in directives
         ])
         super().__init__(token, f'Expected one of these directives: {directives_list}')
-
-
-class MissingLinkModifierError(ParserError):
-    def __init__(self, token: Token):
-        super().__init__(token, f'Expected `.link` modifier: {LINK_MODIFIERS}')
 
 
 class MissingModifierError(ParserError):
@@ -88,7 +90,9 @@ class Parser:
         page_attributes = page_directive
                         | page_directive subtitle_directive
 
-        page_directive = '.page' 'links' DATA
+        page_directive = '.page' page_modifier DATA
+
+        page_modifier = 'author' | 'essay' | 'links'
 
         subtitle_directive = '.subtitle' DATA
 
@@ -163,7 +167,7 @@ class Parser:
 
     def page(self) -> Matched[PageFile] | ParserError:
         match self.overview():
-            case Matched((title, subtitle, notes)):
+            case Matched((modifier, title, subtitle, notes)):
                 pass
             case ParserError() as e:
                 return e
@@ -177,6 +181,7 @@ class Parser:
                 return e
 
         page = PageFile(
+            modifier=modifier,
             title=title,
             subtitle=subtitle,
             notes=notes,
@@ -184,9 +189,9 @@ class Parser:
         )
         return Matched(page)
 
-    def overview(self) -> Matched[Tuple[str, Optional[str], List[str]]] | ParserError:
+    def overview(self) -> Matched[Tuple[str, str, Optional[str], List[str]]] | ParserError:
         match self.page_attributes():
-            case Matched((title, subtitle)):
+            case Matched((modifier, title, subtitle)):
                 pass
             case ParserError() as e:
                 return e
@@ -199,11 +204,11 @@ class Parser:
             case ParserError() as e:
                 return e
 
-        return Matched((title, subtitle, notes))
+        return Matched((modifier, title, subtitle, notes))
 
-    def page_attributes(self) -> Matched[Tuple[str, Optional[str]]] | ParserError:
+    def page_attributes(self) -> Matched[Tuple[str, str, Optional[str]]] | ParserError:
         match self.page_directive():
-            case Matched(title):
+            case Matched((modifier, title)):
                 pass
             case ParserError() as e:
                 return e
@@ -216,15 +221,16 @@ class Parser:
             case ParserError() as e:
                 return e
 
-        return Matched((title, subtitle))
+        return Matched((modifier, title, subtitle))
 
-    def page_directive(self) -> Matched[str] | ParserError:
+    def page_directive(self) -> Matched[Tuple[str, str]] | ParserError:
         if not self.is_directive('page'):
             return MissingDirectiveError(self.token, 'page')
         self.next_token()
 
-        if not self.is_modifier('links'):
-            return MissingModifierError(self.token, 'links')
+        if not self.is_in_modifier_list(PAGE_MODIFIERS):
+            return InvalidModifierError(self.token, PAGE_MODIFIERS)
+        modifier = self.token.text.strip()
         self.next_token()
 
         if not self.is_data():
@@ -232,7 +238,7 @@ class Parser:
         title = self.token.text.strip()
         self.next_token()
 
-        return Matched(title)
+        return Matched((modifier, title))
 
     def subtitle_directive(self) -> Matched[str] | NotMatched | ParserError:
         if not self.is_directive('subtitle'):
@@ -352,7 +358,7 @@ class Parser:
                 case ParserError() as e:
                     return e
 
-        return MissingLinkModifierError(self.token)
+        return InvalidModifierError(self.token, LINK_MODIFIERS)
 
     def book_link(self) -> Matched[BookLink] | NotMatched | ParserError:
         match self.book_link_directive():
@@ -541,7 +547,7 @@ class Parser:
         return Matched(link)
 
     def general_link_directive(self) -> Matched[Tuple[str, str]] | NotMatched | ParserError:
-        if not self.is_general_link_modifier():
+        if not self.is_in_modifier_list(LINK_MODIFIERS):
             return NotMatched()
         modifier = self.token.text
         self.next_token()
@@ -602,18 +608,18 @@ class Parser:
                 and directive == self.token.text
         )
 
-    def is_general_link_modifier(self) -> bool:
-        return (
-                self.token
-                and TokenType.MODIFIER == self.token.type
-                and self.token.text in LINK_MODIFIERS
-        )
-
-    def is_modifier(self, modifier) -> bool:
+    def is_modifier(self, modifier: str) -> bool:
         return (
                 self.token
                 and TokenType.MODIFIER == self.token.type
                 and modifier == self.token.text
+        )
+
+    def is_in_modifier_list(self, modifiers: List[str]) -> bool:
+        return (
+                self.token
+                and TokenType.MODIFIER == self.token.type
+                and self.token.text in modifiers
         )
 
     def is_paragraph(self) -> bool:

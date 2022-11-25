@@ -2,9 +2,9 @@ import unittest
 from textwrap import dedent
 
 from file_formats.page_file import PageFile
-from file_formats.page_file.parser import Parser, ParserError, \
+from file_formats.page_file.parser import Parser, \
     MissingDirectiveError, MissingModifierError, MissingDataError, \
-    UnexpectedTokenError, MissingLinkModifierError, MissingDirectivesError
+    UnexpectedTokenError, MissingDirectivesError, InvalidModifierError, PAGE_MODIFIERS
 
 
 class ParserTestCase(unittest.TestCase):
@@ -18,8 +18,8 @@ class ParserTestCase(unittest.TestCase):
     def test_page_directive_missing_modifier(self):
         source = '.page'
         result = Parser(source).parse()
-        self.assertIsInstance(result, MissingModifierError)
-        self.assertEqual('links', result.modifier)
+        self.assertIsInstance(result, InvalidModifierError)
+        self.assertEqual(PAGE_MODIFIERS, result.modifiers)
 
     def test_page_directive_missing_title(self):
         source = '.page links'
@@ -31,7 +31,18 @@ class ParserTestCase(unittest.TestCase):
         source = '.page links My Links'
         result = Parser(source).parse()
         self.assertIsInstance(result, PageFile)
+        self.assertEqual('links', result.modifier)
         self.assertEqual('My Links', result.title)
+        self.assertIsNone(result.subtitle)
+        self.assertEqual([], result.notes)
+        self.assertEqual([], result.sections)
+
+    def test_page_directive_author(self):
+        source = '.page author William Shakespeare'
+        result = Parser(source).parse()
+        self.assertIsInstance(result, PageFile)
+        self.assertEqual('author', result.modifier)
+        self.assertEqual('William Shakespeare', result.title)
         self.assertIsNone(result.subtitle)
         self.assertEqual([], result.notes)
         self.assertEqual([], result.sections)
@@ -39,8 +50,8 @@ class ParserTestCase(unittest.TestCase):
     def test_page_directive_invalid_modifier(self):
         source = '.page invalid My Links'
         result = Parser(source).parse()
-        self.assertIsInstance(result, MissingModifierError)
-        self.assertEqual('links', result.modifier)
+        self.assertIsInstance(result, InvalidModifierError)
+        self.assertEqual(PAGE_MODIFIERS, result.modifiers)
 
     def test_page_directive_invalid_data(self):
         source = dedent('''
@@ -232,7 +243,7 @@ class ParserTestCase(unittest.TestCase):
         .link
         ''')
         result = Parser(source).parse()
-        self.assertIsInstance(result, MissingLinkModifierError)
+        self.assertIsInstance(result, InvalidModifierError)
 
     def test_link_directive_missing_title(self):
         source = dedent('''
