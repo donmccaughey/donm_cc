@@ -43,23 +43,54 @@ def check_links(root: Directory) -> int:
 
 def find_books(root: Directory):
     page_files = [resource for resource in root.all if isinstance(resource, PageFile)]
-    links = find_book_links(page_files)
-    print(f'Found {len(links)} book links')
-    for link in links:
-        url = open_library_search_url(link)
-        print(f'"{link.title}" - {url}')
-        open_library_results = search_open_library(url)
-        if open_library_results.error:
-            print(f'    ERROR: {open_library_results.error}')
-        elif open_library_results.status_code != 200:
-            print(f'    FAILURE: {open_library_results.status_code}')
-        else:
-            count = len(open_library_results.docs)
+    book_links = find_book_links(page_files)
+    print(f'Found {len(book_links)} book links')
+    search_results = [
+        search_open_library(book_link) for book_link in book_links
+    ]
+    error_results = [
+        search_result for search_result in search_results if search_result.error
+    ]
+    good_results = [
+        search_result for search_result in search_results if not search_result.error
+    ]
+
+    no_results = [
+        search_result for search_result in good_results if not search_result.docs
+    ]
+    one_result = [
+        search_result for search_result in good_results if 1 == len(search_result.docs)
+    ]
+    multiple_results = [
+        search_result for search_result in good_results if len(search_result.docs) > 1
+    ]
+
+    if no_results:
+        print(f'No search results for {len(no_results)} books:')
+        for search_result in sorted(no_results, key=lambda r: r.book_link.title):
+            print(f'    - "{search_result.book_link.title}"')
+
+    if multiple_results:
+        print(f'Multiple search results for {len(multiple_results)} books:')
+        for search_result in sorted(multiple_results, key=lambda r: r.book_link.title):
+            print(f'    - "{search_result.book_link.title}"')
+            count = len(search_result.docs)
             if count > 10:
-                print(f'    Found {count} matches')
+                print(f'        - Found {count} matches')
             else:
-                for doc in open_library_results.docs:
-                    print(f'    - [{doc.type}] "{doc.title}" https://openlibrary.org{doc.key}')
+                for doc in search_result.docs:
+                    print(f'        - [{doc.type}] "{doc.title}" https://openlibrary.org{doc.key}')
+
+    if one_result:
+        print(f'One search result for {len(one_result)} books:')
+        for search_result in sorted(one_result, key=lambda r: r.book_link.title):
+            doc = search_result.docs[0]
+            print(f'    - [{doc.type}] "{doc.title}" https://openlibrary.org{doc.key}')
+
+    if error_results:
+        print(f'Search errors for {len(error_results)} books:')
+        for search_result in sorted(error_results, key=lambda r: r.book_link.title):
+            print(f'    - "{search_result.book_link.title}" - {search_result.error}')
 
 
 def omit_styles(root: Directory):
