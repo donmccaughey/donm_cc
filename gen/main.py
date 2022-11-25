@@ -45,8 +45,14 @@ def find_books(root: Directory):
     page_files = [resource for resource in root.all if isinstance(resource, PageFile)]
     book_links = find_book_links(page_files)
     print(f'Found {len(book_links)} book links')
+
+    non_olw_book_links = [
+        book_link for book_link in book_links if not book_link.olw
+    ]
+    print(f'Found {len(non_olw_book_links)} books without Open Library links')
+
     search_results = [
-        search_open_library(book_link) for book_link in book_links
+        search_open_library(book_link) for book_link in non_olw_book_links
     ]
     error_results = [
         search_result for search_result in search_results if search_result.error
