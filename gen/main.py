@@ -1,3 +1,4 @@
+import dataclasses
 import sys
 from argparse import ArgumentParser, Namespace
 
@@ -42,13 +43,20 @@ def check_links(root: Directory) -> int:
 
 def find_books(root: Directory):
     page_files = [resource for resource in root.all if isinstance(resource, PageFile)]
-    # TODO filter page files by type (links or essay)
     links = []
     for page_file in page_files:
+        default_author = None
+        if 'author' == page_file.page_file.modifier:
+            default_author = page_file.page_file.title
         for section in page_file.page_file.sections:
             for link in section.links:
                 if isinstance(link, BookLink):
-                    links.append(link)
+                    if default_author and default_author not in link.authors:
+                        copy = dataclasses.replace(link)
+                        copy.authors = list(link.authors) + [default_author]
+                        links.append(copy)
+                    else:
+                        links.append(link)
     print(f'Found {len(links)} book links')
     for link in links:
         url = open_library_search_url(link)
@@ -58,7 +66,7 @@ def find_books(root: Directory):
             case OpenLibraryResults():
                 count = len(open_library_results.docs)
                 print(f'    Found {count} matches')
-                if count <= 3:
+                if count <= 10:
                     for doc in open_library_results.docs:
                         print(f'    - [{doc.type}] "{doc.title}" https://openlibrary.org{doc.key}')
             case int():
