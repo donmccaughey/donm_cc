@@ -2,7 +2,7 @@ import dataclasses
 import sys
 from argparse import ArgumentParser, Namespace
 
-from books import open_library_search_url, search_open_library, OpenLibraryResults
+from books import open_library_search_url, search_open_library, OpenLibraryResults, find_book_links
 from file_formats.page_file import BookLink
 from hyperlinks import check_external_links, http_external_links
 from resources import Directory, Page, PageFile
@@ -43,37 +43,23 @@ def check_links(root: Directory) -> int:
 
 def find_books(root: Directory):
     page_files = [resource for resource in root.all if isinstance(resource, PageFile)]
-    links = []
-    for page_file in page_files:
-        default_author = None
-        if 'author' == page_file.page_file.modifier:
-            default_author = page_file.page_file.title
-        for section in page_file.page_file.sections:
-            for link in section.links:
-                if isinstance(link, BookLink):
-                    if default_author and default_author not in link.authors:
-                        copy = dataclasses.replace(link)
-                        copy.authors = list(link.authors) + [default_author]
-                        links.append(copy)
-                    else:
-                        links.append(link)
+    links = find_book_links(page_files)
     print(f'Found {len(links)} book links')
     for link in links:
         url = open_library_search_url(link)
         print(f'"{link.title}" - {url}')
         open_library_results = search_open_library(url)
-        match open_library_results:
-            case OpenLibraryResults():
-                count = len(open_library_results.docs)
+        if open_library_results.error:
+            print(f'    ERROR: {open_library_results.error}')
+        elif open_library_results.status_code != 200:
+            print(f'    FAILURE: {open_library_results.status_code}')
+        else:
+            count = len(open_library_results.docs)
+            if count > 10:
                 print(f'    Found {count} matches')
-                if count <= 10:
-                    for doc in open_library_results.docs:
-                        print(f'    - [{doc.type}] "{doc.title}" https://openlibrary.org{doc.key}')
-            case int():
-                print(f'    FAILURE: {open_library_results}')
-            case Exception():
-                print(f'    ERROR: {open_library_results}')
-
+            else:
+                for doc in open_library_results.docs:
+                    print(f'    - [{doc.type}] "{doc.title}" https://openlibrary.org{doc.key}')
 
 
 def omit_styles(root: Directory):
