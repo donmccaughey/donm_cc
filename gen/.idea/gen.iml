@@ -6,7 +6,7 @@
     <content url="file://$MODULE_DIR$/../wwwroot">
       <excludeFolder url="file://$MODULE_DIR$/../wwwroot" />
     </content>
-    <orderEntry type="jdk" jdkName="Python 3.10 (gen-venv)" jdkType="Python SDK" />
+    <orderEntry type="jdk" jdkName="Python 3.11 (gen-venv)" jdkType="Python SDK" />
     <orderEntry type="sourceFolder" forTests="false" />
   </component>
 </module>

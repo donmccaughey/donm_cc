@@ -19,6 +19,15 @@ Install [`pyenv`](https://github.com/pyenv/pyenv) to manage Python versions.
      *Project: Gen | Python Interpreter* in the tree of options and choose  
      `gen-venv` as the Python version.
 
+Update a virtual environment:
+
+1. `cd <project-dir>`
+2. `pyenv virtualenv-delete <venv-name>`
+3. `pyenv virtualenv <python-version> <venv-name>`
+4. `pip install --upgrade pip`
+5. `pip install -r requirements.txt`
+
+
 ## Strip image metadata notes
 
 Install [`ImageMagick`](https://imagemagick.org).
