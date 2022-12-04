@@ -52,6 +52,12 @@ class Button(CompactElement):
         Text(text, parent=self)
 
 
+class FigCaption(CompactElement):
+    def __init__(self, text: str, parent: Optional[Node] = None, **kwargs):
+        super().__init__(name='figcaption', parent=parent, **kwargs)
+        Text(text, parent=self)
+
+
 class H1(CompactElement):
     def __init__(self, text: str, parent: Optional[Node] = None, **kwargs):
         super().__init__(name='h1', parent=parent, **kwargs)

@@ -130,6 +130,23 @@ class Div(BlockElement):
         )
 
 
+class Figure(BlockElement):
+    def __init__(
+            self,
+            id: Optional[str] = None,
+            class_names: Optional[list[str]] = None,
+            parent: Optional[Node] = None,
+            **kwargs,
+    ):
+        super().__init__(
+            name='figure',
+            id=id,
+            class_names=class_names,
+            parent=parent,
+            **kwargs,
+        )
+
+
 class Form(BlockElement):
     def __init__(
             self,

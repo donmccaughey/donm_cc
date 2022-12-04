@@ -1,20 +1,17 @@
-from markup import Div, Img, Br, Span, Ul
+from markup import FigCaption, Figure, Img, Ul
 from resources import Page
 from website.collection import item
+from website.figures import banner
 
 
 def home_page():
     with Page('Don McCaughey', name='index'):
-        with Div(class_names=['banner']):
-            Img(
-                src='/banners/Don_and_Molly_San_Francisco_autumn_2021.jpg',
-                alt='Don and Molly atop Round Hill'
-            )
-            Br()
-            Span(
-                text='San Francisco, autumn 2021',
-                class_names=['lower-caption']
-            )
+        banner(
+            image='/banners/Don_and_Molly_San_Francisco_autumn_2021.jpg',
+            description='Don and Molly atop Round Hill',
+            caption='San Francisco, Autumn 2021',
+            position='lower'
+        )
         with Ul(class_names=['collection']):
             item('Sourcehut', 'https://git.sr.ht/~donmcc', 'donmcc')
             item('GitHub', 'https://github.com/donmccaughey', 'donmccaughey')
