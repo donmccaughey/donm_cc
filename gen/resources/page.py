@@ -134,14 +134,15 @@ class Page(Resource):
                     Title(self.title)
                     Stylesheet(href='/base.css')
                     head.attach_children(self.head_content.detach_children())
-                with Body() as body:
+                with Body():
                     with Nav(class_names=['menu']):
                         nav_links = self.find_nav_links()
                         for i, (url, title) in enumerate(nav_links):
                             if i:
                                 Text(' \u2022 ')
                             A(href=url, text=title)
-                    body.attach_children(self.body_content.detach_children())
+                    with Main() as main:
+                        main.attach_children(self.body_content.detach_children())
 
     def generate(
             self,

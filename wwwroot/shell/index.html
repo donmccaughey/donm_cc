@@ -30,12 +30,20 @@
         background: white;
         border: 0;
         color: black;
-        font: 12pt Helvetica, Arial, sans-serif;
+        font: 12pt "Atkinson Hyperlegible", Helvetica, Arial, sans-serif;
         margin: 0;
         padding: 0;
     }
     li {
         margin-bottom: 0.5em;
+    }
+    main {
+        background: white;
+        border: 0;
+        color: black;
+        font: 12pt "Atkinson Hyperlegible", Helvetica, Arial, sans-serif;
+        margin: 0;
+        padding: 0;
     }
     section {
         border: 0;
@@ -140,88 +148,93 @@
 <nav class=menu>
     <a href=/ >Don McCaughey</a>
 </nav>
-<section class=overview>
-    <h1>Shell: Bourne, Bash and Zsh</h1>
-    <p>
-        If you spend any time programming a Unix system, you'll spend some time
-        mucking around with <code>sh</code> (the Bourne shell), Bash (the
-        popular GNU alternative) or Zsh (the default on macOS).  Whether
-        scripted or interactive, the shell is the glue that holds Unix systems
-        together.
-</section>
-<section class=links>
-    <h1>Manuals</h1>
-    <ul>
-        <li>
-            <a class=title href=https://pubs.opengroup.org/onlinepubs/9699919799/utilities/sh.html>Manual
-            Page for sh</a>, <time datetime=2018>2018</time>
-        <li>
-            <a class=title href=https://pubs.opengroup.org/onlinepubs/9699919799/utilities/V3_chap02.html#tag_18>Shell
-            Command Language</a>, <time datetime=2018>2018</time>
-        <li>
-            <a class=title href=https://www.gnu.org/software/bash/manual/bash.html>Bash
-            Reference Manual</a>, <time datetime=2020-12-21>2020-12-21</time>
-        <li>
-            <a class=title href=https://zsh.sourceforge.io/Intro/intro_toc.html>An
-            Introduction to the Z Shell</a>, <time datetime=1995>1995</time>
-        <li>
-            <a class=title href=https://zsh.sourceforge.io/Guide/zshguide.html>A
-            User's Guide to the Z-Shell</a>, <span class=authors>Peter
-            Stephenson</span>, <time datetime=2003-03-23>2003-03-23</time>
-        <li>
-            <a class=title href=https://zsh.sourceforge.io/Doc/Release/zsh_toc.html>The
-            Z Shell Manual</a>, <span class=authors>Paul Falstad and Peter
-            Stephenson</span>, <time datetime=2020-02-14>2020-02-14</time>
-    </ul>
-</section>
-<section class=links>
-    <h1>Tools</h1>
-    <ul>
-        <li>
-            <a class=title href=https://github.com/koalaman/shellcheck>ShellCheck
-            - A shell script static analysis tool</a>, <span class=authors>Vidar
-            'koala_man' Holen and contributors</span>
-    </ul>
-</section>
-<section class=links>
-    <h1>Tips and Tricks</h1>
-    <ul>
-        <li>
-            <a class=title href=https://scriptingosx.com/2019/06/moving-to-zsh/ >Moving
-            to zsh</a>, <span class=authors>Armin Briegel</span>,
-            <time datetime=2019-06-05>2019-06-05</time>
-        <li>
-            <a class=title href=http://redsymbol.net/articles/unofficial-bash-strict-mode/ >Use
-            the Unofficial Bash Strict Mode (Unless You Looove Debugging)</a>,
-            <span class=authors>Aaron Maxwell</span>
-        <li>
-            <a class=title href=https://github.com/SixArm/unix-shell-script-tactics>Unix
-            shell script tactics - best practices style guide</a>,
-            <span class=authors>Joel Parker Henderson</span>,
-            <time datetime=2022>2022</time>
-        <li>
-            <a class=title href=https://sipb.mit.edu/doc/safe-shell/ >Writing
-            Safe Shell Scripts</a>, <span class=authors>MIT Student Information
-            Processing Board</span>, <time datetime=2020-02-01>2020-02-01</time>
-        <li>
-            <a class=title href=https://arslan.io/2019/07/03/how-to-write-idempotent-bash-scripts/ >How
-            to write idempotent Bash scripts</a>, <span class=authors>Fatih
-            Arslan</span>, <time datetime=2019-07-03>2019-07-03</time>
-        <li>
-            <a class=title href=http://redsymbol.net/articles/bash-exit-traps/ >How
-            "Exit Traps" Can Make Your Bash Scripts Way More Robust And
-            Reliable</a>, <span class=authors>Aaron Maxwell</span>
-        <li>
-            <a class=title href='https://www.vidarholen.net/contents/blog/?p=1035'>What
-            exactly was the point of [ “x$var” = “xval” ]?</a>,
-            <span class=authors>Vidar Holen</span>,
-            <time datetime=2021-04-12>2021-04-12</time>
-        <li>
-            <a class=title href=https://catonmat.net/bash-functions>Something
-            you didn't know about functions in bash</a>,
-            <span class=authors>Peter Krumins</span>
-        <li>
-            <a class=title href=https://github.com/jlevy/the-art-of-command-line>The
-            Art of Command Line</a>, <span class=authors>Joshua Levy</span>
-    </ul>
-</section>
+<main>
+    <section class=overview>
+        <h1>Shell: Bourne, Bash and Zsh</h1>
+        <p>
+            If you spend any time programming a Unix system, you'll spend some
+            time mucking around with <code>sh</code> (the Bourne shell), Bash
+            (the popular GNU alternative) or Zsh (the default on macOS).
+            Whether scripted or interactive, the shell is the glue that holds
+            Unix systems together.
+    </section>
+    <section class=links>
+        <h1>Manuals</h1>
+        <ul>
+            <li>
+                <a class=title href=https://pubs.opengroup.org/onlinepubs/9699919799/utilities/sh.html>Manual
+                Page for sh</a>, <time datetime=2018>2018</time>
+            <li>
+                <a class=title href=https://pubs.opengroup.org/onlinepubs/9699919799/utilities/V3_chap02.html#tag_18>Shell
+                Command Language</a>, <time datetime=2018>2018</time>
+            <li>
+                <a class=title href=https://www.gnu.org/software/bash/manual/bash.html>Bash
+                Reference Manual</a>,
+                <time datetime=2020-12-21>2020-12-21</time>
+            <li>
+                <a class=title href=https://zsh.sourceforge.io/Intro/intro_toc.html>An
+                Introduction to the Z Shell</a>, <time datetime=1995>1995</time>
+            <li>
+                <a class=title href=https://zsh.sourceforge.io/Guide/zshguide.html>A
+                User's Guide to the Z-Shell</a>, <span class=authors>Peter
+                Stephenson</span>, <time datetime=2003-03-23>2003-03-23</time>
+            <li>
+                <a class=title href=https://zsh.sourceforge.io/Doc/Release/zsh_toc.html>The
+                Z Shell Manual</a>, <span class=authors>Paul Falstad and Peter
+                Stephenson</span>, <time datetime=2020-02-14>2020-02-14</time>
+        </ul>
+    </section>
+    <section class=links>
+        <h1>Tools</h1>
+        <ul>
+            <li>
+                <a class=title href=https://github.com/koalaman/shellcheck>ShellCheck
+                - A shell script static analysis tool</a>,
+                <span class=authors>Vidar 'koala_man' Holen and
+                contributors</span>
+        </ul>
+    </section>
+    <section class=links>
+        <h1>Tips and Tricks</h1>
+        <ul>
+            <li>
+                <a class=title href=https://scriptingosx.com/2019/06/moving-to-zsh/ >Moving
+                to zsh</a>, <span class=authors>Armin Briegel</span>,
+                <time datetime=2019-06-05>2019-06-05</time>
+            <li>
+                <a class=title href=http://redsymbol.net/articles/unofficial-bash-strict-mode/ >Use
+                the Unofficial Bash Strict Mode (Unless You Looove
+                Debugging)</a>, <span class=authors>Aaron Maxwell</span>
+            <li>
+                <a class=title href=https://github.com/SixArm/unix-shell-script-tactics>Unix
+                shell script tactics - best practices style guide</a>,
+                <span class=authors>Joel Parker Henderson</span>,
+                <time datetime=2022>2022</time>
+            <li>
+                <a class=title href=https://sipb.mit.edu/doc/safe-shell/ >Writing
+                Safe Shell Scripts</a>, <span class=authors>MIT Student
+                Information Processing Board</span>,
+                <time datetime=2020-02-01>2020-02-01</time>
+            <li>
+                <a class=title href=https://arslan.io/2019/07/03/how-to-write-idempotent-bash-scripts/ >How
+                to write idempotent Bash scripts</a>, <span class=authors>Fatih
+                Arslan</span>, <time datetime=2019-07-03>2019-07-03</time>
+            <li>
+                <a class=title href=http://redsymbol.net/articles/bash-exit-traps/ >How
+                "Exit Traps" Can Make Your Bash Scripts Way More Robust And
+                Reliable</a>, <span class=authors>Aaron Maxwell</span>
+            <li>
+                <a class=title href='https://www.vidarholen.net/contents/blog/?p=1035'>What
+                exactly was the point of [ “x$var” = “xval” ]?</a>,
+                <span class=authors>Vidar Holen</span>,
+                <time datetime=2021-04-12>2021-04-12</time>
+            <li>
+                <a class=title href=https://catonmat.net/bash-functions>Something
+                you didn't know about functions in bash</a>,
+                <span class=authors>Peter Krumins</span>
+            <li>
+                <a class=title href=https://github.com/jlevy/the-art-of-command-line>The
+                Art of Command Line</a>, <span class=authors>Joshua Levy</span>
+        </ul>
+    </section>
+</main>

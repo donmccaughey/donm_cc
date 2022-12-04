@@ -40,12 +40,20 @@
         background: white;
         border: 0;
         color: black;
-        font: 12pt Helvetica, Arial, sans-serif;
+        font: 12pt "Atkinson Hyperlegible", Helvetica, Arial, sans-serif;
         margin: 0;
         padding: 0;
     }
     li {
         margin-bottom: 0.5em;
+    }
+    main {
+        background: white;
+        border: 0;
+        color: black;
+        font: 12pt "Atkinson Hyperlegible", Helvetica, Arial, sans-serif;
+        margin: 0;
+        padding: 0;
     }
     section {
         border: 0;
@@ -150,161 +158,165 @@
 <nav class=menu>
     <a href=/ >Don McCaughey</a>
 </nav>
-<section class=overview>
-    <h1>Résumé of Don McCaughey</h1>
-    <aside>
+<main>
+    <section class=overview>
+        <h1>Résumé of Don McCaughey</h1>
+        <aside>
+            <ul>
+                <li><a href=/resume/Resume_of_Don_McCaughey.md>markdown</a>
+                <li><a href=/resume/Resume_of_Don_McCaughey.pdf>pdf</a>
+            </ul>
+        </aside>
+        <address>
+            <ul>
+                <li><a href=mailto:don@donm.cc>don@donm.cc</a>
+                <li>
+                    <a href=https://www.linkedin.com/in/donmccaughey/ >linkedin.com/in/donmccaughey</a>
+                <li><a href=tel:+1-415-793-1166>+1 (415) 793-1166</a>
+            </ul>
+        </address>
+        <p>
+            I'm a software engineer with strong technical, leadership and
+            organizational skills.  I build high performing, collaborative,
+            cross-functional teams that focus on sustained, regular delivery of
+            value to customers.
+    </section>
+    <section class=experience>
+        <h1>Selected Experience</h1>
+        <section class=organization>
+            <h2>Cruise</h2>
+            <ul class=details>
+                <li>San Francisco, CA
+                <li>2022 to present
+                <li>Staff Software Engineer
+            </ul>
+            <p>
+                I'm working cross-functionally with the Fleet Health and Fleet
+                Efficiency teams to help move our engineering culture and
+                standards towards a focus on quality and stability.
+        </section>
+        <section class=organization>
+            <h2>Truework</h2>
+            <ul class=details>
+                <li>San Francisco, CA
+                <li>2019 to 2021
+                <li>Engineering Manager
+            </ul>
+            <p>
+                I was the first engineering manager at this early stage fintech
+                startup.
+                <ul>
+                    <li>
+                         Established a fast and lightweight weekly planning and
+                        delivery cycle that increased engineering velocity.
+                    <li>
+                         Doubled the team to 15 engineers, hiring across all
+                        experience levels.
+                    <li>
+                         Guided the delivery of key features, including public
+                        API and SDKs, customer SSO, improved internal tools for
+                        80+ person back office team and integrations with major
+                        payroll providers.
+                </ul>
+        </section>
+        <section class=organization>
+            <h2>Copper CRM</h2>
+            <ul class=details>
+                <li>San Francisco, CA
+                <li>2016 to 2019
+                <li>
+                    Principal Software Engineer → Engineering Manager → Senior
+                    Engineering Manager
+            </ul>
+            <p>
+                I joined Copper as the sole developer for our native iOS app.  I
+                became manager of the mobile team and later the infrastructure
+                team.
+                <ul>
+                    <li>
+                         Revived a moribund iOS codebase, established a regular
+                        release cadence, improved quality and shipped a steady
+                        stream of new features.
+                    <li>
+                         Grew the mobile team from two to six engineers and
+                        fostered a collaborative, cross-functional team culture.
+                    <li>
+                         Advised and coached the QA team on test automation
+                        which cut QA time in half.
+                    <li>
+                         Doubled the rate of web app releases through a release
+                        improvement process.
+                </ul>
+        </section>
+        <section class=organization>
+            <h2>Able Pear Software</h2>
+            <ul class=details>
+                <li>Burlingame, CA
+                <li>2008 to 2016
+                <li>Founder and Principal Developer
+            </ul>
+            <p>
+                I ran a small software development firm focused on mobile apps.
+                Interesting projects included:
+                <ul>
+                    <li class=project>
+                        <strong>Square</strong>, 2012 — <em>iPad integration
+                        with point-of-sale (POS) hardware</em><br>
+                         Built an iOS
+                        library linking the Square POS app with the Square
+                        Stand.  Worked with the app team and embedded software
+                        team to create APIs and communication protocols.  Built
+                        engineering test applications.
+                    <li class=project>
+                        <strong>BMW</strong>, 2009-2010 — <em>first iPhone
+                        integration for the
+                        <a href=https://apps.apple.com/us/app/id1519458349>BMW
+                        Mini</a></em><br>
+                         Starting with BMW's prototype iPhone
+                        app that used HTTP to connect to the
+                        <a href=https://en.wikipedia.org/wiki/Automotive_head_unit>automotive
+                        head unit</a>, I designed and implemented a unique proxy
+                        to direct HTTP connections from the app to the head unit
+                        over the phone's 30 pin connector.  Worked with embedded
+                        engineers to design a communication protocol.  Built a
+                        C++ echo server running on the head unit to diagnose
+                        intermittent data corruption.  Implemented simple flow
+                        control to work around deficiencies in the underlying
+                        <a href=https://en.wikipedia.org/wiki/List_of_Bluetooth_profiles#iPod_Accessory_Protocol_(iAP)>iAP
+                        protocol</a>.
+                </ul>
+        </section>
+    </section>
+    <section class=personal-projects>
+        <h1>Personal Projects</h1>
         <ul>
-            <li><a href=/resume/Resume_of_Don_McCaughey.md>markdown</a>
-            <li><a href=/resume/Resume_of_Don_McCaughey.pdf>pdf</a>
+            <li>
+                 <a href=https://donm.cc/macos_packages/ >macOS Installer
+                Packages</a> for missing Unix command line utilities.
+            <li>
+                 <a href=https://donm.cc/objective-c_tuesdays/ >Objective-C
+                Tuesdays</a>, tutorials on the basics of C and Objective-C.
+            <li>
+                 <a href=https://github.com/donmccaughey/C-evo-x>C-evo-X</a>,
+                maintainer of a Civilization-inspired Windows strategy game.
+            <li>
+                 <a href=https://github.com/donmccaughey/ManOpen>ManOpen</a>,
+                maintainer of a macOS man page viewer.
+            <li>
+                 <a href=https://github.com/donmccaughey/Plug>Plug</a>, an
+                Objective-C framework for building TCP services.
         </ul>
-    </aside>
-    <address>
+    </section>
+    <section class=education>
+        <h1>Education</h1>
         <ul>
-            <li><a href=mailto:don@donm.cc>don@donm.cc</a>
             <li>
-                <a href=https://www.linkedin.com/in/donmccaughey/ >linkedin.com/in/donmccaughey</a>
-            <li><a href=tel:+1-415-793-1166>+1 (415) 793-1166</a>
-        </ul>
-    </address>
-    <p>
-        I'm a software engineer with strong technical, leadership and
-        organizational skills.  I build high performing, collaborative,
-        cross-functional teams that focus on sustained, regular delivery of
-        value to customers.
-</section>
-<section class=experience>
-    <h1>Selected Experience</h1>
-    <section class=organization>
-        <h2>Cruise</h2>
-        <ul class=details>
-            <li>San Francisco, CA
-            <li>2022 to present
-            <li>Staff Software Engineer
-        </ul>
-        <p>
-            I'm working cross-functionally with the Fleet Health and Fleet
-            Efficiency teams to help move our engineering culture and standards
-            towards a focus on quality and stability.
-    </section>
-    <section class=organization>
-        <h2>Truework</h2>
-        <ul class=details>
-            <li>San Francisco, CA
-            <li>2019 to 2021
-            <li>Engineering Manager
-        </ul>
-        <p>
-            I was the first engineering manager at this early stage fintech
-            startup.
-            <ul>
-                <li>
-                     Established a fast and lightweight weekly planning and
-                    delivery cycle that increased engineering velocity.
-                <li>
-                     Doubled the team to 15 engineers, hiring across all
-                    experience levels.
-                <li>
-                     Guided the delivery of key features, including public API
-                    and SDKs, customer SSO, improved internal tools for 80+
-                    person back office team and integrations with major payroll
-                    providers.
-            </ul>
-    </section>
-    <section class=organization>
-        <h2>Copper CRM</h2>
-        <ul class=details>
-            <li>San Francisco, CA
-            <li>2016 to 2019
+                <strong>Stanford University</strong> — One year of graduate
+                study in mechanical engineering; focus in smart product design
+                (ME 218).
             <li>
-                Principal Software Engineer → Engineering Manager → Senior
-                Engineering Manager
+                <strong>New Jersey Institute of Technology</strong> — BS,
+                Mechanical Engineering.
         </ul>
-        <p>
-            I joined Copper as the sole developer for our native iOS app.  I
-            became manager of the mobile team and later the infrastructure team.
-            <ul>
-                <li>
-                     Revived a moribund iOS codebase, established a regular
-                    release cadence, improved quality and shipped a steady
-                    stream of new features.
-                <li>
-                     Grew the mobile team from two to six engineers and fostered
-                    a collaborative, cross-functional team culture.
-                <li>
-                     Advised and coached the QA team on test automation which
-                    cut QA time in half.
-                <li>
-                     Doubled the rate of web app releases through a release
-                    improvement process.
-            </ul>
     </section>
-    <section class=organization>
-        <h2>Able Pear Software</h2>
-        <ul class=details>
-            <li>Burlingame, CA
-            <li>2008 to 2016
-            <li>Founder and Principal Developer
-        </ul>
-        <p>
-            I ran a small software development firm focused on mobile apps.
-            Interesting projects included:
-            <ul>
-                <li class=project>
-                    <strong>Square</strong>, 2012 — <em>iPad integration with
-                    point-of-sale (POS) hardware</em><br>
-                     Built an iOS library
-                    linking the Square POS app with the Square Stand.  Worked
-                    with the app team and embedded software team to create APIs
-                    and communication protocols.  Built engineering test
-                    applications.
-                <li class=project>
-                    <strong>BMW</strong>, 2009-2010 — <em>first iPhone
-                    integration for the
-                    <a href=https://apps.apple.com/us/app/id1519458349>BMW
-                    Mini</a></em><br>
-                     Starting with BMW's prototype iPhone app
-                    that used HTTP to connect to the
-                    <a href=https://en.wikipedia.org/wiki/Automotive_head_unit>automotive
-                    head unit</a>, I designed and implemented a unique proxy to
-                    direct HTTP connections from the app to the head unit over
-                    the phone's 30 pin connector.  Worked with embedded
-                    engineers to design a communication protocol.  Built a C++
-                    echo server running on the head unit to diagnose
-                    intermittent data corruption.  Implemented simple flow
-                    control to work around deficiencies in the underlying
-                    <a href=https://en.wikipedia.org/wiki/List_of_Bluetooth_profiles#iPod_Accessory_Protocol_(iAP)>iAP
-                    protocol</a>.
-            </ul>
-    </section>
-</section>
-<section class=personal-projects>
-    <h1>Personal Projects</h1>
-    <ul>
-        <li>
-             <a href=https://donm.cc/macos_packages/ >macOS Installer
-            Packages</a> for missing Unix command line utilities.
-        <li>
-             <a href=https://donm.cc/objective-c_tuesdays/ >Objective-C
-            Tuesdays</a>, tutorials on the basics of C and Objective-C.
-        <li>
-             <a href=https://github.com/donmccaughey/C-evo-x>C-evo-X</a>,
-            maintainer of a Civilization-inspired Windows strategy game.
-        <li>
-             <a href=https://github.com/donmccaughey/ManOpen>ManOpen</a>,
-            maintainer of a macOS man page viewer.
-        <li>
-             <a href=https://github.com/donmccaughey/Plug>Plug</a>, an
-            Objective-C framework for building TCP services.
-    </ul>
-</section>
-<section class=education>
-    <h1>Education</h1>
-    <ul>
-        <li>
-            <strong>Stanford University</strong> — One year of graduate study in
-            mechanical engineering; focus in smart product design (ME 218).
-        <li>
-            <strong>New Jersey Institute of Technology</strong> — BS, Mechanical
-            Engineering.
-    </ul>
-</section>
+</main>

@@ -30,12 +30,20 @@
         background: white;
         border: 0;
         color: black;
-        font: 12pt Helvetica, Arial, sans-serif;
+        font: 12pt "Atkinson Hyperlegible", Helvetica, Arial, sans-serif;
         margin: 0;
         padding: 0;
     }
     li {
         margin-bottom: 0.5em;
+    }
+    main {
+        background: white;
+        border: 0;
+        color: black;
+        font: 12pt "Atkinson Hyperlegible", Helvetica, Arial, sans-serif;
+        margin: 0;
+        padding: 0;
     }
     section {
         border: 0;
@@ -133,173 +141,180 @@
 <nav class=menu>
     <a href=/ >Don McCaughey</a>
 </nav>
-<section class=overview>
-    <h1>Objective-C Tuesdays</h1>
-    <p>
-        When the <a href=https://en.wikipedia.org/wiki/IOS_SDK#History>iPhone
-        SDK</a> was released in 2008, my good friend
-        <a href=https://bomberry.com>Kevin</a> and I formed Able Pear Software,
-        a small consultancy focused on mobile development.  From 2009 through
-        2011, I wrote a series of posts for our
-        <a href=http://blog.ablepear.com>company blog</a> called <em>Objective-C
-        Tuesdays</em> (published on Tuesdays, naturally).
-    <p>
-        We weren't the only people drawn to iPhone development, but outside of a
-        small cadre of Mac programmers, Objective-C was largely unknown.  It's
-        also very different from most mainstream programming languages, being a
-        Smalltalk-inspired dynamic layer atop the venerable C language -- with
-        very unusual syntax.  There was very little learning material available
-        at the time, either for purchase or free on the Internet, and Apple's
-        terse documentation left big gaps to fill.
-    <p>
-        So I did my part to help.  I focused on the basics: loops, variables,
-        strings and arrays, and wrote about both the dynamic, high level
-        <a href='https://developer.apple.com/documentation/foundation?language=objc'>Foundation
-        classes</a> and the low level, static C equivalents.
-</section>
-<section class=links>
-    <h1>Looping</h1>
-    <ul>
-        <li>
-            <a class=title href=/objective-c_tuesdays/looping_in_objective-c.html>Looping
-            In Objective-C</a>, <time datetime=2009-12-15>2009-12-15</time>
-        <li>
-            <a class=title href=/objective-c_tuesdays/the_for_loop.html>The For
-            Loop</a>, <time datetime=2009-10-06>2009-10-06</time>
-        <li>
-            <a class=title href=/objective-c_tuesdays/for_loop_variations.html>For
-            Loop Variations</a>, <time datetime=2009-10-13>2009-10-13</time>
-        <li>
-            <a class=title href=/objective-c_tuesdays/the_for-in_loop.html>The
-            For...In Loop</a>, <time datetime=2009-10-20>2009-10-20</time>
-        <li>
-            <a class=title href=/objective-c_tuesdays/the_while_loop.html>The
-            While Loop</a>, <time datetime=2009-10-27>2009-10-27</time>
-        <li>
-            <a class=title href=/objective-c_tuesdays/the_do-while_loop.html>The
-            Do...While Loop</a>, <time datetime=2009-11-10>2009-11-10</time>
-        <li>
-            <a class=title href=/objective-c_tuesdays/break_out_of_a_loop.html>Break
-            Out Of A Loop</a>, <time datetime=2009-11-17>2009-11-17</time>
-        <li>
-            <a class=title href=/objective-c_tuesdays/continue.html>Continue</a>,
-            <time datetime=2009-11-24>2009-11-24</time>
-        <li>
-            <a class=title href=/objective-c_tuesdays/goto.html>Goto</a>,
-            <time datetime=2009-12-01>2009-12-01</time>
-        <li>
-            <a class=title href=/objective-c_tuesdays/common_uses_for_goto.html>Common
-            Uses For Goto</a>, <time datetime=2009-12-08>2009-12-08</time>
-    </ul>
-</section>
-<section class=links>
-    <h1>Variables</h1>
-    <ul>
-        <li>
-            <a class=title href=/objective-c_tuesdays/variables_in_objective-c.html>Variables
-            In Objective-C</a>, <time datetime=2010-06-15>2010-06-15</time>
-        <li>
-            <a class=title href=/objective-c_tuesdays/global_variables.html>Global
-            Variables</a>, <time datetime=2009-12-15>2009-12-15</time>
-        <li>
-            <a class=title href=/objective-c_tuesdays/extern_and_global_variables.html>Extern
-            And Global Variables</a>,
-            <time datetime=2010-01-05>2010-01-05</time>
-        <li>
-            <a class=title href=/objective-c_tuesdays/static_variables.html>Static
-            Variables</a>, <time datetime=2010-01-19>2010-01-19</time>
-        <li>
-            <a class=title href=/objective-c_tuesdays/static_variables_in_functions.html>Static
-            Variables In Functions</a>,
-            <time datetime=2010-03-30>2010-03-30</time>
-        <li>
-            <a class=title href=/objective-c_tuesdays/local_variables_and_function_parameters.html>Local
-            Variables And Function Parameters</a>,
-            <time datetime=2010-04-06>2010-04-06</time>
-        <li>
-            <a class=title href=/objective-c_tuesdays/instance_variables.html>Instance
-            Variables</a>, <time datetime=2010-04-13>2010-04-13</time>
-        <li>
-            <a class=title href=/objective-c_tuesdays/instance_variables_getters_and_setters.html>Instance
-            Variables, Getters And Setters</a>,
-            <time datetime=2010-04-20>2010-04-20</time>
-        <li>
-            <a class=title href=/objective-c_tuesdays/at-property_and_at-synthesize.html>@Property
-            And @Synthesize</a>, <time datetime=2010-04-27>2010-04-27</time>
-        <li>
-            <a class=title href=/objective-c_tuesdays/synthesizing_properties.html>Synthesizing
-            Properties</a>, <time datetime=2010-05-04>2010-05-04</time>
-        <li>
-            <a class=title href=/objective-c_tuesdays/atomic_and_nonatomic_properties.html>Atomic
-            And Nonatomic Properties</a>,
-            <time datetime=2010-05-11>2010-05-11</time>
-        <li>
-            <a class=title href=/objective-c_tuesdays/changing_default_property_names.html>Changing
-            Default Property Names</a>,
-            <time datetime=2010-05-18>2010-05-18</time>
-        <li>
-            <a class=title href=/objective-c_tuesdays/writing_a_thread_safe_getter_method.html>Writing
-            A Thread Safe Getter Method</a>,
-            <time datetime=2010-06-08>2010-06-08</time>
-    </ul>
-</section>
-<section class=links>
-    <h1>Strings</h1>
-    <ul>
-        <li>
-            <a class=title href=/objective-c_tuesdays/strings_in_objective-c.html>Strings
-            In Objective-C</a>, <time datetime=2011-07-19>2011-07-19</time>
-        <li>
-            <a class=title href=/objective-c_tuesdays/c_strings.html>C
-            Strings</a>, <time datetime=2010-06-15>2010-06-15</time>
-        <li>
-            <a class=title href=/objective-c_tuesdays/string_literals.html>String
-            Literals</a>, <time datetime=2010-07-13>2010-07-13</time>
-        <li>
-            <a class=title href=/objective-c_tuesdays/unicode_string_literals.html>Unicode
-            String Literals</a>, <time datetime=2010-07-20>2010-07-20</time>
-        <li>
-            <a class=title href=/objective-c_tuesdays/wide_character_strings.html>Wide
-            Character Strings</a>, <time datetime=2010-07-27>2010-07-27</time>
-        <li>
-            <a class=title href=/objective-c_tuesdays/concatenating_strings.html>Concatenating
-            Strings</a>, <time datetime=2010-08-03>2010-08-03</time>
-        <li>
-            <a class=title href=/objective-c_tuesdays/string_comparison_and_equality.html>String
-            Comparison And Equality</a>,
-            <time datetime=2010-09-14>2010-09-14</time>
-        <li>
-            <a class=title href=/objective-c_tuesdays/slicing_and_dicing_strings.html>Slicing
-            And Dicing Strings</a>, <time datetime=2010-09-21>2010-09-21</time>
-        <li>
-            <a class=title href=/objective-c_tuesdays/searching_in_strings.html>Searching
-            In Strings</a>, <time datetime=2010-09-28>2010-09-28</time>
-        <li>
-            <a class=title href=/objective-c_tuesdays/replacing_in_strings.html>Replacing
-            In Strings</a>, <time datetime=2010-10-05>2010-10-05</time>
-        <li>
-            <a class=title href=/objective-c_tuesdays/regular_expressions.html>Regular
-            Expressions</a>, <time datetime=2011-07-12>2011-07-12</time>
-    </ul>
-</section>
-<section class=links>
-    <h1>Data Structures</h1>
-    <ul>
-        <li>
-            <a class=title href=/objective-c_tuesdays/arrays.html>Arrays</a>,
-            <time datetime=2011-07-19>2011-07-19</time>
-        <li>
-            <a class=title href=/objective-c_tuesdays/dynamic_arrays.html>Dynamic
-            Arrays</a>, <time datetime=2011-07-26>2011-07-26</time>
-        <li>
-            <a class=title href=/objective-c_tuesdays/more_about_dynamic_arrays.html>More
-            About Dynamic Arrays</a>,
-            <time datetime=2011-08-02>2011-08-02</time>
-        <li>
-            <a class=title href=/objective-c_tuesdays/sorting_arrays.html>Sorting
-            Arrays</a>, <time datetime=2011-11-29>2011-11-29</time>
-        <li>
-            <a class=title href=/objective-c_tuesdays/more_nsarray_sorting.html>More
-            NSArray Sorting</a>, <time datetime=2011-12-06>2011-12-06</time>
-    </ul>
-</section>
+<main>
+    <section class=overview>
+        <h1>Objective-C Tuesdays</h1>
+        <p>
+            When the
+            <a href=https://en.wikipedia.org/wiki/IOS_SDK#History>iPhone SDK</a>
+            was released in 2008, my good friend
+            <a href=https://bomberry.com>Kevin</a> and I formed Able Pear
+            Software, a small consultancy focused on mobile development.  From
+            2009 through 2011, I wrote a series of posts for our
+            <a href=http://blog.ablepear.com>company blog</a> called
+            <em>Objective-C Tuesdays</em> (published on Tuesdays, naturally).
+        <p>
+            We weren't the only people drawn to iPhone development, but outside
+            of a small cadre of Mac programmers, Objective-C was largely
+            unknown.  It's also very different from most mainstream programming
+            languages, being a Smalltalk-inspired dynamic layer atop the
+            venerable C language -- with very unusual syntax.  There was very
+            little learning material available at the time, either for purchase
+            or free on the Internet, and Apple's terse documentation left big
+            gaps to fill.
+        <p>
+            So I did my part to help.  I focused on the basics: loops,
+            variables, strings and arrays, and wrote about both the dynamic,
+            high level
+            <a href='https://developer.apple.com/documentation/foundation?language=objc'>Foundation
+            classes</a> and the low level, static C equivalents.
+    </section>
+    <section class=links>
+        <h1>Looping</h1>
+        <ul>
+            <li>
+                <a class=title href=/objective-c_tuesdays/looping_in_objective-c.html>Looping
+                In Objective-C</a>, <time datetime=2009-12-15>2009-12-15</time>
+            <li>
+                <a class=title href=/objective-c_tuesdays/the_for_loop.html>The
+                For Loop</a>, <time datetime=2009-10-06>2009-10-06</time>
+            <li>
+                <a class=title href=/objective-c_tuesdays/for_loop_variations.html>For
+                Loop Variations</a>, <time datetime=2009-10-13>2009-10-13</time>
+            <li>
+                <a class=title href=/objective-c_tuesdays/the_for-in_loop.html>The
+                For...In Loop</a>, <time datetime=2009-10-20>2009-10-20</time>
+            <li>
+                <a class=title href=/objective-c_tuesdays/the_while_loop.html>The
+                While Loop</a>, <time datetime=2009-10-27>2009-10-27</time>
+            <li>
+                <a class=title href=/objective-c_tuesdays/the_do-while_loop.html>The
+                Do...While Loop</a>, <time datetime=2009-11-10>2009-11-10</time>
+            <li>
+                <a class=title href=/objective-c_tuesdays/break_out_of_a_loop.html>Break
+                Out Of A Loop</a>, <time datetime=2009-11-17>2009-11-17</time>
+            <li>
+                <a class=title href=/objective-c_tuesdays/continue.html>Continue</a>,
+                <time datetime=2009-11-24>2009-11-24</time>
+            <li>
+                <a class=title href=/objective-c_tuesdays/goto.html>Goto</a>,
+                <time datetime=2009-12-01>2009-12-01</time>
+            <li>
+                <a class=title href=/objective-c_tuesdays/common_uses_for_goto.html>Common
+                Uses For Goto</a>, <time datetime=2009-12-08>2009-12-08</time>
+        </ul>
+    </section>
+    <section class=links>
+        <h1>Variables</h1>
+        <ul>
+            <li>
+                <a class=title href=/objective-c_tuesdays/variables_in_objective-c.html>Variables
+                In Objective-C</a>, <time datetime=2010-06-15>2010-06-15</time>
+            <li>
+                <a class=title href=/objective-c_tuesdays/global_variables.html>Global
+                Variables</a>, <time datetime=2009-12-15>2009-12-15</time>
+            <li>
+                <a class=title href=/objective-c_tuesdays/extern_and_global_variables.html>Extern
+                And Global Variables</a>,
+                <time datetime=2010-01-05>2010-01-05</time>
+            <li>
+                <a class=title href=/objective-c_tuesdays/static_variables.html>Static
+                Variables</a>, <time datetime=2010-01-19>2010-01-19</time>
+            <li>
+                <a class=title href=/objective-c_tuesdays/static_variables_in_functions.html>Static
+                Variables In Functions</a>,
+                <time datetime=2010-03-30>2010-03-30</time>
+            <li>
+                <a class=title href=/objective-c_tuesdays/local_variables_and_function_parameters.html>Local
+                Variables And Function Parameters</a>,
+                <time datetime=2010-04-06>2010-04-06</time>
+            <li>
+                <a class=title href=/objective-c_tuesdays/instance_variables.html>Instance
+                Variables</a>, <time datetime=2010-04-13>2010-04-13</time>
+            <li>
+                <a class=title href=/objective-c_tuesdays/instance_variables_getters_and_setters.html>Instance
+                Variables, Getters And Setters</a>,
+                <time datetime=2010-04-20>2010-04-20</time>
+            <li>
+                <a class=title href=/objective-c_tuesdays/at-property_and_at-synthesize.html>@Property
+                And @Synthesize</a>, <time datetime=2010-04-27>2010-04-27</time>
+            <li>
+                <a class=title href=/objective-c_tuesdays/synthesizing_properties.html>Synthesizing
+                Properties</a>, <time datetime=2010-05-04>2010-05-04</time>
+            <li>
+                <a class=title href=/objective-c_tuesdays/atomic_and_nonatomic_properties.html>Atomic
+                And Nonatomic Properties</a>,
+                <time datetime=2010-05-11>2010-05-11</time>
+            <li>
+                <a class=title href=/objective-c_tuesdays/changing_default_property_names.html>Changing
+                Default Property Names</a>,
+                <time datetime=2010-05-18>2010-05-18</time>
+            <li>
+                <a class=title href=/objective-c_tuesdays/writing_a_thread_safe_getter_method.html>Writing
+                A Thread Safe Getter Method</a>,
+                <time datetime=2010-06-08>2010-06-08</time>
+        </ul>
+    </section>
+    <section class=links>
+        <h1>Strings</h1>
+        <ul>
+            <li>
+                <a class=title href=/objective-c_tuesdays/strings_in_objective-c.html>Strings
+                In Objective-C</a>, <time datetime=2011-07-19>2011-07-19</time>
+            <li>
+                <a class=title href=/objective-c_tuesdays/c_strings.html>C
+                Strings</a>, <time datetime=2010-06-15>2010-06-15</time>
+            <li>
+                <a class=title href=/objective-c_tuesdays/string_literals.html>String
+                Literals</a>, <time datetime=2010-07-13>2010-07-13</time>
+            <li>
+                <a class=title href=/objective-c_tuesdays/unicode_string_literals.html>Unicode
+                String Literals</a>, <time datetime=2010-07-20>2010-07-20</time>
+            <li>
+                <a class=title href=/objective-c_tuesdays/wide_character_strings.html>Wide
+                Character Strings</a>,
+                <time datetime=2010-07-27>2010-07-27</time>
+            <li>
+                <a class=title href=/objective-c_tuesdays/concatenating_strings.html>Concatenating
+                Strings</a>, <time datetime=2010-08-03>2010-08-03</time>
+            <li>
+                <a class=title href=/objective-c_tuesdays/string_comparison_and_equality.html>String
+                Comparison And Equality</a>,
+                <time datetime=2010-09-14>2010-09-14</time>
+            <li>
+                <a class=title href=/objective-c_tuesdays/slicing_and_dicing_strings.html>Slicing
+                And Dicing Strings</a>,
+                <time datetime=2010-09-21>2010-09-21</time>
+            <li>
+                <a class=title href=/objective-c_tuesdays/searching_in_strings.html>Searching
+                In Strings</a>, <time datetime=2010-09-28>2010-09-28</time>
+            <li>
+                <a class=title href=/objective-c_tuesdays/replacing_in_strings.html>Replacing
+                In Strings</a>, <time datetime=2010-10-05>2010-10-05</time>
+            <li>
+                <a class=title href=/objective-c_tuesdays/regular_expressions.html>Regular
+                Expressions</a>, <time datetime=2011-07-12>2011-07-12</time>
+        </ul>
+    </section>
+    <section class=links>
+        <h1>Data Structures</h1>
+        <ul>
+            <li>
+                <a class=title href=/objective-c_tuesdays/arrays.html>Arrays</a>,
+                <time datetime=2011-07-19>2011-07-19</time>
+            <li>
+                <a class=title href=/objective-c_tuesdays/dynamic_arrays.html>Dynamic
+                Arrays</a>, <time datetime=2011-07-26>2011-07-26</time>
+            <li>
+                <a class=title href=/objective-c_tuesdays/more_about_dynamic_arrays.html>More
+                About Dynamic Arrays</a>,
+                <time datetime=2011-08-02>2011-08-02</time>
+            <li>
+                <a class=title href=/objective-c_tuesdays/sorting_arrays.html>Sorting
+                Arrays</a>, <time datetime=2011-11-29>2011-11-29</time>
+            <li>
+                <a class=title href=/objective-c_tuesdays/more_nsarray_sorting.html>More
+                NSArray Sorting</a>, <time datetime=2011-12-06>2011-12-06</time>
+        </ul>
+    </section>
+</main>

@@ -207,6 +207,23 @@ class HTML(BlockElement):
             return True
 
 
+class Main(BlockElement):
+    def __init__(
+            self,
+            id: Optional[str] = None,
+            class_names: Optional[list[str]] = None,
+            parent: Optional[Node] = None,
+            **kwargs,
+    ):
+        super().__init__(
+            name='main',
+            id=id,
+            class_names=class_names,
+            parent=parent,
+            **kwargs,
+        )
+
+
 class Nav(BlockElement):
     def __init__(
             self,

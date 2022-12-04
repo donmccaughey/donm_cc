@@ -30,12 +30,20 @@
         background: white;
         border: 0;
         color: black;
-        font: 12pt Helvetica, Arial, sans-serif;
+        font: 12pt "Atkinson Hyperlegible", Helvetica, Arial, sans-serif;
         margin: 0;
         padding: 0;
     }
     li {
         margin-bottom: 0.5em;
+    }
+    main {
+        background: white;
+        border: 0;
+        color: black;
+        font: 12pt "Atkinson Hyperlegible", Helvetica, Arial, sans-serif;
+        margin: 0;
+        padding: 0;
     }
     section {
         border: 0;
@@ -114,126 +122,131 @@
 <nav class=menu>
     <a href=/ >Don McCaughey</a>
 </nav>
-<section class=overview>
-    <h1>Signed and Notarized Universal macOS Installer Packages</h1>
-    <p>
-        These standard macOS installer packages are built using
-        <code>pkgbuild</code> and <code>productbuild</code> and are signed and
-        notarized with my Apple developer credentials.  They install universal
-        binaries that will run on both Intel and Apple Silicon Macs.
-    <p>
-        This is a collection of command line tools that I've found useful at one
-        time or another over the years.  Some of them are widely used but
-        excluded from macOS and Xcode due to GPL licenses.
-</section>
-<section class=package>
-    <h1>FLAC 1.3.4</h1>
-    <p>
-        A fast and widely supported lossless audio codec.
-    <ul>
-        <li class=installer>
-            <a href=https://github.com/donmccaughey/flac_pkg/releases/download/v1.3.4-r1/flac-1.3.4.pkg>FLAC
-            1.3.4 installer package</a>
-        <li>
-            <a href=https://github.com/donmccaughey/flac_pkg>build script for
-            the <em>FLAC</em> installer package</a>
-        <li>
-            <a href=https://xiph.org/flac/ ><em>FLAC</em> project website</a>
-    </ul>
-</section>
-<section class=package>
-    <h1>jq 1.6</h1>
-    <p>
-        A lightweight and flexible command line JSON processor.
-    <ul>
-        <li class=installer>
-            <a href=https://github.com/donmccaughey/jq_pkg/releases/download/v1.6-r2/jq-1.6-r2.pkg>jq
-            1.6 installer package</a>
-        <li>
-            <a href=https://github.com/donmccaughey/jq_pkg>build script for the
-            <em>jq</em> installer package</a>
-        <li>
-            <a href=https://stedolan.github.io/jq/ ><em>jq</em> project
-            website</a>
-    </ul>
-</section>
-<section class=package>
-    <h1>nginx 1.20.2</h1>
-    <p>
-        A widely used and capable HTTP and proxy server.
-    <ul>
-        <li class=installer>
-            <a href=https://github.com/donmccaughey/nginx_pkg/releases/download/v1.22.0-r1/nginx-1.22.0.pkg>nginx
-            1.20.2 installer package</a>
-        <li>
-            <a href=https://github.com/donmccaughey/nginx_pkg>build script for
-            the <em>nginx</em> installer package</a>
-        <li><a href=https://nginx.org><em>nginx</em> project website</a>
-    </ul>
-</section>
-<section class=package>
-    <h1>pkg-config 0.29.2</h1>
-    <p>
-        A helper tool used when compiling applications and libraries.
-    <ul>
-        <li class=installer>
-            <a href=https://github.com/donmccaughey/pkg-config_pkg/releases/download/v0.29.2-r4/pkg-config-0.29.2-r4.pkg>pkg-config
-            0.29.2 installer package</a>
-        <li>
-            <a href=https://github.com/donmccaughey/pkg-config_pkg>build script
-            for the <em>pkg-config</em> installer package</a>
-        <li>
-            <a href=https://www.freedesktop.org/wiki/Software/pkg-config/ ><em>pkg-config</em>
-            project website</a>
-    </ul>
-</section>
-<section class=package>
-    <h1>tree 2.0.2</h1>
-    <p>
-        A recursive directory listing command.
-    <ul>
-        <li class=installer>
-            <a href=https://github.com/donmccaughey/tree_pkg/releases/download/v2.0.2-r1/tree-2.0.2.pkg>tree
-            2.0.2 installer package</a>
-        <li>
-            <a href=https://github.com/donmccaughey/tree_pkg>build script for
-            the <em>tree</em> installer package</a>
-        <li>
-            <a href=http://mama.indstate.edu/users/ice/tree/ ><em>tree</em>
-            project website</a>
-    </ul>
-</section>
-<section class=package>
-    <h1>wget 1.21.3</h1>
-    <p>
-        A command line tool for retrieving files using HTTP, HTTPS, FTP and
-        FTPS.
-    <ul>
-        <li class=installer>
-            <a href=https://github.com/donmccaughey/wget_pkg/releases/download/v1.21.3-r2/wget-1.21.3-r2.pkg>wget
-            1.21.3 installer package</a>
-        <li>
-            <a href=https://github.com/donmccaughey/wget_pkg>build script for
-            the <em>wget</em> installer package</a>
-        <li>
-            <a href=https://www.gnu.org/software/wget/ ><em>wget</em> project
-            website</a>
-    </ul>
-</section>
-<section class=package>
-    <h1>XZ Utils 5.2.5</h1>
-    <p>
-        A general purpose data compression tool and library, and includes the
-        <code>xz</code> command line tool.
-    <ul>
-        <li class=installer>
-            <a href=https://github.com/donmccaughey/xz_pkg/releases/download/v5.2.5-r2/xz-5.2.5-r2.pkg>XZ
-            Utils 5.2.5 installer package</a>
-        <li>
-            <a href=https://github.com/donmccaughey/xz_pkg>build script for the
-            <em>XZ Utils</em> installer package</a>
-        <li>
-            <a href=https://tukaani.org/xz/ ><em>XZ Utils</em> project
-            website</a>
-    </ul>
-</section>
+<main>
+    <section class=overview>
+        <h1>Signed and Notarized Universal macOS Installer Packages</h1>
+        <p>
+            These standard macOS installer packages are built using
+            <code>pkgbuild</code> and <code>productbuild</code> and are signed
+            and notarized with my Apple developer credentials.  They install
+            universal binaries that will run on both Intel and Apple Silicon
+            Macs.
+        <p>
+            This is a collection of command line tools that I've found useful at
+            one time or another over the years.  Some of them are widely used
+            but excluded from macOS and Xcode due to GPL licenses.
+    </section>
+    <section class=package>
+        <h1>FLAC 1.3.4</h1>
+        <p>
+            A fast and widely supported lossless audio codec.
+        <ul>
+            <li class=installer>
+                <a href=https://github.com/donmccaughey/flac_pkg/releases/download/v1.3.4-r1/flac-1.3.4.pkg>FLAC
+                1.3.4 installer package</a>
+            <li>
+                <a href=https://github.com/donmccaughey/flac_pkg>build script
+                for the <em>FLAC</em> installer package</a>
+            <li>
+                <a href=https://xiph.org/flac/ ><em>FLAC</em> project
+                website</a>
+        </ul>
+    </section>
+    <section class=package>
+        <h1>jq 1.6</h1>
+        <p>
+            A lightweight and flexible command line JSON processor.
+        <ul>
+            <li class=installer>
+                <a href=https://github.com/donmccaughey/jq_pkg/releases/download/v1.6-r2/jq-1.6-r2.pkg>jq
+                1.6 installer package</a>
+            <li>
+                <a href=https://github.com/donmccaughey/jq_pkg>build script for
+                the <em>jq</em> installer package</a>
+            <li>
+                <a href=https://stedolan.github.io/jq/ ><em>jq</em> project
+                website</a>
+        </ul>
+    </section>
+    <section class=package>
+        <h1>nginx 1.20.2</h1>
+        <p>
+            A widely used and capable HTTP and proxy server.
+        <ul>
+            <li class=installer>
+                <a href=https://github.com/donmccaughey/nginx_pkg/releases/download/v1.22.0-r1/nginx-1.22.0.pkg>nginx
+                1.20.2 installer package</a>
+            <li>
+                <a href=https://github.com/donmccaughey/nginx_pkg>build script
+                for the <em>nginx</em> installer package</a>
+            <li>
+                <a href=https://nginx.org><em>nginx</em> project website</a>
+        </ul>
+    </section>
+    <section class=package>
+        <h1>pkg-config 0.29.2</h1>
+        <p>
+            A helper tool used when compiling applications and libraries.
+        <ul>
+            <li class=installer>
+                <a href=https://github.com/donmccaughey/pkg-config_pkg/releases/download/v0.29.2-r4/pkg-config-0.29.2-r4.pkg>pkg-config
+                0.29.2 installer package</a>
+            <li>
+                <a href=https://github.com/donmccaughey/pkg-config_pkg>build
+                script for the <em>pkg-config</em> installer package</a>
+            <li>
+                <a href=https://www.freedesktop.org/wiki/Software/pkg-config/ ><em>pkg-config</em>
+                project website</a>
+        </ul>
+    </section>
+    <section class=package>
+        <h1>tree 2.0.2</h1>
+        <p>
+            A recursive directory listing command.
+        <ul>
+            <li class=installer>
+                <a href=https://github.com/donmccaughey/tree_pkg/releases/download/v2.0.2-r1/tree-2.0.2.pkg>tree
+                2.0.2 installer package</a>
+            <li>
+                <a href=https://github.com/donmccaughey/tree_pkg>build script
+                for the <em>tree</em> installer package</a>
+            <li>
+                <a href=http://mama.indstate.edu/users/ice/tree/ ><em>tree</em>
+                project website</a>
+        </ul>
+    </section>
+    <section class=package>
+        <h1>wget 1.21.3</h1>
+        <p>
+            A command line tool for retrieving files using HTTP, HTTPS, FTP and
+            FTPS.
+        <ul>
+            <li class=installer>
+                <a href=https://github.com/donmccaughey/wget_pkg/releases/download/v1.21.3-r2/wget-1.21.3-r2.pkg>wget
+                1.21.3 installer package</a>
+            <li>
+                <a href=https://github.com/donmccaughey/wget_pkg>build script
+                for the <em>wget</em> installer package</a>
+            <li>
+                <a href=https://www.gnu.org/software/wget/ ><em>wget</em>
+                project website</a>
+        </ul>
+    </section>
+    <section class=package>
+        <h1>XZ Utils 5.2.5</h1>
+        <p>
+            A general purpose data compression tool and library, and includes
+            the <code>xz</code> command line tool.
+        <ul>
+            <li class=installer>
+                <a href=https://github.com/donmccaughey/xz_pkg/releases/download/v5.2.5-r2/xz-5.2.5-r2.pkg>XZ
+                Utils 5.2.5 installer package</a>
+            <li>
+                <a href=https://github.com/donmccaughey/xz_pkg>build script for
+                the <em>XZ Utils</em> installer package</a>
+            <li>
+                <a href=https://tukaani.org/xz/ ><em>XZ Utils</em> project
+                website</a>
+        </ul>
+    </section>
+</main>

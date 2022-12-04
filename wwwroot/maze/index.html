@@ -30,7 +30,15 @@
         background: white;
         border: 0;
         color: black;
-        font: 12pt Helvetica, Arial, sans-serif;
+        font: 12pt "Atkinson Hyperlegible", Helvetica, Arial, sans-serif;
+        margin: 0;
+        padding: 0;
+    }
+    main {
+        background: white;
+        border: 0;
+        color: black;
+        font: 12pt "Atkinson Hyperlegible", Helvetica, Arial, sans-serif;
         margin: 0;
         padding: 0;
     }
@@ -129,45 +137,48 @@
 <nav class=menu>
     <a href=/ >Don McCaughey</a>
 </nav>
-<section class=overview>
-    <h1>Maze Generator</h1>
-    <p>
-        A simple maze generator using a
-        <a href=https://en.wikipedia.org/wiki/Maze_generation_algorithm#Randomized_depth-first_search>randomized
-        depth-first search</a> algorithm.
-</section>
-<section class=generator>
-    <h1 id=maze_title>Maze</h1>
-    <pre id=maze>
-    </pre>
-    <p class=next_maze>
-        (Try a <a id=next_maze href=.>different maze</a>.)
-</section>
-<section class=implementation>
-    <h1>Implementation</h1>
-    <p>
-        The
-        <a href=https://github.com/donmccaughey/donm_cc/blob/master/maze/src/lib.rs>maze
-        generator</a> is written in Rust and compiled to web assembly.  I used
-        <a href=https://rustwasm.github.io/docs/wasm-pack/commands/build.html><code>wasm-pack
-        build</code></a> with the
-        <a href=https://rustwasm.github.io/docs/wasm-bindgen/examples/without-a-bundler.html#using-the-older---target-no-modules><code>--target
-        no-modules</code></a> option to compile Rust to web assembly and
-        generate JavaScript bindings.
-    <p>
-        The <code>maze</code> library exposes a very simple public interface of
-        two functions to web assembly.
-    <p>
-        The <code>generate_seed()</code> function returns a random 64-bit
-        unsigned integer used to seed the pseudorandom number generator; it also
-        serves as the maze title.
-    <p>
-        The <code>generate_maze()</code> function takes parameters for
-        <em>width</em>, <em>height</em>, the <em>seed</em> and output
-        <em>format</em>.  The function returns a string containing the generated
-        maze for display using a monospace font.  The supported formats are
-        <code>"unicode"</code>, using
-        <a href=https://en.wikipedia.org/wiki/Box-drawing_character#Box_Drawing>Unicode
-        box drawing characters</a> and <code>"ascii"</code>, using
-        <code>-</code>, <code>|</code> and <code>+</code>.
-</section>
+<main>
+    <section class=overview>
+        <h1>Maze Generator</h1>
+        <p>
+            A simple maze generator using a
+            <a href=https://en.wikipedia.org/wiki/Maze_generation_algorithm#Randomized_depth-first_search>randomized
+            depth-first search</a> algorithm.
+    </section>
+    <section class=generator>
+        <h1 id=maze_title>Maze</h1>
+        <pre id=maze>
+        </pre>
+        <p class=next_maze>
+            (Try a <a id=next_maze href=.>different maze</a>.)
+    </section>
+    <section class=implementation>
+        <h1>Implementation</h1>
+        <p>
+            The
+            <a href=https://github.com/donmccaughey/donm_cc/blob/master/maze/src/lib.rs>maze
+            generator</a> is written in Rust and compiled to web assembly.  I
+            used
+            <a href=https://rustwasm.github.io/docs/wasm-pack/commands/build.html><code>wasm-pack
+            build</code></a> with the
+            <a href=https://rustwasm.github.io/docs/wasm-bindgen/examples/without-a-bundler.html#using-the-older---target-no-modules><code>--target
+            no-modules</code></a> option to compile Rust to web assembly and
+            generate JavaScript bindings.
+        <p>
+            The <code>maze</code> library exposes a very simple public interface
+            of two functions to web assembly.
+        <p>
+            The <code>generate_seed()</code> function returns a random 64-bit
+            unsigned integer used to seed the pseudorandom number generator; it
+            also serves as the maze title.
+        <p>
+            The <code>generate_maze()</code> function takes parameters for
+            <em>width</em>, <em>height</em>, the <em>seed</em> and output
+            <em>format</em>.  The function returns a string containing the
+            generated maze for display using a monospace font.  The supported
+            formats are <code>"unicode"</code>, using
+            <a href=https://en.wikipedia.org/wiki/Box-drawing_character#Box_Drawing>Unicode
+            box drawing characters</a> and <code>"ascii"</code>, using
+            <code>-</code>, <code>|</code> and <code>+</code>.
+    </section>
+</main>

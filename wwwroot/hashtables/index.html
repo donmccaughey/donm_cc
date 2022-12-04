@@ -30,12 +30,20 @@
         background: white;
         border: 0;
         color: black;
-        font: 12pt Helvetica, Arial, sans-serif;
+        font: 12pt "Atkinson Hyperlegible", Helvetica, Arial, sans-serif;
         margin: 0;
         padding: 0;
     }
     li {
         margin-bottom: 0.5em;
+    }
+    main {
+        background: white;
+        border: 0;
+        color: black;
+        font: 12pt "Atkinson Hyperlegible", Helvetica, Arial, sans-serif;
+        margin: 0;
+        padding: 0;
     }
     section {
         border: 0;
@@ -140,76 +148,78 @@
 <nav class=menu>
     <a href=/ >Don McCaughey</a>
 </nav>
-<section class=overview>
-    <h1>Hashtables</h1>
-    <p>
-        <a href=https://en.wikipedia.org/wiki/Hash_table>Hashtables</a> are such
-        an interesting and foundational data structure, though sadly but
-        understandably missing from the C standard library (and only added to
-        C++ in
-        <a href=https://en.cppreference.com/w/cpp/container/unordered_map>C++
-        11</a>.
-    <p>
-        I have my own unpolished
-        <a href=https://github.com/donmccaughey/hashtable>hashtable for C</a>
-        and I enjoy collecting links to other implementations, hashing functions
-        and related articles.
-</section>
-<section class=links>
-    <h1>Hashtable Implementations</h1>
-    <ul>
-        <li>
-            <a class=title href=https://github.com/troydhanson/uthash>uthash: C
-            macros for hash tables and more</a>
-        <li>
-            <a class=title href=https://github.com/Mashpoe/c-hashmap>C
-            HashMap</a>
-        <li>
-            <a class=title href=https://github.com/Encrylize/hashmap>Hashmap</a>
-    </ul>
-</section>
-<section class=links>
-    <h1>Hashing Functions</h1>
-    <ul>
-        <li>
-            <a class=title href=http://www.isthe.com/chongo/tech/comp/fnv/index.html>FNV
-            Hash</a>, <span class=authors>Landon Curt Noll</span>,
-            <time datetime=2017-04-29>2017-04-29</time>
-        <li><a class=title href=http://www.xxhash.com/ >xxHash</a>
-    </ul>
-</section>
-<section class=links>
-    <h1>Hashing</h1>
-    <ul>
-        <li>
-            <a class=title href=https://attractivechaos.wordpress.com/2018/10/01/advanced-techniques-to-implement-fast-hash-tables/ >Advanced
-            techniques to implement fast hash tables</a>,
-            <time datetime=2018-10-01>2018-10-01</time>
-        <li>
-            <a class=title href=https://skystrife.github.io/blog/2016/01/29/a-probing-hash-table-framework/ >A
-            Probing Hash Table Framework</a>, <span class=authors>Chase
-            Geigle</span>, <time datetime=2016-01-29>2016-01-29</time>
-        <li>
-            <a class=title href=https://www.reddit.com/r/C_Programming/comments/3533bw/best_hash_table_for_c/ >Best
-            hash table for C</a>, <span class=authors>Reddit</span>,
-            <time datetime=2015-05-06>2015-05-06</time>
-        <li>
-            <a class=title href=https://isocpp.org/files/papers/n3980.html>Types
-            Don't Know #</a>, <span class=authors>Howard E Hinnant, Vinnie Falco
-            and John Bytheway</span>,
-            <time datetime=2014-05-24>2014-05-24</time>
-        <li>
-            <a class=title href=https://www.csd.uoc.gr/~hy460/pdf/Dynamic%20Hash%20Tables.pdf>Dynamic
-            Hash Tables</a>, <span class=authors>Per-Åke Larson</span>,
-            <time datetime=1988-04>1988-04</time>
-        <li>
-            <a class=title href=https://blog.waffles.space/2018/12/07/deep-dive-into-hashbrown/ >The
-            Swiss Army Knife of Hashmaps</a>, <span class=authors>Ravi
-            Shankar</span>, <time datetime=2018-12-07>2018-12-07</time>
-        <li>
-            <a class=title href=https://www.idryman.org/blog/2017/05/03/writing-a-damn-fast-hash-table-with-tiny-memory-footprints/ >Writing
-            a Damn Fast Hash Table With Tiny Memory Footprints</a>,
-            <span class=authors>Felix Ren-Chyan Chern</span>,
-            <time datetime=2017-05-03>2017-05-03</time>
-    </ul>
-</section>
+<main>
+    <section class=overview>
+        <h1>Hashtables</h1>
+        <p>
+            <a href=https://en.wikipedia.org/wiki/Hash_table>Hashtables</a> are
+            such an interesting and foundational data structure, though sadly
+            but understandably missing from the C standard library (and only
+            added to C++ in
+            <a href=https://en.cppreference.com/w/cpp/container/unordered_map>C++
+            11</a>.
+        <p>
+            I have my own unpolished
+            <a href=https://github.com/donmccaughey/hashtable>hashtable for
+            C</a> and I enjoy collecting links to other implementations, hashing
+            functions and related articles.
+    </section>
+    <section class=links>
+        <h1>Hashtable Implementations</h1>
+        <ul>
+            <li>
+                <a class=title href=https://github.com/troydhanson/uthash>uthash:
+                C macros for hash tables and more</a>
+            <li>
+                <a class=title href=https://github.com/Mashpoe/c-hashmap>C
+                HashMap</a>
+            <li>
+                <a class=title href=https://github.com/Encrylize/hashmap>Hashmap</a>
+        </ul>
+    </section>
+    <section class=links>
+        <h1>Hashing Functions</h1>
+        <ul>
+            <li>
+                <a class=title href=http://www.isthe.com/chongo/tech/comp/fnv/index.html>FNV
+                Hash</a>, <span class=authors>Landon Curt Noll</span>,
+                <time datetime=2017-04-29>2017-04-29</time>
+            <li><a class=title href=http://www.xxhash.com/ >xxHash</a>
+        </ul>
+    </section>
+    <section class=links>
+        <h1>Hashing</h1>
+        <ul>
+            <li>
+                <a class=title href=https://attractivechaos.wordpress.com/2018/10/01/advanced-techniques-to-implement-fast-hash-tables/ >Advanced
+                techniques to implement fast hash tables</a>,
+                <time datetime=2018-10-01>2018-10-01</time>
+            <li>
+                <a class=title href=https://skystrife.github.io/blog/2016/01/29/a-probing-hash-table-framework/ >A
+                Probing Hash Table Framework</a>, <span class=authors>Chase
+                Geigle</span>, <time datetime=2016-01-29>2016-01-29</time>
+            <li>
+                <a class=title href=https://www.reddit.com/r/C_Programming/comments/3533bw/best_hash_table_for_c/ >Best
+                hash table for C</a>, <span class=authors>Reddit</span>,
+                <time datetime=2015-05-06>2015-05-06</time>
+            <li>
+                <a class=title href=https://isocpp.org/files/papers/n3980.html>Types
+                Don't Know #</a>, <span class=authors>Howard E Hinnant, Vinnie
+                Falco and John Bytheway</span>,
+                <time datetime=2014-05-24>2014-05-24</time>
+            <li>
+                <a class=title href=https://www.csd.uoc.gr/~hy460/pdf/Dynamic%20Hash%20Tables.pdf>Dynamic
+                Hash Tables</a>, <span class=authors>Per-Åke Larson</span>,
+                <time datetime=1988-04>1988-04</time>
+            <li>
+                <a class=title href=https://blog.waffles.space/2018/12/07/deep-dive-into-hashbrown/ >The
+                Swiss Army Knife of Hashmaps</a>, <span class=authors>Ravi
+                Shankar</span>, <time datetime=2018-12-07>2018-12-07</time>
+            <li>
+                <a class=title href=https://www.idryman.org/blog/2017/05/03/writing-a-damn-fast-hash-table-with-tiny-memory-footprints/ >Writing
+                a Damn Fast Hash Table With Tiny Memory Footprints</a>,
+                <span class=authors>Felix Ren-Chyan Chern</span>,
+                <time datetime=2017-05-03>2017-05-03</time>
+        </ul>
+    </section>
+</main>
