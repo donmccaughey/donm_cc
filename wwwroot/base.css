@@ -137,6 +137,13 @@ main {
     padding: 0;
 }
 
+@media (prefers-color-scheme: dark) {
+    main {
+        background: black;
+        color: white;
+    }
+}
+
 pre {
     background: whitesmoke;
     border: 0;

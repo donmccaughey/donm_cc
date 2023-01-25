@@ -15,6 +15,7 @@ def home_page():
         with Ul(class_names=['collection']):
             item('Sourcehut', 'https://git.sr.ht/~donmcc', 'donmcc')
             item('GitHub', 'https://github.com/donmccaughey', 'donmccaughey')
+            item('News', 'https://news.donm.cc/', 'Unsocial media')
             item('Memory Match', '/memory_match/', 'A tile matching game')
             item('Random Words', '/random_words/', 'A handy word picker')
             item('macOS Packages', '/macos_packages/', 'Software installers')

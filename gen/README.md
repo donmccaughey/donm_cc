@@ -13,8 +13,8 @@ Install [`pyenv`](https://github.com/pyenv/pyenv) to manage Python versions.
 5. Add `eval "$(pyenv virtualenv-init -)"` to your startup scripts.
 6. `pyenv install --list` to list available Python versions.
 7. `pyenv versions` to list installed Python versions.
-8. `pyenv install 3.10.0` to install a recent Python version.
-9. `pyenv virtualenv 3.10.0 gen-venv` to create a virtualenv for this project.
+8. `pyenv install 3.11.1` to install a recent Python version.
+9. `pyenv virtualenv 3.11.1 gen-venv` to create a virtualenv for this project.
 10. Edit the `gen/.python-version` file, setting the version to `gen-venv`.
 11. In PyCharm's *Preferences* dialog, select 
      *Project: Gen | Python Interpreter* in the tree of options and choose  
