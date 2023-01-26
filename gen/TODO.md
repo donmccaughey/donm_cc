@@ -1,5 +1,8 @@
 # TODO
 
+- sort @media blocks to the top page style blocks
+- update `macos_packages.css`, `resume.css`, `random_words.css`, 
+      `memory_match.css`, `maze.css`
 - use css custom properties for `.menu { background: ...}`
   - rgba(192, 192, 192, 0.9); /* silver */
   - rgba(128, 128, 128, 0.9); /* gray */

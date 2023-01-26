@@ -231,7 +231,7 @@ time {
 }
 
 .item a:visited {
-    color: var(--dim-text);
+    color: var(--text);
 }
 
 .item strong {
@@ -257,7 +257,7 @@ time {
 }
 
 .links li a:visited {
-    color: var(--dim-text);
+    color: var(--text);
 }
 
 .links time {
@@ -311,6 +311,10 @@ time {
     margin: 3pt 8pt;
     padding: 0;
     text-decoration: none;
+}
+
+.menu a:visited {
+    color: var(--page);
 }
 
 @media (prefers-color-scheme: dark) {
