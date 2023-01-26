@@ -6,6 +6,10 @@
 - use css custom property for
   - body { padding: 24pt 0 1em 0; /* space for fixed menu */ } 
   - .menu { height: 24pt; /* matches body padding-top */ }
+- use css custom property for
+  - "Atkinson Hyperlegible", Helvetica, Arial, sans-serif;
+  - "Courier New", Courier, monospace;
+  - ui-monospace, monospace;
 - add `target=_blank` and `rel=noreferrer` to all external links
 - HTML check fails on `list-style-type: "📦";` -- replace emoji with `'\1f4e6'`
   - .../wwwroot/macos_packages/index.html":87.823-87.823: error: CSS: “list-style-type”: Parse Error.
