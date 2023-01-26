@@ -20,44 +20,44 @@
  *      #551a8b visited purple
  */
 
+@media (prefers-color-scheme: light) {
+    :root {
+        --page: white;
+        --highlight: whitesmoke;
+        --dim-text: dimgray;
+        --text: black;
+    }
+}
+@media (prefers-color-scheme: dark) {
+    :root {
+        --page: black;
+        --highlight: dimgray;
+        --dim-text: whitesmoke;
+        --text: white;
+    }
+}
+
 a {
-    color: black;
+    color: var(--text);
 }
 
 a:visited {
-    color: black;
-}
-
-@media (prefers-color-scheme: dark) {
-    a {
-        color: white;
-    }
-
-    a:visited {
-        color: white;
-    }
+    color: var(--text);
 }
 
 body {
-    background: white;
+    background: var(--page);
     border: 0;
-    color: black;
+    color: var(--text);
     font: 12pt "Atkinson Hyperlegible", Helvetica, Arial, sans-serif;
     margin: 0;
     padding: 24pt 0 1em 0; /* space for fixed menu */
 }
 
-@media (prefers-color-scheme: dark) {
-    body {
-        background: black;
-        color: white;
-    }
-}
-
 footer {
-    background: white;
-    border-top: 1pt solid dimgray;
-    color: dimgray;
+    background: var(--page);
+    border-top: 1pt solid var(--dim-text);
+    color: var(--dim-text);
     font-size: 11pt;
     margin: 1.5em 0 0 0;
     padding: 1em 0;
@@ -65,19 +65,11 @@ footer {
 }
 
 footer a {
-    color: gray;
+    color: var(--dim-text);
 }
 
-@media (prefers-color-scheme: dark) {
-    footer {
-        background: black;
-        border-top: 1pt solid whitesmoke;
-        color: whitesmoke;
-    }
-
-    footer a {
-        color: silver;
-    }
+footer a:visited {
+    color: var(--dim-text);
 }
 
 h1 {
@@ -109,19 +101,12 @@ h3 {
 }
 
 html {
-    background: white;
+    background: var(--page);
     border: 0;
-    color: black;
+    color: var(--text);
     font: 12pt "Atkinson Hyperlegible", Helvetica, Arial, sans-serif;
     margin: 0;
     padding: 0;
-}
-
-@media (prefers-color-scheme: dark) {
-    html {
-        background: black;
-        color: white;
-    }
 }
 
 li {
@@ -129,37 +114,23 @@ li {
 }
 
 main {
-    background: white;
+    background: var(--page);
     border: 0;
-    color: black;
+    color: var(--text);
     font: 12pt "Atkinson Hyperlegible", Helvetica, Arial, sans-serif;
     margin: 0;
     padding: 0;
 }
 
-@media (prefers-color-scheme: dark) {
-    main {
-        background: black;
-        color: white;
-    }
-}
-
 pre {
-    background: whitesmoke;
+    background: var(--highlight);
     border: 0;
-    color: black;
+    color: var(--text);
     font: 11pt ui-monospace, monospace;
     line-height: 150%;
     margin: 0;
     overflow: auto;
     padding: 1em;
-}
-
-@media (prefers-color-scheme: dark) {
-    pre {
-        background: dimgray;
-        color: white;
-    }
 }
 
 section {
@@ -174,14 +145,8 @@ time {
 }
 
 .authors {
-    color: gray;
+    color: var(--dim-text);
     font: italic 12pt Helvetica, Arial, sans-serif;
-}
-
-@media (prefers-color-scheme: dark) {
-    .authors {
-        color: silver;
-    }
 }
 
 .banner {
@@ -200,14 +165,14 @@ time {
 }
 
 .banner .upper-right {
-    color: whitesmoke;
+    color: var(--highlight);
     position: absolute;
     right: 1em;
     top: 0.67em;
 }
 
 .banner .lower-right {
-    color: whitesmoke;
+    color: var(--highlight);
     bottom: 0.67em;
     position: absolute;
     right: 1em;
@@ -221,14 +186,8 @@ time {
 }
 
 .collection h1 {
-    color: dimgray;
+    color: var(--dim-text);
     font-size: 16pt;
-}
-
-@media (prefers-color-scheme: dark) {
-    .collection h1 {
-        color: whitesmoke;
-    }
 }
 
 .data_table {
@@ -236,31 +195,21 @@ time {
 }
 
 .data_table td {
-    border: thin solid black;
+    border: thin solid var(--text);
     padding: 0.25em;
     text-align: center;
 }
 
 .data_table th {
-    border: thin solid black;
+    border: thin solid var(--text);
     padding: 0.25em;
     text-align: center;
 }
 
-@media (prefers-color-scheme: dark) {
-    .data_table td {
-        border: thin solid white;
-    }
-
-    .data_table th {
-        border: thin solid white;
-    }
-}
-
 .item {
-    background: whitesmoke;
-    border: 1pt solid silver;
-    color: black;
+    background: var(--highlight);
+    border: 1pt solid var(--highlight);
+    color: var(--text);
     display: inline-block;
     line-height: 150%;
     margin: 1em;
@@ -269,12 +218,12 @@ time {
 }
 
 .item:hover {
-    border: 1pt solid black;
+    border: 1pt solid var(--text);
 }
 
 .item a {
     border: 0;
-    color: black;
+    color: var(--text);
     display: inline-block;
     margin: 0;
     padding: 0.5em 1em;
@@ -282,7 +231,7 @@ time {
 }
 
 .item a:visited {
-    color: dimgray;
+    color: var(--dim-text);
 }
 
 .item strong {
@@ -294,28 +243,8 @@ time {
     display: block;
 }
 
-@media (prefers-color-scheme: dark) {
-    .item {
-        background: dimgray;
-        border: 1pt solid gray;
-        color: white;
-    }
-
-    .item:hover {
-        border: 1pt solid white;
-    }
-
-    .item a {
-        color: white;
-    }
-
-    .item a:visited {
-        color: whitesmoke;
-    }
-}
-
 .links li {
-    color: black;
+    color: var(--text);
     font-size: 12pt;
     line-height: 1.4;
     margin: 0 2em;
@@ -324,35 +253,17 @@ time {
 }
 
 .links li a {
-    color: black;
+    color: var(--text);
 }
 
 .links li a:visited {
-    color: dimgray;
+    color: var(--dim-text);
 }
 
 .links time {
-    color: gray;
+    color: var(--dim-text);
     font: italic 12pt Helvetica, Arial, sans-serif;
     white-space: nowrap;
-}
-
-@media (prefers-color-scheme: dark) {
-    .links li {
-        color: white;
-    }
-
-    .links li a {
-        color: white;
-    }
-
-    .links li a:visited {
-        color: whitesmoke;
-    }
-
-    .links time {
-        color: silver;
-    }
 }
 
 .memory_map {
@@ -360,7 +271,7 @@ time {
 }
 
 .memory_map td {
-    border: thin solid black;
+    border: thin solid var(--text);
     font-family: "Courier New", Courier, monospace;
     padding: 0.25em;
     text-align: center;
@@ -368,7 +279,7 @@ time {
 }
 
 .memory_map th {
-    border: thin solid black;
+    border: thin solid var(--text);
     font-family: "Courier New", Courier, monospace;
     padding: 0.25em;
     text-align: center;
@@ -379,21 +290,10 @@ time {
     border: none;
 }
 
-@media (prefers-color-scheme: dark) {
-    .memory_map td {
-        border: thin solid white;
-    }
-
-    .memory_map th {
-        border: thin solid white;
-    }
-}
-
 .menu {
     background: rgba(192, 192, 192, 0.9); /* silver */
     border: 0;
-    border-bottom: 2pt solid silver;
-    color: white;
+    color: var(--page);
     height: 24pt; /* matches body padding-top */
     margin: 0;
     padding: 0;
@@ -405,10 +305,10 @@ time {
 
 .menu a {
     border: 0;
-    color: white;
+    color: var(--page);
     display: inline-block;
     font: bold 16pt Helvetica, Arial, sans-serif;
-    margin: 4pt 8pt;
+    margin: 3pt 8pt;
     padding: 0;
     text-decoration: none;
 }
@@ -416,12 +316,6 @@ time {
 @media (prefers-color-scheme: dark) {
     .menu {
         background: rgba(128, 128, 128, 0.9); /* gray */
-        border-bottom: 2pt solid gray;
-        color: black;
-    }
-
-    .menu a {
-        color: black;
     }
 }
 

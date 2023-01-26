@@ -6,15 +6,15 @@
 <title>James SA Corey</title>
 <style>
     a {
-        color: black;
+        color: var(--text);
     }
     a:visited {
-        color: black;
+        color: var(--text);
     }
     body {
-        background: white;
+        background: var(--page);
         border: 0;
-        color: black;
+        color: var(--text);
         font: 12pt "Atkinson Hyperlegible", Helvetica, Arial, sans-serif;
         margin: 0;
         padding: 24pt 0 1em 0; 
@@ -27,9 +27,9 @@
         padding: 0;
     }
     html {
-        background: white;
+        background: var(--page);
         border: 0;
-        color: black;
+        color: var(--text);
         font: 12pt "Atkinson Hyperlegible", Helvetica, Arial, sans-serif;
         margin: 0;
         padding: 0;
@@ -38,9 +38,9 @@
         margin-bottom: 0.5em;
     }
     main {
-        background: white;
+        background: var(--page);
         border: 0;
-        color: black;
+        color: var(--text);
         font: 12pt "Atkinson Hyperlegible", Helvetica, Arial, sans-serif;
         margin: 0;
         padding: 0;
@@ -55,7 +55,7 @@
         white-space: nowrap;
     }
     .links li {
-        color: black;
+        color: var(--text);
         font-size: 12pt;
         line-height: 1.4;
         margin: 0 2em;
@@ -63,21 +63,20 @@
         width: 70ex;
     }
     .links li a {
-        color: black;
+        color: var(--text);
     }
     .links li a:visited {
-        color: dimgray;
+        color: var(--dim-text);
     }
     .links time {
-        color: gray;
+        color: var(--dim-text);
         font: italic 12pt Helvetica, Arial, sans-serif;
         white-space: nowrap;
     }
     .menu {
         background: rgba(192, 192, 192, 0.9); 
         border: 0;
-        border-bottom: 2pt solid silver;
-        color: white;
+        color: var(--page);
         height: 24pt; 
         margin: 0;
         padding: 0;
@@ -88,10 +87,10 @@
     }
     .menu a {
         border: 0;
-        color: white;
+        color: var(--page);
         display: inline-block;
         font: bold 16pt Helvetica, Arial, sans-serif;
-        margin: 4pt 8pt;
+        margin: 3pt 8pt;
         padding: 0;
         text-decoration: none;
     }
@@ -102,43 +101,22 @@
         font: 14pt Helvetica, Arial, sans-serif;
     }
     @media (prefers-color-scheme: dark) {
-        a {
-            color: white;
-        }
-        a:visited {
-            color: white;
-        }
-        body {
-            background: black;
-            color: white;
-        }
-        html {
-            background: black;
-            color: white;
-        }
-        main {
-            background: black;
-            color: white;
-        }
-        .links li {
-            color: white;
-        }
-        .links li a {
-            color: white;
-        }
-        .links li a:visited {
-            color: whitesmoke;
-        }
-        .links time {
-            color: silver;
+        :root {
+            --page: black;
+            --highlight: dimgray;
+            --dim-text: whitesmoke;
+            --text: white;
         }
         .menu {
             background: rgba(128, 128, 128, 0.9); 
-            border-bottom: 2pt solid gray;
-            color: black;
         }
-        .menu a {
-            color: black;
+    }
+    @media (prefers-color-scheme: light) {
+        :root {
+            --page: white;
+            --highlight: whitesmoke;
+            --dim-text: dimgray;
+            --text: black;
         }
     }
 </style>

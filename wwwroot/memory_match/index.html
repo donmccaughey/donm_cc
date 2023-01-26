@@ -6,31 +6,31 @@
 <title>Memory Match</title>
 <style>
     a {
-        color: black;
+        color: var(--text);
     }
     a:visited {
-        color: black;
+        color: var(--text);
     }
     body {
-        background: white;
+        background: var(--page);
         border: 0;
-        color: black;
+        color: var(--text);
         font: 12pt "Atkinson Hyperlegible", Helvetica, Arial, sans-serif;
         margin: 0;
         padding: 24pt 0 1em 0; 
     }
     html {
-        background: white;
+        background: var(--page);
         border: 0;
-        color: black;
+        color: var(--text);
         font: 12pt "Atkinson Hyperlegible", Helvetica, Arial, sans-serif;
         margin: 0;
         padding: 0;
     }
     main {
-        background: white;
+        background: var(--page);
         border: 0;
-        color: black;
+        color: var(--text);
         font: 12pt "Atkinson Hyperlegible", Helvetica, Arial, sans-serif;
         margin: 0;
         padding: 0;
@@ -38,8 +38,7 @@
     .menu {
         background: rgba(192, 192, 192, 0.9); 
         border: 0;
-        border-bottom: 2pt solid silver;
-        color: white;
+        color: var(--page);
         height: 24pt; 
         margin: 0;
         padding: 0;
@@ -50,10 +49,10 @@
     }
     .menu a {
         border: 0;
-        color: white;
+        color: var(--page);
         display: inline-block;
         font: bold 16pt Helvetica, Arial, sans-serif;
-        margin: 4pt 8pt;
+        margin: 3pt 8pt;
         padding: 0;
         text-decoration: none;
     }
@@ -87,31 +86,14 @@
         color: black;
     }
     @media (prefers-color-scheme: dark) {
-        a {
-            color: white;
-        }
-        a:visited {
-            color: white;
-        }
-        body {
-            background: black;
-            color: white;
-        }
-        html {
-            background: black;
-            color: white;
-        }
-        main {
-            background: black;
-            color: white;
+        :root {
+            --page: black;
+            --highlight: dimgray;
+            --dim-text: whitesmoke;
+            --text: white;
         }
         .menu {
             background: rgba(128, 128, 128, 0.9); 
-            border-bottom: 2pt solid gray;
-            color: black;
-        }
-        .menu a {
-            color: black;
         }
         #clock {
             background: black;
@@ -141,6 +123,14 @@
         #tries {
             background: black;
             color: white;
+        }
+    }
+    @media (prefers-color-scheme: light) {
+        :root {
+            --page: white;
+            --highlight: whitesmoke;
+            --dim-text: dimgray;
+            --text: black;
         }
     }
 </style>

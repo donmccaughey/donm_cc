@@ -6,23 +6,23 @@
 <title>Don McCaughey</title>
 <style>
     a {
-        color: black;
+        color: var(--text);
     }
     a:visited {
-        color: black;
+        color: var(--text);
     }
     body {
-        background: white;
+        background: var(--page);
         border: 0;
-        color: black;
+        color: var(--text);
         font: 12pt "Atkinson Hyperlegible", Helvetica, Arial, sans-serif;
         margin: 0;
         padding: 24pt 0 1em 0; 
     }
     html {
-        background: white;
+        background: var(--page);
         border: 0;
-        color: black;
+        color: var(--text);
         font: 12pt "Atkinson Hyperlegible", Helvetica, Arial, sans-serif;
         margin: 0;
         padding: 0;
@@ -31,9 +31,9 @@
         margin-bottom: 0.5em;
     }
     main {
-        background: white;
+        background: var(--page);
         border: 0;
-        color: black;
+        color: var(--text);
         font: 12pt "Atkinson Hyperlegible", Helvetica, Arial, sans-serif;
         margin: 0;
         padding: 0;
@@ -46,7 +46,7 @@
         width: 100%;
     }
     .banner .lower-right {
-        color: whitesmoke;
+        color: var(--highlight);
         bottom: 0.67em;
         position: absolute;
         right: 1em;
@@ -64,9 +64,9 @@
         text-align: center;
     }
     .item {
-        background: whitesmoke;
-        border: 1pt solid silver;
-        color: black;
+        background: var(--highlight);
+        border: 1pt solid var(--highlight);
+        color: var(--text);
         display: inline-block;
         line-height: 150%;
         margin: 1em;
@@ -75,14 +75,14 @@
     }
     .item a {
         border: 0;
-        color: black;
+        color: var(--text);
         display: inline-block;
         margin: 0;
         padding: 0.5em 1em;
         text-decoration: none;
     }
     .item a:visited {
-        color: dimgray;
+        color: var(--dim-text);
     }
     .item em {
         display: block;
@@ -92,13 +92,12 @@
         font-weight: normal;
     }
     .item:hover {
-        border: 1pt solid black;
+        border: 1pt solid var(--text);
     }
     .menu {
         background: rgba(192, 192, 192, 0.9); 
         border: 0;
-        border-bottom: 2pt solid silver;
-        color: white;
+        color: var(--page);
         height: 24pt; 
         margin: 0;
         padding: 0;
@@ -109,53 +108,30 @@
     }
     .menu a {
         border: 0;
-        color: white;
+        color: var(--page);
         display: inline-block;
         font: bold 16pt Helvetica, Arial, sans-serif;
-        margin: 4pt 8pt;
+        margin: 3pt 8pt;
         padding: 0;
         text-decoration: none;
     }
     @media (prefers-color-scheme: dark) {
-        a {
-            color: white;
-        }
-        a:visited {
-            color: white;
-        }
-        body {
-            background: black;
-            color: white;
-        }
-        html {
-            background: black;
-            color: white;
-        }
-        main {
-            background: black;
-            color: white;
-        }
-        .item {
-            background: dimgray;
-            border: 1pt solid gray;
-            color: white;
-        }
-        .item:hover {
-            border: 1pt solid white;
-        }
-        .item a {
-            color: white;
-        }
-        .item a:visited {
-            color: whitesmoke;
+        :root {
+            --page: black;
+            --highlight: dimgray;
+            --dim-text: whitesmoke;
+            --text: white;
         }
         .menu {
             background: rgba(128, 128, 128, 0.9); 
-            border-bottom: 2pt solid gray;
-            color: black;
         }
-        .menu a {
-            color: black;
+    }
+    @media (prefers-color-scheme: light) {
+        :root {
+            --page: white;
+            --highlight: whitesmoke;
+            --dim-text: dimgray;
+            --text: black;
         }
     }
 </style>

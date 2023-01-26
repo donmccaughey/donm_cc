@@ -1,5 +1,14 @@
 # TODO
 
+- use css custom properties for `.menu { background: ...}`
+  - rgba(192, 192, 192, 0.9); /* silver */
+  - rgba(128, 128, 128, 0.9); /* gray */
+- use css custom property for
+  - body { padding: 24pt 0 1em 0; /* space for fixed menu */ } 
+  - .menu { height: 24pt; /* matches body padding-top */ }
+- add `target=_blank` and `rel=noreferrer` to all external links
+- HTML check fails on `list-style-type: "📦";` -- replace emoji with `'\1f4e6'`
+  - .../wwwroot/macos_packages/index.html":87.823-87.823: error: CSS: “list-style-type”: Parse Error.
 - add top-level author field to links page files to support author-centric pages 
 - add title annotation field to book links ("novella", "collection", etc)
 - add openlibrary.org works ID field to book links
