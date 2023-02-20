@@ -8,7 +8,7 @@ def home_page():
     with Page('Don McCaughey', name='index'):
         banner(
             image='/banners/Don_and_Molly_San_Francisco_autumn_2021.jpg',
-            description='Don and Molly atop Round Hill',
+            description='Don and Molly on the balcony',
             caption='San Francisco, Autumn 2021',
             position='lower'
         )
