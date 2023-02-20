@@ -8,6 +8,7 @@ def aughey():
         with Page('Don McCaughey', name='index'):
             banner(
                 image='/aughey/handstand.jpg',
+                width=600, height=800,
                 description='Don doing a handstand',
                 caption='Coachella Festival, Spring 2007',
                 position='upper'

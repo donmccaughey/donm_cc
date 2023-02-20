@@ -28,11 +28,17 @@ class Img(EmptyElement):
             self,
             src: str,
             alt: str,
+            width: Optional[int] = None,
+            height: Optional[int] = None,
             parent: Optional[Node] = None,
             **kwargs,
     ):
         super().__init__(name='img', parent=parent, **kwargs)
         self.attributes['src'] = src
+        if width:
+            self.attributes['width'] = str(width)
+        if height:
+            self.attributes['height'] = str(height)
         self.attributes['alt'] = alt
 
 

@@ -159,6 +159,7 @@ time {
 
 .banner img {
     border: 0;
+    height: auto;
     margin: 0;
     padding: 0;
     width: 100%;
