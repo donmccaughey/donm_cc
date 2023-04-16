@@ -19,9 +19,13 @@ San Francisco, CA
 2022 to present
 Staff Software Engineer
 
-I'm working cross-functionally with the Fleet Health and Fleet Efficiency teams
-to help move our engineering culture and standards towards a focus on quality
-and stability.
+I joined the fleet management team supporting Cruise's rapidly growing fleet of
+autonomous vehicles.
+
+- Worked on complex cross-functional integration efforts to deliver automatic
+  firmware updates for Cruise's new Origin vehicle.
+- Drove efforts to improve engineering culture and standards.
+- On-boarded and mentored new engineers as the team doubled in size.
 
 
 ### Truework
@@ -33,29 +37,26 @@ Engineering Manager
 I was the first engineering manager at this early stage fintech startup.
 
 - Established a fast and lightweight weekly planning and delivery cycle that
-  increased engineering velocity.
+  increased engineering velocity and predictability.
 - Doubled the team to 15 engineers, hiring across all experience levels.
-- Guided the delivery of key features, including public API and SDKs, customer
-  SSO, improved internal tools for 80+ person back office team and integrations
-  with major payroll providers.
+- Guided delivery of key features, including public SDKs, SSO, tools for 80+
+  person back office team and payroll provider integrations.
 
 
 ### Copper CRM
 
 San Francisco, CA
-2016 to 2019 
+2016 to 2019
 Principal Software Engineer
 Engineering Manager
 Senior Engineering Manager
 
 I joined Copper as the sole developer for their native iOS app.  I became
-manager of the mobile team and later the infrastructure team.
+manager of the mobile team and infrastructure team.
 
-- Revived a moribund iOS codebase, established a regular release cadence,
-  improved quality and shipped a steady stream of new features.
+- Established a regular release cadence and shipped many new features.
 - Grew the mobile team from two to six engineers and fostered a collaborative,
   cross-functional team culture.
-- Advised and coached the QA team on test automation which cut QA time in half.
 - Doubled the rate of web app releases through a release improvement process.
 
 
@@ -88,23 +89,21 @@ projects included:
 
 ### Personal Projects
 
-- [macOS Installer Packages][5] for missing Unix command line utilities.
-- [Objective-C Tuesdays][6], tutorials on the basics of C and Objective-C.
-- [C-evo-X][7], maintainer of a Civilization-inspired Windows strategy game.
-- [ManOpen][8], maintainer of a macOS man page viewer.
-- [Plug][9], an Objective-C framework for building TCP services.
+- [News][5], a personal tech news aggregator.
+- [macOS Installer Packages][6] for missing Unix command line utilities.
+- [Objective-C Tuesdays][7], tutorials on the basics of C and Objective-C.
+- [C-evo-X][8], maintainer of a Civilization-inspired Windows strategy game.
 
-[5]: https://donm.cc/macos_packages/
-[6]: https://donm.cc/objective-c_tuesdays/
-[7]: https://github.com/donmccaughey/C-evo-x
-[8]: https://github.com/donmccaughey/ManOpen
-[9]: https://github.com/donmccaughey/Plug
+[5]: https://news.donm.cc
+[6]: https://donm.cc/macos_packages/
+[7]: https://donm.cc/objective-c_tuesdays/
+[8]: https://github.com/donmccaughey/C-evo-x
 
 
 ### Education
 
 - **Stanford University** - One year of graduate study in mechanical
-  engineering; focus in smart product design (ME 218). 
+  engineering; focus in smart product design (ME 218).
 - **New Jersey Institute of Technology** - BS, Mechanical Engineering.
 
 
@@ -141,5 +140,4 @@ projects included:
         https://donm.cc/maze/                                  finish
 
 
-                              updated 22 July 2022
-
+                              updated 16 April 2023

@@ -68,11 +68,24 @@ def resume():
                                          ['Staff Software Engineer'])
                     with P():
                         Text('''
-                            I'm working cross-functionally with the Fleet Health
-                            and Fleet Efficiency teams to help move our
-                            engineering culture and standards towards a focus on
-                            quality and stability.
+                            I joined the fleet management team supporting
+                            Cruise's rapidly growing fleet of autonomous
+                            vehicles.
                         ''')
+                        with Ul():
+                            Li('''
+                                Worked on complex cross-functional integration
+                                efforts to deliver automatic firmware updates
+                                for Cruise's new Origin vehicle.
+                            ''')
+                            Li('''
+                                Drove efforts to improve engineering culture and
+                                standards.
+                            ''')
+                            Li('''
+                                On-boarded and mentored new engineers as the
+                                team doubled in size.
+                            ''')
                 with Section(class_names=['organization']):
                     H2('Truework')
                     organization_details('San Francisco, CA', '2019', '2021',
@@ -86,17 +99,16 @@ def resume():
                             Li('''
                                 Established a fast and lightweight weekly 
                                 planning and delivery cycle that increased 
-                                engineering velocity.
+                                engineering velocity and predictability.
                             ''')
                             Li('''
                                 Doubled the team to 15 engineers, hiring across 
                                 all experience levels.
                             ''')
                             Li('''
-                                Guided the delivery of key features, including  
-                                public API and SDKs, customer SSO, improved 
-                                internal tools for 80+ person back office team
-                                and integrations with major payroll providers.
+                                Guided delivery of key features, including
+                                public SDKs, SSO, tools for 80+ person back
+                                office team and payroll provider integrations.
                             ''')
                 with Section(class_names=['organization']):
                     H2('Copper CRM')
@@ -112,18 +124,13 @@ def resume():
                         ''')
                         with Ul():
                             Li('''
-                                Revived a moribund iOS codebase, established 
-                                a regular release cadence, improved quality and
-                                shipped a steady stream of new features.
+                                Established a regular release cadence and
+                                shipped many new features.
                             ''')
                             Li('''
                                 Grew the mobile team from two to six engineers 
                                 and fostered a collaborative, cross-functional 
                                 team culture.
-                            ''')
-                            Li('''
-                                Advised and coached the QA team on test 
-                                automation which cut QA time in half.
                             ''')
                             Li('''
                                 Doubled the rate of web app releases through a 
@@ -178,6 +185,11 @@ def resume():
                 with Ul():
                     with Li():
                         inline_markdown_to_markup('''
+                            [News](https://news.donm.cc), a personal tech news
+                            aggregator.
+                        ''')
+                    with Li():
+                        inline_markdown_to_markup('''
                             [macOS Installer Packages](https://donm.cc/macos_packages/)
                             for missing Unix command line utilities.
                         ''')
@@ -191,16 +203,6 @@ def resume():
                             [C-evo-X](https://github.com/donmccaughey/C-evo-x), 
                             maintainer of a Civilization-inspired Windows 
                             strategy game.
-                        ''')
-                    with Li():
-                        inline_markdown_to_markup('''
-                            [ManOpen](https://github.com/donmccaughey/ManOpen), 
-                            maintainer of a macOS man page viewer.
-                        ''')
-                    with Li():
-                        inline_markdown_to_markup('''
-                            [Plug](https://github.com/donmccaughey/Plug), an 
-                            Objective-C framework for building TCP services.
                         ''')
 
             with Section(class_names=['education']):
