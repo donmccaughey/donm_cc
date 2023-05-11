@@ -39,8 +39,8 @@ def macos_packages():
             )
             package(
                 name='nginx',
-                version='1.22.1',
-                package='https://github.com/donmccaughey/nginx_pkg/releases/download/v1.22.1-r1/nginx-1.22.1.pkg',
+                version='1.24.0',
+                package='https://github.com/donmccaughey/nginx_pkg/releases/download/v1.24.0-r1/nginx-1.24.0.pkg',
                 source='https://github.com/donmccaughey/nginx_pkg',
                 project='https://nginx.org',
                 description='A widely used and capable HTTP and proxy server.'
@@ -63,16 +63,16 @@ def macos_packages():
             )
             package(
                 name='wget',
-                version='1.21.3',
-                package='https://github.com/donmccaughey/wget_pkg/releases/download/v1.21.3-r3/wget-1.21.3-r3.pkg',
+                version='1.21.4',
+                package='https://github.com/donmccaughey/wget_pkg/releases/download/v1.21.4-r1/wget-1.21.4.pkg',
                 source='https://github.com/donmccaughey/wget_pkg',
                 project='https://www.gnu.org/software/wget/',
                 description='A command line tool for retrieving files using HTTP, HTTPS, FTP and FTPS.'
             )
             package(
                 name='XZ Utils',
-                version='5.4.1',
-                package='https://github.com/donmccaughey/xz_pkg/releases/download/v5.4.1-r1/xz-5.4.1.pkg',
+                version='5.4.2',
+                package='https://github.com/donmccaughey/xz_pkg/releases/download/v5.4.2-r1/xz-5.4.2.pkg',
                 source='https://github.com/donmccaughey/xz_pkg',
                 project='https://tukaani.org/xz/',
                 description='A general purpose data compression tool and library, and includes the `xz` command line tool.'
