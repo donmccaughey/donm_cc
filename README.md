@@ -1,7 +1,7 @@
 # donm_cc
 
-Source for my [personal web site](https://donm.cc)
-and [news page](https://news.donm.cc).
+Source for my [personal web site](https://donm.cc).
+
 
 ## Licenses
 

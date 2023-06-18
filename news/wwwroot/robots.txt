@@ -1,3 +1,0 @@
-Sitemap: https://news.donm.cc/sitemap.txt
-User-agent: *
-Disallow: /
