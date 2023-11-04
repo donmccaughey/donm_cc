@@ -32,7 +32,7 @@ def macos_packages():
             package(
                 name='jq',
                 version='1.7',
-                package='https://github.com/donmccaughey/jq_pkg/releases/download/v1.7-r1/jq-1.7.pkg',
+                package='https://github.com/donmccaughey/jq_pkg/releases/download/v1.7-r2/jq-1.7-r2.pkg',
                 source='https://github.com/donmccaughey/jq_pkg',
                 project='https://jqlang.github.io/jq/',
                 description='A lightweight and flexible command line JSON processor.'
@@ -64,15 +64,15 @@ def macos_packages():
             package(
                 name='wget',
                 version='1.21.4',
-                package='https://github.com/donmccaughey/wget_pkg/releases/download/v1.21.4-r2/wget-1.21.4-r2.pkg',
+                package='https://github.com/donmccaughey/wget_pkg/releases/download/v1.21.4-r3/wget-1.21.4-r3.pkg',
                 source='https://github.com/donmccaughey/wget_pkg',
                 project='https://www.gnu.org/software/wget/',
                 description='A command line tool for retrieving files using HTTP, HTTPS, FTP and FTPS.'
             )
             package(
                 name='XZ Utils',
-                version='5.4.4',
-                package='https://github.com/donmccaughey/xz_pkg/releases/download/v5.4.4-r1/xz-5.4.4.pkg',
+                version='5.4.5',
+                package='https://github.com/donmccaughey/xz_pkg/releases/download/v5.4.5-r1/xz-5.4.5.pkg',
                 source='https://github.com/donmccaughey/xz_pkg',
                 project='https://tukaani.org/xz/',
                 description='A general purpose data compression tool and library, and includes the `xz` command line tool.'
