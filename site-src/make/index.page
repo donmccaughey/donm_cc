@@ -39,6 +39,11 @@ obvious and subtle ways while using Make.
 
 .section links Articles
 
+.link site Makefile Tutorial By Example
+.url https://makefiletutorial.com
+.author Chase Lambert
+.date 2023-08-09
+
 .link blog Notes for new Make users
 .url http://gromnitsky.users.sourceforge.net/articles/notes-for-new-make-users/
 .author Alexander Gromnitsky
