@@ -15,19 +15,37 @@ maze : \
 
 
 .PHONY : upload
-upload : check scripts/upload
-	scripts/upload
+upload : $(TMP)/uploaded.stamp.txt
 
 
 .PHONY : check
-check : scripts/check-html
-	scripts/check-html
+check : $(TMP)/checked_html.stamp.txt
 
 
 .PHONY : clean
 clean :
 	rm -rf $(TMP)
 	rm -rf maze/pkg
+
+
+wwwroot_files := $(shell find wwwroot -type f)
+
+
+$(TMP)/checked_html.stamp.txt : \
+		scripts/check-html \
+		$(wwwroot_files) \
+		| $$(dir $$@)
+	scripts/check-html
+	date > $@
+
+
+$(TMP)/uploaded.stamp.txt : \
+		$(TMP)/checked_html.stamp.txt \
+		scripts/upload \
+		$(wwwroot_files) \
+		| $$(dir $$@)
+	scripts/upload
+	date > $@
 
 
 ##### Maze ##########
