@@ -14,6 +14,16 @@ maze : \
 		site-src/maze/maze_bg.js
 
 
+.PHONY : upload
+upload : check scripts/upload
+	scripts/upload
+
+
+.PHONY : check
+check : scripts/check-html
+	scripts/check-html
+
+
 .PHONY : clean
 clean :
 	rm -rf $(TMP)
@@ -43,4 +53,3 @@ $(TMP)/maze-wasm-generated.stamp.txt : maze/Cargo.toml maze/src/lib.rs | $$(dir 
 $(TMP) \
 site-src/maze :
 	mkdir -p $@
-

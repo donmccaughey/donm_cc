@@ -1,0 +1,16 @@
+#!/bin/sh
+
+# Requires AWS Command Line Interface `aws`
+# https://aws.amazon.com/cli/
+
+if [ ! -d wwwroot ]
+then
+    script_name="$(basename "$0")"
+    printf 'ERROR: %s must run from the project root directory.\n' "$script_name"
+    exit 1
+fi
+
+aws s3 sync wwwroot s3://donm.cc \
+    --acl public-read \
+    --exclude '.DS_Store' \
+    --delete

@@ -1,0 +1,19 @@
+#!/bin/sh
+
+# Requires the Nu Html Checker `vnu`
+# https://github.com/validator/validator
+
+if [ ! -d wwwroot ] || [ ! -d objective-c_tuesdays/tmp ]
+then
+    script_name="$(basename "$0")"
+    printf 'ERROR: %s must run from the project root directory.\n' "$script_name"
+    exit 1
+fi
+
+vnu \
+    --skip-non-html wwwroot \
+    --also-check-css wwwroot
+
+vnu \
+    --skip-non-html objective-c_tuesdays/tmp \
+    --also-check-css objective-c_tuesdays/tmp
