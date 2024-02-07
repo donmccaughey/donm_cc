@@ -31,8 +31,8 @@ def macos_packages():
             )
             package(
                 name='jq',
-                version='1.7',
-                package='https://github.com/donmccaughey/jq_pkg/releases/download/v1.7-r2/jq-1.7-r2.pkg',
+                version='1.7.1',
+                package='https://github.com/donmccaughey/jq_pkg/releases/download/v1.7.1-r1/jq-1.7.1.pkg',
                 source='https://github.com/donmccaughey/jq_pkg',
                 project='https://jqlang.github.io/jq/',
                 description='A lightweight and flexible command line JSON processor.'
