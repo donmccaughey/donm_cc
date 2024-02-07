@@ -172,50 +172,34 @@ def resume():
                                 '''
                             )
                             project(
+                                customer='Facebook, Skype, Pivotal Labs',
+                                date='2011',
+                                summary='Skype app for unreleased phone',
+                                description='''
+                                    Created a Skype client for a mobile OS built
+                                    on an Android core.  Worked with Skype and
+                                    Facebook engineers to integrate the Skype
+                                    client library with the phone's custom UI
+                                    toolkit built atop HTML, CSS and JavaScript.
+                                '''
+                            )
+                            project(
                                 customer='BMW',
                                 date='2009-2010',
                                 summary='first iPhone integration for the [BMW Mini](https://apps.apple.com/us/app/id1519458349)',
                                 description='''
-                                    Starting with BMW's prototype iPhone app
-                                    that used HTTP to connect to the
-                                    [automotive head unit](https://en.wikipedia.org/wiki/Automotive_head_unit),
-                                    I designed and implemented a unique proxy
-                                    to direct HTTP connections from the app to
-                                    the head unit over the phone's 30 pin
-                                    connector.  Worked with embedded engineers
-                                    to design a communication protocol.  Built
-                                    a C++ echo server running on the head unit
+                                    Designed and implemented a unique proxy to
+                                    direct HTTP connections from the app to the
+                                    [automotive head unit](https://en.wikipedia.org/wiki/Automotive_head_unit)
+                                    over the phone's 30 pin connector.  Worked
+                                    with embedded engineers to design a
+                                    communication protocol.  Built tools in C++
                                     to diagnose intermittent data corruption.
                                     Implemented simple flow control to work
                                     around deficiencies in the underlying
                                     [iAP protocol](https://en.wikipedia.org/wiki/List_of_Bluetooth_profiles#iPod_Accessory_Protocol_(iAP)).
                                 '''
                             )
-
-            with Section(class_names=['personal-projects']):
-                H1('Personal Projects')
-                with Ul():
-                    with Li():
-                        inline_markdown_to_markup('''
-                            [News](https://news.donm.cc), a personal tech news
-                            aggregator.
-                        ''')
-                    with Li():
-                        inline_markdown_to_markup('''
-                            [macOS Installer Packages](https://donm.cc/macos_packages/)
-                            for missing Unix command line utilities.
-                        ''')
-                    with Li():
-                        inline_markdown_to_markup('''
-                            [Objective-C Tuesdays](https://donm.cc/objective-c_tuesdays/),
-                            tutorials on the basics of C and Objective-C.
-                        ''')
-                    with Li():
-                        inline_markdown_to_markup('''
-                            [C-evo-X](https://github.com/donmccaughey/C-evo-x), 
-                            maintainer of a Civilization-inspired Windows 
-                            strategy game.
-                        ''')
 
             with Section(class_names=['education']):
                 H1('Education')

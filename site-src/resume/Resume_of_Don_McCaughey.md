@@ -13,10 +13,21 @@ focus on sustained, regular delivery of value to customers.
 
 ## Selected Experience
 
+### United States Digital Service
+
+Remote
+2023 to present
+Digital Services Expert
+
+I'm working with the United States Digital Service to help agencies across the
+federal government build and improve their software systems in order to deliver
+a better government experience to millions of people.
+
+
 ### Cruise
 
 San Francisco, CA
-2022 to present
+2022 to 2023
 Staff Software Engineer
 
 I joined the fleet management team supporting Cruise's rapidly growing fleet of
@@ -60,55 +71,46 @@ manager of the mobile team and infrastructure team.
 - Doubled the rate of web app releases through a release improvement process.
 
 
+
 ### Able Pear Software
 
 Burlingame, CA
 2008 to 2016
 Founder and Principal Developer
 
-I ran a small software development firm focused on mobile apps.  Interesting
-projects included:
+I ran a small software development firm.  Interesting projects included:
 
 - **Square**, 2012 - _iPad integration with point-of-sale (POS) hardware_
   Built an iOS library linking the Square POS app with the Square Stand.
   Worked with the app team and embedded software team to create APIs and
   communication protocols.  Built engineering test applications.
+
+- **Facebook, Skype, Pivotal Labs**, 2011 - _Skype app for unreleased phone_
+  Created a Skype client for a mobile OS built on an Android core.  Worked with
+  Skype and Facebook engineers to integrate the Skype client library with the
+  phone's custom UI toolkit built atop HTML, CSS and JavaScript.
+
 - **BMW**, 2009-2010 - _first iPhone integration for the [BMW Mini][2]_
-  Starting with BMW's prototype iPhone app that used HTTP to connect to the
-  [automotive head unit][3], I designed and implemented a unique proxy to
-  direct HTTP connections from the app to the head unit over the phone's 30 pin
-  connector.  Worked with embedded engineers to design a communication
-  protocol.  Built a C++ echo server running on the head unit to diagnose
-  intermittent data corruption.  Implemented simple flow control to work around
-  deficiencies in the underlying [iAP protocol][4].
+  Designed and implemented a unique proxy to direct HTTP connections from the
+  app to the [automotive head unit][3] over the phone's 30 pin connector.
+  Worked with embedded engineers to design a communication protocol.  Built
+  tools in C++ to diagnose intermittent data corruption.  Implemented simple
+  flow control to work around deficiencies in the underlying [iAP protocol][4].
 
 [2]: https://apps.apple.com/us/app/id1519458349
 [3]: https://en.wikipedia.org/wiki/Automotive_head_unit
 [4]: https://en.wikipedia.org/wiki/List_of_Bluetooth_profiles#iPod_Accessory_Protocol_(iAP)
 
 
-### Personal Projects
-
-- [News][5], a personal tech news aggregator.
-- [macOS Installer Packages][6] for missing Unix command line utilities.
-- [Objective-C Tuesdays][7], tutorials on the basics of C and Objective-C.
-- [C-evo-X][8], maintainer of a Civilization-inspired Windows strategy game.
-
-[5]: https://news.donm.cc
-[6]: https://donm.cc/macos_packages/
-[7]: https://donm.cc/objective-c_tuesdays/
-[8]: https://github.com/donmccaughey/C-evo-x
-
-
 ### Education
 
 - **Stanford University** - One year of graduate study in mechanical
   engineering; focus in smart product design (ME 218).
+
 - **New Jersey Institute of Technology** - BS, Mechanical Engineering.
 
 
                                      * * *
-
         start
 
         +  ------+--------------+--------------+-----------------+--+
@@ -140,4 +142,4 @@ projects included:
         https://donm.cc/maze/                                  finish
 
 
-                              updated 16 April 2023
+                              updated 6 February 2024
