@@ -63,8 +63,20 @@ def resume():
             with Section(class_names=['experience']):
                 H1('Selected Experience')
                 with Section(class_names=['organization']):
+                    H2('United States Digital Service')
+                    organization_details('Remote', '2023', 'present',
+                                         ['Digital Services Expert'])
+                    with P():
+                        Text('''
+                            I'm working with the United States Digital Service 
+                            to help agencies across the federal government build
+                            and improve their software systems in order to
+                            deliver a better government experience to millions 
+                            of people.
+                        ''')
+                with Section(class_names=['organization']):
                     H2('Cruise')
-                    organization_details('San Francisco, CA', '2022', 'present',
+                    organization_details('San Francisco, CA', '2022', '2023',
                                          ['Staff Software Engineer'])
                     with P():
                         Text('''
