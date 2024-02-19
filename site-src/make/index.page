@@ -32,9 +32,16 @@ obvious and subtle ways while using Make.
 .author John Graham-Cumming
 .date 2015
 
+
+.section links Documentation
+
 .link book The GNU Make Manual
 .url https://www.gnu.org/software/make/manual/html_node/index.html
 .date 2016
+
+.link site POSIX Make
+.url https://pubs.opengroup.org/onlinepubs/9699919799/utilities/make.html
+.date 2018
 
 
 .section links Articles
