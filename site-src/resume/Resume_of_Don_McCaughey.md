@@ -5,7 +5,7 @@ don@donm.cc
 +1 (415) 793-1166
 
 I'm a software engineer with strong technical, leadership and organizational
-skills. I build high performing, collaborative, cross-functional teams that
+skills.  I build high performing, collaborative, cross-functional teams that
 focus on sustained, regular delivery of value to customers.
 
 [1]: https://www.linkedin.com/in/donmccaughey/
@@ -19,9 +19,9 @@ Remote
 2023 to present
 Digital Services Expert
 
-I'm working with the United States Digital Service to help agencies across the
-federal government build and improve their software systems in order to deliver
-a better government experience to millions of people.
+At USDS I'm helping agencies across the federal government build and improve
+their software systems, delivering a better government experience to millions
+of people.
 
 
 ### Cruise
@@ -68,7 +68,7 @@ manager of the mobile team and infrastructure team.
 - Established a regular release cadence and shipped many new features.
 - Grew the mobile team from two to six engineers and fostered a collaborative,
   cross-functional team culture.
-- Doubled the rate of web app releases through a release improvement process.
+- Quadrupled web app release rate by improving the release process.
 
 
 
@@ -142,4 +142,4 @@ I ran a small software development firm.  Interesting projects included:
         https://donm.cc/maze/                                  finish
 
 
-                              updated 6 February 2024
+                              updated 13 April 2024

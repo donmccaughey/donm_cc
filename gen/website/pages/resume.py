@@ -68,11 +68,10 @@ def resume():
                                          ['Digital Services Expert'])
                     with P():
                         Text('''
-                            I'm working with the United States Digital Service 
-                            to help agencies across the federal government build
-                            and improve their software systems in order to
-                            deliver a better government experience to millions 
-                            of people.
+                            At USDS I'm helping agencies across the federal
+                            government build and improve their software systems,
+                            delivering a better government experience to
+                            millions of people.
                         ''')
                 with Section(class_names=['organization']):
                     H2('Cruise')
@@ -145,8 +144,8 @@ def resume():
                                 team culture.
                             ''')
                             Li('''
-                                Doubled the rate of web app releases through a 
-                                release improvement process.
+                                Quadrupled web app release rate by improving the
+                                release process.
                             ''')
 
                 with Section(class_names=['organization']):
