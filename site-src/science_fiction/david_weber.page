@@ -138,14 +138,14 @@ breaks it all down.
 .date 2012
 .checked
 
-.link book Shadow of Freedom
-.url https://www.baen.com/shadow-of-freedom.html
-.date 2013
-.checked
-
 .link book Fire Season
 .url https://www.baen.com/fire-season.html
 .date 2012
+.checked
+
+.link book Shadow of Freedom
+.url https://www.baen.com/shadow-of-freedom.html
+.date 2013
 .checked
 
 .link book The Treecat Wars
@@ -210,6 +210,10 @@ breaks it all down.
 .link book What Price Victory?
 .url https://www.baen.com/what-price-victory.html
 .date 2023
+
+.link book Toll of Honor
+.url https://www.baen.com/toll-of-honor.html
+.date 2024
 
 
 .section links Empire of Man
