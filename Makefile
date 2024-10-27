@@ -5,17 +5,7 @@ TMP ?= $(abspath tmp)
 
 
 .PHONY : all
-all : maze
-
-
-.PHONY : maze
-maze : \
-		site-src/maze/maze_bg.wasm \
-		site-src/maze/maze_bg.js
-
-
-.PHONY : upload
-upload : $(TMP)/uploaded.stamp.txt
+all : maze objective-c_tuesdays
 
 
 .PHONY : check
@@ -26,6 +16,29 @@ check : $(TMP)/checked_html.stamp.txt
 clean :
 	rm -rf $(TMP)
 	rm -rf maze/pkg
+
+
+.PHONY : clobber
+clobber : clean
+	-rm -rf ./.venv
+
+
+.PHONY : maze
+maze : \
+		site-src/maze/maze_bg.wasm \
+		site-src/maze/maze_bg.js
+
+
+.PHONY : objective-c_tuesdays
+objective-c_tuesdays : $(TMP)/objective-c_tuesdays.stamp.txt
+
+
+.PHONY : prettify
+prettify : $(TMP)/blog-08-09-2020-pretty.xml $(TMP)/blog-pretty.xml
+
+
+.PHONY : upload
+upload : $(TMP)/uploaded.stamp.txt
 
 
 site_src := \
@@ -108,11 +121,29 @@ site_src := \
 wwwroot_files := $(shell find wwwroot -type f)
 
 
+uv.lock : pyproject.toml .python-version
+	uv sync
+	touch $@
+
+
+$(TMP)/blog-pretty.xml : objective-c_tuesdays/data/blog.xml | $$(dir $$@)
+	XMLLINT_INDENT='    ' xmllint --format $< > $@
+
+
+$(TMP)/blog-08-09-2020-pretty.xml : objective-c_tuesdays/data/blog-08-09-2020.xml | $$(dir $$@)
+	XMLLINT_INDENT='    ' xmllint --format $< > $@
+
+
 $(TMP)/checked_html.stamp.txt : \
 		scripts/check-html \
 		$(wwwroot_files) \
 		| $$(dir $$@)
 	scripts/check-html
+	date > $@
+
+
+$(TMP)/objective-c_tuesdays.stamp.txt : $(TMP)/blog-pretty.xml uv.lock | $$(dir $$@)
+	uv run objective-c_tuesdays/main.py --brief $< $(TMP)/objective-c_tuesdays
 	date > $@
 
 
@@ -125,7 +156,9 @@ $(TMP)/uploaded.stamp.txt : \
 	date > $@
 
 
-##### gen ##########
+$(TMP)/uv-sync.stamp.txt : uv.lock | $$(dir $$@)
+	uv sync --frozen
+	date > $@
 
 
 ##### maze ##########
