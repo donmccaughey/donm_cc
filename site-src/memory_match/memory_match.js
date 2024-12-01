@@ -361,7 +361,7 @@ function faceSet(includeSets) {
     var faceSet = [];
     faceSet.merge(numbersFaceSet);
     var letterSet = nextRandomIntegerLessThan(2);
-    if (letterSet == 0) {
+    if (letterSet === 0) {
         faceSet.merge(romanCapitalLettersFaceSet);
         faceSet.merge(romanSmallLettersFaceSet);
     } else {
@@ -515,7 +515,7 @@ Location.prototype.splitQueryParameters = function() {
     pairs.forEach(function(pair) {
         var parts = pair.split('=', 2);
         var name = decodeURIComponent(parts[0]);
-        var value = (parts.length == 2) ? decodeURIComponent(parts[1]) : undefined;
+        var value = (parts.length === 2) ? decodeURIComponent(parts[1]) : undefined;
         parameters[name] = value;
     }); 
     return parameters;
@@ -532,11 +532,11 @@ View.prototype.$ = function() {
 }
 
 View.prototype.isHidden = function() {
-    return this.$().css('display') == 'none';
+    return this.$().css('display') === 'none';
 }
 
 View.prototype.isVisible = function() {
-    return this.$().css('display') != 'none';
+    return this.$().css('display') !== 'none';
 }
 
 View.prototype.hide = function() {
@@ -716,27 +716,27 @@ function Status(container, width) {
 Status.prototype = new View();
 
 Status.prototype.clearFirstTile = function() {
-    $('#first_tile').empty();
+    document.querySelector('#first_tile').innerHTML = '';
 }
 
 Status.prototype.clearSecondTile = function() {
-    $('#second_tile').empty();
+    document.querySelector('#second_tile').innerHTML = '';
 }
 
 Status.prototype.setFirstTile = function(tile) {
-    $('#first_tile').text(tile.face[1]);
+    document.querySelector('#first_tile').innerHTML = tile.face[1];
 }
 
 Status.prototype.setSecondTile = function(tile) {
-    $('#second_tile').text(tile.face[1]);
+    document.querySelector('#second_tile').innerHTML = tile.face[1];
 }
 
 Status.prototype.setTries = function(tries) {
-    $('#tries').text('' + tries + ' tries');
+    document.querySelector('#tries').innerHTML = '' + tries + ' tries';
 }
 
 Status.prototype.setClock = function(elapsedSeconds) {
-    $('#clock').text(formatElapsedSeconds(elapsedSeconds));
+    document.querySelector('#clock').innerHTML = formatElapsedSeconds(elapsedSeconds);
 }
 
 function Tile(game, x, y, face) {
@@ -916,7 +916,7 @@ Game.prototype.createTiles = function() {
     var $board = this.board.$();
     for (var i = 0; i < this.horizontalTileCount; ++i) {
         for (var j = 0; j < this.verticalTileCount; ++j) {
-            if (skipCenter && i == centerI && j == centerJ) continue;
+            if (skipCenter && i === centerI && j === centerJ) continue;
             this.tiles.push(new Tile(this, i, j, this.faces[n]));
             ++n;
         }
@@ -925,7 +925,7 @@ Game.prototype.createTiles = function() {
 }
 
 Game.prototype.hasMatch = function() {
-    return this.firstTile.face == this.secondTile.face;
+    return this.firstTile.face === this.secondTile.face;
 }
 
 Game.prototype.onGameCompleted = function() {
@@ -949,7 +949,7 @@ Game.prototype.onBackgroundClicked = function(event) {
         this.resolveMatch();
         this.onTileClicked = this.onNoneUp;
     }
-    if (this.remainingTileCount == 0) {
+    if (this.remainingTileCount === 0) {
         this.onGameCompleted();
     } else {
         this.options.hide();
@@ -967,7 +967,7 @@ Game.prototype.onNoneUp = function(tile) {
 }
 
 Game.prototype.onOneUp = function(tile) {
-    if (tile != this.firstTile) {
+    if (tile !== this.firstTile) {
         tile.flipUp();
         ++this.tries;
         this.status.setSecondTile(tile);
@@ -983,7 +983,7 @@ Game.prototype.onOneUp = function(tile) {
 }
 
 Game.prototype.onTwoUp = function(tile) {
-    if (tile != this.firstTile && tile != this.secondTile) {
+    if (tile !== this.firstTile && tile !== this.secondTile) {
         this.resolveMatch();
         tile.flipUp();
         this.status.setFirstTile(tile);
@@ -1034,4 +1034,3 @@ Game.prototype.updateClock = function() {
 $(function() {
     new Game('memory_match');
 });
-
