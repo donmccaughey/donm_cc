@@ -716,27 +716,28 @@ function Status(container, width) {
 Status.prototype = new View();
 
 Status.prototype.clearFirstTile = function() {
-    $('#first_tile').empty();
+    // $('#first_tile').empty();
+    document.querySelector('#first_tile').innerHTML = '';
 }
 
 Status.prototype.clearSecondTile = function() {
-    $('#second_tile').empty();
+    document.querySelector('#second_tile').innerHTML = '';
 }
 
 Status.prototype.setFirstTile = function(tile) {
-    $('#first_tile').text(tile.face[1]);
+    document.querySelector('#first_tile').innerHTML = tile.face[1];
 }
 
 Status.prototype.setSecondTile = function(tile) {
-    $('#second_tile').text(tile.face[1]);
+    document.querySelector('#second_tile').innerHTML = tile.face[1];
 }
 
 Status.prototype.setTries = function(tries) {
-    $('#tries').text('' + tries + ' tries');
+    document.querySelector('#tries').innerHTML = '' + tries + ' tries';
 }
 
 Status.prototype.setClock = function(elapsedSeconds) {
-    $('#clock').text(formatElapsedSeconds(elapsedSeconds));
+    document.querySelector('#clock').innerHTML = formatElapsedSeconds(elapsedSeconds);
 }
 
 function Tile(game, x, y, face) {
@@ -1034,4 +1035,3 @@ Game.prototype.updateClock = function() {
 $(function() {
     new Game('memory_match');
 });
-
