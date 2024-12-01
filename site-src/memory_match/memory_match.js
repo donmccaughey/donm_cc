@@ -503,12 +503,7 @@ function Board(container, width, height) {
     $('<div/>')
         .attr( {id: this.id} )
         .css({
-            background: 'silver',
-            border: '1pt solid black',
-            height: em(height), 
-            margin: '0 auto',
-            padding: 0,
-            position: 'relative',
+            height: em(height),
             width: em(width)
         })
         .appendTo(container.element());
@@ -536,11 +531,6 @@ function Options($container, width, horizontalTileCount, verticalTileCount) {
         .attr( {id: this.id} )
         .css({
             display: 'none',
-            margin: '1em',
-            padding: '1em',
-            position: 'absolute',
-            textAlign: 'center',
-            zIndex: 10,
         })
         .on('touchend', function(event) {
             event.stopPropagation();
@@ -599,16 +589,6 @@ function Status(container) {
     this.id = 'status';
     const $status = $('<div/>')
         .attr( {id: this.id} )
-        .css({
-            bottom: '0px',
-            border: 0,
-            left: '0px',
-            margin: 0,
-            padding: '0.5em',
-            position: 'fixed',
-            textAlign: 'center',
-            width: '100%'
-        })
         .appendTo(container.element());
     const tileLabelCss = {
             border: 0,
