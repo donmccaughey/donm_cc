@@ -532,7 +532,7 @@ Container.prototype.setBottomMargin = function(cssHeight) {
 
 function Options($container, width, horizontalTileCount, verticalTileCount) {
     this.id = 'options';
-    var $options = $('<div/>')
+    const $options = $('<div/>')
         .attr( {id: this.id} )
         .css({
             display: 'none',
@@ -557,24 +557,24 @@ function Options($container, width, horizontalTileCount, verticalTileCount) {
             padding: 0
         })
         .appendTo($options);
-    var $form = $('<form/>')
+    const $form = $('<form/>')
         .attr( {action: '.', method: 'GET'} )
         .css( {margin: 0, padding: 0} )
         .appendTo($options);
-    var inputCss = {
+    const inputCss = {
         fontSize: '10pt',
         height: '2em',
         padding: '0 0.5em',
         width: '2.5em'
     };
-    var $widthLabel = $('<label>width: </label>')
+    const $widthLabel = $('<label>width: </label>')
         .appendTo($form);
     $('<input/>')
         .attr( {name: 'width', type: 'number', value: horizontalTileCount} )
         .css(inputCss)
         .appendTo($widthLabel);
     $('<p/>').appendTo($form);
-    var $heightLabel = $('<label>height: </label>')
+    const $heightLabel = $('<label>height: </label>')
         .appendTo($form);
     $('<input/>')
         .attr( {name: 'height', type: 'number', value: verticalTileCount} )
@@ -597,7 +597,7 @@ Options.prototype = new View();
 
 function Status(container) {
     this.id = 'status';
-    var $status = $('<div/>')
+    const $status = $('<div/>')
         .attr( {id: this.id} )
         .css({
             bottom: '0px',
@@ -610,7 +610,7 @@ function Status(container) {
             width: '100%'
         })
         .appendTo(container.element());
-    var tileLabelCss = {
+    const tileLabelCss = {
             border: 0,
             display: 'inline-block',
             margin: 0,
@@ -681,8 +681,8 @@ function Tile(game, x, y, face) {
     this.game = game;
     this.id = 'tile_' + x + '_' + y;
 
-    var top = Tile.height * y + Tile.topPadding;
-    var left = Tile.width * x + Tile.leftPadding;
+    const top = Tile.height * y + Tile.topPadding;
+    const left = Tile.width * x + Tile.leftPadding;
 
     $('<div/>')
         .attr( {id: this.id} )
@@ -715,7 +715,7 @@ Tile.prototype.flipDown = function() {
 }
 
 Tile.prototype.flipUp = function() {
-    var $face = $('<span>')
+    const $face = $('<span>')
         .css({
             border: 0,
             color: 'black',
@@ -731,8 +731,8 @@ Tile.prototype.flipUp = function() {
     const $tile = this.element();
     $tile.style.backgroundColor = 'yellow';
     $tile.appendChild($face[0]);
-    var bottom = Math.trunc(($tile.clientHeight - $face.outerHeight()) / 2);
-    var left = Math.trunc(($tile.clientWidth - $face.outerWidth()) / 2);
+    const bottom = Math.trunc(($tile.clientHeight - $face.outerHeight()) / 2);
+    const left = Math.trunc(($tile.clientWidth - $face.outerWidth()) / 2);
     $face.css( {bottom: px(bottom), left: px(left)} );
 }
 
@@ -749,7 +749,7 @@ Tile.prototype.onClick = function(event) {
 function Title(container, game, width) {
     this.id = 'title';
     this.game = game;
-    var $title = $('<div/>')
+    const $title = $('<div/>')
         .attr( {id: this.id} )
         .css({
             border: 0,
@@ -760,7 +760,7 @@ function Title(container, game, width) {
             width: em(width)
         })
         .appendTo(container.element());
-    var $optionsButton = $('<img/>')
+    const $optionsButton = $('<img/>')
         .attr( {src: 'gear.png'} )
         .css({
             border: 0,
@@ -778,7 +778,7 @@ function Title(container, game, width) {
         .css( {fontSize: '24pt'} )
         .text('Memory Match')
         .appendTo($title);
-    var top = Math.trunc(($title.innerHeight() - $optionsButton.outerHeight()) / 2);
+    const top = Math.trunc(($title.innerHeight() - $optionsButton.outerHeight()) / 2);
     $optionsButton.css( {top: px(top)} );
 }
 
@@ -791,7 +791,7 @@ Title.prototype.onOptionsButtonClick = function(event) {
 }
 
 function Game(containerID, horizontalTileCount, verticalTileCount) {
-    var queryParameters = window.location.splitQueryParameters();
+    const queryParameters = window.location.splitQueryParameters();
     
     this.horizontalTileCount = horizontalTileCount 
                             || toInt(queryParameters["width"]) 
@@ -816,8 +816,8 @@ function Game(containerID, horizontalTileCount, verticalTileCount) {
 
     this.container = new Container(containerID, this);
 
-    var width = this.horizontalTileCount * Tile.width + 2 * Tile.leftPadding;
-    var height = this.verticalTileCount * Tile.height + 2 * Tile.topPadding;
+    const width = this.horizontalTileCount * Tile.width + 2 * Tile.leftPadding;
+    const height = this.verticalTileCount * Tile.height + 2 * Tile.topPadding;
 
     this.title = new Title(this.container, this, width);
     this.board = new Board(this.container, width, height);
@@ -830,20 +830,20 @@ function Game(containerID, horizontalTileCount, verticalTileCount) {
 }
 
 Game.prototype.createFaces = function() {
-    var faceSet = this.faceSet.shuffled();
-    var faceCount = Math.trunc(this.horizontalTileCount * this.verticalTileCount / 2);
-    var uniqueFaces = faceSet.slice(0, faceCount);
+    const faceSet = this.faceSet.shuffled();
+    const faceCount = Math.trunc(this.horizontalTileCount * this.verticalTileCount / 2);
+    const uniqueFaces = faceSet.slice(0, faceCount);
     this.faces = uniqueFaces.concat(uniqueFaces).shuffled();
 }
 
 Game.prototype.createTiles = function() {
-    var skipCenter = isOdd(this.horizontalTileCount) 
+    const skipCenter = isOdd(this.horizontalTileCount)
                   && isOdd(this.verticalTileCount);
-    var centerI = Math.trunc(this.horizontalTileCount / 2);
-    var centerJ = Math.trunc(this.verticalTileCount / 2);
-    var n = 0;
-    for (var i = 0; i < this.horizontalTileCount; ++i) {
-        for (var j = 0; j < this.verticalTileCount; ++j) {
+    const centerI = Math.trunc(this.horizontalTileCount / 2);
+    const centerJ = Math.trunc(this.verticalTileCount / 2);
+    let n = 0;
+    for (let i = 0; i < this.horizontalTileCount; ++i) {
+        for (let j = 0; j < this.verticalTileCount; ++j) {
             if (skipCenter && i === centerI && j === centerJ) continue;
             this.tiles.push(new Tile(this, i, j, this.faces[n]));
             ++n;
@@ -936,10 +936,10 @@ Game.prototype.resolveMatch = function() {
 Game.prototype.startClock = function() {
     this.clockStartInSeconds = Date.nowInSeconds();
     this.clockCurrentInSeconds = this.clockStartInSeconds;
-    var game = this;
-    var delayInMillis = 200;
+    const game = this;
+    const delayInMillis = 200;
     this.clockIntervalID = setInterval(function() {
-        var nowInSeconds = Date.nowInSeconds();
+        const nowInSeconds = Date.nowInSeconds();
         if (nowInSeconds > game.clockCurrentInSeconds) {
             game.clockCurrentInSeconds = nowInSeconds;
             game.updateClock();
