@@ -527,16 +527,20 @@ View.prototype.$ = function() {
     return $(id(this.id));
 }
 
+View.prototype.$$ = function() {
+    return document.querySelector(id(this.id));
+}
+
 View.prototype.isHidden = function() {
-    return this.$().css('display') === 'none';
+    return this.$$().style.display === 'none';
 }
 
 View.prototype.hide = function() {
-    this.$().css( {display: 'none'} );
+    this.$$().style.display = 'none';
 }
 
 View.prototype.show = function() {
-    this.$().css( {display: 'block'} );
+    this.$$().style.display = 'block';
 }
 
 View.prototype.toggleDisplay = function() {
@@ -582,7 +586,7 @@ function Container(id, game) {
 Container.prototype = new View();
 
 Container.prototype.setBottomMargin = function(cssHeight) {
-    this.$().css( { marginBottom: cssHeight } );
+    this.$$().style.marginBottom = cssHeight;
 }
 
 function Options($container, width, horizontalTileCount, verticalTileCount) {
@@ -792,7 +796,7 @@ Tile.prototype.flipUp = function() {
 }
 
 Tile.prototype.matched = function() {
-    this.$().remove();
+    this.$$().remove();
 }
 
 Tile.prototype.onClick = function(event) {
