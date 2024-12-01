@@ -357,7 +357,7 @@ var objectsEmojiFaceSet = [
     // ['\u{}', ''],
 ];
 
-function faceSet(includeSets) {
+function buildFaceSet() {
     var faceSet = [];
     faceSet.merge(numbersFaceSet);
     var letterSet = nextRandomIntegerLessThan(2);
@@ -865,7 +865,7 @@ function Game(containerID, horizontalTileCount, verticalTileCount) {
     this.verticalTileCount = verticalTileCount 
                           || toInt(queryParameters["height"]) 
                           || 4;
-    this.faceSet = faceSet('all');
+    this.faceSet = buildFaceSet();
     this.faces = [];
     this.tiles = [];
 
