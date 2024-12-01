@@ -523,12 +523,6 @@ Board.prototype = new View();
 function Container(id, game) {
     this.id = id;
     const $container = this.element();
-    Object.assign($container.style, {
-        border: 0,
-        font: '12pt Helvetica, Arial, sans-serif',
-        margin: 0,
-        padding: '1em',
-    });
     $container.innerHTML = '';
     $container.addEventListener('touchend', game.onBackgroundClicked.bind(game));
     $container.addEventListener('click', game.onBackgroundClicked.bind(game));
