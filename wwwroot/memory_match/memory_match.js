@@ -384,10 +384,6 @@ function em(value) {
     return '' + value + 'em';
 }
 
-function id(value) {
-    return '#' + value;
-}
-
 function isOdd(number) {
     return number % 2;
 }
@@ -479,7 +475,7 @@ Location.prototype.splitQueryParameters = function() {
 function View() {}
 
 View.prototype.element = function() {
-    return document.querySelector(id(this.id));
+    return document.getElementById(this.id);
 }
 
 View.prototype.isHidden = function() {
