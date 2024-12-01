@@ -523,10 +523,6 @@ Location.prototype.splitQueryParameters = function() {
 
 function View() {}
 
-View.prototype.$ = function() {
-    return $(id(this.id));
-}
-
 View.prototype.$$ = function() {
     return document.querySelector(id(this.id));
 }
@@ -564,23 +560,23 @@ function Board(container, width, height) {
             position: 'relative',
             width: em(width)
         })
-        .appendTo(container.$());
+        .appendTo(container.$$());
 }
 
 Board.prototype = new View();
 
 function Container(id, game) {
     this.id = id;
-    var $container = this.$();
-    $container.css({
+    const $container = this.$$();
+    Object.assign($container.style, {
         border: 0,
         font: '12pt Helvetica, Arial, sans-serif',
         margin: 0,
-        padding: '1em'
-    }).empty();
-    $container
-        .on('touchend', game.onBackgroundClicked.bind(game))
-        .on('click', game.onBackgroundClicked.bind(game));
+        padding: '1em',
+    });
+    $container.innerHTML = '';
+    $container.addEventListener('touchend', game.onBackgroundClicked.bind(game));
+    $container.addEventListener('click', game.onBackgroundClicked.bind(game));
 }
 
 Container.prototype = new View();
@@ -668,7 +664,7 @@ function Status(container) {
             textAlign: 'center',
             width: '100%'
         })
-        .appendTo(container.$());
+        .appendTo(container.$$());
     var tileLabelCss = {
             border: 0,
             display: 'inline-block',
@@ -758,7 +754,7 @@ function Tile(game, x, y, face) {
         })
         .on('touchend', this.onClick.bind(this))
         .on('click', this.onClick.bind(this))
-        .appendTo(this.game.board.$());
+        .appendTo(this.game.board.$$());
 }
 
 Tile.height = 5;
@@ -769,7 +765,8 @@ Tile.leftPadding = 2;
 Tile.prototype = new View();
 
 Tile.prototype.flipDown = function() {
-    this.$().css( {backgroundColor: 'green'} ).empty();
+    this.$$().style.backgroundColor = 'green';
+    this.$$().innerHTML = '';
 }
 
 Tile.prototype.flipUp = function() {
@@ -786,12 +783,11 @@ Tile.prototype.flipUp = function() {
             transform: 'scale(2.67)'
         })
         .text(this.face[0]);
-    var $tile = this.$();
-    $tile
-        .css( {backgroundColor: 'yellow'} )
-        .append($face);
-    var bottom = Math.trunc(($tile.innerHeight() - $face.outerHeight()) / 2);
-    var left = Math.trunc(($tile.innerWidth() - $face.outerWidth()) / 2);
+    const $tile = this.$$();
+    $tile.style.backgroundColor = 'yellow';
+    $tile.appendChild($face[0]);
+    var bottom = Math.trunc(($tile.clientHeight - $face.outerHeight()) / 2);
+    var left = Math.trunc(($tile.clientWidth - $face.outerWidth()) / 2);
     $face.css( {bottom: px(bottom), left: px(left)} );
 }
 
@@ -818,7 +814,7 @@ function Title(container, game, width) {
             textAlign: 'center',
             width: em(width)
         })
-        .appendTo(container.$());
+        .appendTo(container.$$());
     var $optionsButton = $('<img/>')
         .attr( {src: 'gear.png'} )
         .css({
@@ -881,7 +877,7 @@ function Game(containerID, horizontalTileCount, verticalTileCount) {
     this.title = new Title(this.container, this, width);
     this.board = new Board(this.container, width, height);
     this.status = new Status(this.container);
-    this.options = new Options(this.board.$(), width, 
+    this.options = new Options(this.board.$$(), width,
                                this.horizontalTileCount, 
                                this.verticalTileCount);
 
