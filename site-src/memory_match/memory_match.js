@@ -521,10 +521,6 @@ Location.prototype.splitQueryParameters = function() {
     return parameters;
 }
 
-String.prototype.asArray = function() {
-    return this.split('');
-}
-
 function View() {}
 
 View.prototype.$ = function() {
@@ -533,10 +529,6 @@ View.prototype.$ = function() {
 
 View.prototype.isHidden = function() {
     return this.$().css('display') === 'none';
-}
-
-View.prototype.isVisible = function() {
-    return this.$().css('display') !== 'none';
 }
 
 View.prototype.hide = function() {
@@ -658,7 +650,7 @@ function Options($container, width, horizontalTileCount, verticalTileCount) {
 
 Options.prototype = new View();
 
-function Status(container, width) {
+function Status(container) {
     this.id = 'status';
     var $status = $('<div/>')
         .attr( {id: this.id} )
@@ -741,7 +733,6 @@ Status.prototype.setClock = function(elapsedSeconds) {
 
 function Tile(game, x, y, face) {
     this.face = face;
-    this.faceDown = true;
     this.game = game;
     this.id = 'tile_' + x + '_' + y;
 
@@ -775,7 +766,6 @@ Tile.prototype = new View();
 
 Tile.prototype.flipDown = function() {
     this.$().css( {backgroundColor: 'green'} ).empty();
-    this.faceDown = true;
 }
 
 Tile.prototype.flipUp = function() {
@@ -799,7 +789,6 @@ Tile.prototype.flipUp = function() {
     var bottom = Math.trunc(($tile.innerHeight() - $face.outerHeight()) / 2);
     var left = Math.trunc(($tile.innerWidth() - $face.outerWidth()) / 2);
     $face.css( {bottom: px(bottom), left: px(left)} );
-    this.faceDown = false;
 }
 
 Tile.prototype.matched = function() {
@@ -887,17 +876,12 @@ function Game(containerID, horizontalTileCount, verticalTileCount) {
 
     this.title = new Title(this.container, this, width);
     this.board = new Board(this.container, width, height);
-    this.status = new Status(this.container, width);
+    this.status = new Status(this.container);
     this.options = new Options(this.board.$(), width, 
                                this.horizontalTileCount, 
                                this.verticalTileCount);
 
     this.createTiles();
-}
-
-Game.prototype.clearClock = function() {
-    this.clockStartInSeconds = null;
-    this.clockCurrentInSeconds = null;
 }
 
 Game.prototype.createFaces = function() {
@@ -913,7 +897,6 @@ Game.prototype.createTiles = function() {
     var centerI = Math.trunc(this.horizontalTileCount / 2);
     var centerJ = Math.trunc(this.verticalTileCount / 2);
     var n = 0;
-    var $board = this.board.$();
     for (var i = 0; i < this.horizontalTileCount; ++i) {
         for (var j = 0; j < this.verticalTileCount; ++j) {
             if (skipCenter && i === centerI && j === centerJ) continue;
