@@ -1,6 +1,6 @@
 'use strict';
 
-var numbersFaceSet = [
+const numbersFaceSet = [
     ['0', 'zero'],
     ['1', 'one'],
     ['2', 'two'],
@@ -12,7 +12,7 @@ var numbersFaceSet = [
     ['8', 'eight'],
     ['9', 'nine'],
 ];
-var romanCapitalLettersFaceSet = [
+const romanCapitalLettersFaceSet = [
     ['A', 'capital A'],
     ['B', 'capital B'],
     ['C', 'capital C'],
@@ -40,7 +40,7 @@ var romanCapitalLettersFaceSet = [
     ['Y', 'capital Y'],
     ['Z', 'capital Z'],
 ];
-var romanSmallLettersFaceSet = [
+const romanSmallLettersFaceSet = [
     ['a', 'small A'],
     ['b', 'small B'],
     ['c', 'small C'],
@@ -68,7 +68,7 @@ var romanSmallLettersFaceSet = [
     ['y', 'small Y'],
     ['z', 'small Z'],
 ];
-var greekCapitalLettersFaceSet = [
+const greekCapitalLettersFaceSet = [
     ['\u0391', 'capital alpha'],
     ['\u0392', 'capital beta'],
     ['\u0393', 'capital gamma'],
@@ -94,7 +94,7 @@ var greekCapitalLettersFaceSet = [
     ['\u03A8', 'capital psi'], 
     ['\u03A9', 'capital omega'], 
 ];
-var greekSmallLettersFaceSet = [
+const greekSmallLettersFaceSet = [
     ['\u03B1', 'small alpha'], 
     ['\u03B2', 'small beta'], 
     ['\u03B3', 'small gamma'], 
@@ -121,7 +121,7 @@ var greekSmallLettersFaceSet = [
     ['\u03C8', 'small psi'], 
     ['\u03C9', 'small omega'], 
 ];
-var foodEmojiFaceSet = [
+const foodEmojiFaceSet = [
     ['\uD83C\uDF47', 'grapes'], // '\u{1F347}'
     ['\uD83C\uDF48', 'melon'], // '\u{1F348}'
     ['\uD83C\uDF49', 'watermelon'], // '\u{1F349}'
@@ -216,7 +216,7 @@ var foodEmojiFaceSet = [
     ['\uD83C\uDF7D', 'fork and knife with plate'], // '\u{1F37D}'
     ['\uD83C\uDF74', 'fork and knife'], // '\u{1F374}'
 ];
-var animalsAndNatureEmojiFaceSet = [
+const animalsAndNatureEmojiFaceSet = [
     ['\uD83D\uDE48', 'see-no-evil monkey'], // '\u{1F648}'
     ['\uD83D\uDE49', 'hear-no-evil monkey'], // '\u{1F649}'
     ['\uD83D\uDE4A', 'speak-no-evil monkey'], // '\u{1F64A}'
@@ -343,7 +343,7 @@ var animalsAndNatureEmojiFaceSet = [
     ['\uD83C\uDF1E', 'sun with face'], // '\u{1F31E}'
     ['\u{2B50}', 'star'],
 ];
-var objectsEmojiFaceSet = [
+const objectsEmojiFaceSet = [
     ['\uD83D\uDC8C', 'love letter'], // '\u{1F48C}'
     ['\uD83D\uDCA3', 'bomb'], // '\u{1F4A3}'
     ['\uD83E\uDDED', 'compass'], // '\u{1F9ED}'
@@ -358,9 +358,9 @@ var objectsEmojiFaceSet = [
 ];
 
 function buildFaceSet() {
-    var faceSet = [];
+    const faceSet = [];
     faceSet.merge(numbersFaceSet);
-    var letterSet = nextRandomIntegerLessThan(2);
+    const letterSet = nextRandomIntegerLessThan(2);
     if (letterSet === 0) {
         faceSet.merge(romanCapitalLettersFaceSet);
         faceSet.merge(romanSmallLettersFaceSet);
@@ -375,8 +375,8 @@ function buildFaceSet() {
 }
 
 function formatElapsedSeconds(elapsedSeconds) {
-    var minutes = Math.trunc(elapsedSeconds / 60);
-    var seconds = Math.trunc(elapsedSeconds % 60);
+    const minutes = Math.trunc(elapsedSeconds / 60);
+    const seconds = Math.trunc(elapsedSeconds % 60);
     return zeroPadded(minutes, 2) + ':' + zeroPadded(seconds, 2);
 }
 
@@ -395,12 +395,12 @@ function isOdd(number) {
 // Uniform random integer if a good random integer source is available
 function nextRandomIntegerLessThan(exclusiveUpperBound) {
     if (window.crypto && window.crypto.getRandomValues && Uint32Array) {
-        var max = 0xffffffff;
-        var min = 0;
-        var count = max - min + 1;
-        var moduloBias = count % exclusiveUpperBound;
-        var uniformMax = max - moduloBias;
-        var next = new Uint32Array(1);
+        const max = 0xffffffff;
+        const min = 0;
+        const count = max - min + 1;
+        const moduloBias = count % exclusiveUpperBound;
+        const uniformMax = max - moduloBias;
+        const next = new Uint32Array(1);
         do {
             window.crypto.getRandomValues(next);
         } while (next[0] > uniformMax);
@@ -415,16 +415,16 @@ function px(value) {
 }
 
 function toInt(value) {
-    var i = parseInt(value);
+    const i = parseInt(value);
     return isNaN(i) ? undefined : i;
 }
 
 function zeroPadded(value, length) {
-    var stringValue = '' + value;
+    const stringValue = '' + value;
     if (stringValue.length >= length) return stringValue;
 
-    var paddingLength = length - stringValue.length;
-    var padding = Array(paddingLength).fill('0').join('');
+    const paddingLength = length - stringValue.length;
+    const padding = Array(paddingLength).fill('0').join('');
     return padding + stringValue;
 }
 
@@ -435,16 +435,16 @@ Array.prototype.merge = function(array) {
 // Fisher–Yates shuffle
 // https://en.wikipedia.org/wiki/Fisher–Yates_shuffle
 Array.prototype.shuffle = function() {
-    for (var i = this.length - 1; i > 0; --i) {
-        var j = nextRandomIntegerLessThan(i + 1);
-        var temp = this[i];
+    for (let i = this.length - 1; i > 0; --i) {
+        const j = nextRandomIntegerLessThan(i + 1);
+        const temp = this[i];
         this[i] = this[j];
         this[j] = temp;
     }
 }
 
 Array.prototype.shuffled = function() {
-    var copy = this.slice();
+    const copy = this.slice();
     copy.shuffle();
     return copy;
 }
@@ -464,13 +464,13 @@ Math.trunc = Math.trunc || function(x) {
 };
 
 Location.prototype.splitQueryParameters = function() {
-    var queryString = this.search.substring(1);
-    var pairs = queryString.split('&');
-    var parameters = {};
+    const queryString = this.search.substring(1);
+    const pairs = queryString.split('&');
+    const parameters = {};
     pairs.forEach(function(pair) {
-        var parts = pair.split('=', 2);
-        var name = decodeURIComponent(parts[0]);
-        var value = (parts.length === 2) ? decodeURIComponent(parts[1]) : undefined;
+        const parts = pair.split('=', 2);
+        const name = decodeURIComponent(parts[0]);
+        const value = (parts.length === 2) ? decodeURIComponent(parts[1]) : undefined;
         parameters[name] = value;
     }); 
     return parameters;
