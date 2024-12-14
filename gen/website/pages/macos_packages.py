@@ -63,8 +63,8 @@ def macos_packages():
             )
             package(
                 name='wget',
-                version='1.21.4',
-                package='https://github.com/donmccaughey/wget_pkg/releases/download/v1.21.4-r3/wget-1.21.4-r3.pkg',
+                version='1.21.5',
+                package='https://github.com/donmccaughey/wget_pkg/releases/download/v1.21.5-r1/wget-1.21.5.pkg',
                 source='https://github.com/donmccaughey/wget_pkg',
                 project='https://www.gnu.org/software/wget/',
                 description='A command line tool for retrieving files using HTTP, HTTPS, FTP and FTPS.'
