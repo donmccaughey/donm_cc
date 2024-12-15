@@ -3,7 +3,7 @@
 <link rel=icon href=data:,>
 <meta charset=utf-8>
 <meta name=viewport content='initial-scale=0.9, width=device-width'>
-<title>Science Fiction</title>
+<title>Andrew Moriarty</title>
 <style>
     a {
         color: var(--text);
@@ -51,39 +51,27 @@
         max-width: 40em;
         padding: 0 1em;
     }
-    .collection {
-        border: 0;
-        margin: 0;
-        padding: 0;
-        text-align: center;
+    time {
+        white-space: nowrap;
     }
-    .item {
-        background: var(--highlight);
-        border: 1pt solid var(--highlight);
+    .links li {
         color: var(--text);
-        display: inline-block;
-        line-height: 150%;
-        margin: 1em;
-        padding: 0;
-        text-align: center;
+        font-size: 12pt;
+        line-height: 1.4;
+        margin: 0 2em;
+        padding: 0.25em;
+        width: 70ex;
     }
-    .item a {
-        border: 0;
-        color: var(--text);
-        display: inline-block;
-        margin: 0;
-        padding: 0.5em 1em;
-        text-decoration: none;
-    }
-    .item a:visited {
+    .links li a {
         color: var(--text);
     }
-    .item strong {
-        font-size: 14pt;
-        font-weight: normal;
+    .links li a:visited {
+        color: var(--text);
     }
-    .item:hover {
-        border: 1pt solid var(--text);
+    .links time {
+        color: var(--dim-text);
+        font: italic 12pt "Atkinson Hyperlegible", Helvetica, Arial, sans-serif;
+        white-space: nowrap;
     }
     .menu {
         background: rgba(192, 192, 192, 0.9); 
@@ -112,6 +100,9 @@
     .overview h1 {
         text-align: center;
     }
+    .title {
+        font: 14pt "Atkinson Hyperlegible", Helvetica, Arial, sans-serif;
+    }
     @media (prefers-color-scheme: dark) {
         :root {
             --page: black;
@@ -133,40 +124,43 @@
     }
 </style>
 <nav class=menu>
-    <a href=/ >Don McCaughey</a>
+    <a href=/ >Don McCaughey</a> • <a href=/science_fiction/ >Science
+    Fiction</a>
 </nav>
 <main>
     <section class=overview>
-        <h1>Science Fiction</h1>
+        <h1>Andrew Moriarty</h1>
         <p>
-            Science fiction has been a staple of my reading diet since I was
-            very young.  I gravitate towards space opera; multi-book,
-            galaxy-spanning sagas are my bread and butter.
+            Moriarty writes amiable, pulpy adventure stories.
     </section>
-    <ul class=collection>
-        <li class=item>
-            <a href=/science_fiction/iain_m_banks.html><strong>Iain M
-            Banks</strong></a>
-        <li class=item>
-            <a href=/science_fiction/lois_mcmaster_bujold.html><strong>Lois
-            McMaster Bujold</strong></a>
-        <li class=item>
-            <a href=/science_fiction/james_sa_corey.html><strong>James SA
-            Corey</strong></a>
-        <li class=item>
-            <a href=/science_fiction/andrew_moriarty.html><strong>Andrew
-            Moriarty</strong></a>
-        <li class=item>
-            <a href=/science_fiction/alastair_reynolds.html><strong>Alastair
-            Reynolds</strong></a>
-        <li class=item>
-            <a href=/science_fiction/neal_stephenson.html><strong>Neal
-            Stephenson</strong></a>
-        <li class=item>
-            <a href=/science_fiction/david_weber.html><strong>David
-            Weber</strong></a>
-        <li class=item>
-            <a href=/science_fiction/walter_jon_williams.html><strong>Walter Jon
-            Williams</strong></a>
-    </ul>
+    <section class=links>
+        <h1>Adventures of a Jump Space Accountant</h1>
+        <p>
+            This coming-of-age story set in a colony world cut off from the
+            galactic empire follows the adventures of our young protagonist
+            Jake.
+        <ul>
+            <li>
+                <a class=title href=https://openlibrary.org/works/OL24419388W>Trans
+                Galactic Insurance</a>, <time datetime=2017>2017</time> ✓
+            <li>
+                <a class=title href=https://openlibrary.org/works/OL34316624W>Orbital
+                Claims Adjuster</a>, <time datetime=2018>2018</time> ✓
+            <li>
+                <a class=title href=https://openlibrary.org/works/OL26724923W>Third
+                Moon Chemicals</a>, <time datetime=2019>2019</time> ✓
+            <li>
+                <a class=title href=https://openlibrary.org/works/OL26724922W>A
+                Corporate Coup</a>, <time datetime=2021>2021</time> ✓
+            <li>
+                <a class=title href=https://www.amazon.com/dp/B0B5XZV14L>The
+                Jump Ship</a>, <time datetime=2022>2022</time>
+            <li>
+                <a class=title href=https://openlibrary.org/works/OL34792340W>The
+                Military Advisors</a>, <time datetime=2023>2023</time>
+            <li>
+                <a class=title href=https://openlibrary.org/works/OL36717240W>Revolt
+                in the Palace</a>, <time datetime=2023>2023</time>
+        </ul>
+    </section>
 </main>

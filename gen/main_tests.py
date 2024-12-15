@@ -98,6 +98,7 @@ class MainTestCase(unittest.TestCase):
             ('./robots.txt', '/robots.txt'),
             ('./science_fiction/', '/science_fiction/'),
             ('./science_fiction/alastair_reynolds.html', '/science_fiction/alastair_reynolds.html'),
+            ('./science_fiction/andrew_moriarty.html', '/science_fiction/andrew_moriarty.html'),
             ('./science_fiction/david_weber.html', '/science_fiction/david_weber.html'),
             ('./science_fiction/iain_m_banks.html', '/science_fiction/iain_m_banks.html'),
             ('./science_fiction/index.html', '/science_fiction/index.html'),
