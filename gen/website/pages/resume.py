@@ -64,15 +64,42 @@ def resume():
                 H1('Selected Experience')
                 with Section(class_names=['organization']):
                     H2('United States Digital Service')
-                    organization_details('Remote', '2023', 'present',
+                    organization_details('Remote', '2023', '2025',
                                          ['Digital Services Expert'])
                     with P():
                         Text('''
-                            At USDS I'm helping agencies across the federal
-                            government build and improve their software systems,
-                            delivering a better government experience to
-                            millions of people.
+                            The United States Digital Service (USDS) helped
+                            agencies across the federal government build and
+                            improve their software systems, delivering a better
+                            government experience to millions of people.
                         ''')
+                    with P():
+                        inline_markdown_to_markup('''
+                            At USDS I was detailed to the Office of the CTO
+                            (OCTO) at the Department of Veterans Affairs (VA),
+                            where I was the lead engineer for the
+                            [VA: Health and Benefits](https://mobile.va.gov/app/va-health-and-benefits)
+                            mobile app.
+                        ''')
+                        with Ul():
+                            Li('''
+                                Engineering leader for a thirty person mobile
+                                development team.
+                            ''')
+                            Li('''
+                                Shipped a high quality release every two weeks
+                                used by over one million veterans monthly.
+                            ''')
+                            Li('''
+                                Worked closely with health, benefits and digital
+                                experience teams to ship new mobile features.
+                            ''')
+                            Li('''
+                                Helped develop and run a lightweight engineering
+                                review for fifty contract teams building on
+                                VA.gov, spotting problems or omissions in 75% of
+                                projects.
+                            ''')
                 with Section(class_names=['organization']):
                     H2('Cruise')
                     organization_details('San Francisco, CA', '2022', '2023',
