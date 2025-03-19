@@ -105,16 +105,10 @@ def resume():
                                          ['Staff Software Engineer'])
                     with P():
                         Text('''
-                            I joined the fleet management team supporting
-                            Cruise's rapidly growing fleet of autonomous
-                            vehicles.
+                            I worked on cloud services for managing Cruise's
+                            fleet of autonomous vehicles.
                         ''')
                         with Ul():
-                            Li('''
-                                Worked on complex cross-functional integration
-                                efforts to deliver automatic firmware updates
-                                for Cruise's new Origin vehicle.
-                            ''')
                             Li('''
                                 Drove efforts to improve engineering culture and
                                 standards.
@@ -122,6 +116,10 @@ def resume():
                             Li('''
                                 On-boarded and mentored new engineers as the
                                 team doubled in size.
+                            ''')
+                            Li('''
+                                Helped get a complex cross-functional
+                                integration effort back on track.
                             ''')
                 with Section(class_names=['organization']):
                     H2('Truework')
@@ -143,9 +141,8 @@ def resume():
                                 all experience levels.
                             ''')
                             Li('''
-                                Guided delivery of key features, including
-                                public SDKs, SSO, tools for 80+ person back
-                                office team and payroll provider integrations.
+                                Guided delivery of public SDKs, SSO, internal
+                                tools and partner integrations.
                             ''')
                 with Section(class_names=['organization']):
                     H2('Copper CRM')
