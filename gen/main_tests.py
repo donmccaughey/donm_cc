@@ -9,7 +9,7 @@ class MainTestCase(unittest.TestCase):
         expected = [
             ('./', '/'),
             ('./aughey/', '/aughey/'),
-            ('./aughey/handstand.jpg', '/aughey/handstand.jpg'),
+            ('./aughey/Split-Rocker_by_Jeff_Koons_Glenstone_summer_2024.jpg', '/aughey/Split-Rocker_by_Jeff_Koons_Glenstone_summer_2024.jpg'),
             ('./aughey/index.html', '/aughey/index.html'),
             ('./banners/', '/banners/'),
             ('./banners/Don_and_Molly_San_Francisco_autumn_2021.jpg', '/banners/Don_and_Molly_San_Francisco_autumn_2021.jpg'),
