@@ -7,10 +7,10 @@ from website.figures import banner
 def home_page():
     with Page('Don McCaughey', name='index'):
         banner(
-            image='/banners/Don_and_Molly_San_Francisco_autumn_2021.jpg',
-            width=821, height=461,
-            description='Don and Molly on the balcony',
-            caption='San Francisco, Autumn 2021',
+            image='/banners/Thorton_State_Beach_summer_2016.jpg',
+            width=1024, height=341,
+            description='A dog running on the beach chasing sea birds',
+            caption='Thorton State Beach, summer 2016',
             position='lower'
         )
         with Ul(class_names=['collection']):
