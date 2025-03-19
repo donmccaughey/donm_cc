@@ -48,17 +48,16 @@ def resume():
                 alternate_formats({
                     'markdown': '/resume/Resume_of_Don_McCaughey.md',
                     'pdf': '/resume/Resume_of_Don_McCaughey.pdf',
+                    'linkedin': 'https://www.linkedin.com/in/donmccaughey/',
                 })
                 contact_info({
                     'don@donm.cc': 'mailto:don@donm.cc',
-                    'linkedin.com/in/donmccaughey': 'https://www.linkedin.com/in/donmccaughey/',
-                    '+1 (415) 793-1166': 'tel:+1-415-793-1166',
                 })
                 P('''
                     I'm a software engineer with strong technical, leadership 
                     and organizational skills.  I build high performing, 
                     collaborative, cross-functional teams that focus on
-                    sustained, regular delivery of value to customers.
+                    sustained, predictable delivery of value to customers.
                 ''')
             with Section(class_names=['experience']):
                 H1('Selected Experience')
