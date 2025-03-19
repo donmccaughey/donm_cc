@@ -19,6 +19,7 @@ with root:
     Directory('banners')
     Directory('business_novels')
     Directory('engineering_management')
+    Directory('fonts')
     Directory('hashtables')
     Directory('make')
     Directory('objective-c_tuesdays')
