@@ -11,7 +11,7 @@ def home_page():
             width=1024, height=341,
             description='A dog running on the beach chasing sea birds',
             caption='Thorton State Beach, summer 2016',
-            position='lower'
+            position='upper'
         )
         with Ul(class_names=['collection']):
             item('Sourcehut', 'https://git.sr.ht/~donmcc', 'donmcc')
