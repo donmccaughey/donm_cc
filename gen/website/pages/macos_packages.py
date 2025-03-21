@@ -23,8 +23,8 @@ def macos_packages():
                 """)
             package(
                 name='FLAC',
-                version='1.4.3',
-                package='https://github.com/donmccaughey/flac_pkg/releases/download/v1.4.3-r1/flac-1.4.3.pkg',
+                version='1.5.0',
+                package='https://github.com/donmccaughey/flac_pkg/releases/download/v1.5.0-r1/flac-1.5.0.pkg',
                 source='https://github.com/donmccaughey/flac_pkg',
                 project='https://xiph.org/flac/',
                 description='A fast and widely supported lossless audio codec.'
